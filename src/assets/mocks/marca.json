@@ -1,0 +1,9 @@
+{
+    "msg": "Obtener",
+    "code": 200,
+    "data": [{
+        "id": 1,
+        "nombre": "Loma negra",
+        "abreviatura": "LN"
+    }]
+}

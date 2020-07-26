@@ -1,0 +1,84 @@
+<div class="container" ng-controller="unidades de medida">
+    <div class="card m-1">
+        <h1 class="text-center">
+            <button class="btn btn-default" style="margin-right: 100%;" (click)="backPage()">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 20 20">
+              <title>volver</title>
+              <path d="M11.302 6.776c-0.196-0.197-0.515-0.197-0.71 0l-2.807 2.865c-0.196 0.199-0.196 0.52 0 0.717l2.807 2.864c0.195 0.199 0.514 0.198 0.71 0 0.196-0.197 0.196-0.518 0-0.717l-2.302-2.505 2.302-2.506c0.196-0.198 0.196-0.518 0-0.718zM10 0.4c-5.302 0-9.6 4.298-9.6 9.6 0 5.303 4.298 9.6 9.6 9.6s9.6-4.297 9.6-9.6c0-5.302-4.298-9.6-9.6-9.6zM10 18.354c-4.615 0-8.354-3.74-8.354-8.354s3.739-8.354 8.354-8.354c4.613 0 8.354 3.74 8.354 8.354s-3.741 8.354-8.354 8.354z"></path>
+              </svg>
+        </button>
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 20 20">
+          <title>UNIDAD DE MEDIDA</title>
+          <path d="M14.249 0.438l-13.811 13.813c-0.584 0.584-0.584 1.538 0.002 2.124l3.185 3.187c0.584 0.584 1.541 0.586 2.124 0.002l13.813-13.813c0.584-0.585 0.584-1.541 0-2.125l-3.186-3.188c-0.587-0.586-1.542-0.583-2.127 0zM3.929 15.312l-0.759 0.759-1.896-1.897 0.759-0.759 1.896 1.897zM6.965 15.312l-0.759 0.759-3.415-3.415 0.759-0.76 3.415 3.416zM6.965 12.276l-0.759 0.759-1.898-1.896 0.76-0.76 1.897 1.897zM8.483 10.758l-0.759 0.759-1.896-1.896 0.759-0.76 1.896 1.897zM11.518 10.758l-0.759 0.759-3.414-3.414 0.759-0.759 3.414 3.414zM11.518 7.723l-0.759 0.759-1.896-1.896 0.759-0.759 1.896 1.896zM13.036 6.206l-0.759 0.759-1.897-1.897 0.759-0.759 1.897 1.897zM16.072 6.206l-0.76 0.759-3.414-3.415 0.759-0.76 3.415 3.416zM16.071 3.171l-0.759 0.759-1.896-1.898 0.759-0.758 1.896 1.897z"></path>
+          </svg>LISTA DE UNIDADES DE MEDIDA</h1>
+
+        <div class="card-body ">
+            <div class="row ">
+                <table class="table ">
+                    <thead class="thead-dark ">
+                        <tr>
+                            <td>
+                                <button class="btn btn-default ">NOMBRE </button>
+                            </td>
+                            <td>
+                                <input type="text " [(ngModel)]="busqueda " class="form-control " placeholder="ingrese nombre " (keyup)="filtrarBancoNombre($event) ">
+                            </td>
+                            <td>
+                                <button class="btn btn-default ">ABREVIATURA </button>
+                            </td>
+                            <td>
+                                <input type="text " [(ngModel)]="busquedaNombre " class="form-control " placeholder="ingrese abreviatura " (keyup)="filtrarBancoAbreviatura($event) ">
+
+                            </td>
+                            <td>
+
+                                <button class="btn btn-warning " [routerLink]="[ '/abm-compras/agregar-unidad-medida'] " routerLinkActive="router-link-active " style="margin-left: 50px; ">
+                                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                                    <title>UNIDAD DE MEDIDA</title>
+                                    <path d="M14.249 0.438l-13.811 13.813c-0.584 0.584-0.584 1.538 0.002 2.124l3.185 3.187c0.584 0.584 1.541 0.586 2.124 0.002l13.813-13.813c0.584-0.585 0.584-1.541 0-2.125l-3.186-3.188c-0.587-0.586-1.542-0.583-2.127 0zM3.929 15.312l-0.759 0.759-1.896-1.897 0.759-0.759 1.896 1.897zM6.965 15.312l-0.759 0.759-3.415-3.415 0.759-0.76 3.415 3.416zM6.965 12.276l-0.759 0.759-1.898-1.896 0.76-0.76 1.897 1.897zM8.483 10.758l-0.759 0.759-1.896-1.896 0.759-0.76 1.896 1.897zM11.518 10.758l-0.759 0.759-3.414-3.414 0.759-0.759 3.414 3.414zM11.518 7.723l-0.759 0.759-1.896-1.896 0.759-0.759 1.896 1.896zM13.036 6.206l-0.759 0.759-1.897-1.897 0.759-0.759 1.897 1.897zM16.072 6.206l-0.76 0.759-3.414-3.415 0.759-0.76 3.415 3.416zM16.071 3.171l-0.759 0.759-1.896-1.898 0.759-0.758 1.896 1.897z"></path>
+                                    </svg>
+                              NUEVA UD. MED
+                            </button>
+                            </td>
+                        </tr>
+
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class=" card-body p-0 " style="width:1100px; height:400px; overflow: auto; ">
+            <table class="table table-responsive-sm ">
+                <thead class="thead-dark ">
+
+                    <tr class="text-center ">
+                        <th scope="col ">NOMBRE</th>
+                        <th scope="col ">ABREVIATURA</th>
+                        <th scope="col ">HABILITACION</th>
+                        <th scope="col*2 ">OPCIONES</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="unidadMedidas !=null ">
+                    <tr *ngFor="let unidadMedida of unidadMedidaFilter " class="text-center ">
+                        <td>{{unidadMedida.nombre}}</td>
+                        <td>{{unidadMedida.abreviatura}}</td>
+                        <td>{{unidadMedida.habilitacion}}</td>
+
+                        <td>
+                            <button class="btn btn-default " title="Modificar " (click)="modificarUnidadMedida(unidadMedida) ">
+                              <svg xmlns="http://www.w3.org/2000/svg " width="14 " height="16 " viewBox="0 0 14 16 "><path fill-rule="evenodd " d="M0 12v3h3l8-8-3-3-8 8zm3 2H1v-2h1v1h1v1zm10.3-9.3L12 6 9 3l1.3-1.3a.996.996 0 0 1 1.41 0l1.59 1.59c.39.39.39
+        1.02 0 1.41z "/></svg>
+                           </button>
+
+
+                            <button class="btn btn-default " title="Eliminar " style="margin-left: 10px; " (click)="deshabilitarUnidadMedida(unidadMedida) ">
+                          <svg xmlns="http://www.w3.org/2000/svg " width="12 " height="16 " viewBox="0 0 12 16 "><path fill-rule="evenodd " d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48
+        1.48L7.48 8z "/></svg>
+                          </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,63 @@
+<div class="container" ng-controller="distritos">
+    <div class="card m-2">
+        <h1 class="text-center">EDITAR SUB RUBROS</h1>
+        <div class="card-body">
+            <table class="table col-md-6">
+                <thead class="thead-dark was-validated">
+                    <tr>
+                        <td>
+                            <label class="btn btn-default " for="nombre"> NOMBRE</label>
+                        </td>
+                        <td>
+                            <input #nombre [(ngModel)]="subRubro.nombre" type="text " class="form-control" placeholder={{subRubroDTO.nombre}} required="true">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="abreviatura"> DESCRIPCION</label>
+                        </td>
+                        <td>
+                            <input #abreviatura [(ngModel)]="subRubro.descripcion" type="text " class="form-control " placeholder={{subRubroDTO.descripcion}} required="true">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="departamento"> RUBRO</label>
+                        </td>
+                        <td>
+                            <!-- <select (change)="listarDepartamentos($event.target.value)" [(ngModel)]="departamento" class="form-control"> -->
+                            <select [(ngModel)]="nombreRubro" class="form-control">
+                            <option *ngFor=" let rubro of rubros"[selected]="rubro.nombre==rubroSelected.nombre">
+                            {{rubro.nombre}}
+                          </option>
+                        </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button (click)="actualizarSubRubro(subRubro)" class="btn btn-warning ">ACEPTAR</button>
+                        </td>
+                        <td>
+                            <button (click)="volverAtras() " class="btn btn-danger " style="margin-left: 10px; ">CANCELAR</button>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+</div>
+<!-- <select id="departamento" name="departamento" [(ngModel)]="departamento" class="form-control ">
+                              <option *ngFor="let departamento of departamentos" [selected]="departamento.nombre===departamentoSelected.nombre">
+                                    {{departamento.nombre}}
+                              </option>
+                        </select> -->
+
+<!-- <label class="btn btn-default " for="departamento "> DEPARTAMENTO </label>
+
+
+
+      </div>
+  </div>
+
+</div> -->

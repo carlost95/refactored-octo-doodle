@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "refactored-octo-doodle"
+    }
+  },
+  "defaultProject": "refactored-octo-doodle",
+  "cli": {
+    "analytics": "f6c3d1d7-4a8e-4fcc-9dfe-dc46b19e0c71"
+  }
 }

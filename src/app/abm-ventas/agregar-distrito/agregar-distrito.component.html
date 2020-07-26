@@ -1,0 +1,48 @@
+<div class="container" ng-controller="departamentos">
+    <div class="card m-2">
+        <h1 class="text-center">CARGA DE DISTRITOS</h1>
+        <div class="card-body">
+            <table class="table col-md-6">
+                <thead class="thead-dark was-validated">
+                    <tr>
+                        <td>
+                            <label class="btn btn-default " for="nombre"> NOMBRE</label>
+                        </td>
+                        <td>
+                            <input [(ngModel)]="distrito.nombre" type="text " class="form-control" placeholder="ingrese nombre" required="true">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="abreviatura"> ABREVIATURA</label>
+                        </td>
+                        <td>
+                            <input [(ngModel)]="distrito.abreviatura" type="text " class="form-control " placeholder="ingrese abreviatura " required="true">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="departamento"> DEPARTAMENTO</label>
+                        </td>
+                        <td>
+                            <select (change)="listarDepartamentos($event.target.value)" [(ngModel)]="nombreDepto" class="form-control">
+                              <option *ngFor=" let departamento of departamentos">
+                              {{departamento.nombre}}
+                            </option>
+                          </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button (click)="nuevoDistrito(distrito)" class="btn btn-warning">ACEPTAR</button>
+                        </td>
+                        <td>
+                            <button (click)="volverAtras() " class="btn btn-danger " style="margin-left: 10px; ">CANCELAR</button>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+</div>

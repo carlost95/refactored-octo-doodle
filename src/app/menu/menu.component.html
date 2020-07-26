@@ -1,0 +1,167 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="30"
+      height="30"
+      viewBox="0 0 16 16"
+      class="svg-color"
+    >
+      <path
+        fill-rule="evenodd"
+        d="M16 9l-3-3V2h-2v2L8 1 0 9h2l1 5c0 .55.45 1 1 1h8c.55 0 1-.45 1-1l1-5h2zm-4 5H9v-4H7v4H4L2.81 7.69 8 2.5l5.19 5.19L12 14z"
+      />
+    </svg>
+  </a>
+
+  <div
+    *ngIf="autenticacion.usuarioLogeado()"
+    class="collapse navbar-collapse"
+    id="navbarSupportedContent"
+  >
+    <ul class="navbar-nav">
+      <!-- <ul class="navbar-nav mr-auto"> -->
+
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['ventas']" routerLinkActive="active"
+          >VENTAS</a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['compras']" routerLinkActive="active"
+          >COMPRAS</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          [routerLink]="['seguridad']"
+          routerLinkActive="active"
+          >SEGURIDAD</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          [routerLink]="['reportes']"
+          routerLinkActive="active"
+          >REPORTES</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          [routerLink]="['logistica']"
+          routerLinkActive="active"
+          >LOGISTICA</a
+        >
+      </li>
+      <li>
+        <div class="btn-group">
+          <button
+            type="button"
+            class="btn btn-dark dropdown-toggle"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            CONFIGURACIONES
+          </button>
+          <div class="dropdown-menu">
+            <!-- METODO DE NAVEGACION A SUB-MENUS -->
+            <a
+              class="dropdown-item"
+              [routerLink]="['abm-ventas']"
+              routerLinkActive="active"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="16"
+                viewBox="0 0 14 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M7 6.75V12h4V8h1v4c0 .55-.45 1-1 1H7v3l-5.45-2.72c-.33-.17-.55-.52-.55-.91V1c0-.55.45-1 1-1h9c.55 0 1 .45 1 1v3h-1V1H3l4 2v2.25L10 3v2h4v2h-4v2L7 6.75z"
+                />
+              </svg>
+              ABM VENTAS</a
+            >
+
+            <div class="dropdown-divider"></div>
+            <a
+              class="dropdown-item"
+              [routerLink]="['abm-compras']"
+              routerLinkActive="active"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="16"
+                viewBox="0 0 14 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M7 6.75V12h4V8h1v4c0 .55-.45 1-1 1H7v3l-5.45-2.72c-.33-.17-.55-.52-.55-.91V1c0-.55.45-1 1-1h9c.55 0 1 .45 1 1v3h-1V1H3l4 2v2.25L10 3v2h4v2h-4v2L7 6.75z"
+                />
+              </svg>
+              ABM COMPRAS</a
+            >
+
+            <div class="dropdown-divider"></div>
+            <a
+              class="dropdown-item"
+              [routerLink]="['ventas']"
+              routerLinkActive="active"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="16"
+                viewBox="0 0 14 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 1H4L0 5v6l4 4h6l4-4V5l-4-4zm3 9.5L9.5 14h-5L1 10.5v-5L4.5 2h5L13 5.5v5zM6 4h2v5H6V4zm0 6h2v2H6v-2z"
+                />
+              </svg>
+              ABM SEGURIDAD</a
+            >
+
+            <div class="dropdown-divider"></div>
+            <a
+              class="dropdown-item"
+              [routerLink]="['ventas']"
+              routerLinkActive="active"
+              >ABM LOGISTICA</a
+            >
+
+            <div class="dropdown-divider"></div>
+            <a
+              class="dropdown-item"
+              [routerLink]="['ventas']"
+              routerLinkActive="active"
+              >GENERAL</a
+            >
+          </div>
+        </div>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      <li>
+        <a class="nav-link" [routerLink]="['logout']" routerLinkActive="active"
+          >CERRAR SESION</a
+        >
+      </li>
+    </ul>
+  </div>
+  <div *ngIf="!autenticacion.usuarioLogeado()" class="collapse navbar-collapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['login']" routerLinkActive="active"
+          >INICIAR SESION</a
+        >
+      </li>
+    </ul>
+  </div>
+</nav>

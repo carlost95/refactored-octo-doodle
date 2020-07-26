@@ -1,0 +1,38 @@
+<div class="container" ng-controller="unidadMedida">
+    <div class="card m-2">
+        <h1 class="text-center">EDITAR UNIDAD DE MEDIDA</h1>
+        <div class="card-body">
+            <!-- <div class="row"> -->
+            <table class="table col-md-6">
+                <thead class="thead-dark ">
+                    <tr>
+                        <td>
+                            <label class="btn btn-default " for="nombre "> NOMBRE</label>
+                        </td>
+                        <td>
+                            <input #nombre [(ngModel)]="unidadMedida.nombre" type="text" class="form-control" placeholder="{{unidadMedida.nombre}}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="btn btn-default " for="nombre "> ABREVIATURA</label>
+                        </td>
+                        <td>
+                            <input #abreviatura [(ngModel)]="unidadMedida.abreviatura" type="text" class="form-control" placeholder="{{unidadMedida.abreviatura}}">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <button (click)=" actualizarUnidadMedida(unidadMedida) " class="btn btn-warning ">ACEPTAR</button>
+                        </td>
+                        <td>
+                            <button (click)="cancelar() " class="btn btn-danger " style="margin-left: 10px; ">CANCELAR</button>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+</div>

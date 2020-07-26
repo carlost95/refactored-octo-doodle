@@ -1,0 +1,16 @@
+.container {
+  background-color: rgba(245, 245, 245, 0.753);
+  padding-right: 1%;
+  padding-left: 1%;
+  padding-bottom: 1%;
+  padding-top: 1%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  margin-left: auto;
+}
+
+/* thead tr:nth-child(1) th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+} */

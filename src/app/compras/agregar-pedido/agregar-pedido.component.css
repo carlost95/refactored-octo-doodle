@@ -1,0 +1,17 @@
+.color {
+    background-attachment: rgba(255, 255, 255, 0.575);
+}
+
+.container {
+    padding-top: 10px;
+}
+
+.table-responsive-sm {
+    overflow: scroll;
+}
+
+thead tr:nth-child(1) th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}

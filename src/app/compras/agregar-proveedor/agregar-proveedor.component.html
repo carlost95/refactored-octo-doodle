@@ -1,0 +1,61 @@
+<div class="container" ng-controller="proveedores">
+    <div class="card m-2">
+        <h1 class="text-center">CARGA DE PROVEEDORES</h1>
+        <div class="card-body">
+            <table class="table col-md-6">
+                <thead class="thead-dark was-validated">
+                    <tr>
+                        <td>
+                            <label class="btn btn-default " for="razonSocial "> RAZON SOCIAL</label>
+                        </td>
+                        <td>
+                            <input [(ngModel)]="proveedor.razonSocial" type="text " class="form-control " placeholder="ingrese razon social " required="true ">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="btn btn-default " for="domicilio "> DOMICILIO</label>
+                        </td>
+                        <td>
+                            <input [(ngModel)]="proveedor.domicilio" type="text " class="form-control " placeholder="ingrese domicilio " required="true ">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="btn btn-default " for="mail "> MAIL</label>
+                        </td>
+                        <td>
+                            <input [(ngModel)]="proveedor.mail" type="text " class="form-control " placeholder="ingrese mail " required="false">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="btn btn-default " for="celular "> CELULAR</label>
+                        </td>
+                        <td>
+                            <input [(ngModel)]="proveedor.celular" type="text " class="form-control " placeholder="ingrese celular " required="false">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="btn btn-default " for="telefono "> TELEFONO</label>
+                        </td>
+                        <td>
+                            <input [(ngModel)]="proveedor.telefono" type="text " class="form-control " placeholder="ingrese telefono " required="false">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <button (click)="guardarProveedor(proveedor)" class="btn btn-warning ">ACEPTAR</button>
+                        </td>
+                        <td>
+                            <button (click)="cancelar() " class="btn btn-danger " style="margin-left: 10px; ">CANCELAR</button>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+</div>
