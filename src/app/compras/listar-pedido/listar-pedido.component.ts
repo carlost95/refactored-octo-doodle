@@ -20,12 +20,12 @@ export class ListarPedidoComponent implements OnInit {
   searchDesde: string = "";
   searchHasta: string = "";
   rows: any[];
-  proveedores: Proveedor[]=[];
+  proveedores: Proveedor[] = [];
   razonSocial: string;
 
   //
   //
-  constructor(private serviceCompra: ComprasService, private router: Router) {}
+  constructor(private serviceCompra: ComprasService, private router: Router) { }
 
   ngOnInit() {
     this.fetchEvent().then(() => {
@@ -43,7 +43,7 @@ export class ListarPedidoComponent implements OnInit {
         console.log('fechas: ');
         this.pedidosFilter = this.pedidos;
 
-        this.pedidos.forEach((p , index)=>{
+        this.pedidos.forEach((p, index) => {
           console.log(p.fecha);
         })
 
@@ -67,7 +67,7 @@ export class ListarPedidoComponent implements OnInit {
       });
     }
   }
-  filtarPedidoNombre(event: any) {
+  filtarPedidoProveedor(event: any) {
     if (this.busqueda !== null) {
       this.pedidosFilter = this.pedidos.filter(item => {
         if (item.nombre.toUpperCase().includes(this.busqueda.toUpperCase())) {
@@ -115,7 +115,7 @@ export class ListarPedidoComponent implements OnInit {
     window.history.back();
   }
 
-  consultarPedido(pedido: Pedido){
+  consultarPedido(pedido: Pedido) {
     this.router.navigate(['consultar-pedido/']);
   }
 }
