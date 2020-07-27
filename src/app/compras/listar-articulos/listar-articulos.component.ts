@@ -88,51 +88,7 @@ export class ListarArticulosComponent implements OnInit {
       });
     }
   }
-  // filtrarArticuloNombre(event: any) {
-  //   if (this.busqueda !== null) {
-  //     this.articulosFilter = this.articulos.filter((item) => {
-  //       if (item.nombre.toUpperCase().includes(this.busqueda.toUpperCase())) {
-  //         return item;
-  //       }
-  //     });
-  //   } else {
-  //     this.articulosFilter = this.articulos;
-  //   }
-  // }
-  // filtrarArticuloCodigo(event: any) {
-  //   if (this.busquedaCodigo !== null) {
-  //     this.articulosFilter = this.articulos.filter((item) => {
-  //       if (
-  //         item.codigoArt
-  //           .toUpperCase()
-  //           .includes(this.busquedaCodigo.toUpperCase())
-  //       ) {
-  //         return item;
-  //       }
-  //     });
-  //   } else {
-  //     this.articulosFilter = this.articulos;
-  //   }
-  // }
-  // filtrarArticuloRubro(event: any) {
-  //   console.log("================ENTRO================");
 
-  //   if (this.busquedaRubro !== null) {
-  //     this.articulosFilter = this.articulos.filter((item) => {
-  //       if (item.rubroId !== null) {
-  //         if (
-  //           item.rubroId.nombre
-  //             .toUpperCase()
-  //             .includes(this.busquedaRubro.toUpperCase())
-  //         ) {
-  //           return item;
-  //         }
-  //       }
-  //     });
-  //   } else {
-  //     this.articulosFilter = this.articulos;
-  //   }
-  // }
 
   backPage() {
     window.history.back();

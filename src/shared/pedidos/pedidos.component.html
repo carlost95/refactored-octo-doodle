@@ -68,10 +68,12 @@
                 *ngFor="let prov of proveedores"
                 value="{{ prov.razonSocial }}"
               >
+                <!-- <label>{{ prov.razonSocial }}</label> -->
                 <label *ngIf="prov.razonSocial !== ' '">{{
                   prov.razonSocial
                 }}</label>
-                <label *ngIf="prov.razonSocial === ' '">Todos</label>
+                <!-- <label *ngIf="prov.razonSocial === ' '">Todos</label> -->
+                <!-- <label>{{ prov.razonSocial }}</label> -->
               </option>
             </select>
           </div>
