@@ -16,6 +16,13 @@ thead tr:nth-child(1) th {
     z-index: 10;
 }
 
+.black {
+  background: black;
+}
+
+.white {
+  color: white;
+}
 
 /*
 .table-fixed tbody {

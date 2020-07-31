@@ -1,7 +1,9 @@
 import { Banco } from "./../../modelo/Banco";
 import { AbmComprasService } from "./../../service/abm-compras.service";
 import { Router } from "@angular/router";
-import { Component, OnInit } from "@angular/core";
+import {Component, Inject, OnInit} from "@angular/core";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+
 
 @Component({
   selector: "app-agregar-banco",
@@ -11,7 +13,14 @@ import { Component, OnInit } from "@angular/core";
 export class AgregarBancoComponent implements OnInit {
   banco: Banco = new Banco();
 
-  constructor(private service: AbmComprasService) {}
+  constructor ( private service: AbmComprasService,
+                public dialogRef: MatDialogRef<AgregarBancoComponent>,
+                @Inject(MAT_DIALOG_DATA) public data: Banco) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
 
   ngOnInit() {}
 
@@ -27,6 +36,8 @@ export class AgregarBancoComponent implements OnInit {
       this.banco = data;
       alert("se guardo un nuevo banco");
       window.history.back();
+      this.dialogRef.close();
+
     });
   }
   cancelar() {

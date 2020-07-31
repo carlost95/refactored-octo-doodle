@@ -1,3 +1,20 @@
+@import '~@angular/material/theming';
+@include mat-core();
+
+// COLORES: https://material.io/design/color/
+$corralon-primary: mat-palette($mat-amber, 600);
+$corralon-accent:  mat-palette($mat-grey, 600);
+$corralon-warn:    mat-palette($mat-red);
+
+$corralon: mat-light-theme((
+  color: (
+    primary: $corralon-primary,
+    accent: $corralon-accent,
+    warn: $corralon-warn,
+  )
+));
+@include angular-material-theme($corralon);
+
 .btn-outline-warning {
   color: black;
 }
@@ -46,4 +63,42 @@ thead tr:nth-child(1) th {
 td {
   padding-top: 1%;
   padding-bottom: 1%;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.confirm-dialog-container .content-container{
+  margin: 5px 5px 15px 5px;
+  color: #8f9cb5;
+  display: flex;
+}
+.confirm-dialog-container #close-icon{
+  margin-left: auto;
+  order: 2;
+  font-weight: bolder;
+}
+.confirm-dialog-container #close-icon:hover{
+  cursor: pointer;
+}
+
+.confirm-dialog-container #no-button{
+  height: 50px;
+  width: 50%;
+  background-color: #fc7169;
+  color:white;
+  border-radius: 0px;
+}
+
+.confirm-dialog-container #yes-button{
+  height: 50px;
+  width: 50%;
+  background-color: #b6bece;
+  color:white;
+  border-radius: 0px;
+}
+
+.confirm-dialog-container span.content-span{
+  padding:  35px 16px;
+  text-align: center;
+  font-size: 20px;
 }

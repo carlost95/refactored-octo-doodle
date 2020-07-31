@@ -11,10 +11,12 @@ import { LoginComponent } from "./login/login.component";
 import { LogoutComponent } from "./logout/logout.component";
 import { ExcelExportService } from "./service/excel-export.service";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MaterialModule} from "./material/material.module";
+import { FormBancoComponent } from './shared/form-banco/form-banco.component';
 // import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
 @NgModule({
-  declarations: [AppComponent, MenuComponent, LoginComponent, LogoutComponent],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule, BrowserAnimationsModule],
+  declarations: [AppComponent, MenuComponent, LoginComponent, LogoutComponent, FormBancoComponent],
+  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule, BrowserAnimationsModule, MaterialModule],
   providers: [
     VentasService,
     ExcelExportService,
@@ -24,6 +26,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       multi: true,
     },
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}
