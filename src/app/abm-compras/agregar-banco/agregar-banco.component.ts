@@ -14,6 +14,7 @@ export class AgregarBancoComponent implements OnInit {
   bancoForm: FormGroup;
   errorInForm: boolean = false;
   submitted = false;
+  updating = false;
 
   constructor(private service: BancosService,
               public dialogRef: MatDialogRef<AgregarBancoComponent>,
@@ -25,11 +26,12 @@ export class AgregarBancoComponent implements OnInit {
   ngOnInit() {
     if (this.data) {
       this.bancoForm = this.formBuilder.group({
+        id: [this.data.id, null],
         nombre: [this.data.nombre, Validators.required],
         abreviatura: [this.data.abreviatura, Validators.required]
       })
+      this.updating = true;
     } else {
-      ;
       this.bancoForm = this.formBuilder.group({
         nombre: ['', Validators.required],
         abreviatura: ['',null]
@@ -56,14 +58,26 @@ export class AgregarBancoComponent implements OnInit {
   }
 
   makeDTO() {
+    this.banco.id = this.bancoForm.controls.id.value;
     this.banco.nombre = this.bancoForm.controls.nombre.value;
     this.banco.abreviatura = this.bancoForm.controls.abreviatura.value;
-    this.save();
+    if (this.updating){
+      this.update();
+    } else {
+      this.save();
+    }
   }
 
 
   save() {
     this.service.guardarBanco(this.banco).subscribe(data => {
+      this.banco = data.data;
+      this.dialogRef.close();
+    });
+  }
+
+  private update() {
+    this.service.actualizarBanco(this.banco).subscribe(data => {
       this.banco = data.data;
       this.dialogRef.close();
     });

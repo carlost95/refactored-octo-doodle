@@ -24,7 +24,7 @@ export class BancosService {
     return this.http.post<Response>(this.url , banco);
   }
   actualizarBanco(banco: Banco) {
-    return this.http.put<Banco>(this.url , banco);
+    return this.http.put<Response>(this.url , banco);
   }
   listarBancoId(id: number) {
     return this.http.get<Response>(this.url + "/" + id);

@@ -17,6 +17,7 @@ export class ListarBancoComponent implements OnInit {
   busquedaNombre: string = null;
   busqueda: string = null;
   displayedColumns: string[] = ['nombre', 'abreviatura'];
+  toUpdateBank: Banco;
 
   constructor(private service: AbmComprasService, private router: Router,
               public matDialog: MatDialog) {
@@ -29,9 +30,7 @@ export class ListarBancoComponent implements OnInit {
     });
   }
 
-  modificarBanco(banco: Banco) {
-    this.router.navigate(["abm-compras/modificar-banco/" + banco.id]);
-  }
+
 
   deshabilitarBanco(banco: Banco) {
   }
@@ -64,20 +63,29 @@ export class ListarBancoComponent implements OnInit {
     }
   }
 
-  newBanco(customContent) {
-
-    this.openDialog(customContent);
+  newBanco() {
+    this.toUpdateBank = null;
+    this.openDialog();
   }
-
-  openDialog(customContent): void {
+  modificarBanco(banco: Banco) {
+    this.toUpdateBank = banco;
+    this.openDialog();
+  }
+  openDialog(): void {
     const dialogConfig = new MatDialogConfig();
     // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
     dialogConfig.id = "modal-component";
     dialogConfig.height = '400px'
     dialogConfig.width = '300px';
+    dialogConfig.data = this.toUpdateBank;
     const modalDialog = this.matDialog.open(AgregarBancoComponent, dialogConfig);
-
+    modalDialog.afterClosed().subscribe(result => {
+      this.service.listarBancosTodos().subscribe(data => {
+        this.bancos = data.data;
+        this.bancoFilter = data.data;
+      });
+    });
   }
 
   backPage() {
