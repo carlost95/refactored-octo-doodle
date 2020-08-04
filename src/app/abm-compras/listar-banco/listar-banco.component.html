@@ -39,7 +39,7 @@
 
             </td>
             <td>
-              <button mat-raised-button color="primary" (click)="openDialog()">
+              <button mat-raised-button color="primary" (click)="newBanco(agregarBanco)">
                 <mat-icon aria-hidden="false" aria-label="Example home icon">home</mat-icon>
                 Banco
               </button>
@@ -102,3 +102,7 @@
 
   </div>
 </div>
+
+<ng-template #agregarBanco >
+  <app-agregar-banco></app-agregar-banco>
+</ng-template>

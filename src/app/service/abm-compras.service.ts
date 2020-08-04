@@ -26,7 +26,7 @@ export class AbmComprasService {
     return this.http.get<Response>(this.Url + "/bancos");
   }
   guardarBanco(banco: Banco) {
-    return this.http.post<Banco>(this.Url + "/bancos/", banco);
+    return this.http.post<Response>(this.Url + "/bancos/", banco);
   }
   actualizarBanco(banco: Banco) {
     return this.http.put<Banco>(this.Url + "/bancos/", banco);

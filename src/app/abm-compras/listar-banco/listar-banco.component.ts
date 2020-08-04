@@ -1,8 +1,8 @@
-import { Banco } from "../../modelo/Banco";
-import { Router } from "@angular/router";
-import { AbmComprasService } from "../../service/abm-compras.service";
+import {Banco} from "../../modelo/Banco";
+import {Router} from "@angular/router";
+import {AbmComprasService} from "../../service/abm-compras.service";
 import {Component, Inject, OnInit} from "@angular/core";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {AgregarBancoComponent} from "../agregar-banco/agregar-banco.component";
 
 @Component({
@@ -17,8 +17,10 @@ export class ListarBancoComponent implements OnInit {
   busquedaNombre: string = null;
   busqueda: string = null;
   displayedColumns: string[] = ['nombre', 'abreviatura'];
+
   constructor(private service: AbmComprasService, private router: Router,
-              public dialog: MatDialog) {}
+              public matDialog: MatDialog) {
+  }
 
   ngOnInit() {
     this.service.listarBancosTodos().subscribe(data => {
@@ -26,10 +28,14 @@ export class ListarBancoComponent implements OnInit {
       this.bancoFilter = data.data;
     });
   }
+
   modificarBanco(banco: Banco) {
     this.router.navigate(["abm-compras/modificar-banco/" + banco.id]);
   }
-  deshabilitarBanco(banco: Banco) {}
+
+  deshabilitarBanco(banco: Banco) {
+  }
+
   filtrarBancoNombre(event: any) {
     if (this.busqueda !== null) {
       this.bancoFilter = this.bancos.filter(item => {
@@ -58,21 +64,20 @@ export class ListarBancoComponent implements OnInit {
     }
   }
 
+  newBanco(customContent) {
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(AgregarBancoComponent, {
-      width: '50%',
-      height: '50%',
-      panelClass: 'confirm-dialog-container'
-    });
+    this.openDialog(customContent);
+  }
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.service.listarBancosTodos().subscribe(data => {
-        this.bancos = data.data;
-        this.bancoFilter = data.data;
-      });
-    });
+  openDialog(customContent): void {
+    const dialogConfig = new MatDialogConfig();
+    // The user can't close the dialog by clicking outside its body
+    dialogConfig.disableClose = true;
+    dialogConfig.id = "modal-component";
+    dialogConfig.height = '400px'
+    dialogConfig.width = '300px';
+    const modalDialog = this.matDialog.open(AgregarBancoComponent, dialogConfig);
+
   }
 
   backPage() {

@@ -1,4 +1,4 @@
-import { FormsModule } from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { AbmComprasComponent } from "./abm-compras.component";
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
@@ -54,6 +54,6 @@ import {MaterialModule} from "../material/material.module";
     AgregarAjusteComponent
 
   ],
-    imports: [CommonModule, FormsModule, AbmComprasRoutingModule, MaterialModule]
+    imports: [CommonModule, FormsModule, AbmComprasRoutingModule, MaterialModule, ReactiveFormsModule]
 })
 export class AbmComprasModule {}
