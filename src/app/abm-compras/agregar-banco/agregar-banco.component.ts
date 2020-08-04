@@ -17,8 +17,8 @@ export class AgregarBancoComponent implements OnInit {
   updating = false;
 
   constructor(private service: BancosService,
-              public dialogRef: MatDialogRef<AgregarBancoComponent>,
               private formBuilder: FormBuilder,
+              public dialogRef: MatDialogRef<AgregarBancoComponent>,
               @Inject(MAT_DIALOG_DATA) public data: Banco) {
   }
 

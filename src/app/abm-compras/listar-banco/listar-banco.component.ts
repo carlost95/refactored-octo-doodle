@@ -4,6 +4,7 @@ import {AbmComprasService} from "../../service/abm-compras.service";
 import {Component, Inject, OnInit} from "@angular/core";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {AgregarBancoComponent} from "../agregar-banco/agregar-banco.component";
+import {ConfirmModalComponent} from "../../shared/confirm-modal/confirm-modal.component";
 
 @Component({
   selector: "app-listar-banco",
@@ -90,5 +91,30 @@ export class ListarBancoComponent implements OnInit {
 
   backPage() {
 
+  }
+
+  changeSwitch(banco: Banco) {
+
+  }
+
+  showModal(banco: Banco) {
+    const dialogConfig = new MatDialogConfig();
+    // The user can't close the dialog by clicking outside its body
+    dialogConfig.disableClose = true;
+    dialogConfig.id = "modal-component";
+    dialogConfig.height = '300px'
+    dialogConfig.width = '350px';
+    dialogConfig.data = {
+      message: 'Desea cambiar estado?',
+      title: 'Cambio estado',
+      id: banco.id
+    };
+    const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
+    modalDialog.afterClosed().subscribe(result => {
+      this.service.listarBancosTodos().subscribe(data => {
+        this.bancos = data.data;
+        this.bancoFilter = data.data;
+      });
+    });
   }
 }

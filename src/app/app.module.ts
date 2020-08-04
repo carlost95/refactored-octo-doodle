@@ -12,10 +12,10 @@ import { LogoutComponent } from "./logout/logout.component";
 import { ExcelExportService } from "./service/excel-export.service";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MaterialModule} from "./material/material.module";
-import { FormBancoComponent } from './shared/form-banco/form-banco.component';
+import { ConfirmModalComponent } from './shared/confirm-modal/confirm-modal.component';
 // import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
 @NgModule({
-  declarations: [AppComponent, MenuComponent, LoginComponent, LogoutComponent, FormBancoComponent],
+  declarations: [AppComponent, MenuComponent, LoginComponent, LogoutComponent, ConfirmModalComponent],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule, BrowserAnimationsModule, MaterialModule],
   providers: [
     VentasService,

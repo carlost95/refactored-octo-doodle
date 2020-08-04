@@ -26,6 +26,9 @@ export class BancosService {
   actualizarBanco(banco: Banco) {
     return this.http.put<Response>(this.url , banco);
   }
+  cambiarHabilitacion(id: number) {
+    return this.http.put<Response>(this.url+ "/" + id , id);
+  }
   listarBancoId(id: number) {
     return this.http.get<Response>(this.url + "/" + id);
   }
