@@ -3,7 +3,7 @@ import { Cliente } from "./../modelo/Cliente";
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Response } from "../modelo/Response";
-import {environment} from "../../environments/environment.prod";
+import { environment } from "../../environments/environment.prod";
 
 @Injectable({
   providedIn: "root"
@@ -12,7 +12,7 @@ export class VentasService {
 
   Url = environment.url;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
 
 
@@ -62,5 +62,9 @@ export class VentasService {
   }
   deshabilitarTipoDireccion(id: number) {
     return this.http.delete(this.Url + "/tipo-direccion/" + id);
+  }
+
+  getReporteBancoPdf() {
+    return this.http.get<Response>(this.Url + '/reportes/banco');
   }
 }
