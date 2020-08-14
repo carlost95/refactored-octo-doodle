@@ -4,6 +4,8 @@ import { Cliente } from "../../modelo/Cliente";
 import { Component, OnInit } from "@angular/core";
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 // import { MatDialogModule } from "@angular/material";
+import { PdfExportService } from '../../service/pdf-export.service';
+import { ServiceReportService } from '../../service/service-report.service';
 
 @Component({
   selector: "app-listar-clientes",
@@ -17,7 +19,8 @@ export class ListarClientesComponent implements OnInit {
 
   busqueda: string = null;
 
-  constructor(private service: VentasService, private router: Router) { }
+  constructor(private service: VentasService, private router: Router,
+    private servicePdf: PdfExportService, private serviceReport: ServiceReportService) { }
   ngOnInit() {
     this.service.listarClientesTodos().subscribe((data) => {
       this.clientes = data.data;
@@ -57,39 +60,15 @@ export class ListarClientesComponent implements OnInit {
     window.history.back();
   }
   consultaCliente() { }
-  exportarExcel() { }
+  exportarExcel() {
+    console.warn('muestra de excel');
+
+  }
 
   exportarPDF() {
-    this.service.getReporteBancoPdf().subscribe(resp => {
-      const arrayBuffer = this.base64ToArrayBuffer(resp.data.file);
-      this.createAndDownloadBlobFile(arrayBuffer, resp.data.name);
+    this.serviceReport.getReporteBancoPdf().subscribe(resp => {
+      this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
     });
   }
 
-  base64ToArrayBuffer(base64: string) {
-    const binaryString = window.atob(base64); // Comment this if not using base64
-    const bytes = new Uint8Array(binaryString.length);
-    return bytes.map((byte, i) => binaryString.charCodeAt(i));
-  }
-
-  createAndDownloadBlobFile(body, filename, extension = 'pdf') {
-    const blob = new Blob([body]);
-    const fileName = `${filename}.${extension}`;
-    if (navigator.msSaveBlob) {
-      // IE 10+
-      navigator.msSaveBlob(blob, fileName);
-    } else {
-      const link = document.createElement('a');
-      // Browsers that support HTML5 download attribute
-      if (link.download !== undefined) {
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', fileName);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    }
-  }
 }

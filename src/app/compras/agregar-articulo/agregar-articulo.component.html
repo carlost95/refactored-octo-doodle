@@ -88,7 +88,6 @@
                     <label for="unidadMedida"> UNIDAD MEDIDA</label>
                   </td>
                   <td>
-                    <!-- <select (change)="listarUnidadMedida($event.target.value)"  [(ngModel)]="nombreUnidadMedida" class="form-control"> -->
                     <select
                       (change)="listarUnidadMedida($event.target.value)"
                       [(ngModel)]="articuloStorage.unidadMedida"
@@ -279,26 +278,18 @@
           </div>
           <hr />
 
-          <div class="row justify-content-center">
-            <tr>
-              <td>
-                <button
-                  (click)="nuevoArticulo(articuloDTO)"
-                  class="btn btn-warning"
-                >
-                  ACEPTAR
-                </button>
-              </td>
-              <td>
-                <button
-                  (click)="volverAtras()"
-                  class="btn btn-danger"
-                  style="margin-left: 10px;"
-                >
-                  CANCELAR
-                </button>
-              </td>
-            </tr>
+          <div class="text-right">
+            <button (click)="volverAtras()" class="btn btn-outline-danger">
+              CANCELAR
+            </button>
+
+            &nbsp; &nbsp;
+            <button
+              (click)="nuevoArticulo(articuloDTO)"
+              class="btn btn-warning"
+            >
+              ACEPTAR
+            </button>
           </div>
         </thead>
       </table>

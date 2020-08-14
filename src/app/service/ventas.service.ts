@@ -64,7 +64,7 @@ export class VentasService {
     return this.http.delete(this.Url + "/tipo-direccion/" + id);
   }
 
-  getReporteBancoPdf() {
-    return this.http.get<Response>(this.Url + '/reportes/banco');
-  }
+  // getReporteBancoPdf() {
+  //   return this.http.get<Response>(this.Url + '/reportes/banco');
+  // }
 }

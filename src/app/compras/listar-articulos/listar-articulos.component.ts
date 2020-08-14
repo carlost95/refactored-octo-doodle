@@ -1,20 +1,22 @@
-import { Router } from "@angular/router";
-import { ComprasService } from "./../../service/compras.service";
-import { Articulo } from "./../../modelo/Articulo";
-import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
-import { ExcelExportService } from "../../service/excel-export.service";
-import { ArticuloExcel } from "../../modelo/ArticuloExcel";
-import { async } from "@angular/core/testing";
+import { Router } from '@angular/router';
+import { ComprasService } from './../../service/compras.service';
+import { Articulo } from './../../modelo/Articulo';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+// import jsPDF from "jspdf";
+// import 'jspdf-autotable';
+import { ExcelExportService } from '../../service/excel-export.service';
+import { ArticuloExcel } from '../../modelo/ArticuloExcel';
+// import { async } from "@angular/core/testing";
+import { ServiceReportService } from '../../service/service-report.service';
+import { PdfExportService } from '../../service/pdf-export.service';
 
 @Component({
-  selector: "app-listar-articulos",
-  templateUrl: "./listar-articulos.component.html",
-  styleUrls: ["./listar-articulos.component.css"],
+  selector: 'app-listar-articulos',
+  templateUrl: './listar-articulos.component.html',
+  styleUrls: ['./listar-articulos.component.css'],
 })
 export class ListarArticulosComponent implements OnInit {
-  @ViewChild("listArt") content: ElementRef;
+  @ViewChild('listArt') content: ElementRef;
 
   articulos: Articulo[] = [];
   articulosFilter: Articulo[] = [];
@@ -32,45 +34,44 @@ export class ListarArticulosComponent implements OnInit {
   constructor(
     private serviceCompra: ComprasService,
     private router: Router,
-    private excelService: ExcelExportService
+    private excelService: ExcelExportService,
+    private serviceReport: ServiceReportService,
+    private servicePdf: PdfExportService
   ) { }
 
+  // tslint:disable-next-line: typedef
   ngOnInit() {
     this.fetchEvent().then(() => {
       console.log(this.articulos);
     });
     localStorage.clear();
-    localStorage.setItem("listar", "true");
+    localStorage.setItem('listar', 'true');
   }
 
-  fetchEvent() {
-    return this.serviceCompra
+  // tslint:disable-next-line: typedef
+  async fetchEvent() {
+    const data = await this.serviceCompra
       .listarArticuloTodos()
-      .toPromise()
-      .then((data) => {
-        // subscribe(data => {
-        this.articulos = data.data;
-        this.articulosFilter = this.articulos;
-        // console.info("Articulos");
-        // console.info(data.data);
-        // console.info("ArticulosFilter");
-
-        // console.info(this.articulosFilter);
-      });
+      .toPromise();
+    this.articulos = data.data;
+    this.articulosFilter = this.articulos;
   }
 
+  // tslint:disable-next-line: typedef
   modificarArticulo(articulo: Articulo) {
-    this.router.navigate(["compras/modificar-articulo/" + articulo.id]);
+    this.router.navigate(['compras/modificar-articulo/' + articulo.id]);
   }
+  // tslint:disable-next-line: typedef
   deshabilitarArticulo(articulo: Articulo) {
     let resultado: boolean;
-    resultado = confirm("¿DESEA DESHABILITAR ESTE ARTICULO?");
+    resultado = confirm('¿DESEA DESHABILITAR ESTE ARTICULO?');
     if (resultado === true) {
       this.serviceCompra.desabilitarArticulo(articulo.id).subscribe((data) => {
         window.location.reload();
       });
     }
   }
+  // tslint:disable-next-line: typedef
   filtrarArticulo() {
     console.log(this.busqueda);
 
@@ -89,43 +90,22 @@ export class ListarArticulosComponent implements OnInit {
     }
   }
 
-
+  // tslint:disable-next-line: typedef
   backPage() {
     window.history.back();
   }
+  // tslint:disable-next-line: typedef
   exportarPDF() {
-    const promesa = new Promise((resp, error) => {
-      this.export = true;
-      console.log("LOG 1");
-
-      resp();
-    })
-      .then(async (resp) => {
-        console.log("LOG 2");
-
-        const doc = new jsPDF();
-        doc.autoTable({ html: "#listArt" });
-        await doc.save("table.pdf");
-      })
-      .then(() => {
-        console.log("LOG 3");
-
-        this.export = false;
-      });
+    this.serviceReport.getReporteArticuloPdf().subscribe(resp => {
+      this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
+    });
   }
+
   exportarExcel(): void {
-    console.warn("arreglo--");
-
-    console.log(this.articulosFilter);
-
+    // tslint:disable-next-line: prefer-for-of
     for (let index = 0; index < this.articulosFilter.length; index++) {
-      this.articuloExcel = new ArticuloExcel("", "", 0, 0);
-      console.warn("----------------------");
-      console.log(this.articulosFilter[index]);
-
+      this.articuloExcel = new ArticuloExcel('', '', 0, 0);
       if (this.articulosFilter[index] != null) {
-        console.warn("ENTRO");
-
         this.articuloExcel.codigoArt = this.articulosFilter[index].codigoArt;
         this.articuloExcel.nombre = this.articulosFilter[index].nombre;
         this.articuloExcel.stockMin = this.articulosFilter[index].stockMin;
@@ -134,6 +114,6 @@ export class ListarArticulosComponent implements OnInit {
       this.articulosExcel.push(this.articuloExcel);
     }
 
-    this.excelService.exportToExcel(this.articulosExcel, "lista_articulos");
+    this.excelService.exportToExcel(this.articulosExcel, 'Reporte Articulos');
   }
 }
