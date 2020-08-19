@@ -1,6 +1,7 @@
 <div class="modal-content-wrapper">
   <header class="modal-header">
-    <h1 class="modal-title">Nuevo banco</h1>
+    <h1 class="modal-title" *ngIf="!updating">Nuevo Banco</h1>
+    <h1 class="modal-title" *ngIf="updating">Actualizar Banco</h1>
   </header>
   <section class="modal-body">
     <form [formGroup]="bancoForm" >
@@ -23,6 +24,6 @@
   </section>
   <footer class="modal-footer">
     <button mat-raised-button color="warn" (click)="close()">Cerrar</button>
-    <button mat-raised-button color="primary" (click)="onSubmit()">Guardar</button>
+    <button mat-raised-button  (click)="onSubmit()">Guardar</button>
   </footer>
 </div>

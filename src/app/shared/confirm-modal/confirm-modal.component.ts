@@ -20,14 +20,11 @@ export class ConfirmModalComponent implements OnInit {
   }
 
   close() {
-    this.dialogRef.close();
+    this.dialogRef.close({state: false});
   }
 
   updateStatus() {
     console.log(this.data)
-    this.service.cambiarHabilitacion(this.data.id).subscribe(data => {
-      this.dialogRef.close();
-    });
-
+    this.dialogRef.close({state: true});
   }
 }

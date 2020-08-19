@@ -5,6 +5,7 @@ import {Component, Inject, OnInit} from "@angular/core";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {AgregarBancoComponent} from "../agregar-banco/agregar-banco.component";
 import {ConfirmModalComponent} from "../../shared/confirm-modal/confirm-modal.component";
+import {BancosService} from "../../service/bancos.service";
 
 @Component({
   selector: "app-listar-banco",
@@ -20,7 +21,7 @@ export class ListarBancoComponent implements OnInit {
   displayedColumns: string[] = ['nombre', 'abreviatura'];
   toUpdateBank: Banco;
 
-  constructor(private service: AbmComprasService, private router: Router,
+  constructor(private service: BancosService, private router: Router,
               public matDialog: MatDialog) {
   }
 
@@ -107,14 +108,24 @@ export class ListarBancoComponent implements OnInit {
     dialogConfig.data = {
       message: 'Desea cambiar estado?',
       title: 'Cambio estado',
-      id: banco.id
+      state: banco.habilitado
     };
     const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
-      this.service.listarBancosTodos().subscribe(data => {
-        this.bancos = data.data;
-        this.bancoFilter = data.data;
-      });
+      if( result.state) {
+        this.service.cambiarHabilitacion(banco.id).subscribe(result => {
+          this.getData();
+        })
+      } else {
+        this.getData();
+      }
+    });
+  }
+
+  getData() {
+    this.service.listarBancosTodos().subscribe(data => {
+      this.bancos = data.data;
+      this.bancoFilter = data.data;
     });
   }
 }

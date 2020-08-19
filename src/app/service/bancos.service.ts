@@ -13,7 +13,7 @@ export class BancosService {
   private url: string;
 
   constructor(private http: HttpClient) {
-    this.url =environment.url + banco.path;
+    this.url = environment.url + banco.path;
 
   }
 
