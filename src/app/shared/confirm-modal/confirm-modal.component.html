@@ -1,0 +1,13 @@
+<div class="modal-content-confirm">
+  <header class="modal-header">
+    <h1 class="modal-title">{{data.title}}</h1>
+  </header>
+  <section class="modal-body">
+      <mat-label>{{data.message}}</mat-label>
+
+  </section>
+  <footer class="modal-footer">
+    <button mat-raised-button color="warn" (click)="close()">Cerrar</button>
+    <button mat-raised-button color="primary" (click)="updateStatus()">Guardar</button>
+  </footer>
+</div>

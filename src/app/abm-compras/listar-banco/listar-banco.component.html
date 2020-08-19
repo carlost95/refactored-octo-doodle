@@ -1,87 +1,83 @@
-<div class="container" ng-controller="bancos">
-    <div class="card m-1">
-        <h1 class="text-center">
-            <button class="btn btn-default" style="margin-right: 100%;" (click)="backPage()">
-                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 20 20">
-                  <title>volver</title>
-                  <path d="M11.302 6.776c-0.196-0.197-0.515-0.197-0.71 0l-2.807 2.865c-0.196 0.199-0.196 0.52 0 0.717l2.807 2.864c0.195 0.199 0.514 0.198 0.71 0 0.196-0.197 0.196-0.518 0-0.717l-2.302-2.505 2.302-2.506c0.196-0.198 0.196-0.518 0-0.718zM10 0.4c-5.302 0-9.6 4.298-9.6 9.6 0 5.303 4.298 9.6 9.6 9.6s9.6-4.297 9.6-9.6c0-5.302-4.298-9.6-9.6-9.6zM10 18.354c-4.615 0-8.354-3.74-8.354-8.354s3.739-8.354 8.354-8.354c4.613 0 8.354 3.74 8.354 8.354s-3.741 8.354-8.354 8.354z"></path>
-                  </svg>
+<div class="container">
+  <div class="card m-1">
+    <header class="row mt-4 ml-3 mb-3">
+      <i class="col-md-2 m-0 fas fa-chevron-left fa-3x" style="margin-right: 100%;" (click)="backPage()"></i>
+      <h1  class="m-0 col-md-10" style="padding-left: 10rem!important">
+        Lista de Bancos
+      </h1>
+    </header>
+
+    <div class="card-body ">
+      <div class="row ">
+        <table class="table ">
+          <thead class="thead-dark ">
+          <tr>
+            <td>
+              <button class="btn btn-default ">NOMBRE</button>
+            </td>
+            <td>
+              <input type="text " [(ngModel)]="busqueda " class="form-control " placeholder="ingrese nombre "
+                     (keyup)="filtrarBancoNombre($event) ">
+            </td>
+            <td>
+              <button class="btn btn-default ">ABREVIATURA</button>
+            </td>
+            <td>
+              <input type="text " [(ngModel)]="busquedaNombre " class="form-control " placeholder="ingrese abreviatura "
+                     (keyup)="filtrarBancoAbreviatura($event) ">
+
+            </td>
+            <td>
+              <button mat-raised-button color="primary" (click)="newBanco()" title="Nuevo Banco">
+                <mat-icon aria-hidden="false" aria-label="Example home icon">home</mat-icon>
+                Banco
+              </button>
+
+            </td>
+          </tr>
+
+          </thead>
+        </table>
+      </div>
+    </div>
+
+    <div class=" card-body p-0 " style="width:1100px; height:400px; overflow: auto; ">
+      <table class="table table-responsive-sm ">
+        <thead class="thead-dark ">
+        <tr class="text-center ">
+          <th scope="col ">NOMBRE</th>
+          <th scope="col ">ABREVIATURA</th>
+          <th scope="col ">HABILITACION</th>
+          <th scope="col*2 ">OPCIONES</th>
+        </tr>
+        </thead>
+        <tbody *ngIf="bancos !=null ">
+        <tr *ngFor="let banco of bancoFilter " class="text-center ">
+          <td>{{banco.nombre}}</td>
+          <td>{{banco.abreviatura}}</td>
+          <td>
+            <mat-slide-toggle
+              [checked]="banco.habilitado"
+              (click)="showModal(banco)"
+              color="primary"
+            ></mat-slide-toggle>
+          </td>
+
+          <td>
+            <button class="btn btn-default " title="Modificar " (click)="modificarBanco(banco) ">
+              <svg xmlns="http://www.w3.org/2000/svg " width="14 " height="16 " viewBox="0 0 14 16 ">
+                <path fill-rule="evenodd " d="M0 12v3h3l8-8-3-3-8 8zm3 2H1v-2h1v1h1v1zm10.3-9.3L12 6 9 3l1.3-1.3a.996.996 0 0 1 1.41 0l1.59 1.59c.39.39.39
+            1.02 0 1.41z "/>
+              </svg>
             </button>
 
-            <svg version=" 1.1 " xmlns="http://www.w3.org/2000/svg " width="50 " height="50 " viewBox="0 0 34 32">
-            <title>BANCO</title>
-            <path d="M32 30v-2h-2v-12h2v-2h-6v2h2v12h-6v-12h2v-2h-6v2h2v12h-6v-12h2v-2h-6v2h2v12h-6v-12h2v-2h-6v2h2v12h-2v2h-2v2h34v-2h-2z "></path>
-            <path d="M16 0h2l16 10v2h-34v-2l16-10z "></path>
-            </svg>LISTA DE BANCOS</h1>
-
-        <div class="card-body ">
-            <div class="row ">
-                <table class="table ">
-                    <thead class="thead-dark ">
-                        <tr>
-                            <td>
-                                <button class="btn btn-default ">NOMBRE </button>
-                            </td>
-                            <td>
-                                <input type="text " [(ngModel)]="busqueda " class="form-control " placeholder="ingrese nombre " (keyup)="filtrarBancoNombre($event) ">
-                            </td>
-                            <td>
-                                <button class="btn btn-default ">ABREVIATURA </button>
-                            </td>
-                            <td>
-                                <input type="text " [(ngModel)]="busquedaNombre " class="form-control " placeholder="ingrese abreviatura " (keyup)="filtrarBancoAbreviatura($event) ">
-
-                            </td>
-                            <td>
-
-                                <button class="btn btn-warning " [routerLink]="[ '/abm-compras/agregar-banco'] " routerLinkActive="router-link-active " style="margin-left: 50px; ">
-                                  <svg version=" 1.1 " xmlns="http://www.w3.org/2000/svg " width="20 " height="20 " viewBox="0 0 34 32">
-                                    <title>BANCO</title>
-                                    <path d="M32 30v-2h-2v-12h2v-2h-6v2h2v12h-6v-12h2v-2h-6v2h2v12h-6v-12h2v-2h-6v2h2v12h-6v-12h2v-2h-6v2h2v12h-2v2h-2v2h34v-2h-2z "></path>
-                                    <path d="M16 0h2l16 10v2h-34v-2l16-10z "></path>
-                                    </svg>
-                                  NUEVO BANCO
-                                </button>
-                            </td>
-                        </tr>
-
-                    </thead>
-                </table>
-            </div>
-        </div>
-
-        <div class=" card-body p-0 " style="width:1100px; height:400px; overflow: auto; ">
-            <table class="table table-responsive-sm ">
-                <thead class="thead-dark ">
-                    <tr class="text-center ">
-                        <th scope="col ">NOMBRE</th>
-                        <th scope="col ">ABREVIATURA</th>
-                        <th scope="col ">HABILITACION</th>
-                        <th scope="col*2 ">OPCIONES</th>
-                    </tr>
-                </thead>
-                <tbody *ngIf="bancos !=null ">
-                    <tr *ngFor="let banco of bancoFilter " class="text-center ">
-                        <td>{{banco.nombre}}</td>
-                        <td>{{banco.abreviatura}}</td>
-                        <td>{{banco.habilitado}}</td>
-
-                        <td>
-                            <button class="btn btn-default " title="Modificar " (click)="modificarBanco(banco) ">
-                                  <svg xmlns="http://www.w3.org/2000/svg " width="14 " height="16 " viewBox="0 0 14 16 "><path fill-rule="evenodd " d="M0 12v3h3l8-8-3-3-8 8zm3 2H1v-2h1v1h1v1zm10.3-9.3L12 6 9 3l1.3-1.3a.996.996 0 0 1 1.41 0l1.59 1.59c.39.39.39
-            1.02 0 1.41z "/></svg>
-                               </button>
-
-
-                            <button class="btn btn-default " title="Eliminar " style="margin-left: 10px; " (click)="deshabilitarBanco(banco) ">
-                              <svg xmlns="http://www.w3.org/2000/svg " width="12 " height="16 " viewBox="0 0 12 16 "><path fill-rule="evenodd " d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48
-            1.48L7.48 8z "/></svg>
-                              </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
+          </td>
+        </tr>
+        </tbody>
+      </table>
     </div>
+
+  </div>
 </div>
+
+

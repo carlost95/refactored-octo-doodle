@@ -1,37 +1,29 @@
-<div class="container" ng-controller="bancos">
-    <div class="card m-2">
-        <h1 class="text-center">CARGA DE BANCOS</h1>
-        <div class="card-body">
-            <table class="table col-md-6">
-                <thead class="thead-dark was-validated">
-                    <tr>
-                        <td>
-                            <label class="btn btn-default " for="nombre "> NOMBRE</label>
-                        </td>
-                        <td>
-                            <input [(ngModel)]="banco.nombre " type="text " class="form-control " placeholder="ingrese nombre " required="true ">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <!-- <button class="btn btn-default ">ABREVIATURA</button> -->
-                            <label for="abreviatura "> ABREVIATURA</label>
-                        </td>
-                        <td>
-                            <input [(ngModel)]="banco.abreviatura " type="text " class="form-control " placeholder="ingrese abreviatura " required="true ">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button (click)="guardarBanco(banco)" class="btn btn-warning ">ACEPTAR</button>
-                        </td>
-                        <td>
-                            <button (click)="cancelar() " class="btn btn-danger " style="margin-left: 10px; ">CANCELAR</button>
-                        </td>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
-
+<div class="modal-content-wrapper">
+  <header class="modal-header">
+    <h1 class="modal-title" *ngIf="!updating">Nuevo Banco</h1>
+    <h1 class="modal-title" *ngIf="updating">Actualizar Banco</h1>
+  </header>
+  <section class="modal-body">
+    <form [formGroup]="bancoForm" >
+    <p>
+      <mat-form-field appearance="legacy">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="nombre" required>
+        <mat-error *ngIf="bancoForm.controls.nombre.errors">
+          Nombre es<strong> requerido</strong>
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field appearance="legacy">
+        <mat-label>Abreviatura</mat-label>
+        <input matInput formControlName="abreviatura">
+      </mat-form-field>
+    </p>
+    </form>
+  </section>
+  <footer class="modal-footer">
+    <button mat-raised-button color="warn" (click)="close()">Cerrar</button>
+    <button mat-raised-button  (click)="onSubmit()">Guardar</button>
+  </footer>
 </div>

@@ -1,3 +1,22 @@
+@import '~@angular/material/theming';
+@import './styles/modal';
+@import './styles/button';
+@include mat-core();
+
+// COLORES: https://material.io/design/color/
+$corralon-primary: mat-palette($mat-amber, 600);
+$corralon-accent: mat-palette($mat-grey, 600);
+$corralon-warn: mat-palette($mat-red);
+
+$corralon: mat-light-theme((
+  color: (
+    primary: $corralon-primary,
+    accent: $corralon-accent,
+    warn: $corralon-warn,
+  )
+));
+@include angular-material-theme($corralon);
+
 .btn-outline-warning {
   color: black;
 }
@@ -6,6 +25,7 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -46,4 +66,28 @@ thead tr:nth-child(1) th {
 td {
   padding-top: 1%;
   padding-bottom: 1%;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+//
+//.myapp-no-padding-dialog .mat-dialog-container {
+//  padding: 0;
+//  border-radius: 20px;
+//  height: 400px;
+//  width: 300px;
+//}
+
+
+mat-dialog-container#modal-component {
+  padding: 0;
+  border: 2px solid #262626;
+  border-radius: 11px;
+  background-color: whitesmoke;
 }
