@@ -34,22 +34,17 @@ export class ListarPedidoComponent implements OnInit {
 
   }
 
-  fetchEvent() {
-    return this.serviceCompra
+  // tslint:disable-next-line: typedef
+  async fetchEvent() {
+    const data = await this.serviceCompra
       .listarPedidoTodos()
-      .toPromise()
-      .then(data => {
-        this.pedidos = data.data;
-        console.log('fechas: ');
-        this.pedidosFilter = this.pedidos;
-
-        this.pedidos.forEach((p, index) => {
-          console.log(p.fecha);
-        })
-
-
-
-      });
+      .toPromise();
+    this.pedidos = data.data;
+    console.log('fechas: ');
+    this.pedidosFilter = this.pedidos;
+    this.pedidos.forEach((p, index) => {
+      console.log(p.fecha);
+    });
   }
   jsonStringDate(jdate): string {
     if (jdate != null) {
@@ -67,18 +62,20 @@ export class ListarPedidoComponent implements OnInit {
       });
     }
   }
+
+  // tslint:disable-next-line: typedef
   filtarPedidoProveedor(event: any) {
     if (this.busqueda !== null) {
       this.pedidosFilter = this.pedidos.filter(item => {
-        if (item.nombre.toUpperCase().includes(this.busqueda.toUpperCase())) {
-          return item;
-        }
-      });
-    } else {
-      this.pedidosFilter = this.pedidos;
+        const inName = item.nombre.toLowerCase().indexOf(this.busqueda) !== -1;
+        const inLastName = item.razonSocial.toLowerCase().indexOf(this.busqueda) !== -1;
+        return inName || inLastName;
+      }
+      );
     }
   }
 
+  // tslint:disable-next-line: typedef
   updateFilterDateDesde() {
     let val = null;
     if (this.searchDesde != null && this.searchDesde !== "") {
@@ -93,9 +90,10 @@ export class ListarPedidoComponent implements OnInit {
     this.orderRows();
   }
 
+  // tslint:disable-next-line: typedef
   updateFilterDateHasta() {
     let val = null;
-    if (this.searchHasta != null && this.searchHasta !== "") {
+    if (this.searchHasta != null && this.searchHasta !== '') {
       val = new Date(this.searchHasta);
       // filter our data
       this.pedidosFilter = this.pedidosFilter.filter(element => {
@@ -107,14 +105,17 @@ export class ListarPedidoComponent implements OnInit {
 
     this.orderRows();
   }
+  // tslint:disable-next-line: typedef
   orderRows() {
-    this.pedidosFilter = _.orderBy(this.pedidosFilter, ["fecha"], ["desc"]);
+    this.pedidosFilter = _.orderBy(this.pedidosFilter, ['fecha'], ['desc']);
   }
 
+  // tslint:disable-next-line: typedef
   backPage() {
     window.history.back();
   }
 
+  // tslint:disable-next-line: typedef
   consultarPedido(pedido: Pedido) {
     this.router.navigate(['consultar-pedido/']);
   }

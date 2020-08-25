@@ -1,15 +1,15 @@
-import { ActivatedRoute, Router } from "@angular/router";
-import { Component, OnInit, Input } from "@angular/core";
-import { Pedido } from "src/app/modelo/Pedido";
-import { Articulo } from "src/app/modelo/Articulo";
-import { MovimientoArticuloDTO } from "src/app/modelo/MovimientoArticuloDTO";
-import { ComprasService } from "src/app/service/compras.service";
-import { Proveedor } from "src/app/modelo/Proveedor";
+import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, Input } from '@angular/core';
+import { Pedido } from 'src/app/modelo/Pedido';
+import { Articulo } from 'src/app/modelo/Articulo';
+import { MovimientoArticuloDTO } from 'src/app/modelo/MovimientoArticuloDTO';
+import { ComprasService } from 'src/app/service/compras.service';
+import { Proveedor } from 'src/app/modelo/Proveedor';
 
 @Component({
-  selector: "app-pedidos",
-  templateUrl: "./pedidos.component.html",
-  styleUrls: ["./pedidos.component.css"],
+  selector: 'app-pedidos',
+  templateUrl: './pedidos.component.html',
+  styleUrls: ['./pedidos.component.css'],
 })
 export class PedidosComponent implements OnInit {
   @Input() consultar: boolean;
@@ -24,7 +24,8 @@ export class PedidosComponent implements OnInit {
   articulosFilter: Articulo[] = null;
   stockArticulo: number[] = [];
   proveedores: Proveedor[] = [];
-  razonSocial: String = " ";
+  // tslint:disable-next-line: ban-types
+  razonSocial: String = ' ';
   movimientoFilter: MovimientoArticuloDTO[] = [];
   movimientosPrevios: StockArticulo[] = [];
   stockArticuloPorPedido: StockArticulo[] = [];
@@ -36,13 +37,15 @@ export class PedidosComponent implements OnInit {
     private comprasService: ComprasService,
     private route: Router,
     private active: ActivatedRoute
-  ) {}
+  ) { }
 
+  // tslint:disable-next-line: typedef
   async ngOnInit() {
-    if (this.route.url === "/compras/agregar-pedido") {
-      console.log("agregar");
-    } else {
-      const idPedido = Number(this.active.snapshot.paramMap.get("id"));
+    if (this.route.url === '/compras/agregar-pedido') {
+      console.log('agregar');
+    }
+    else {
+      const idPedido = Number(this.active.snapshot.paramMap.get('id'));
       await this.comprasService
         .listarPedidoId(idPedido)
         .toPromise()
@@ -65,13 +68,25 @@ export class PedidosComponent implements OnInit {
     this.listaProveedor();
     //
   }
-
+  // tslint:disable-next-line: typedef
   guardarPedido(pedido: Pedido) {
-    console.log(this.articulosStockMovimientoFilter);
-
+    // console.log(this.articulosStockMovimientoFilter);  
     this.pedido.id = null;
-    this.pedido.nombre = pedido.nombre.toUpperCase();
+    this.pedido.nombre = pedido.nombre.toUpperCase().trim();
     this.pedido.fecha = pedido.fecha;
+
+    this.proveedores.forEach(prov => {
+      if (this.razonSocial === prov.razonSocial) {
+        pedido.proveedorId = prov.id;
+        pedido.razonSocial = prov.razonSocial;
+      }
+    });
+    this.pedido.proveedorId = pedido.proveedorId;
+
+    console.warn('--------------MUESTRA DE ID PROVEEDOR------------');
+    console.error(this.pedido.proveedorId);
+
+
     this.pedido.descripcion = pedido.descripcion.toUpperCase();
 
     this.comprasService.guardarPedidos(this.pedido).then((data) => {
@@ -91,16 +106,17 @@ export class PedidosComponent implements OnInit {
           this.comprasService
             .guardarMovimiento(this.movimientoArticuloDTO)
             .subscribe((resp) => {
-              console.log("entre :V");
+              console.log('Ingreso a los movimientos');
             });
         }
       });
     });
 
-    alert("SE GUARDO UN NUEVO PEDIDO");
+    alert('Se guardo un nuevo pedido');
     window.history.back();
   }
 
+  // tslint:disable-next-line: typedef
   listaProveedor() {
     this.comprasService.listarProveedoresHabilitados().subscribe((data) => {
       this.proveedores = data.data;
@@ -110,145 +126,129 @@ export class PedidosComponent implements OnInit {
     });
   }
 
-  getArticulos() {
-    return this.comprasService
-      .listarArticuloHabilitados()
-      .toPromise()
-      .then((data) => {
-        this.articulos = data.data;
-        this.articulosFilter = this.articulos;
-      });
+  // tslint:disable-next-line: typedef
+  async getArticulos() {
+    const data = await this.comprasService.listarArticuloHabilitados()
+      .toPromise();
+    this.articulos = data.data;
+    this.articulosFilter = this.articulos;
   }
 
-  getMovimientos() {
+  // tslint:disable-next-line: typedef
+  async getMovimientos() {
     if (this.consultar) {
-      return this.comprasService
+      const data = await this.comprasService
         .getMovimientosPrevios(this.pedido.id)
-        .toPromise()
-        .then((data) => {
-          console.log("getMovimientosPrevios");
-          let keys = Object.keys(data.data);
-          let value = Object.values(data.data);
-          let movimientosPrev = [];
-          value.forEach((v, index) => {
-            let stock = new StockArticulo(Number(keys[index]), Number(v));
-            movimientosPrev.push(stock);
-          });
-          console.log("movimivneto previo-------");
-          console.log(movimientosPrev);
-          // movimientosPrev = movimientosPrev.filter( m => m.stock !== 0);
-
-          this.movimientosPrevios = movimientosPrev;
-          console.log(movimientosPrev);
-          this.articulos.forEach((a, index) => {
-            this.stockArticulo.push(data.data.id);
-          });
-          this.movimientosPrevios.forEach((mov) =>
-            this.stockArticulo.push(mov.stock)
-          );
-        });
+        .toPromise();
+      console.log('getMovimientosPrevios');
+      const keys = Object.keys(data.data);
+      const value = Object.values(data.data);
+      const movimientosPrev = [];
+      value.forEach((v, index) => {
+        const stock = new StockArticulo(Number(keys[index]), Number(v));
+        movimientosPrev.push(stock);
+      });
+      console.log('movimivneto previo-------');
+      console.log(movimientosPrev);
+      // movimientosPrev = movimientosPrev.filter( m => m.stock !== 0);
+      this.movimientosPrevios = movimientosPrev;
+      console.log(movimientosPrev);
+      this.articulos.forEach((a, index_1) => {
+        this.stockArticulo.push(data.data.id);
+      });
+      this.movimientosPrevios.forEach((mov) => this.stockArticulo.push(mov.stock)
+      );
     } else {
-      return this.comprasService
+      // tslint:disable-next-line: variable-name
+      const data_1 = await this.comprasService
         .listarStockArticulo()
-        .toPromise()
-        .then((data) => {
-          console.log("lista");
-
-          this.articulos.forEach((a, index) => {
-            this.stockArticulo.push(data.data[index]);
-            this.articulosStockMovimiento.push({
-              articulo: a,
-              stock: data.data[index],
-              movimiento: this.movimientoFilter[index],
-            });
-            this.articulosStockMovimientoFilter = this.articulosStockMovimiento;
-          });
-
-          console.log(this.articulosStockMovimiento);
-
-          console.log(this.stockArticulo);
+        .toPromise();
+      console.log('lista');
+      // tslint:disable-next-line: variable-name
+      this.articulos.forEach((a_1, index_2) => {
+        this.stockArticulo.push(data_1.data[index_2]);
+        this.articulosStockMovimiento.push({
+          articulo: a_1,
+          stock: data_1.data[index_2],
+          movimiento: this.movimientoFilter[index_2],
         });
+        this.articulosStockMovimientoFilter = this.articulosStockMovimiento;
+      });
+      console.log(this.articulosStockMovimiento);
+      console.log(this.stockArticulo);
     }
   }
 
+  // tslint:disable-next-line: typedef
   volverAtras() {
     window.history.back();
   }
 
+  // tslint:disable-next-line: typedef
   async listarFiltro() {
     this.articulosStockMovimientoFilter = [];
-    if (this.razonSocial === " ") {
+    if (this.razonSocial === ' ') {
       this.articulosStockMovimientoFilter = this.articulosStockMovimiento;
     } else {
       await this.articulosStockMovimiento.forEach((artStockMov) => {
         artStockMov.articulo.proveedorId.razonSocial === this.razonSocial
-          ? this.articulosStockMovimientoFilter.push(artStockMov)
-          : false;
+          ? this.articulosStockMovimientoFilter.push(artStockMov) : false;
       });
     }
   }
 
-  actualizarStockFiltro(articulosFilter: Articulo[]) {
+  // tslint:disable-next-line: typedef
+  async actualizarStockFiltro(articulosFilter: Articulo[]) {
     this.stockArticulo = [];
-    return this.comprasService
+    const data = await this.comprasService
       .listarStockArticulo()
-      .toPromise()
-      .then((data) => {
-        articulosFilter.forEach((a, index) => {
-          this.stockArticulo.push(data.data[a.id]);
-        });
-      });
+      .toPromise();
+    articulosFilter.forEach((a, index) => {
+      this.stockArticulo.push(data.data[a.id]);
+    });
   }
 
   guardarCarga() {
-    console.log("Entre");
+    console.log('Entre');
   }
 
-  getStock() {
+  async getStock() {
     if (this.consultar) {
-      return this.comprasService
+      const data = await this.comprasService
         .getMovimientosStock(this.pedido.id)
-        .toPromise()
-        .then((data) => {
-          let keys = Object.keys(data.data);
-          let value = Object.values(data.data);
-          keys.forEach((k, index) =>
-            this.stockArticuloPorPedido.push(
-              new StockArticulo(Number(k), Number(value[index]))
-            )
-          );
-          this.movimientoFilter = [];
-          keys.forEach((k, index) => {
-            let mov = new MovimientoArticuloDTO();
-            mov.articuloId = Number(k);
-            mov.movimiento = Number(value[index]);
-            this.movimientoFilter.push(mov);
-          });
-
-          let indexMovpre = [];
-          this.movimientoFilter.forEach((p) => indexMovpre.push(p.articuloId));
-          this.movimientosPrevios = this.movimientosPrevios.filter((m) =>
-            indexMovpre.includes(m.idArticulo)
-          );
-          this.stockArticulo.splice(0, this.stockArticulo.length);
-          this.movimientosPrevios.forEach((m) =>
-            this.stockArticulo.push(m.stock)
-          );
-
-          this.articulosFilter = this.articulosFilter.filter((a) =>
-            keys.includes(String(a.id))
-          );
-          this.articulosFilter.forEach((a, index) => {
-            this.articulosStockMovimiento.push({
-              articulo: a,
-              stock: this.stockArticulo[index],
-              movimiento: this.movimientoFilter[index],
-            });
-            this.articulosStockMovimientoFilter = this.articulosStockMovimiento;
-          });
-          console.error(this.articulosStockMovimiento);
-          console.error("Soy un fucking error ");
+        .toPromise();
+      const keys = Object.keys(data.data);
+      const value = Object.values(data.data);
+      keys.forEach((k, index) => this.stockArticuloPorPedido.push(
+        new StockArticulo(Number(k), Number(value[index]))
+      )
+      );
+      this.movimientoFilter = [];
+      keys.forEach((k_1, index_1) => {
+        const mov = new MovimientoArticuloDTO();
+        mov.articuloId = Number(k_1);
+        mov.movimiento = Number(value[index_1]);
+        this.movimientoFilter.push(mov);
+      });
+      const indexMovpre = [];
+      this.movimientoFilter.forEach((p) => indexMovpre.push(p.articuloId));
+      this.movimientosPrevios = this.movimientosPrevios.filter((m) => indexMovpre.includes(m.idArticulo)
+      );
+      this.stockArticulo.splice(0, this.stockArticulo.length);
+      this.movimientosPrevios.forEach((m_1) => this.stockArticulo.push(m_1.stock)
+      );
+      this.articulosFilter = this.articulosFilter.filter((a) => keys.includes(String(a.id))
+      );
+      this.articulosFilter.forEach((a_1, index_2) => {
+        this.articulosStockMovimiento.push({
+          articulo: a_1,
+          stock: this.stockArticulo[index_2],
+          movimiento: this.movimientoFilter[index_2],
         });
+        this.articulosStockMovimientoFilter = this.articulosStockMovimiento;
+      });
+      console.error(this.articulosStockMovimiento);
+      console.error('Soy un fucking error ');
     }
   }
 }
