@@ -1,5 +1,5 @@
 <div class="container" ng-controller="pedido">
-  <div class="card">
+  <div class="card m-1">
     <h1 class="text-center mt-4" *ngIf="consultar">Pedidos</h1>
     <h1 class="text-center" *ngIf="!consultar">Carga de Pedidos</h1>
     <div class="row card-body p-0 m-2">
@@ -9,7 +9,7 @@
             <label for="nombre"> <h5>Nombre</h5></label>
             <input
               [(ngModel)]="pedido.nombre"
-              type="text "
+              type="text"
               :required
               class="form-control"
               placeholder="ingrese nombre"
@@ -29,7 +29,7 @@
             />
             <label
               class="form-control"
-              style="background-color: #e9ecef;"
+              style="background-color: #e9ecefb7;"
               *ngIf="consultar"
               >{{ pedido.fecha | date: "yyyy-MM-dd" }}</label
             >
@@ -45,8 +45,8 @@
             <textarea
               [(ngModel)]="pedido.descripcion"
               class="form-control"
-              rows="3"
-              cols="12"
+              rows="2"
+              cols="10"
               placeholder="ingrese descripcion"
               required="true"
               [disabled]="consultar"
@@ -68,19 +68,16 @@
                 *ngFor="let prov of proveedores"
                 value="{{ prov.razonSocial }}"
               >
-                <!-- <label>{{ prov.razonSocial }}</label> -->
-                <label *ngIf="prov.razonSocial !== ' '">{{
-                  prov.razonSocial
-                }}</label>
+                <label *ngIf="prov.razonSocial !== ' '">
+                  {{ prov.razonSocial }}
+                </label>
                 <label *ngIf="prov.razonSocial === ' '">Proveedores</label>
-                <!-- <label>{{ prov.razonSocial }}</label> -->
               </option>
             </select>
           </div>
         </div>
       </div>
     </div>
-    <!-- <div class="card-body p-0"> -->
     <div
       class="card-body p-0"
       style="width: 1100px; height: 450px; overflow: auto;"
@@ -88,11 +85,11 @@
       <table class="table table-striped">
         <thead class="thead-dark">
           <tr class="text-lg-center">
-            <th scope="col">CODIGO</th>
-            <th scope="col">NOMBRE</th>
-            <th scope="col" *ngIf="consultar">STOCK PREVIO</th>
-            <th scope="col" *ngIf="!consultar">STOCK ACTUAL</th>
-            <th scope="col">CARGA</th>
+            <th scope="col">Codigo</th>
+            <th scope="col">Nombre</th>
+            <th scope="col" *ngIf="consultar">Stock Previo</th>
+            <th scope="col" *ngIf="!consultar">Stock Actual</th>
+            <th scope="col">Ingreso</th>
           </tr>
         </thead>
         <tbody *ngIf="articulos != null" class="tbody-scroll p-0 m-0">
@@ -108,12 +105,13 @@
             <td>{{ artStoMov.stock }}</td>
             <td>
               <input
+                type="number"
+                min="0"
+                maxlength="8"
                 (change)="guardarCarga()"
                 [(ngModel)]="artStoMov.movimiento.movimiento"
-                type="number"
-                min="1"
-                pattern="^[0-9]+"
                 class="form-control text-center"
+                oninput="this.value=this.value.slice(0,this.maxLength|| 0/0);this.value=(this.value< 0) ? (0/0) : this.value;"
                 placeholder="cantidad"
                 [disabled]="consultar"
               />
@@ -122,7 +120,6 @@
         </tbody>
       </table>
     </div>
-    <!-- <hr class="m-0 p-0" style="color: black; background-color: black;" /> -->
     <div class="row justify-content-end m-2 p-2" *ngIf="!consultar">
       <button (click)="volverAtras()" class="btn btn-outline-danger">
         CANCELAR
@@ -134,23 +131,8 @@
     </div>
     <div class="row justify-content-end m-0 p-0" *ngIf="consultar">
       <button (click)="volverAtras()" class="btn btn-warning">
-        <h5>
-          <svg
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            width="30"
-            height="30"
-            viewBox="0 0 20 20"
-          >
-            <title>volver</title>
-            <path
-              d="M11.302 6.776c-0.196-0.197-0.515-0.197-0.71 0l-2.807 2.865c-0.196 0.199-0.196 0.52 0 0.717l2.807 2.864c0.195 0.199 0.514 0.198 0.71 0 0.196-0.197 0.196-0.518 0-0.717l-2.302-2.505 2.302-2.506c0.196-0.198 0.196-0.518 0-0.718zM10 0.4c-5.302 0-9.6 4.298-9.6 9.6 0 5.303 4.298 9.6 9.6 9.6s9.6-4.297 9.6-9.6c0-5.302-4.298-9.6-9.6-9.6zM10 18.354c-4.615 0-8.354-3.74-8.354-8.354s3.739-8.354 8.354-8.354c4.613 0 8.354 3.74 8.354 8.354s-3.741 8.354-8.354 8.354z"
-            ></path>
-          </svg>
-          Atras
-        </h5>
+        ATRAS
       </button>
-      &nbsp;
     </div>
   </div>
 </div>

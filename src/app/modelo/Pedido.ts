@@ -1,13 +1,18 @@
-export class Pedido{
+export class Pedido {
   id: number;
   nombre: string;
   fecha: string;
+  // tslint:disable-next-line: variable-name
+  proveedorId: number;
+  razonSocial: string;
   descripcion: string;
 
-  constructor(id?: number, nombre?: string, fecha?:string, descripcion?:string){
-    this.id  = id;
+  // tslint:disable-next-line: variable-name
+  constructor(id?: number, nombre?: string, fecha?: string, proveedorId?: number, descripcion?: string) {
+    this.id = id;
     this.nombre = nombre;
     this.fecha = fecha;
+    this.proveedorId = proveedorId;
     this.descripcion = descripcion;
   }
 }
