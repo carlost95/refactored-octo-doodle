@@ -47,6 +47,9 @@ export class AbmComprasService {
     return this.http.get<Response>(this.Url + "/marcas/habilitados");
     // return this.http.get<Response>('../../assets/mocks/marca.json');
   }
+  // cambiarHabilitacion(id: number) {
+  //   return this.http.put<Response>(this.url + "/" + id, id);
+  // }
   guardarMarca(marca: Marca) {
     return this.http.post<Marca>(this.Url + "/marcas/", marca);
     // return this.http.post<Response>('../../assets/mocks/marca.json', marca.);

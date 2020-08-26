@@ -1,44 +1,40 @@
 import { Marca } from './../../modelo/Marca';
 import { Router } from '@angular/router';
-import { AbmComprasService } from './../../service/abm-compras.service';
-import { Component, OnInit } from "@angular/core";
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
+import { Component, OnInit } from '@angular/core';
+import { MarcasService } from '../../service/marcas.service';
+import { AgregarMarcaComponent } from '../agregar-marca/agregar-marca.component';
 
 @Component({
-  selector: "app-listar-marca",
-  templateUrl: "./listar-marca.component.html",
-  styleUrls: ["./listar-marca.component.css"]
+  selector: 'app-listar-marca',
+  templateUrl: './listar-marca.component.html',
+  styleUrls: ['./listar-marca.component.css']
 })
 export class ListarMarcaComponent implements OnInit {
   marca: Marca = null;
   marcas: Marca[] = null;
   marcaFilter: Marca[] = null;
-  busquedaNombre: string = null;
   busqueda: string = null;
+  toUpdateMarca: Marca;
 
-  constructor(private serviceAbmCompra: AbmComprasService, private router: Router) { }
+  constructor(private serviceMarca: MarcasService,
+    private router: Router,
+    public matDialog: MatDialog) { }
 
   // tslint:disable-next-line: typedef
   ngOnInit() {
-    this.serviceAbmCompra.listarMarcaTodos().subscribe(data => {
+    this.serviceMarca.listarMarcaTodos().subscribe(data => {
       this.marcas = data.data;
       this.marcaFilter = data.data;
     });
   }
   // tslint:disable-next-line: typedef
-  modificarMarca(marca: Marca) {
-    this.router.navigate(['abm-compras/modificar-marca/' + marca.id]);
-  }
+  // modificarMarca(marca: Marca) {
+  //   this.router.navigate(['abm-compras/modificar-marca/' + marca.id]);
+  // }
   // tslint:disable-next-line: typedef
   deshabilitarMarca(marca: Marca) {
-    let resultado: boolean;
-    resultado = confirm('¿Decea deshabilitar esta marca?');
-    if (resultado === true) {
-      this.serviceAbmCompra
-        .desabilitarMarca(marca.id)
-        .subscribe(data => {
-          window.location.reload();
-        });
-    }
   }
   // tslint:disable-next-line: typedef
   filtrar(event: any) {
@@ -61,5 +57,62 @@ export class ListarMarcaComponent implements OnInit {
   // tslint:disable-next-line: typedef
   backPage() {
     window.history.back();
+  }
+  // tslint:disable-next-line: typedef
+  newMarca() {
+    this.toUpdateMarca = null;
+    this.openDialog();
+  }
+  // tslint:disable-next-line: adjacent-overload-signatures
+  // tslint:disable-next-line: typedef
+  modificarMarca(marca: Marca) {
+    this.toUpdateMarca = marca;
+    this.openDialog();
+  }
+  openDialog(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'modal-component';
+    dialogConfig.height = '400px'
+    dialogConfig.width = '300px';
+    dialogConfig.data = this.toUpdateMarca;
+    const modalDialog = this.matDialog.open(AgregarMarcaComponent, dialogConfig);
+    modalDialog.afterClosed().subscribe(result => {
+      this.serviceMarca.listarMarcaTodos().subscribe(data => {
+        this.marcas = data.data;
+        this.marcaFilter = data.data;
+      });
+    });
+  }
+  // tslint:disable-next-line: typedef
+  showModal(marca: Marca) {
+    const dialogConfig = new MatDialogConfig();
+    // The user can't close the dialog by clicking outside its body
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'modal-component';
+    dialogConfig.height = '300px';
+    dialogConfig.width = '350px';
+    dialogConfig.data = {
+      message: 'Desea cambiar estado?',
+      title: 'Cambio estado',
+      state: marca.habilitacion
+    };
+    const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
+    modalDialog.afterClosed().subscribe(result => {
+      if (result.state) {
+        this.serviceMarca.cambiarHabilitacion(marca.id).subscribe(result => {
+          this.getData();
+        })
+      } else {
+        this.getData();
+      }
+    });
+  }
+  // tslint:disable-next-line: typedef
+  getData() {
+    this.serviceMarca.listarMarcaTodos().subscribe(data => {
+      this.marcas = data.data;
+      this.marcaFilter = data.data;
+    });
   }
 }
