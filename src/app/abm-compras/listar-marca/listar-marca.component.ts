@@ -15,22 +15,23 @@ export class ListarMarcaComponent implements OnInit {
   busquedaNombre: string = null;
   busqueda: string = null;
 
-  constructor(private serviceAbmCompra: AbmComprasService, private router: Router) {}
+  constructor(private serviceAbmCompra: AbmComprasService, private router: Router) { }
 
+  // tslint:disable-next-line: typedef
   ngOnInit() {
     this.serviceAbmCompra.listarMarcaTodos().subscribe(data => {
-      console.log("prueba");
-
       this.marcas = data.data;
       this.marcaFilter = data.data;
     });
   }
+  // tslint:disable-next-line: typedef
   modificarMarca(marca: Marca) {
-    this.router.navigate(["abm-compras/modificar-marca/" + marca.id]);
+    this.router.navigate(['abm-compras/modificar-marca/' + marca.id]);
   }
+  // tslint:disable-next-line: typedef
   deshabilitarMarca(marca: Marca) {
     let resultado: boolean;
-    resultado = confirm("¿DESEA DESHABILITAR ESTA MARCA?");
+    resultado = confirm('¿Decea deshabilitar esta marca?');
     if (resultado === true) {
       this.serviceAbmCompra
         .desabilitarMarca(marca.id)
@@ -39,33 +40,25 @@ export class ListarMarcaComponent implements OnInit {
         });
     }
   }
-  filtrarBancoNombre(event: any) {
+  // tslint:disable-next-line: typedef
+  filtrar(event: any) {
+    this.busqueda = this.busqueda.toLowerCase();
+    this.marcaFilter = this.marcas;
     if (this.busqueda !== null) {
       this.marcaFilter = this.marcas.filter(item => {
-        if (item.nombre.toUpperCase().includes(this.busqueda.toUpperCase())) {
-          return item;
-        }
+        const inName = item.nombre.toLowerCase().indexOf(this.busqueda) !== -1;
+        const inLastName =
+          item.abreviatura.toLowerCase().indexOf(this.busqueda) !== -1;
+        return inName || inLastName;
       });
-    } else {
-      this.marcaFilter = this.marcas;
     }
   }
+  // tslint:disable-next-line: typedef
+  exportarPDF() { }
+  // tslint:disable-next-line: typedef
+  exportarExcel() { }
 
-  filtrarBancoAbreviatura(event: any) {
-    if (this.busquedaNombre !== null) {
-      this.marcaFilter = this.marcas.filter(item => {
-        if (
-          item.abreviatura
-            .toUpperCase()
-            .includes(this.busquedaNombre.toUpperCase())
-        ) {
-          return item;
-        }
-      });
-    } else {
-      this.marcaFilter = this.marcas;
-    }
-  }
+  // tslint:disable-next-line: typedef
   backPage() {
     window.history.back();
   }

@@ -73,8 +73,6 @@ export class ListarArticulosComponent implements OnInit {
   }
   // tslint:disable-next-line: typedef
   filtrarArticulo() {
-    console.log(this.busqueda);
-
     this.busqueda = this.busqueda.toLowerCase();
     this.articulosFilter = this.articulos;
 
