@@ -29,59 +29,6 @@
           </div>
         </div>
 
-        <!-- <table class="table">
-          <thead class="thead-dark">
-            <tr>
-              <td>
-                <label for="busqueda">Busqueda: </label>
-              </td>
-              <td>
-                <input
-                  type="text "
-                  [(ngModel)]="busqueda"
-                  class="form-control"
-                  placeholder="ingrese nombre "
-                  (keyup)="filtrarBancoNombre($event)"
-                />
-              </td>
-              <td>
-                <button class="btn btn-default">ABREVIATURA</button>
-              </td>
-              <td>
-                <input
-                  type="text "
-                  [(ngModel)]="busquedaNombre"
-                  class="form-control"
-                  placeholder="ingrese abreviatura "
-                  (keyup)="filtrarBancoAbreviatura($event)"
-                />
-              </td>
-              <td>
-                <button
-                  class="btn btn-warning"
-                  [routerLink]="['/abm-compras/agregar-marca']"
-                  routerLinkActive="router-link-active "
-                  style="margin-left: 50px"
-                >
-                  <svg
-                    version="1.1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                  >
-                    <title>MARCA</title>
-                    <path
-                      d="M19.388 0.405c-0.111-0.314-0.454-0.48-0.769-0.371s-0.481 0.455-0.372 0.77c0.929 2.67-0.915 4.664-2.321 5.732l-0.568-0.814c-0.191-0.273-0.618-0.5-0.95-0.504l-3.188 0.014c-0.332-0.006-0.825 0.146-1.097 0.338l-9.394 6.587c-0.455 0.32-0.565 0.947-0.247 1.404l4.269 6.108c0.32 0.455 0.831 0.4 1.287 0.082l9.394-6.588c0.27-0.191 0.582-0.603 0.692-0.918l0.998-3.145c0.11-0.314 0.043-0.793-0.148-1.066l-0.346-0.496c1.888-1.447 3.848-4.004 2.76-7.133zM15.017 9.763c-0.727 0.51-1.731 0.332-2.24-0.396-0.511-0.73-0.333-1.734 0.395-2.246 0.578-0.405 1.328-0.376 1.868 0.017-0.272 0.164-0.459 0.26-0.494 0.275-0.301 0.143-0.43 0.504-0.288 0.805 0.104 0.219 0.321 0.348 0.547 0.348 0.086 0 0.174-0.020 0.257-0.059 0.194-0.092 0.402-0.201 0.619-0.33 0.097 0.594-0.139 1.217-0.664 1.586z"
-                    ></path>
-                  </svg>
-                  NUEVA MARCA
-                </button>
-              </td>
-            </tr>
-          </thead>
-        </table> -->
-        <!-- </div> -->
         <br />
         <div class="row col-12 d-flex justify-content-end">
           <button class="btn btn-outline-danger" (click)="exportarPDF()">
@@ -122,10 +69,16 @@
             </svg>
           </button>
           &nbsp;
-          <button
+          <!-- <button
             class="btn btn-warning"
             [routerLink]="['/abm-compras/agregar-marca']"
             routerLinkActive="router-link-active "
+          > -->
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="newMarca()"
+            title="Nueva Marca"
           >
             <svg
               version="1.1"
@@ -149,17 +102,23 @@
         <table class="table table-responsive-sm">
           <thead class="thead-dark">
             <tr class="text-center">
-              <th scope="col ">NOMBRE</th>
-              <th scope="col ">ABREVIATURA</th>
-              <th scope="col ">HABILITACION</th>
-              <th scope="col*2 ">OPCIONES</th>
+              <th scope="col ">Nombre</th>
+              <th scope="col ">Abreviatura</th>
+              <th scope="col ">Habilitacion</th>
+              <th scope="col*2 ">Opciones</th>
             </tr>
           </thead>
           <tbody *ngIf="marcas != null">
             <tr *ngFor="let marca of marcaFilter" class="text-center">
               <td>{{ marca.nombre }}</td>
               <td>{{ marca.abreviatura }}</td>
-              <td>{{ marca.habilitacion }}</td>
+              <td>
+                <mat-slide-toggle
+                  [checked]="marca.habilitacion"
+                  (click)="showModal(marca)"
+                  color="primary"
+                ></mat-slide-toggle>
+              </td>
 
               <td>
                 <button
@@ -181,7 +140,7 @@
                   </svg>
                 </button>
 
-                <button
+                <!-- <button
                   class="btn btn-default"
                   title="Eliminar "
                   style="margin-left: 10px"
@@ -199,7 +158,7 @@
           1.48L7.48 8z "
                     />
                   </svg>
-                </button>
+                </button> -->
               </td>
             </tr>
           </tbody>
