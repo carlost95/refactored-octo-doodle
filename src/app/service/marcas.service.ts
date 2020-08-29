@@ -20,7 +20,6 @@ export class MarcasService {
   // tslint:disable-next-line: typedef
   listarMarcaHabilitados() {
     return this.http.get<Response>(this.Url + '/marcas/habilitados');
-    // return this.http.get<Response>('../../assets/mocks/marca.json');
   }
   // tslint:disable-next-line: typedef
   cambiarHabilitacion(id: number) {

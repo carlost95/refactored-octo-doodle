@@ -15,6 +15,8 @@ import { ListarPedidoComponent } from "./listar-pedido/listar-pedido.component";
 import { AgregarPedidoComponent } from "./agregar-pedido/agregar-pedido.component";
 import { ConsultarPedidoComponent } from "./consultar-pedido/consultar-pedido.component";
 import { ExcelExportService } from "../service/excel-export.service";
+import {AgregarMarcaComponent} from '../abm-compras/agregar-marca/agregar-marca.component';
+import {AbmComprasModule} from '../abm-compras/abm-compras.module';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,7 @@ import { ExcelExportService } from "../service/excel-export.service";
     // ListarRubroComponent,
     // ListarSubrubroComponent
   ],
-  imports: [CommonModule, ComprasRoutingModule, FormsModule, SharedModule],
+  imports: [CommonModule, ComprasRoutingModule, FormsModule, SharedModule, AbmComprasModule],
   providers: [ExcelExportService],
 })
 export class ComprasModule {}
