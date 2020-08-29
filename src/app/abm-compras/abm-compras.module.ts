@@ -54,6 +54,7 @@ import {MaterialModule} from "../material/material.module";
     AgregarAjusteComponent
 
   ],
-    imports: [CommonModule, FormsModule, AbmComprasRoutingModule, MaterialModule, ReactiveFormsModule]
+    imports: [CommonModule, FormsModule, AbmComprasRoutingModule, MaterialModule, ReactiveFormsModule],
+  exports: [AgregarMarcaComponent]
 })
 export class AbmComprasModule {}
