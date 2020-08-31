@@ -23,4 +23,8 @@ export class ServiceReportService {
   getReporteArticuloPdf() {
     return this.http.get<Response>(this.Url + report.path + '/articulo');
   }
+  // tslint:disable-next-line: typedef
+  getReporteMarcaPdf() {
+    return this.http.get<Response>(this.Url + report.path + '/marca');
+  }
 }

@@ -7,7 +7,7 @@
     <form [formGroup]="marcaForm">
       <p>
         <mat-form-field appearance="legacy">
-          <mat-label>Nombre</mat-label>
+          <mat-label>Nombre</mat-label>|
           <input matInput formControlName="nombre" required />
           <mat-error *ngIf="marcaForm.controls.nombre.errors">
             Nombre es<strong> requerido</strong>

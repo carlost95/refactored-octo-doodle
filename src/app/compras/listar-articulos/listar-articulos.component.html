@@ -27,22 +27,22 @@
     </h1>
     <div class="row card-body">
       <div class="container">
-          <div class="row col-12 d-flex justify-content-start">
-            <label class="col-5 m-0 p-0">
-              <h3>Busqueda:</h3>
-            </label>
+        <div class="row col-12 d-flex justify-content-start">
+          <label class="col-5 m-0 p-0">
+            <h3>Busqueda:</h3>
+          </label>
 
-            <div class="col-12 m-0 p-0 aligth">
-              <input
-                class="col-12 position-relative has-icon-right searchDiv"
-                type="text"
-                [(ngModel)]="busqueda"
-                class="form-control searchText"
-                placeholder="ingrese busqueda"
-                (keyup)="filtrarArticulo()"
-              />
-            </div>
+          <div class="col-12 m-0 p-0 aligth">
+            <input
+              class="col-12 position-relative has-icon-right searchDiv"
+              type="text"
+              [(ngModel)]="busqueda"
+              class="form-control searchText"
+              placeholder="ingrese busqueda"
+              (keyup)="filtrarArticulo()"
+            />
           </div>
+        </div>
 
         <br />
 
@@ -110,7 +110,7 @@
       </div>
       <div
         class="card-body p-0"
-        style="width: 1100px; height: 450px; overflow: auto;"
+        style="width: 1100px; height: 450px; overflow: auto"
       >
         <table class="table table-striped" id="listArt" #listArt>
           <thead class="thead-dark">
@@ -144,7 +144,7 @@
                   title="Modificar "
                   (click)="modificarArticulo(articulo)"
                 >
-                  <svg style="width: 18; height: 22;" viewBox="0 0 14 16 ">
+                  <svg style="width: 18; height: 22" viewBox="0 0 14 16 ">
                     <path
                       fill-rule="evenodd "
                       d="M0 12v3h3l8-8-3-3-8 8zm3 2H1v-2h1v1h1v1zm10.3-9.3L12 6 
@@ -158,7 +158,7 @@
                   title="Eliminar "
                   (click)="deshabilitarArticulo(articulo)"
                 >
-                  <svg style="width: 18; height: 22;" viewBox="0 0 12 16 ">
+                  <svg style="width: 18; height: 22" viewBox="0 0 12 16 ">
                     <path
                       fill-rule="evenodd "
                       d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 
