@@ -1,4 +1,4 @@
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ComprasComponent } from "./compras.component";
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
@@ -15,8 +15,10 @@ import { ListarPedidoComponent } from "./listar-pedido/listar-pedido.component";
 import { AgregarPedidoComponent } from "./agregar-pedido/agregar-pedido.component";
 import { ConsultarPedidoComponent } from "./consultar-pedido/consultar-pedido.component";
 import { ExcelExportService } from "../service/excel-export.service";
-import {AgregarMarcaComponent} from '../abm-compras/agregar-marca/agregar-marca.component';
-import {AbmComprasModule} from '../abm-compras/abm-compras.module';
+import { AgregarMarcaComponent } from '../abm-compras/agregar-marca/agregar-marca.component';
+import { AbmComprasModule } from '../abm-compras/abm-compras.module';
+import { MaterialModule } from "../material/material.module";
+
 
 @NgModule({
   declarations: [
@@ -34,7 +36,7 @@ import {AbmComprasModule} from '../abm-compras/abm-compras.module';
     // ListarRubroComponent,
     // ListarSubrubroComponent
   ],
-  imports: [CommonModule, ComprasRoutingModule, FormsModule, SharedModule, AbmComprasModule],
+  imports: [CommonModule, ComprasRoutingModule, FormsModule, SharedModule, AbmComprasModule, MaterialModule, ReactiveFormsModule],
   providers: [ExcelExportService],
 })
-export class ComprasModule {}
+export class ComprasModule { }
