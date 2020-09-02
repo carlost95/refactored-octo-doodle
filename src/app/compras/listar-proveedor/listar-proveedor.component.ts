@@ -38,18 +38,16 @@ export class ListarProveedorComponent implements OnInit {
     });
   }
   // tslint:disable-next-line: typedef
-  filtrarProveedor(event: any) { }
-  //   this.busqueda = this.busqueda.toLowerCase();
-  //   this.proveedoresFilter = this.proveedores;
-  //   if (this.busqueda !== null) {
-  //     this.proveedoresFilter = this.proveedores.filter(item => {
-  //       const inName = item.razonSocial.toLowerCase().indexOf(this.busqueda) !== -1;
-  //       const inNumber = item.celular.toLowerCase().indexOf(this.busqueda) !== -1;
-  //       const inTwoNumber = item.telefono.toLowerCase().indexOf(this.busqueda) !== -1;
-  //       return inName || inTwoNumber || inNumber;
-  //     });
-  //   }
-  // }
+  filtrarProveedor(event: any) {
+    this.busqueda = this.busqueda.toLowerCase();
+    this.proveedoresFilter = this.proveedores;
+    if (this.busqueda !== null) {
+      this.proveedoresFilter = this.proveedores.filter(item => {
+        const inName = item.razonSocial.toLowerCase().indexOf(this.busqueda) !== -1;
+        return inName;
+      });
+    }
+  }
   // tslint:disable-next-line: typedef
   deshabilitarProveedor(proveedor: Proveedor) {
 
@@ -60,26 +58,26 @@ export class ListarProveedorComponent implements OnInit {
   exportarPDF() { }
   // tslint:disable-next-line: typedef
   newProveedor() {
-    this.toUpdateProveedor = proveedor;
-    this.openDialog();
+    this.toUpdateProveedor = null;
+    this.openDialogProveedor();
   }
 
   // tslint:disable-next-line: typedef
-  modificarProveedor() {
-    this.toUpdateProveedor = this.proveedor;
-    this.openDialog();
+  modificarProveedor(proveedor: Proveedor) {
+    this.toUpdateProveedor = proveedor;
+    this.openDialogProveedor();
   }
   // tslint:disable-next-line: typedef
   backPage() {
     window.history.back();
   }
-  openDialog(): void {
+  openDialogProveedor(): void {
     const dialogConfig = new MatDialogConfig();
     // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
-    dialogConfig.height = '500px';
-    dialogConfig.width = '350px';
+    dialogConfig.height = '600px';
+    dialogConfig.width = '400px';
     dialogConfig.data = this.toUpdateProveedor;
     const modalDialog = this.matDialog.open(AgregarProveedorComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {

@@ -30,14 +30,17 @@ export class AgregarProveedorComponent implements OnInit {
         razonSocial: [this.data.razonSocial, Validators.required],
         domicilio: [this.data.domicilio, Validators.required],
         mail: [this.data.mail, Validators.required],
-        celular: [this.data.celular, Validators.required],
-        telefono: [this.data.telefono, Validators.required]
+        celular: [this.data.celular, null],
+        telefono: [this.data.telefono, null]
       })
       this.updating = true;
     } else {
       this.proveedorForm = this.formBuilder.group({
         razonSocial: ['', Validators.required],
-        domicilio: ['', null]
+        domicilio: ['', Validators.required],
+        mail: ['', Validators.required],
+        celular: ['', null],
+        telefono: ['', null]
       })
     }
   }
@@ -79,16 +82,23 @@ export class AgregarProveedorComponent implements OnInit {
     if (this.errorInForm) {
       console.log('Error en los datos')
     } else {
+      console.log(this.proveedorForm.controls.razonSocial.value);
+      console.log(this.proveedorForm.controls.domicilio.value);
+      console.log(this.proveedorForm.controls.mail.value)
+      console.log(this.proveedorForm.controls.telefono.value)
+      console.log(this.proveedorForm.controls.celular.value)
       this.makeDTO();
-      console.log(this.proveedorForm.controls.razonScial.value)
-      console.log(this.proveedorForm.controls.abreviatura.value)
+
     }
 
   }
   // tslint:disable-next-line: typedef
   makeDTO() {
-    this.proveedor.razonSocial = this.proveedorForm.controls.nombre.value;
-    this.proveedor.domicilio = this.proveedorForm.controls.abreviatura.value;
+    this.proveedor.razonSocial = this.proveedorForm.controls.razonSocial.value;
+    this.proveedor.domicilio = this.proveedorForm.controls.domicilio.value;
+    this.proveedor.mail = this.proveedorForm.controls.mail.value;
+    this.proveedor.telefono = this.proveedorForm.controls.telefono.value;
+    this.proveedor.celular = this.proveedorForm.controls.celular.value;
     if (this.updating) {
       this.proveedor.id = this.proveedorForm.controls.id.value;
       this.update();
