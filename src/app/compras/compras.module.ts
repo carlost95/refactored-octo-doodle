@@ -17,7 +17,7 @@ import { ConsultarPedidoComponent } from "./consultar-pedido/consultar-pedido.co
 import { ExcelExportService } from "../service/excel-export.service";
 import { AgregarMarcaComponent } from '../abm-compras/agregar-marca/agregar-marca.component';
 import { AbmComprasModule } from '../abm-compras/abm-compras.module';
-import { MaterialModule } from "../material/material.module";
+import { MaterialModule } from '../material/material.module';
 
 
 @NgModule({

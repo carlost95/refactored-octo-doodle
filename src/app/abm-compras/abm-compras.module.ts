@@ -1,4 +1,4 @@
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AbmComprasComponent } from "./abm-compras.component";
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
@@ -7,7 +7,7 @@ import { AbmComprasRoutingModule } from "./abm-compras-routing.module";
 
 import { SubMenuComprasComponent } from "./sub-menu-compras/sub-menu-compras.component";
 import { AgregarBancoComponent } from "./agregar-banco/agregar-banco.component";
-import { ListarBancoComponent} from "./listar-banco/listar-banco.component";
+import { ListarBancoComponent } from "./listar-banco/listar-banco.component";
 import { ModificarBancoComponent } from "./modificar-banco/modificar-banco.component";
 import { ListarMarcaComponent } from "./listar-marca/listar-marca.component";
 import { AgregarMarcaComponent } from "./agregar-marca/agregar-marca.component";
@@ -26,7 +26,7 @@ import { AgregarSubRubroComponent } from './agregar-sub-rubro/agregar-sub-rubro.
 import { ModificarSubRubroComponent } from './modificar-sub-rubro/modificar-sub-rubro.component';
 import { ListarAjunteComponent } from './listar-ajunte/listar-ajunte.component';
 import { AgregarAjusteComponent } from './agregar-ajuste/agregar-ajuste.component';
-import {MaterialModule} from "../material/material.module";
+import { MaterialModule } from "../material/material.module";
 
 @NgModule({
   declarations: [
@@ -54,7 +54,7 @@ import {MaterialModule} from "../material/material.module";
     AgregarAjusteComponent
 
   ],
-    imports: [CommonModule, FormsModule, AbmComprasRoutingModule, MaterialModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, AbmComprasRoutingModule, MaterialModule, ReactiveFormsModule],
   exports: [AgregarMarcaComponent]
 })
-export class AbmComprasModule {}
+export class AbmComprasModule { }

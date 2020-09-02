@@ -1,4 +1,4 @@
-<div class="container" ng-controller="proveedores">
+<!-- <div class="container" ng-controller="proveedores">
     <div class="card m-2">
         <h1 class="text-center">CARGA DE PROVEEDORES</h1>
         <div class="card-body">
@@ -58,4 +58,33 @@
         </div>
     </div>
 
+</div> -->
+<div class="modal-content-wrapper">
+  <header class="modal-header">
+    <h1 class="modal-title" *ngIf="!updating">Nuevo Banco</h1>
+    <h1 class="modal-title" *ngIf="updating">Actualizar Banco</h1>
+  </header>
+  <section class="modal-body">
+    <form [formGroup]="proveedorForm">
+      <p>
+        <mat-form-field appearance="legacy">
+          <mat-label>Razon Social</mat-label>
+          <input matInput formControlName="razonSocial" required />
+          <mat-error *ngIf="proveedorForm.controls.razonSocial.errors">
+            Razon Social es<strong> requerido</strong>
+          </mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="legacy">
+          <mat-label>domicilio</mat-label>
+          <input matInput formControlName="domicilio" />
+        </mat-form-field>
+      </p>
+    </form>
+  </section>
+  <footer class="modal-footer">
+    <button mat-raised-button color="warn" (click)="close()">Cerrar</button>
+    <button mat-raised-button (click)="onSubmit()">Guardar</button>
+  </footer>
 </div>
