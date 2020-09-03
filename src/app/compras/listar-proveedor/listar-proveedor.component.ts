@@ -9,6 +9,7 @@ import { ProveedoresService } from '../../service/proveedores.service';
 import { Proveedor } from '../../modelo/Proveedor';
 import { AgregarProveedorComponent } from '../agregar-proveedor/agregar-proveedor.component';
 import { proveedor } from '../../../environments/global-route';
+import { ProveedorExcel } from '../../modelo/ProveedorExcel';
 
 @Component({
   selector: 'app-listar-proveedor',
@@ -21,6 +22,8 @@ export class ListarProveedorComponent implements OnInit {
   proveedoresFilter: Proveedor[] = null;
   busqueda: string = null;
   toUpdateProveedor: any;
+  proveedoresExcel: ProveedorExcel[] = [];
+  proveedorExcel: ProveedorExcel;
 
   constructor(
     private router: Router,
@@ -49,13 +52,27 @@ export class ListarProveedorComponent implements OnInit {
     }
   }
   // tslint:disable-next-line: typedef
-  deshabilitarProveedor(proveedor: Proveedor) {
-
+  exportarExcel() {
+    // tslint:disable-next-line: prefer-for-of
+    for (let index = 0; index < this.proveedoresFilter.length; index++) {
+      this.proveedorExcel = new ProveedorExcel('', '', '', '', '');
+      if (this.proveedoresFilter[index] != null) {
+        this.proveedorExcel.razonSocial = this.proveedoresFilter[index].razonSocial;
+        this.proveedorExcel.domicilio = this.proveedoresFilter[index].domicilio;
+        this.proveedorExcel.mail = this.proveedoresFilter[index].mail;
+        this.proveedorExcel.telefono = this.proveedoresFilter[index].telefono;
+        this.proveedorExcel.celular = this.proveedoresFilter[index].celular;
+      }
+      this.proveedoresExcel.push(this.proveedorExcel);
+    }
+    this.excelService.exportToExcel(this.proveedoresExcel, 'Reporte Proveedores');
   }
   // tslint:disable-next-line: typedef
-  exportarExcel() { }
-  // tslint:disable-next-line: typedef
-  exportarPDF() { }
+  exportarPDF() {
+    this.serviceReport.getReporteProveedorPdf().subscribe(resp => {
+      this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
+    });
+  }
   // tslint:disable-next-line: typedef
   newProveedor() {
     this.toUpdateProveedor = null;

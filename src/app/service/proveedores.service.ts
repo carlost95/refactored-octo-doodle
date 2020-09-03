@@ -37,7 +37,7 @@ export class ProveedoresService {
   }
   // tslint:disable-next-line: typedef
   actualizarProveedor(proveedor: Proveedor) {
-    return this.http.put<Response>(this.url + '/', Proveedor);
+    return this.http.put<Response>(this.url + '/', proveedor);
   }
   // tslint:disable-next-line: typedef
   listarProveedorId(id: number) {

@@ -44,33 +44,6 @@ export class AgregarProveedorComponent implements OnInit {
       })
     }
   }
-
-  // guardarProveedor(proveedor: Proveedor) {
-  //   console.log("muestra de Proveedor===>");
-  //   this.proveedor.id = null;
-  //   console.log(proveedor);
-
-  //   // this.proveedor.id = null;
-  //   this.proveedor.razonSocial = this.proveedor.razonSocial.toUpperCase();
-  //   this.proveedor.domicilio = this.proveedor.domicilio.toUpperCase();
-  //   this.proveedor.habilitacion= 1;
-  //   this.comprasService.guardarProveedor(this.proveedor).subscribe(data => {
-  //     this.proveedor = data;
-  //     alert("SE GUARDO UN NUEVO PROVEEDOR");
-  //     window.history.back();
-  //   });
-  // }
-  // tslint:disable-next-line: typedef
-  // guardarProveedor(proveedot: Proveedor) {
-  //   console.log(this.proveedor);
-  //   this.proveedor.habilitado = 1;
-  //   this.proveedor.id = null;
-  //   this.proveedorService.guardarProveedor(this.proveedor).subscribe(data => {
-  //     this.proveedor = data.data;
-  //     alert('se guardo un nuevo proveedor');
-  //     window.history.back();
-  //   });
-  // }
   // tslint:disable-next-line: typedef
   close() {
     this.dialogRef.close();
@@ -82,11 +55,6 @@ export class AgregarProveedorComponent implements OnInit {
     if (this.errorInForm) {
       console.log('Error en los datos')
     } else {
-      console.log(this.proveedorForm.controls.razonSocial.value);
-      console.log(this.proveedorForm.controls.domicilio.value);
-      console.log(this.proveedorForm.controls.mail.value)
-      console.log(this.proveedorForm.controls.telefono.value)
-      console.log(this.proveedorForm.controls.celular.value)
       this.makeDTO();
 
     }

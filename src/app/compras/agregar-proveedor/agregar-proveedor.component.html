@@ -69,7 +69,12 @@
       <p>
         <mat-form-field appearance="legacy">
           <mat-label>Razon Social</mat-label>
-          <input matInput formControlName="razonSocial" required />
+          <input
+            matInput
+            formControlName="razonSocial"
+            required
+            autocomplete="off"
+          />
           <mat-error *ngIf="proveedorForm.controls.razonSocial.errors">
             Razon Social es<strong> requerido</strong>
           </mat-error>
@@ -78,7 +83,12 @@
       <p>
         <mat-form-field appearance="legacy">
           <mat-label>Domicilio</mat-label>
-          <input matInput formControlName="domicilio" required />
+          <input
+            matInput
+            formControlName="domicilio"
+            required
+            autocomplete="off"
+          />
           <mat-error *ngIf="proveedorForm.controls.domicilio.errors">
             Domcilio es<strong> requerido</strong>
           </mat-error>
@@ -87,7 +97,7 @@
       <p>
         <mat-form-field appearance="legacy">
           <mat-label>Mail</mat-label>
-          <input matInput formControlName="mail" required />
+          <input matInput formControlName="mail" required autocomplete="off" />
           <mat-error *ngIf="proveedorForm.controls.mail.errors">
             Mail es<strong> requerido</strong>
           </mat-error>
@@ -96,13 +106,13 @@
       <p>
         <mat-form-field appearance="legacy">
           <mat-label>Telefono</mat-label>
-          <input matInput formControlName="telefono" />
+          <input matInput formControlName="telefono" autocomplete="off" />
         </mat-form-field>
       </p>
       <p>
         <mat-form-field appearance="legacy">
           <mat-label>Celular</mat-label>
-          <input matInput formControlName="celular" />
+          <input matInput formControlName="celular" autocomplete="off" />
         </mat-form-field>
       </p>
     </form>
