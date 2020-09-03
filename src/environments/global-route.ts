@@ -5,3 +5,7 @@ export const banco = {
 export const report = {
   path: '/reportes'
 }
+export const proveedor = {
+  path: '/proveedores',
+  status: '/status'
+}

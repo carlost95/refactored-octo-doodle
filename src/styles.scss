@@ -1,6 +1,6 @@
-@import '~@angular/material/theming';
-@import './styles/modal';
-@import './styles/button';
+@import "~@angular/material/theming";
+@import "./styles/modal";
+@import "./styles/button";
 @include mat-core();
 
 // COLORES: https://material.io/design/color/
@@ -8,13 +8,15 @@ $corralon-primary: mat-palette($mat-amber, 600);
 $corralon-accent: mat-palette($mat-grey, 600);
 $corralon-warn: mat-palette($mat-red);
 
-$corralon: mat-light-theme((
-  color: (
-    primary: $corralon-primary,
-    accent: $corralon-accent,
-    warn: $corralon-warn,
+$corralon: mat-light-theme(
+  (
+    color: (
+      primary: $corralon-primary,
+      accent: $corralon-accent,
+      warn: $corralon-warn,
+    ),
   )
-));
+);
 @include angular-material-theme($corralon);
 
 .btn-outline-warning {
@@ -33,7 +35,7 @@ body {
 
 .container {
   padding-top: 1%;
-  background-color: whitesmoke;
+  background-color: rgb(245, 245, 245);
   padding-right: 1%;
   padding-left: 1%;
   padding-bottom: 1%;
@@ -68,7 +70,8 @@ td {
   padding-bottom: 1%;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
@@ -83,7 +86,6 @@ body {
 //  height: 400px;
 //  width: 300px;
 //}
-
 
 mat-dialog-container#modal-component {
   padding: 0;

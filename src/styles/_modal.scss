@@ -2,14 +2,14 @@
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-rows: 20%  60%  20%;
+  grid-template-rows: 20% 60% 20%;
 }
 
 .modal-content-confirm {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-rows: 20%  60%  20%;
+  grid-template-rows: 20% 60% 20%;
   overflow-y: hidden;
 }
 
@@ -18,7 +18,12 @@
 }
 
 .modal-header {
-  background-color: #FFC312;
+  background-color: #ffc312;
+}
+
+.modal-header-size1 {
+  width: 100%;
+  height: 50%;
 }
 
 .modal-footer {
@@ -28,7 +33,7 @@
 
 .modal-action-button {
   margin-right: 30px;
-  background-color:#3b3b3b;
+  background-color: #3b3b3b;
 }
 
 .modal-cancel-button {
