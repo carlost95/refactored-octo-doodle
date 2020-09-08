@@ -5,6 +5,8 @@ import { Articulo } from 'src/app/modelo/Articulo';
 import { MovimientoArticuloDTO } from 'src/app/modelo/MovimientoArticuloDTO';
 import { ComprasService } from 'src/app/service/compras.service';
 import { Proveedor } from 'src/app/modelo/Proveedor';
+import { ProveedoresService } from '../../app/service/proveedores.service';
+import { proveedor } from '../../environments/global-route';
 
 @Component({
   selector: 'app-pedidos',
@@ -25,7 +27,7 @@ export class PedidosComponent implements OnInit {
   stockArticulo: number[] = [];
   proveedores: Proveedor[] = [];
   // tslint:disable-next-line: ban-types
-  razonSocial: String = ' ';
+  razonSocial: String = '';
   movimientoFilter: MovimientoArticuloDTO[] = [];
   movimientosPrevios: StockArticulo[] = [];
   stockArticuloPorPedido: StockArticulo[] = [];
@@ -35,6 +37,7 @@ export class PedidosComponent implements OnInit {
 
   constructor(
     private comprasService: ComprasService,
+    private proveedorService: ProveedoresService,
     private route: Router,
     private active: ActivatedRoute
   ) { }
@@ -118,7 +121,7 @@ export class PedidosComponent implements OnInit {
 
   // tslint:disable-next-line: typedef
   listaProveedor() {
-    this.comprasService.listarProveedoresHabilitados().subscribe((data) => {
+    this.proveedorService.listarProveedoresHabilitados().subscribe((data) => {
       this.proveedores = data.data;
       this.proveedores.sort(
         (a, b) => a.razonSocial.length - b.razonSocial.length
@@ -187,7 +190,7 @@ export class PedidosComponent implements OnInit {
   // tslint:disable-next-line: typedef
   async listarFiltro() {
     this.articulosStockMovimientoFilter = [];
-    if (this.razonSocial === ' ') {
+    if (this.razonSocial === null) {
       this.articulosStockMovimientoFilter = this.articulosStockMovimiento;
     } else {
       await this.articulosStockMovimiento.forEach((artStockMov) => {
