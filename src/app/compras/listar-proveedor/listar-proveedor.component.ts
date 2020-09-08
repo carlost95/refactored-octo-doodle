@@ -21,7 +21,7 @@ export class ListarProveedorComponent implements OnInit {
   proveedores: Proveedor[] = null;
   proveedoresFilter: Proveedor[] = null;
   busqueda: string = null;
-  toUpdateProveedor: any;
+  toUpdateProveedor: any = null;
   proveedoresExcel: ProveedorExcel[] = [];
   proveedorExcel: ProveedorExcel;
 

@@ -3,6 +3,7 @@ import { ProveedoresService } from '../../service/proveedores.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Proveedor } from '../../modelo/Proveedor';
+import { LoginComponent } from '../../login/login.component';
 
 @Component({
   selector: 'app-agregar-proveedor',
@@ -12,10 +13,11 @@ import { Proveedor } from '../../modelo/Proveedor';
 export class AgregarProveedorComponent implements OnInit {
   proveedor: Proveedor = new Proveedor();
   proveedorForm: FormGroup;
+  proveedores: Proveedor[] = [];
   errorInForm = false;
   submitted = false;
   updating = false;
-
+  nombreRepe = false;
   constructor(
     private proveedorService: ProveedoresService,
     private formBuilder: FormBuilder,
@@ -24,6 +26,8 @@ export class AgregarProveedorComponent implements OnInit {
 
   // tslint:disable-next-line: typedef
   ngOnInit() {
+    this.proveedorService.listarProveedoresTodos().subscribe(resp => this.proveedores = resp.data);
+
     if (this.data) {
       this.proveedorForm = this.formBuilder.group({
         id: [this.data.id, null],
@@ -32,7 +36,7 @@ export class AgregarProveedorComponent implements OnInit {
         mail: [this.data.mail, Validators.required],
         celular: [this.data.celular, null],
         telefono: [this.data.telefono, null]
-      })
+      });
       this.updating = true;
     } else {
       this.proveedorForm = this.formBuilder.group({
@@ -41,8 +45,19 @@ export class AgregarProveedorComponent implements OnInit {
         mail: ['', Validators.required],
         celular: ['', null],
         telefono: ['', null]
-      })
+      });
     }
+  }
+  validar({ target }) {
+
+    const { value: nombre } = target;
+
+    const finded = this.proveedores.find(p => p.razonSocial.toLowerCase() === nombre.toLowerCase().trim());
+
+    console.log(finded);
+
+    this.nombreRepe = (finded !== undefined) ? true : false;
+
   }
   // tslint:disable-next-line: typedef
   close() {
@@ -50,9 +65,13 @@ export class AgregarProveedorComponent implements OnInit {
   }
   // tslint:disable-next-line: typedef
   onSubmit() {
-    this.errorInForm = this.submitted && this.proveedorForm.invalid;
     this.submitted = true;
-    if (this.errorInForm) {
+    this.errorInForm = this.submitted && this.proveedorForm.invalid;
+    if (this.errorInForm || this.nombreRepe) {
+      this.proveedorForm.controls.razonSocial.markAllAsTouched();
+      this.proveedorForm.controls.domicilio.markAllAsTouched();
+      this.proveedorForm.controls.mail.markAllAsTouched();
+
       console.log('Error en los datos')
     } else {
       this.makeDTO();
