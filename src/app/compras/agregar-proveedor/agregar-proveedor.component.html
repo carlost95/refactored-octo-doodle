@@ -74,11 +74,20 @@
             formControlName="razonSocial"
             required
             autocomplete="off"
+            (keyup)="validar($event)"
           />
+
           <mat-error *ngIf="proveedorForm.controls.razonSocial.errors">
             Razon Social es<strong> requerido</strong>
           </mat-error>
         </mat-form-field>
+        <br />
+        <label
+          class="m-0 p-0"
+          *ngIf="nombreRepe"
+          style="color: #f44336; font-size: 75%"
+          >Nombre repetido</label
+        >
       </p>
       <p>
         <mat-form-field appearance="legacy">
