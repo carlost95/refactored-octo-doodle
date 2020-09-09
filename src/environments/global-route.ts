@@ -9,3 +9,7 @@ export const proveedor = {
   path: '/proveedores',
   status: '/status'
 }
+export const marca = {
+  path: '/marcas',
+  status: '/status'
+}

@@ -16,13 +16,20 @@ export class AgregarMarcaComponent implements OnInit {
   errorInForm: boolean = false;
   submitted = false;
   updating = false;
+  nombreRepe = false;
+  abreRepe = false;
+  marcas: Marca[] = [];
 
-  constructor(private marcaService: MarcasService,
+  constructor(
+    private marcaService: MarcasService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AgregarMarcaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Marca) { }
 
+  // tslint:disable-next-line: typedef
   ngOnInit() {
+    this.marcaService.listarMarcaTodos().subscribe(resp => this.marcas = resp.data);
+
     if (this.data) {
       this.marcaForm = this.formBuilder.group({
         id: [this.data.id, null],
@@ -33,7 +40,7 @@ export class AgregarMarcaComponent implements OnInit {
     } else {
       this.marcaForm = this.formBuilder.group({
         nombre: ['', Validators.required],
-        abreviatura: ['', null]
+        abreviatura: ['', Validators.required]
       })
     }
   }
@@ -41,15 +48,17 @@ export class AgregarMarcaComponent implements OnInit {
   close() {
     this.dialogRef.close();
   }
+  // tslint:disable-next-line: typedef
   onSubmit() {
-    this.errorInForm = this.submitted && this.marcaForm.invalid;
     this.submitted = true;
-    if (this.errorInForm) {
+    this.errorInForm = this.submitted && this.marcaForm.invalid;
+    if (this.errorInForm || this.nombreRepe || this.abreRepe) {
+      this.marcaForm.controls.nombre.markAsTouched();
+      this.marcaForm.controls.abreviatura.markAsTouched();
       console.log('Error en los datos')
     } else {
       this.makeDTO();
-      console.log(this.marcaForm.controls.nombre.value)
-      console.log(this.marcaForm.controls.abreviatura.value)
+
     }
 
   }
@@ -79,23 +88,12 @@ export class AgregarMarcaComponent implements OnInit {
       this.dialogRef.close();
     });
   }
-
-  // guardarMarca(marca: Marca) {
-  //   console.log(marca);
-
-  //   // this.marca.id = null;
-  //   this.marca.nombre = this.marca.nombre.toUpperCase();
-  //   this.marca.abreviatura = this.marca.abreviatura.toUpperCase();
-
-
-  //   this.serviceAbmCompra.guardarMarca(this.marca).subscribe(data => {
-  //     this.marca = data;
-  //     alert("se guardo una nueva marca");
-  //     window.history.back();
-  //   });
-  // }
-  // cancelar() {
-  //   window.history.back();
-  // }
-
+  // tslint:disable-next-line: typedef
+  validar({ target }) {
+    const { value: nombre } = target;
+    const finded = this.marcas.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
+    const finded2 = this.marcas.find(p => p.abreviatura.toLowerCase() === nombre.toLowerCase());
+    this.nombreRepe = (finded !== undefined) ? true : false;
+    this.abreRepe = (finded2 !== undefined) ? true : false;
+  }
 }

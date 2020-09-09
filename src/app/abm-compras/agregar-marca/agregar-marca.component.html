@@ -7,18 +7,47 @@
     <form [formGroup]="marcaForm">
       <p>
         <mat-form-field appearance="legacy">
-          <mat-label>Nombre</mat-label>|
-          <input matInput formControlName="nombre" required />
+          <mat-label>Nombre</mat-label>
+          <input
+            matInput
+            formControlName="nombre"
+            required
+            autocomplete="off"
+            (keyup)="validar($event)"
+          />
           <mat-error *ngIf="marcaForm.controls.nombre.errors">
             Nombre es<strong> requerido</strong>
           </mat-error>
         </mat-form-field>
+        <br />
+        <label
+          class="m-0 p-0"
+          *ngIf="nombreRepe"
+          style="color: #f44336; font-size: 75%"
+          >Nombre repetido</label
+        >
       </p>
       <p>
         <mat-form-field appearance="legacy">
           <mat-label>Abreviatura</mat-label>
-          <input matInput formControlName="abreviatura" />
+          <input
+            matInput
+            formControlName="abreviatura"
+            required
+            autocomplete="off"
+            (keyup)="validar($event)"
+          />
+          <mat-error *ngIf="marcaForm.controls.abreviatura.errors">
+            Abreviatura es <strong> requerido</strong>
+          </mat-error>
         </mat-form-field>
+        <br />
+        <label
+          class="m-0 p-0"
+          *ngIf="abreRepe"
+          style="color: #f44336; font-size: 75%"
+          >Abreviatura repetido</label
+        >
       </p>
     </form>
   </section>
