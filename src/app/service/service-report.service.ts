@@ -31,4 +31,8 @@ export class ServiceReportService {
   getReporteProveedorPdf() {
     return this.http.get<Response>(this.Url + report.path + '/proveedor');
   }
+  // tslint:disable-next-line: typedef
+  getReporteRubroPdf() {
+    return this.http.get<Response>(this.Url + report.path + '/rubro');
+  }
 }

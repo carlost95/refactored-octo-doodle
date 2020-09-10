@@ -13,3 +13,7 @@ export const marca = {
   path: '/marcas',
   status: '/status'
 }
+export const rubro = {
+  path: '/rubros',
+  status: '/status'
+}
