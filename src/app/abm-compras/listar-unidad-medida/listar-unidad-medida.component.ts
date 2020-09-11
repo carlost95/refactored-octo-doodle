@@ -117,10 +117,13 @@ export class ListarUnidadMedidaComponent implements OnInit {
   }
   // tslint:disable-next-line: typedef
   exportarPDF() {
-
+    this.serviceReport.getReporteUnidadMedidaPdf().subscribe(resp => {
+      this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
+    });
   }
   // tslint:disable-next-line: typedef
   exportarExcel() {
+    // tslint:disable-next-line: prefer-for-of
     for (let index = 0; index < this.unidadMedidaFilter.length; index++) {
       this.unidadMedidaExcel = new UnidadMedidaExcel(0, '', '');
       if (this.unidadMedidaFilter[index] != null) {
