@@ -35,4 +35,9 @@ export class ServiceReportService {
   getReporteRubroPdf() {
     return this.http.get<Response>(this.Url + report.path + '/rubro');
   }
+
+  // tslint:disable-next-line: typedef
+  getReporteUnidadMedidaPdf() {
+    return this.http.get<Response>(this.Url + report.path + '/unidad-medida');
+  }
 }
