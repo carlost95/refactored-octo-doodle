@@ -17,3 +17,7 @@ export const rubro = {
   path: '/rubros',
   status: '/status'
 }
+export const unidadMedida = {
+  path: '/unidad-medida',
+  status: '/status'
+}
