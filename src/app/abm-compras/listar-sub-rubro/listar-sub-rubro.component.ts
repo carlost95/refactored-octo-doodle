@@ -8,6 +8,7 @@ import { ExcelExportService } from '../../service/excel-export.service';
 import { AgregarSubRubroComponent } from '../agregar-sub-rubro/agregar-sub-rubro.component';
 import { SubRubroService } from '../../service/sub-rubro.service';
 import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
+import { SubRubroExcel } from '../../modelo/SubRubroExcel';
 
 @Component({
   selector: 'app-listar-sub-rubro',
@@ -23,6 +24,8 @@ export class ListarSubRubroComponent implements OnInit {
   busqueda: string = null;
   toUpdateSubRubro: SubRubro;
   toUpdateSubRubroDTO: SubRubroDTO;
+  subRubroExcel: SubRubroExcel;
+  subRubrosExcel: SubRubroExcel[] = [];
 
   constructor(
     private subRubroService: SubRubroService,
@@ -100,12 +103,6 @@ export class ListarSubRubroComponent implements OnInit {
       this.subRubrosFilter = data.data;
     });
   }
-
-  // tslint:disable-next-line: typedef
-  exportarPDF() { }
-  // tslint:disable-next-line: typedef
-  exportarExcel() { }
-
   // tslint:disable-next-line: typedef
   newSubRubro() {
     this.toUpdateSubRubro = null;
@@ -128,4 +125,28 @@ export class ListarSubRubroComponent implements OnInit {
   backPage() {
     window.history.back();
   }
+  // tslint:disable-next-line: typedef
+  exportarPDF() {
+    this.serviceReport.getReporteRubroPdf().subscribe(resp => {
+      this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
+    });
+  }
+
+  // tslint:disable-next-line: typedef
+  exportarExcel() {
+    // tslint:disable-next-line: prefer-for-of
+    for (let index = 0; index < this.subRubrosFilter.length; index++) {
+      this.subRubroExcel = new SubRubroExcel('', '', '');
+      if (this.subRubrosFilter[index] != null) {
+        this.subRubroExcel.nombre = this.subRubrosFilter[index].nombre;
+        this.subRubroExcel.descripcion = this.subRubrosFilter[index].descripcion;
+        this.subRubroExcel.nombreRubro = this.subRubrosFilter[index].rubroId.nombre;
+      }
+      this.subRubrosExcel.push(this.subRubroExcel);
+
+    }
+    this.excelService.exportToExcel(this.subRubrosExcel, 'Reporte SubRubros');
+
+  }
+
 }
