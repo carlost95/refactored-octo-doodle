@@ -127,7 +127,7 @@ export class ListarSubRubroComponent implements OnInit {
   }
   // tslint:disable-next-line: typedef
   exportarPDF() {
-    this.serviceReport.getReporteRubroPdf().subscribe(resp => {
+    this.serviceReport.getReporteSubRubroPdf().subscribe(resp => {
       this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
     });
   }
