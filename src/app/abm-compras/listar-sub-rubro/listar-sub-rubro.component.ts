@@ -46,6 +46,8 @@ export class ListarSubRubroComponent implements OnInit {
   }
   // tslint:disable-next-line: typedef
   modificarSubRubro(subRubro: SubRubro) {
+    console.warn('muetra de Id');
+    console.error(subRubro);
     this.toUpdateSubRubro = subRubro;
     this.openDialog();
     // this.router.navigate(["abm-compras/modificar-sub-rubro/" + subRubro.id]);
@@ -55,7 +57,7 @@ export class ListarSubRubroComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
-    dialogConfig.height = '550px';
+    dialogConfig.height = '500px';
     dialogConfig.width = '350px';
     dialogConfig.data = this.toUpdateSubRubro;
     const modalDialog = this.matDialog.open(AgregarSubRubroComponent, dialogConfig);

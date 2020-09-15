@@ -38,15 +38,16 @@ export class AgregarSubRubroComponent implements OnInit {
       this.rubros = datas.data);
     this.subRubroService.listarSubRubrosTodos().subscribe(resp =>
       this.subRubros = resp.data);
-    this.rubroSelected = this.data.rubroId.nombre;
     if (this.data) {
+      this.rubroSelected = this.data.rubroId.nombre;
+
       this.subRubroForm = this.formBuilder.group({
         id: [this.data.id, null],
         nombre: [this.data.nombre, Validators.required],
         descripcion: [this.data.descripcion, null],
         rubroId: [this.data.rubroId, Validators.required]
       });
-      this.updating = false;
+      this.updating = true;
     } else {
       this.subRubroForm = this.formBuilder.group({
         nombre: ['', Validators.required],
@@ -120,13 +121,5 @@ export class AgregarSubRubroComponent implements OnInit {
     const { value: nombre } = target;
     const finded = this.subRubros.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
     this.nombreRepe = (finded !== undefined) ? true : false;
-  }
-  // tslint:disable-next-line: typedef
-  cargaRubro({ target }) {
-    const { value: campos } = target;
-    console.log('------------campos-----------');
-
-    console.warn(campos);
-
   }
 }
