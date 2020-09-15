@@ -28,11 +28,11 @@ export class SubRubroService {
   }
   // tslint:disable-next-line: typedef
   guardarSubRubro(subRubroDTO: SubRubroDTO) {
-    return this.http.post<SubRubroDTO>(this.url, subRubroDTO);
+    return this.http.post<Response>(this.url, subRubroDTO);
   }
   // tslint:disable-next-line: typedef
   actualizarSubRubro(subRubroDTO: SubRubroDTO) {
-    return this.http.put<SubRubroDTO>(this.url, subRubroDTO);
+    return this.http.put<Response>(this.url, subRubroDTO);
   }
   // tslint:disable-next-line: typedef
   listarSubRubroId(id: number) {

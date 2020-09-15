@@ -22,6 +22,7 @@ export class ListarSubRubroComponent implements OnInit {
   busquedaNombre: string = null;
   busqueda: string = null;
   toUpdateSubRubro: SubRubro;
+  toUpdateSubRubroDTO: SubRubroDTO;
 
   constructor(
     private subRubroService: SubRubroService,
@@ -46,15 +47,16 @@ export class ListarSubRubroComponent implements OnInit {
   // tslint:disable-next-line: typedef
   modificarSubRubro(subRubro: SubRubro) {
     this.toUpdateSubRubro = subRubro;
-    // this.router.navigate(["abm-compras/modificar-sub-rubro/" + subRubro.id]);
     this.openDialog();
+    // this.router.navigate(["abm-compras/modificar-sub-rubro/" + subRubro.id]);
+
   }
   openDialog(): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
-    dialogConfig.height = '400px';
-    dialogConfig.width = '300px';
+    dialogConfig.height = '550px';
+    dialogConfig.width = '350px';
     dialogConfig.data = this.toUpdateSubRubro;
     const modalDialog = this.matDialog.open(AgregarSubRubroComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
@@ -103,7 +105,10 @@ export class ListarSubRubroComponent implements OnInit {
   exportarExcel() { }
 
   // tslint:disable-next-line: typedef
-  newSubRubro() { }
+  newSubRubro() {
+    this.toUpdateSubRubro = null;
+    this.openDialog();
+  }
   // tslint:disable-next-line: typedef
   filtrarSubRubro(event: any) {
     if (this.busqueda !== null) {
@@ -117,6 +122,7 @@ export class ListarSubRubroComponent implements OnInit {
     }
   }
 
+  // tslint:disable-next-line: typedef
   backPage() {
     window.history.back();
   }

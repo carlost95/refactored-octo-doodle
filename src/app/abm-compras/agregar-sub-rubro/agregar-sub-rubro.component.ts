@@ -1,9 +1,11 @@
 import { SubRubroDTO } from './../../modelo/SubRubroDTO';
-import { Router } from '@angular/router';
 import { Rubro } from './../../modelo/Rubro';
 import { SubRubro } from './../../modelo/SubRubro';
-import { Component, OnInit } from '@angular/core';
-import { AbmComprasService } from 'src/app/service/abm-compras.service';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { SubRubroService } from 'src/app/service/sub-rubro.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { RubrosService } from '../../service/rubros.service';
 
 @Component({
   selector: 'app-agregar-sub-rubro',
@@ -12,54 +14,119 @@ import { AbmComprasService } from 'src/app/service/abm-compras.service';
 })
 export class AgregarSubRubroComponent implements OnInit {
   subRubroDTO: SubRubroDTO = new SubRubroDTO();
+  subRubro: SubRubro = new SubRubro();
+  subRubros: SubRubroDTO[] = null;
   rubros: Rubro[] = null;
-  rubroFilter: Rubro[] = null;
-  idRubro: number = 1;
-  nombreRubro: string = null;
+  rubroSelected: string = null;
+  subRubroFilter: Rubro[] = null;
+  subRubroForm: FormGroup;
+  submitted = false;
+  errorInForm = false;
+  updating = false;
+  nombreRepe = false;
 
-  constructor(private serviceAbmCompra: AbmComprasService, private router: Router) {}
+  constructor(
+    private subRubroService: SubRubroService,
+    private rubroService: RubrosService,
+    private formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef<AgregarSubRubroComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: SubRubro) { }
 
+  // tslint:disable-next-line: typedef
   ngOnInit() {
-    this.serviceAbmCompra.listarRubrosTodos().subscribe(data => {
-      this.rubros = Object.keys(data.data).map(function(key) {
-        return data.data[key];
+    this.rubroService.listarRubrosHabilitados().subscribe(datas =>
+      this.rubros = datas.data);
+    this.subRubroService.listarSubRubrosTodos().subscribe(resp =>
+      this.subRubros = resp.data);
+    this.rubroSelected = this.data.rubroId.nombre;
+    if (this.data) {
+      this.subRubroForm = this.formBuilder.group({
+        id: [this.data.id, null],
+        nombre: [this.data.nombre, Validators.required],
+        descripcion: [this.data.descripcion, null],
+        rubroId: [this.data.rubroId, Validators.required]
       });
-      this.rubroFilter = this.rubros;
-    });
-  }
-  volverAtras() {
-    window.history.back();
-  }
-  nuevoSubRubro(subRubroDTO: SubRubroDTO) {
-    this.subRubroDTO.rubroId = 1;
-
-    this.rubros.forEach(rubro => {
-      if (rubro.nombre == this.nombreRubro) {
-        this.subRubroDTO.id = rubro.id;
-      }
-    });
-
-    for (var i = 0; i < this.rubros.length; i++) {
-      if (this.rubros[i].nombre == this.nombreRubro) {
-        this.subRubroDTO.rubroId = this.rubros[i].id;
-      }
+      this.updating = false;
+    } else {
+      this.subRubroForm = this.formBuilder.group({
+        nombre: ['', Validators.required],
+        descripcion: ['', null],
+        rubroId: ['', Validators.required]
+      });
     }
-    this.subRubroDTO.habilitacion = 1;
-    this.subRubroDTO.id = null;
-    this.subRubroDTO.nombre=this.subRubroDTO.nombre.toUpperCase();
-    this.subRubroDTO.descripcion=this.subRubroDTO.descripcion.toUpperCase();
+  }
 
-    this.serviceAbmCompra.guardarSubRubro(this.subRubroDTO).subscribe(data => {
-      alert("SE GUARDO UN NUEVO SUB RUBRO");
-      window.history.back();
+  // tslint:disable-next-line: typedef
+  close() {
+    this.dialogRef.close();
+  }
+
+  // tslint:disable-next-line: typedef
+  onSubmit() {
+    this.submitted = true;
+    this.errorInForm = this.submitted && this.subRubroForm.invalid;
+
+    if (this.errorInForm || this.nombreRepe) {
+      this.subRubroForm.controls.nombre.markAsTouched();
+      this.subRubroForm.controls.rubroId.markAsTouched();
+      console.log('Error en los datos');
+    } else {
+      this.makeDTO();
+
+    }
+  }
+  // tslint:disable-next-line: typedef
+  makeDTO() {
+    this.subRubroDTO.nombre = this.subRubroForm.controls.nombre.value;
+    this.subRubroDTO.descripcion = this.subRubroForm.controls.descripcion.value;
+    // this.subRubroDTO.rubroId = this.subRubroForm.controls.rubroId.i.value;
+    if (this.rubroSelected !== null) {
+      this.rubros.forEach(rub => {
+        if (this.rubroSelected.toLowerCase() === rub.nombre.toLowerCase()) {
+          this.subRubroDTO.rubroId = rub.id;
+        }
+      });
+    }
+    console.warn(this.rubroSelected);
+    console.warn('------------------');
+    console.warn(this.subRubroDTO);
+
+
+
+    if (this.updating) {
+      this.subRubroDTO.id = this.subRubroForm.controls.id.value;
+      this.update();
+    } else {
+      this.save();
+    }
+  }
+  // tslint:disable-next-line: typedef
+  update() {
+    this.subRubroService.actualizarSubRubro(this.subRubroDTO).subscribe(data => {
+      this.subRubroDTO = data.data;
+      this.dialogRef.close();
+    });
+  }
+  // tslint:disable-next-line: typedef
+  save() {
+    this.subRubroService.guardarSubRubro(this.subRubroDTO).subscribe(data => {
+      this.subRubroDTO = data.data;
+      this.dialogRef.close();
     });
   }
 
-  listarRubros(filterVal: any) {
-    if (filterVal == "0") this.rubroFilter = this.rubros;
-    else
-      this.rubroFilter = this.rubros.filter(
-        item => item.nombre == filterVal
-      );
+  // tslint:disable-next-line: typedef
+  validar({ target }) {
+    const { value: nombre } = target;
+    const finded = this.subRubros.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
+    this.nombreRepe = (finded !== undefined) ? true : false;
+  }
+  // tslint:disable-next-line: typedef
+  cargaRubro({ target }) {
+    const { value: campos } = target;
+    console.log('------------campos-----------');
+
+    console.warn(campos);
+
   }
 }
