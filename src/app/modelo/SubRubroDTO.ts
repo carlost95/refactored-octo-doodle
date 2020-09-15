@@ -1,4 +1,4 @@
-export class SubRubroDTO{
+export class SubRubroDTO {
   id: number;
   nombre: string;
   descripcion: string;

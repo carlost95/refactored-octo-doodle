@@ -24,11 +24,11 @@ export class ModificarSubRubroComponent implements OnInit {
   constructor(
     private serviceAbmCompra: AbmComprasService,
     private id: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.serviceAbmCompra.listarRubrosHabilitados().subscribe(data => {
-      this.rubros = Object.keys(data.data).map(function(key) {
+      this.rubros = Object.keys(data.data).map(function (key) {
         return data.data[key];
       });
       // console.log("this.departamentos", this.departamentos);
@@ -43,7 +43,7 @@ export class ModificarSubRubroComponent implements OnInit {
           .listarRubroId(this.subRubro.rubroId.id)
           .subscribe(resp => {
             this.rubroSelected = resp.data;
-            console.log("this.rubroSelected======>",this.rubroSelected);
+            console.log("this.rubroSelected======>", this.rubroSelected);
           });
       });
     });
