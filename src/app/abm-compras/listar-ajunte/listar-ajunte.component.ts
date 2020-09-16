@@ -17,20 +17,20 @@ export class ListarAjunteComponent implements OnInit {
   ajustesFilter: Ajuste[] = [];
   busqueda: string = null;
   busquedaFecha: string = null;
-  searchDesde: string = "";
-  searchHasta: string = "";
+  searchDesde: string = '';
+  searchHasta: string = '';
   rows: any[];
-  proveedores: Proveedor[]=[];
+  proveedores: Proveedor[] = [];
   razonSocial: string;
 
-   constructor(private serviceCompra: ComprasService, private serviceAbmCompra: AbmComprasService, private router: Router) {}
+  constructor(private serviceCompra: ComprasService, private serviceAbmCompra: AbmComprasService, private router: Router) { }
 
-   ngOnInit() {
+  ngOnInit() {
     this.fetchEvent().then(() => {
       console.log(this.ajustes);
     });
 
-   }
+  }
 
   fetchEvent() {
     return this.serviceAbmCompra.listarAjustesTodos()
@@ -39,9 +39,9 @@ export class ListarAjunteComponent implements OnInit {
         this.ajustes = data.data;
         this.ajustesFilter = this.ajustes;
 
-        this.ajustes.forEach((p , index)=>{
+        this.ajustes.forEach((p, index) => {
           console.log(p.fecha);
-      })
+        })
       });
   }
   jsonStringDate(jdate): string {
@@ -107,7 +107,10 @@ export class ListarAjunteComponent implements OnInit {
     window.history.back();
   }
 
-  consultarAjuste(ajuste: Ajuste){
+  consultarAjuste(ajuste: Ajuste) {
     this.router.navigate(['consultar-ajuste/']);
+  }
+  filtarPedidoProveedor({ target }) {
+
   }
 }

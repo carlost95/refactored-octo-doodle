@@ -27,6 +27,7 @@ import { ModificarSubRubroComponent } from './modificar-sub-rubro/modificar-sub-
 import { ListarAjunteComponent } from './listar-ajunte/listar-ajunte.component';
 import { AgregarAjusteComponent } from './agregar-ajuste/agregar-ajuste.component';
 import { MaterialModule } from '../material/material.module';
+import { ConsultarAjusteComponent } from './consultar-ajuste/consultar-ajuste.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { MaterialModule } from '../material/material.module';
     AgregarSubRubroComponent,
     ModificarSubRubroComponent,
     ListarAjunteComponent,
-    AgregarAjusteComponent
+    AgregarAjusteComponent,
+    ConsultarAjusteComponent
 
   ],
   imports: [CommonModule, FormsModule, AbmComprasRoutingModule, MaterialModule, ReactiveFormsModule],
