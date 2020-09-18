@@ -13,6 +13,6 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     FormsModule,
     CommonModule
   ],
-  exports: [PedidosComponent]
+  exports: [PedidosComponent, AjustesComponent]
 })
 export class SharedModule { }

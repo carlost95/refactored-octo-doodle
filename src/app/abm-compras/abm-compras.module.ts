@@ -24,10 +24,11 @@ import { ModificarRubroComponent } from './modificar-rubro/modificar-rubro.compo
 import { ListarSubRubroComponent } from './listar-sub-rubro/listar-sub-rubro.component';
 import { AgregarSubRubroComponent } from './agregar-sub-rubro/agregar-sub-rubro.component';
 import { ModificarSubRubroComponent } from './modificar-sub-rubro/modificar-sub-rubro.component';
-import { ListarAjunteComponent } from './listar-ajunte/listar-ajunte.component';
 import { AgregarAjusteComponent } from './agregar-ajuste/agregar-ajuste.component';
 import { MaterialModule } from '../material/material.module';
 import { ConsultarAjusteComponent } from './consultar-ajuste/consultar-ajuste.component';
+import { SharedModule } from '../../shared/shared.module';
+import { ListarAjusteComponent } from './listar-ajuste/listar-ajuste.component';
 
 @NgModule({
   declarations: [
@@ -51,12 +52,11 @@ import { ConsultarAjusteComponent } from './consultar-ajuste/consultar-ajuste.co
     ListarSubRubroComponent,
     AgregarSubRubroComponent,
     ModificarSubRubroComponent,
-    ListarAjunteComponent,
+    ListarAjusteComponent,
     AgregarAjusteComponent,
     ConsultarAjusteComponent
-
   ],
-  imports: [CommonModule, FormsModule, AbmComprasRoutingModule, MaterialModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, AbmComprasRoutingModule, MaterialModule, ReactiveFormsModule, SharedModule],
   exports: [AgregarMarcaComponent]
 })
 export class AbmComprasModule { }

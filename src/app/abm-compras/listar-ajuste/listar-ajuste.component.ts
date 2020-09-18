@@ -1,18 +1,18 @@
-import { Proveedor } from './../../modelo/Proveedor';
-import { AbmComprasService } from './../../service/abm-compras.service';
+import { Proveedor } from '../../modelo/Proveedor';
+import { AbmComprasService } from '../../service/abm-compras.service';
 import { Router } from '@angular/router';
-import { ComprasService } from './../../service/compras.service';
-import { Ajuste } from './../../modelo/Ajuste';
+import { ComprasService } from '../../service/compras.service';
+import { Ajuste } from '../../modelo/Ajuste';
 import { Component, OnInit } from '@angular/core';
 import * as _ from "lodash";
 
 
 @Component({
-  selector: 'app-listar-ajunte',
-  templateUrl: './listar-ajunte.component.html',
-  styleUrls: ['./listar-ajunte.component.css']
+  selector: 'app-listar-ajuste',
+  templateUrl: './listar-ajuste.component.html',
+  styleUrls: []
 })
-export class ListarAjunteComponent implements OnInit {
+export class ListarAjusteComponent implements OnInit {
   ajustes: Ajuste[] = [];
   ajustesFilter: Ajuste[] = [];
   busqueda: string = null;

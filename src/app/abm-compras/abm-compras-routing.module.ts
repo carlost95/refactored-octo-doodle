@@ -1,4 +1,3 @@
-import { ListarAjunteComponent } from './listar-ajunte/listar-ajunte.component';
 import { ModificarSubRubroComponent } from './modificar-sub-rubro/modificar-sub-rubro.component';
 import { AgregarSubRubroComponent } from './agregar-sub-rubro/agregar-sub-rubro.component';
 import { ListarSubRubroComponent } from './listar-sub-rubro/listar-sub-rubro.component';
@@ -21,6 +20,8 @@ import { AbmComprasComponent } from './abm-compras.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ConsultarAjusteComponent } from './consultar-ajuste/consultar-ajuste.component';
+import { AgregarAjusteComponent } from './agregar-ajuste/agregar-ajuste.component';
+import { ListarAjusteComponent } from './listar-ajuste/listar-ajuste.component';
 
 const routes: Routes = [
   {
@@ -33,13 +34,14 @@ const routes: Routes = [
       { path: 'agregar-unidad-medida', component: AgregarUnidadMedidaComponent },
       { path: 'agregar-rubro', component: AgregarRubroComponent },
       { path: 'agregar-sub-rubro', component: AgregarSubRubroComponent },
+      { path: 'agregar-ajuste', component: AgregarAjusteComponent },
       { path: 'listar-banco', component: ListarBancoComponent },
       { path: 'listar-marca', component: ListarMarcaComponent },
       { path: 'listar-forma-pago', component: ListarFormaPagoComponent },
       { path: 'listar-unidad-medida', component: ListarUnidadMedidaComponent },
       { path: 'listar-rubro', component: ListarRubroComponent },
       { path: 'listar-sub-rubro', component: ListarSubRubroComponent },
-      { path: 'listar-ajuste', component: ListarAjunteComponent },
+      { path: 'listar-ajuste', component: ListarAjusteComponent },
       { path: 'modificar-banco/:id', component: ModificarBancoComponent },
       { path: 'modificar-forma-pago/:id', component: ModificarFormaPagoComponent },
       { path: 'modificar-unidad-medida/:id', component: ModificarUnidadMedidaComponent },

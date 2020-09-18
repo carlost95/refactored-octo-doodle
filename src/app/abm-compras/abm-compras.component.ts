@@ -24,6 +24,7 @@ export class AbmComprasComponent implements OnInit {
       this.router.url.includes("/agregar-forma-pago") ||
       this.router.url.includes("/agregar-unidad-medida") ||
       this.router.url.includes("/agregar-rubro") ||
+      this.router.url.includes("/agregar-ajuste") ||
       this.router.url.includes("/agregar-sub-rubro") ||
       this.router.url.includes("/modificar-marca") ||
       this.router.url.includes("/modificar-forma-pago") ||
