@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment.prod";
 import {cliente} from "../../environments/global-route";
 import {Response} from "../modelo/Response";
+import {Cliente} from "../modelo/Cliente";
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class ClienteService {
     return this.http.get<Response>(this.url);
   }
 
-  save(client: any) {
+  save(client: Cliente) {
     return this.http.post<Response>(this.url, client);
   }
 

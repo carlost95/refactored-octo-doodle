@@ -1,11 +1,14 @@
-import { VentasService } from "./../../service/ventas.service";
-import { Router } from "@angular/router";
-import { Cliente } from "../../modelo/Cliente";
-import { Component, OnInit } from "@angular/core";
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import {VentasService} from "./../../service/ventas.service";
+import {Router} from "@angular/router";
+import {Cliente} from "../../modelo/Cliente";
+import {Component, OnInit} from "@angular/core";
+import {THIS_EXPR} from '@angular/compiler/src/output/output_ast';
 // import { MatDialogModule } from "@angular/material";
-import { PdfExportService } from '../../service/pdf-export.service';
-import { ServiceReportService } from '../../service/service-report.service';
+import {PdfExportService} from '../../service/pdf-export.service';
+import {ServiceReportService} from '../../service/service-report.service';
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {AgregarMarcaComponent} from "../../abm-compras/agregar-marca/agregar-marca.component";
+import {AgregarClienteComponent} from "../agregar-cliente/agregar-cliente.component";
 
 @Component({
   selector: "app-listar-clientes",
@@ -18,18 +21,24 @@ export class ListarClientesComponent implements OnInit {
   clientesFilter: Cliente[] = null;
 
   busqueda: string = null;
+  toUpdate: null;
 
   constructor(private service: VentasService, private router: Router,
-    private servicePdf: PdfExportService, private serviceReport: ServiceReportService) { }
+              private servicePdf: PdfExportService,
+              private serviceReport: ServiceReportService,
+              public matDialog: MatDialog) {}
+
   ngOnInit() {
     this.service.listarClientesTodos().subscribe((data) => {
       this.clientes = data.data;
       this.clientesFilter = data.data;
     });
   }
+
   modificarCliente(cliente: Cliente) {
     this.router.navigate(["/ventas/modificar-cliente/" + cliente.id]);
   }
+
   inhabilitarCliente(cliente: Cliente) {
     let resultado: boolean;
     resultado = confirm("¿DESEA ELIMINAR CLIENTE?");
@@ -39,6 +48,7 @@ export class ListarClientesComponent implements OnInit {
       });
     }
   }
+
   filtrarCliente() {
     console.log(this.busqueda);
 
@@ -59,7 +69,10 @@ export class ListarClientesComponent implements OnInit {
   backPage() {
     window.history.back();
   }
-  consultaCliente() { }
+
+  consultaCliente() {
+  }
+
   exportarExcel() {
     console.warn('muestra de excel');
 
@@ -71,4 +84,24 @@ export class ListarClientesComponent implements OnInit {
     });
   }
 
+  newClient() {
+    this.toUpdate = null;
+    this.openDialog();
+  }
+
+  openDialog(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'modal-component';
+    dialogConfig.height = '540px'
+    dialogConfig.width = '300px';
+    dialogConfig.data = this.toUpdate;
+    const modalDialog = this.matDialog.open(AgregarClienteComponent, dialogConfig);
+    // modalDialog.afterClosed().subscribe(result => {
+    //   this.serviceMarca.listarMarcaTodos().subscribe(data => {
+    //     this.marcas = data.data;
+    //     this.marcaFilter = data.data;
+    //   });
+    // });
+  }
 }

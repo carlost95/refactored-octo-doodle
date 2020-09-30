@@ -2,7 +2,9 @@ export class Cliente{
   id: number;
   nombre: string;
   apellido: string;
+  mail: string;
   dni: string;
-  habilitacion: boolean;
+  estado: boolean;
   direcciones: [];
+
 }
