@@ -2,18 +2,16 @@ import {VentasService} from "./../../service/ventas.service";
 import {Router} from "@angular/router";
 import {Cliente} from "../../modelo/Cliente";
 import {Component, OnInit} from "@angular/core";
-import {THIS_EXPR} from '@angular/compiler/src/output/output_ast';
-// import { MatDialogModule } from "@angular/material";
 import {PdfExportService} from '../../service/pdf-export.service';
 import {ServiceReportService} from '../../service/service-report.service';
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {AgregarMarcaComponent} from "../../abm-compras/agregar-marca/agregar-marca.component";
 import {AgregarClienteComponent} from "../agregar-cliente/agregar-cliente.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {SnackConfirmComponent} from "../../shared/snack-confirm/snack-confirm.component";
 
 @Component({
   selector: "app-listar-clientes",
-  templateUrl: "./listar-clientes.component.html",
-  styleUrls: ["./listar-clientes.component.css"],
+  templateUrl: "./listar-clientes.component.html"
 })
 export class ListarClientesComponent implements OnInit {
   clientes: Cliente[] = null;
@@ -26,7 +24,8 @@ export class ListarClientesComponent implements OnInit {
   constructor(private service: VentasService, private router: Router,
               private servicePdf: PdfExportService,
               private serviceReport: ServiceReportService,
-              public matDialog: MatDialog) {}
+              public matDialog: MatDialog,
+              private _snackBar: MatSnackBar) {}
 
   ngOnInit() {
     this.service.listarClientesTodos().subscribe((data) => {
@@ -97,11 +96,21 @@ export class ListarClientesComponent implements OnInit {
     dialogConfig.width = '300px';
     dialogConfig.data = this.toUpdate;
     const modalDialog = this.matDialog.open(AgregarClienteComponent, dialogConfig);
-    // modalDialog.afterClosed().subscribe(result => {
+    modalDialog.afterClosed().subscribe(result => {
+      this.openSnackBar()
+    })
     //   this.serviceMarca.listarMarcaTodos().subscribe(data => {
     //     this.marcas = data.data;
     //     this.marcaFilter = data.data;
     //   });
     // });
   }
+
+  openSnackBar() {
+    this._snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+    });
+  }
+
 }

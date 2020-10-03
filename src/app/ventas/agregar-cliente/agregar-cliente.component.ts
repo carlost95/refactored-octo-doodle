@@ -52,7 +52,7 @@ export class AgregarClienteComponent implements OnInit {
 
   validar({target}) {
     const {value: dni} = target;
-    const finded = this.clients.find(c => c.dni.toLowerCase() === dni.toLowerCase());
+    const finded = this.clients.find(c => c.dni.toLowerCase().trim() === dni.toLowerCase().trim());
     this.duplicateDni = finded ? true : false;
   }
 
@@ -65,17 +65,16 @@ export class AgregarClienteComponent implements OnInit {
     this.errorInForm = this.submitted && this.clientForm.invalid;
     if (this.errorInForm || this.duplicateDni) {
       this.clientForm.controls.dni.markAsTouched();
-      console.log('Error en los datos')
     } else {
       this.makeDTO();
     }
   }
 
   makeDTO() {
-    this.client.apellido = this.clientForm.controls.apellido.value;
-    this.client.nombre = this.clientForm.controls.nombre.value;
-    this.client.dni = this.clientForm.controls.dni.value;
-    this.client.mail = this.clientForm.controls.mail.value;
+    this.client.apellido = (this.clientForm.controls.apellido.value).trim();
+    this.client.nombre = (this.clientForm.controls.nombre.value).trim();
+    this.client.dni = (this.clientForm.controls.dni.value).trim;
+    this.client.mail = (this.clientForm.controls.mail.value).trim();
     if (this.updating) {
       this.client.id = this.clientForm.controls.id.value;
       this.client.estado = this.clientForm.controls.estado.value;
