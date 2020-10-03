@@ -1,1 +1,151 @@
-<p>ajustes works!</p>
+<div class="container" ng-controller="ajuste">
+  <div class="card m-1">
+    <h1 class="text-center mt-4" *ngIf="consultar">Ajustes</h1>
+    <h1 class="text-center" *ngIf="!consultar">Carga de Ajustes</h1>
+    <div class="row card-body p-0 m-2">
+      <div class="container">
+        <div class="row ml-2 mr-2">
+          <div class="col-md-6">
+            <label for="nombre">
+              <h5>Nombre</h5>
+            </label>
+            <input
+              [(ngModel)]="ajuste.nombre"
+              type="text"
+              :required
+              class="form-control"
+              placeholder="ingrese nombre"
+              required="true"
+              [disabled]="consultar"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="fecha">
+              <h5>Fecha</h5>
+            </label>
+            <input
+              id="fecha"
+              [(ngModel)]="ajuste.fecha"
+              type="date"
+              class="form-control"
+              required="true"
+              *ngIf="!consultar"
+            />
+            <label
+              class="form-control"
+              style="background-color: #e9ecefb7"
+              *ngIf="consultar"
+            >{{ ajuste.fecha | date: "yyyy-MM-dd" }}</label
+            >
+          </div>
+        </div>
+        <div class="row mt-3 ml-2 mr-2">
+          <div class="col-md-6">
+            <label for="descripcion">
+              <h5>Descripción</h5>
+            </label>
+            <textarea
+              [(ngModel)]="ajuste.descripcion"
+              class="form-control"
+              rows="2"
+              cols="10"
+              placeholder="ingrese descripcion"
+              required="true"
+              [disabled]="consultar"
+            ></textarea>
+          </div>
+          <div class="col-md-6">
+            <!-- <mat-label>Favorite food</mat-label>
+            <mat-select>
+              <mat-option *ngFor="let prov of proveedores" [value]="prov.value">
+                {{ food.viewValue }}
+              </mat-option>
+            </mat-select> -->
+            <label>
+              <h5>Proveedor</h5>
+            </label>
+            <!--            <mat-form-field appearance="fill">-->
+            <!--              <mat-select-->
+            <!--                [(ngModel)]="proveedorSelect"-->
+            <!--                name="rubro"-->
+            <!--                formControlName="rubroId"-->
+            <!--                autocomplete="off"-->
+            <!--              >-->
+            <!--                <mat-option *ngFor="let prov of proveedores" [value]="prov.razonSocial">-->
+            <!--                  {{ prov.razonSocial }}-->
+            <!--                </mat-option>-->
+            <!--              </mat-select>-->
+
+            <!--            </mat-form-field>-->
+<!--            <select (change)="listarFiltro()" [(ngModel)]="proveedorSelect"-->
+<!--                    class="form-control" [disabled]="consultar">-->
+<!--              <option selected>Proveedor</option>-->
+<!--              <option *ngFor="let prov of proveedores">-->
+<!--                <label>{{ prov.razonSocial }}</label>-->
+<!--              </option>-->
+<!--            </select>-->
+                        <input [(ngModel)]="busqueda"
+                               type="text"
+                               class="form-control"
+                               placeholder="ingrese nombre"
+                               [disabled]="consultar"
+                               autocomplete="off" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="card-body p-0"
+      style="width: 1100px; height: 450px; overflow: auto"
+    >
+      <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr class="text-lg-center">
+          <th scope="col">Codigo</th>
+          <th scope="col">Nombre</th>
+          <th scope="col" *ngIf="consultar">Stock Previo</th>
+          <th scope="col" *ngIf="!consultar">Stock Actual</th>
+          <th scope="col">Ingreso</th>
+        </tr>
+        </thead>
+        <tbody *ngIf="articulos != null" class="tbody-scroll p-0 m-0">
+        <tr
+          *ngFor="
+              let artStoMov of articulosStockMovimientoFilter;
+              let i = index
+            "
+          class="text-center"
+        >
+          <td>{{ artStoMov.articulo.codigoArt }}</td>
+          <td>{{ artStoMov.articulo.nombre }}</td>
+          <td>{{ artStoMov.stock }}</td>
+          <td>
+            <input
+              type="checkbox"
+              maxlength="8"
+              (change)="guardarCarga()"
+              *ngIf="!consultar"
+              [(ngModel)]="artStoMov.movimiento.movimiento"
+              class="form-control text-center"
+              placeholder="cantidad"
+              [disabled]="consultar"
+            />
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row justify-content-end m-2 p-2" *ngIf="!consultar">
+      <button (click)="volverAtras()" class="btn btn-outline-danger">
+        Cancelar
+      </button>
+      &nbsp; &nbsp; &nbsp;
+      <button (click)="guardarAjuste(ajuste)" class="btn btn-warning">
+        Aceptar
+      </button>
+    </div>
+    <div class="row justify-content-end m-0 p-0" *ngIf="consultar">
+      <button (click)="volverAtras()" class="btn btn-warning">Volver</button>
+    </div>
+  </div>
+</div>

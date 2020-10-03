@@ -25,3 +25,7 @@ export const subRubro = {
   path: '/sub-rubros',
   status: '/status'
 }
+export const ajuste = {
+  path: '/ajustes',
+  status: '/status'
+}

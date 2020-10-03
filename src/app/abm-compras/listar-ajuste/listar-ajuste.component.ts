@@ -1,36 +1,36 @@
-import { Proveedor } from './../../modelo/Proveedor';
-import { AbmComprasService } from './../../service/abm-compras.service';
+import { Proveedor } from '../../modelo/Proveedor';
+import { AbmComprasService } from '../../service/abm-compras.service';
 import { Router } from '@angular/router';
-import { ComprasService } from './../../service/compras.service';
-import { Ajuste } from './../../modelo/Ajuste';
+import { ComprasService } from '../../service/compras.service';
+import { Ajuste } from '../../modelo/Ajuste';
 import { Component, OnInit } from '@angular/core';
 import * as _ from "lodash";
 
 
 @Component({
-  selector: 'app-listar-ajunte',
-  templateUrl: './listar-ajunte.component.html',
-  styleUrls: ['./listar-ajunte.component.css']
+  selector: 'app-listar-ajuste',
+  templateUrl: './listar-ajuste.component.html',
+  styleUrls: []
 })
-export class ListarAjunteComponent implements OnInit {
+export class ListarAjusteComponent implements OnInit {
   ajustes: Ajuste[] = [];
   ajustesFilter: Ajuste[] = [];
   busqueda: string = null;
   busquedaFecha: string = null;
-  searchDesde: string = "";
-  searchHasta: string = "";
+  searchDesde: string = '';
+  searchHasta: string = '';
   rows: any[];
-  proveedores: Proveedor[]=[];
+  proveedores: Proveedor[] = [];
   razonSocial: string;
 
-   constructor(private serviceCompra: ComprasService, private serviceAbmCompra: AbmComprasService, private router: Router) {}
+  constructor(private serviceCompra: ComprasService, private serviceAbmCompra: AbmComprasService, private router: Router) { }
 
-   ngOnInit() {
+  ngOnInit() {
     this.fetchEvent().then(() => {
       console.log(this.ajustes);
     });
 
-   }
+  }
 
   fetchEvent() {
     return this.serviceAbmCompra.listarAjustesTodos()
@@ -39,9 +39,9 @@ export class ListarAjunteComponent implements OnInit {
         this.ajustes = data.data;
         this.ajustesFilter = this.ajustes;
 
-        this.ajustes.forEach((p , index)=>{
+        this.ajustes.forEach((p, index) => {
           console.log(p.fecha);
-      })
+        })
       });
   }
   jsonStringDate(jdate): string {
@@ -107,7 +107,10 @@ export class ListarAjunteComponent implements OnInit {
     window.history.back();
   }
 
-  consultarAjuste(ajuste: Ajuste){
+  consultarAjuste(ajuste: Ajuste) {
     this.router.navigate(['consultar-ajuste/']);
+  }
+  filtarPedidoProveedor({ target }) {
+
   }
 }

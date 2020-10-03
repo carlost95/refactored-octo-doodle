@@ -9,7 +9,7 @@ import { Component, OnInit } from "@angular/core";
 export class AbmComprasComponent implements OnInit {
   menuDeplegado = true;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
   validaMenu() {
     if (
       this.router.url.includes("/listar-banco") ||
@@ -24,17 +24,19 @@ export class AbmComprasComponent implements OnInit {
       this.router.url.includes("/agregar-forma-pago") ||
       this.router.url.includes("/agregar-unidad-medida") ||
       this.router.url.includes("/agregar-rubro") ||
+      this.router.url.includes("/agregar-ajuste") ||
       this.router.url.includes("/agregar-sub-rubro") ||
       this.router.url.includes("/modificar-marca") ||
       this.router.url.includes("/modificar-forma-pago") ||
       this.router.url.includes("/modificar-unidad-medida") ||
-      this.router.url.includes("/modificar-banco")||
-      this.router.url.includes("/modificar-rubro")||
-      this.router.url.includes("/modificar-sub-rubro")
+      this.router.url.includes("/modificar-banco") ||
+      this.router.url.includes("/modificar-rubro") ||
+      this.router.url.includes("/modificar-sub-rubro") ||
+      this.router.url.includes('consultar-ajuste')
     )
       return false;
     else return true;
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 }
