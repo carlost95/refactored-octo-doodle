@@ -1,158 +1,73 @@
-<div class="container" ng-controller="clientes">
-  <div class="card m-2">
-    <br />
-    <br />
-    <h1 class="text-center">Carga de Clientes</h1>
-    <div class="card-body">
-      <table class="table table-borderless col-md border-0">
-        <thead class="thead-dark was-validated">
-          <div class="container">
-            <h3>Datos Personales</h3>
-            <div class="row justify-content-md-center">
-              <div class="column col-md-0">
-                <tr>
-                  <td>
-                    <label for="nombre"> Nombre</label>
-                  </td>
-                  <td>
-                    <input
-                      [(ngModel)]="cliente.nombre"
-                      type="text "
-                      :required
-                      class="form-control"
-                      placeholder="ingrese nombre "
-                      required="true"
-                    />
-                  </td>
+<div class="modal-content-wrapper">
+  <header class="modal-header modal-header-size2">
+    <h1 class="modal-title" *ngIf="!updating">Nuevo Cliente</h1>
+    <h1 class="modal-title" *ngIf="updating">Actualizar Cliente</h1>
+  </header>
+  <section class="modal-body">
+    <form [formGroup]="clientForm">
+      <p>
+        <mat-form-field appearance="legacy">
+          <mat-label>Apellido</mat-label>
+          <input
+            matInput
+            formControlName="apellido"
+            required
+            autocomplete="off"
+          />
+          <mat-error *ngIf="clientForm.controls.apellido.errors">
+            Apellido es<strong> requerido</strong>
+          </mat-error>
+        </mat-form-field>
+      </p>
 
-                  <td>
-                    <label for="abreviatura"> Apellido</label>
-                  </td>
-                  <td>
-                    <input
-                      [(ngModel)]="cliente.apellido"
-                      type="text "
-                      class="form-control"
-                      placeholder="ingrese apellido "
-                      required="true"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label for="abreviatura"> DNI</label>
-                  </td>
-                  <td>
-                    <input
-                      [(ngModel)]="cliente.dni"
-                      type="text "
-                      class="form-control"
-                      placeholder="ingrese documento "
-                      required="true"
-                    />
-                  </td>
-                </tr>
-              </div>
-            </div>
-          </div>
-          <div class="container">
-            <h3>Direccion</h3>
-            <div class="row justify-content-center">
-              <div class="column col-md-0">
-                <tr>
-                  <td>
-                    <label for="nombre"> Calle</label>
-                  </td>
-                  <td>
-                    <input
-                      [(ngModel)]="cliente.nombre"
-                      type="text "
-                      :required
-                      class="form-control"
-                      placeholder="ingrese nombre calle "
-                      required="true"
-                    />
-                  </td>
-                  <td>
-                    <label for="abreviatura"> Tipo Direccion</label>
-                  </td>
-                  <!-- <td>
-                    <select
-                      (change)="listarDepartamentos($event.target.value)"
-                      [(ngModel)]="nombreDepto"
-                      class="form-control"
-                    >
-                      <option *ngFor="let departamento of departamentos">
-                        {{ departamento.nombre }}
-                      </option>
-                    </select>
-                  </td> -->
-                </tr>
-                <tr>
-                  <td>
-                    <label for="abreviatura"> Nro Casa</label>
-                  </td>
-                  <td>
-                    <input
-                      [(ngModel)]="cliente.apellido"
-                      type="number "
-                      class="form-control"
-                      placeholder="numero de casa "
-                    />
-                  </td>
-                  <td>
-                    <label for="abreviatura"> Descripcion</label>
-                  </td>
-                  <td>
-                    <input
-                      [(ngModel)]="cliente.dni"
-                      type="text "
-                      class="form-control"
-                      placeholder="descripcion "
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label for="abreviatura"> Ubicacion</label>
-                  </td>
-                  <td>
-                    <input
-                      [(ngModel)]="cliente.dni"
-                      type="text "
-                      class="form-control"
-                      placeholder="descripcion "
-                    />
-                  </td>
-                </tr>
-              </div>
-            </div>
-          </div>
+      <p>
+        <mat-form-field appearance="legacy">
+          <mat-label>Nombre</mat-label>
+          <input
+            matInput
+            formControlName="nombre"
+            required
+            autocomplete="off"
+          />
+          <mat-error *ngIf="clientForm.controls.nombre.errors">
+            Nombre es<strong> requerido</strong>
+          </mat-error>
+        </mat-form-field>
+      </p>
 
-          <div class="row justify-content-end">
-            <tr>
-              <td>
-                <button
-                  (click)="cancelar()"
-                  class="btn btn-outline-danger"
-                  style="margin-left: 10px;"
-                >
-                  CANCELAR
-                </button>
-              </td>
-              <td>
-                <button
-                  (click)="guardarCliente(cliente)"
-                  class="btn btn-warning"
-                >
-                  ACEPTAR
-                </button>
-              </td>
-            </tr>
-          </div>
-          <!-- </div> -->
-        </thead>
-      </table>
-    </div>
-  </div>
+      <p>
+        <mat-form-field appearance="legacy">
+          <mat-label>D.N.I.</mat-label>
+          <input
+            matInput
+            formControlName="dni"
+            required
+            autocomplete="off"
+            (keyup)="validar($event)"
+          />
+          <mat-error *ngIf="clientForm.controls.dni.errors">
+            D.N.I. es<strong> requerido</strong>
+          </mat-error>
+        </mat-form-field>
+        <br/>
+        <label class="error-field m-0 p-0" *ngIf="duplicateDni">D.N.I. ya en uso</label>
+      </p>
+
+      <p>
+        <mat-form-field appearance="legacy">
+          <mat-label>Mail</mat-label>
+          <input
+            matInput
+            formControlName="mail"
+            autocomplete="off"
+          />
+        </mat-form-field>
+      </p>
+
+    </form>
+  </section>
+  <footer class="modal-footer">
+    <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>
+    <button class="btn btn-warning" (click)="onSubmit()">Guardar</button>
+  </footer>
 </div>

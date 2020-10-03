@@ -13,9 +13,10 @@ import { ExcelExportService } from "./service/excel-export.service";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MaterialModule} from "./material/material.module";
 import { ConfirmModalComponent } from './shared/confirm-modal/confirm-modal.component';
+import { SnackConfirmComponent } from './shared/snack-confirm/snack-confirm.component';
 // import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
 @NgModule({
-  declarations: [AppComponent, MenuComponent, LoginComponent, LogoutComponent, ConfirmModalComponent],
+  declarations: [AppComponent, MenuComponent, LoginComponent, LogoutComponent, ConfirmModalComponent, SnackConfirmComponent],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule, BrowserAnimationsModule, MaterialModule],
   providers: [
     VentasService,
