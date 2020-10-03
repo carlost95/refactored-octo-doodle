@@ -35,7 +35,7 @@
               class="form-control"
               style="background-color: #e9ecefb7"
               *ngIf="consultar"
-              >{{ ajuste.fecha | date: "yyyy-MM-dd" }}</label
+            >{{ ajuste.fecha | date: "yyyy-MM-dd" }}</label
             >
           </div>
         </div>
@@ -64,17 +64,32 @@
             <label>
               <h5>Proveedor</h5>
             </label>
-            <select
-              (change)="listarFiltro()"
-              [(ngModel)]="razonSocial"
-              class="form-control"
-              [disabled]="consultar"
-            >
-              <option value="0">Proveedores</option>
-              <option *ngFor="let prov of proveedores">
-                <label>{{ prov.razonSocial }}</label>
-              </option>
-            </select>
+            <!--            <mat-form-field appearance="fill">-->
+            <!--              <mat-select-->
+            <!--                [(ngModel)]="proveedorSelect"-->
+            <!--                name="rubro"-->
+            <!--                formControlName="rubroId"-->
+            <!--                autocomplete="off"-->
+            <!--              >-->
+            <!--                <mat-option *ngFor="let prov of proveedores" [value]="prov.razonSocial">-->
+            <!--                  {{ prov.razonSocial }}-->
+            <!--                </mat-option>-->
+            <!--              </mat-select>-->
+
+            <!--            </mat-form-field>-->
+<!--            <select (change)="listarFiltro()" [(ngModel)]="proveedorSelect"-->
+<!--                    class="form-control" [disabled]="consultar">-->
+<!--              <option selected>Proveedor</option>-->
+<!--              <option *ngFor="let prov of proveedores">-->
+<!--                <label>{{ prov.razonSocial }}</label>-->
+<!--              </option>-->
+<!--            </select>-->
+                        <input [(ngModel)]="busqueda"
+                               type="text"
+                               class="form-control"
+                               placeholder="ingrese nombre"
+                               [disabled]="consultar"
+                               autocomplete="off" />
           </div>
         </div>
       </div>
@@ -85,53 +100,52 @@
     >
       <table class="table table-striped">
         <thead class="thead-dark">
-          <tr class="text-lg-center">
-            <th scope="col">Codigo</th>
-            <th scope="col">Nombre</th>
-            <th scope="col" *ngIf="consultar">Stock Previo</th>
-            <th scope="col" *ngIf="!consultar">Stock Actual</th>
-            <th scope="col">Ingreso</th>
-          </tr>
+        <tr class="text-lg-center">
+          <th scope="col">Codigo</th>
+          <th scope="col">Nombre</th>
+          <th scope="col" *ngIf="consultar">Stock Previo</th>
+          <th scope="col" *ngIf="!consultar">Stock Actual</th>
+          <th scope="col">Ingreso</th>
+        </tr>
         </thead>
         <tbody *ngIf="articulos != null" class="tbody-scroll p-0 m-0">
-          <tr
-            *ngFor="
+        <tr
+          *ngFor="
               let artStoMov of articulosStockMovimientoFilter;
               let i = index
             "
-            class="text-center"
-          >
-            <td>{{ artStoMov.articulo.codigoArt }}</td>
-            <td>{{ artStoMov.articulo.nombre }}</td>
-            <td>{{ artStoMov.stock }}</td>
-            <td>
-              <input
-                type="number"
-                min="0"
-                maxlength="8"
-                (change)="guardarCarga()"
-                [(ngModel)]="artStoMov.movimiento.movimiento"
-                class="form-control text-center"
-                oninput="this.value=this.value.slice(0,this.maxLength|| 0/0);this.value=(this.value< 0) ? (0/0) : this.value;"
-                placeholder="cantidad"
-                [disabled]="consultar"
-              />
-            </td>
-          </tr>
+          class="text-center"
+        >
+          <td>{{ artStoMov.articulo.codigoArt }}</td>
+          <td>{{ artStoMov.articulo.nombre }}</td>
+          <td>{{ artStoMov.stock }}</td>
+          <td>
+            <input
+              type="checkbox"
+              maxlength="8"
+              (change)="guardarCarga()"
+              *ngIf="!consultar"
+              [(ngModel)]="artStoMov.movimiento.movimiento"
+              class="form-control text-center"
+              placeholder="cantidad"
+              [disabled]="consultar"
+            />
+          </td>
+        </tr>
         </tbody>
       </table>
     </div>
     <div class="row justify-content-end m-2 p-2" *ngIf="!consultar">
       <button (click)="volverAtras()" class="btn btn-outline-danger">
-        CANCELAR
+        Cancelar
       </button>
       &nbsp; &nbsp; &nbsp;
       <button (click)="guardarAjuste(ajuste)" class="btn btn-warning">
-        ACEPTAR
+        Aceptar
       </button>
     </div>
     <div class="row justify-content-end m-0 p-0" *ngIf="consultar">
-      <button (click)="volverAtras()" class="btn btn-warning">ATRAS</button>
+      <button (click)="volverAtras()" class="btn btn-warning">Volver</button>
     </div>
   </div>
 </div>
