@@ -141,6 +141,7 @@ export class AbmComprasService {
     return this.http.delete(this.Url + "/sub-rubros/" + id);
   }
   // SERVICE THE AJUSTES
+  // tslint:disable-next-line:typedef
   listarAjustesTodos() {
     return this.http.get<Response>(this.Url + "/ajustes");
   }
