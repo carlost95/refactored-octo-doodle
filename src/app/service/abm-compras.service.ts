@@ -99,66 +99,66 @@ export class AbmComprasService {
   desabilitarUnidadMedida(id: number) {
     return this.http.delete(this.Url + "/unidad-medida/" + id);
   }
-  //SERVICE DE RUBROS
-  listarRubrosTodos() {
-    return this.http.get<Response>(this.Url + "/rubro");
-  }
-  listarRubrosHabilitados() {
-    return this.http.get<Response>(this.Url + "/rubro/habilitados");
-  }
-  guardarRubro(rubro: Rubro) {
-    return this.http.post<Rubro>(this.Url + "/rubro/", rubro);
-  }
-  actualizarRubro(rubro: Rubro) {
-    return this.http.put<Rubro>(this.Url + "/rubro/", rubro);
-  }
-  listarRubroId(id: number) {
-    return this.http.get<Response>(this.Url + "/rubro/" + id);
-  }
-  desabilitarRubro(id: number) {
-    return this.http.delete(this.Url + "/rubro/" + id);
-  }
+  // //SERVICE DE RUBROS
+  // listarRubrosTodos() {
+  //   return this.http.get<Response>(this.Url + "/rubro");
+  // }
+  // listarRubrosHabilitados() {
+  //   return this.http.get<Response>(this.Url + "/rubro/habilitados");
+  // }
+  // guardarRubro(rubro: Rubro) {
+  //   return this.http.post<Rubro>(this.Url + "/rubro/", rubro);
+  // }
+  // actualizarRubro(rubro: Rubro) {
+  //   return this.http.put<Rubro>(this.Url + "/rubro/", rubro);
+  // }
+  // listarRubroId(id: number) {
+  //   return this.http.get<Response>(this.Url + "/rubro/" + id);
+  // }
+  // desabilitarRubro(id: number) {
+  //   return this.http.delete(this.Url + "/rubro/" + id);
+  // }
   //SERVICE DE SUB-RUBROS
-  listarSubRubrosTodos() {
-    return this.http.get<Response>(this.Url + "/sub-rubros");
-  }
-  listarSubRubrosHabilitados() {
-    return this.http.get<Response>(this.Url + "/sub-rubros/habilitados");
-  }
-  listarSubRubrosPorIdRubro(id: number) {
-    return this.http.get<Response>(this.Url + "/sub-rubros/rubro/" + id);
-  }
-  guardarSubRubro(subRubroDTO: SubRubroDTO) {
-    return this.http.post<SubRubroDTO>(this.Url + "/sub-rubros/", subRubroDTO);
-  }
-  actualizarSubRubro(subRubroDTO: SubRubroDTO) {
-    return this.http.put<SubRubroDTO>(this.Url + "/sub-rubros/", subRubroDTO);
-  }
-  listarSubRubroId(id: number) {
-    return this.http.get<Response[]>(this.Url + "/sub-rubros/" + id);
-  }
-  desabilitarSubRubro(id: number) {
-    return this.http.delete(this.Url + "/sub-rubros/" + id);
-  }
-  // SERVICE THE AJUSTES
-  // tslint:disable-next-line:typedef
-  listarAjustesTodos() {
-    return this.http.get<Response>(this.Url + "/ajustes");
-  }
-  listarAjustesHabilitados() {
-    return this.http.get<Response>(this.Url + "/ajustes/habilitados");
-  }
-  async guardarAjustes(ajuste: Ajuste) {
-    let ajustes = await this.http.post<Response>(this.Url + "/ajustes/", ajuste).toPromise();
-    return ajustes;
-  }
-  actualizarAjuste(ajuste: Ajuste) {
-    return this.http.put<Ajuste>(this.Url + "/ajustes/", ajuste);
-  }
-  listarAjusteId(id: number) {
-    return this.http.get<Response>(this.Url + "/ajustes/" + id);
-  }
-  desabilitarAjuste(id: number) {
-    return this.http.delete(this.Url + "/ajustes/" + id);
-  }
+
+//   }listarSubRubrosTodos() {
+//   return this.http.get<Response>(this.Url + "/sub-rubros");
+// }
+//   listarSubRubrosHabilitados() {
+//     return this.http.get<Response>(this.Url + "/sub-rubros/habilitados");
+//   }
+//   listarSubRubrosPorIdRubro(id: number) {
+//     return this.http.get<Response>(this.Url + "/sub-rubros/rubro/" + id);
+//   }
+//   guardarSubRubro(subRubroDTO: SubRubroDTO) {
+//     return this.http.post<SubRubroDTO>(this.Url + "/sub-rubros/", subRubroDTO);
+//   }
+//   actualizarSubRubro(subRubroDTO: SubRubroDTO) {
+//     return this.http.put<SubRubroDTO>(this.Url + "/sub-rubros/", subRubroDTO);
+//   }
+//   listarSubRubroId(id: number) {
+//     return this.http.get<Response[]>(this.Url + "/sub-rubros/" + id);
+//   }
+//   desabilitarSubRubro(id: number) {
+//     return this.http.delete(this.Url + "/sub-rubros/" + id);
+  // // SERVICE THE AJUSTES
+  // // tslint:disable-next-line:typedef
+  // listarAjustesTodos() {
+  //   return this.http.get<Response>(this.Url + "/ajustes");
+  // }
+  // listarAjustesHabilitados() {
+  //   return this.http.get<Response>(this.Url + "/ajustes/habilitados");
+  // }
+  // async guardarAjustes(ajuste: Ajuste) {
+  //   let ajustes = await this.http.post<Response>(this.Url + "/ajustes/", ajuste).toPromise();
+  //   return ajustes;
+  // }
+  // actualizarAjuste(ajuste: Ajuste) {
+  //   return this.http.put<Ajuste>(this.Url + "/ajustes/", ajuste);
+  // }
+  // listarAjusteId(id: number) {
+  //   return this.http.get<Response>(this.Url + "/ajustes/" + id);
+  // }
+  // desabilitarAjuste(id: number) {
+  //   return this.http.delete(this.Url + "/ajustes/" + id);
+  // }
 }

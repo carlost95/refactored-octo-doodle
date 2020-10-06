@@ -10,6 +10,8 @@ import { ArticuloDTO } from "./../../modelo/ArticuloDTO";
 import { Articulo } from "./../../modelo/Articulo";
 import { Component, OnInit } from "@angular/core";
 import { Key } from "protractor";
+import {SubRubroService} from '../../service/sub-rubro.service';
+import {RubrosService} from '../../service/rubros.service';
 
 @Component({
   selector: "app-modificar-articulo",
@@ -57,6 +59,8 @@ export class ModificarArticuloComponent implements OnInit {
 
   constructor(
     private serviceAbmCompra: AbmComprasService,
+    private subRubroService: SubRubroService,
+    private rubroService: RubrosService,
     private serviceCompra: ComprasService,
     private id: ActivatedRoute
   ) {}
@@ -80,12 +84,12 @@ export class ModificarArticuloComponent implements OnInit {
       this.unidadMedidaSelected = this.articulo.unidadMedidaId;
     });
 
-    this.serviceAbmCompra.listarRubrosHabilitados().subscribe(data => {
+    this.rubroService.listarRubrosHabilitados().subscribe(data => {
       this.rubros = data.data;
       this.rubroSelected = this.articulo.rubroId;
     });
 
-    this.serviceAbmCompra.listarSubRubrosHabilitados().subscribe(data => {
+    this.subRubroService.listarSubRubrosHabilitados().subscribe(data => {
       this.subRubros = data.data;
       this.subRubroSelected = this.articulo.subRubroId;
     });

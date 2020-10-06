@@ -18,6 +18,8 @@ import { AgregarMarcaComponent } from '../../abm-compras/agregar-marca/agregar-m
 import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
 import { FormBuilder } from '@angular/forms';
 import { MarcasService } from '../../service/marcas.service';
+import {SubRubroService} from '../../service/sub-rubro.service';
+import {RubrosService} from '../../service/rubros.service';
 
 
 @Component({
@@ -61,7 +63,9 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
   constructor(
     private serviceAbmCompra: AbmComprasService,
     private serviceCompra: ComprasService,
+    private subRubroService: SubRubroService,
     private marcaService: MarcasService,
+    private rubroService: RubrosService,
     private formBuilder: FormBuilder,
     public matDialog: MatDialog,
     private router: Router) { }
@@ -76,7 +80,7 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
       );
     });
 
-    let rubroPromise = await this.serviceAbmCompra
+    let rubroPromise = await this.rubroService
       .listarRubrosHabilitados()
       .toPromise()
       .then(data => {
@@ -85,7 +89,7 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
         this.rubroFilter.sort((a, b) => a.nombre.length - b.nombre.length);
       });
 
-    this.serviceAbmCompra.listarSubRubrosHabilitados().subscribe(data => {
+    this.subRubroService.listarSubRubrosHabilitados().subscribe(data => {
       this.subRubros = Object.keys(data.data).map(function (key) {
         return data.data[key];
       });
@@ -228,7 +232,7 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
     // TODO: VAlidar que no sea nulo rubroFilter
     let idRubro = this.rubroFilter[0].id;
 
-    this.serviceAbmCompra.listarSubRubrosPorIdRubro(idRubro).subscribe(data => {
+    this.subRubroService.listarSubRubrosPorIdRubro(idRubro).subscribe(data => {
       this.subRubros = Object.keys(data.data).map(function (key) {
         return data.data[key];
       });
