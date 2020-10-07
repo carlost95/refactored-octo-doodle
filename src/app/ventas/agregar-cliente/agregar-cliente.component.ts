@@ -12,6 +12,7 @@ import {ClienteService} from "../../service/cliente.service";
 export class AgregarClienteComponent implements OnInit {
   client: Cliente = new Cliente();
   updating: boolean = false;
+  consultar: boolean = false;
   clientForm: any;
   clients: Cliente[] = [];
   duplicateDni: boolean = false;
@@ -22,7 +23,7 @@ export class AgregarClienteComponent implements OnInit {
   constructor(private service: ClienteService,
               private formBuilder: FormBuilder,
               public dialogRef: MatDialogRef<AgregarClienteComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: Cliente) {
+              @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
   ngOnInit() {
@@ -30,17 +31,20 @@ export class AgregarClienteComponent implements OnInit {
       this.clients = resp.data;
       console.log(resp);
     });
+    const {cliente} = this.data;
 
-    if (this.data) {
+    if (cliente) {
+      this.consultar = this.data.consultar;
+
       this.clientForm = this.formBuilder.group({
-        id: [this.data.id, null],
-        apellido: [this.data.apellido, Validators.required],
-        nombre: [this.data.nombre, Validators.required],
-        dni: [this.data.dni, Validators.required],
-        mail: [this.data.mail, null],
-        estado: [this.data.estado, null],
+        id: [cliente.id, null],
+        apellido: [{value: cliente.apellido, disabled: this.consultar}, Validators.required],
+        nombre: [{value: cliente.nombre, disabled: this.consultar}, Validators.required],
+        dni: [{value: cliente.dni, disabled: this.consultar}, Validators.required],
+        mail: [{value: cliente.mail, disabled: this.consultar}, null],
+        estado: [{value: cliente.estado, disabled: this.consultar}, null],
       });
-      this.updating = true;
+      this.updating = !this.consultar;
     } else {
       this.clientForm = this.formBuilder.group({
         apellido: ['', Validators.required],
@@ -93,9 +97,9 @@ export class AgregarClienteComponent implements OnInit {
   }
 
   update() {
-    // this.service.actualizarBanco(this.banco).subscribe(data => {
-    //   this.banco = data.data;
-    //   this.dialogRef.close();
-    // });
+    this.service.update(this.client).subscribe(data => {
+      this.client = data.data;
+      this.dialogRef.close();
+    });
   }
 }

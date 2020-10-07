@@ -24,6 +24,10 @@ export class ClienteService {
     return this.http.post<Response>(this.url, client);
   }
 
+  update(client: Cliente) {
+    return this.http.put<Response>(this.url, client);
+  }
+
   changeStatus(id: number){
     console.log(this.url + cliente.status + `/${id}`)
     return this.http.put<Response>(this.url + cliente.status + `/${id}`, null);

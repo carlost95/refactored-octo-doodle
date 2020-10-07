@@ -22,7 +22,8 @@ export class ListarClientesComponent implements OnInit {
   clientesFilter: Cliente[] = null;
 
   busqueda: string = null;
-  toUpdate: null;
+  toUpdate: Cliente;
+  consulting: boolean;
 
   constructor(private service: ClienteService,
               private router: Router,
@@ -81,6 +82,19 @@ export class ListarClientesComponent implements OnInit {
 
   newClient() {
     this.toUpdate = null;
+    this.consulting = false;
+    this.openDialog();
+  }
+
+  editClient(client: Cliente) {
+    this.toUpdate = client;
+    this.consulting = false;
+    this.openDialog();
+  }
+
+  readClient(client: Cliente){
+    this.toUpdate = client;
+    this.consulting = true;
     this.openDialog();
   }
 
@@ -90,16 +104,15 @@ export class ListarClientesComponent implements OnInit {
     dialogConfig.id = 'modal-component';
     dialogConfig.height = '540px'
     dialogConfig.width = '300px';
-    dialogConfig.data = this.toUpdate;
+    dialogConfig.data = {
+      cliente: this.toUpdate,
+      consultar: this.consulting
+    };
     const modalDialog = this.matDialog.open(AgregarClienteComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
-      this.openSnackBar()
+      this.openSnackBar();
+      this.getData();
     })
-    //   this.serviceMarca.listarMarcaTodos().subscribe(data => {
-    //     this.marcas = data.data;
-    //     this.marcaFilter = data.data;
-    //   });
-    // });
   }
 
   openSnackBar() {
