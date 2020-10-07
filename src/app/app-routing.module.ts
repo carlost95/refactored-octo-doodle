@@ -7,7 +7,7 @@ import { AuthGaurdService } from "./service/auth-gaurd.service";
 const routes: Routes = [
   {
     path: "ventas",
-    loadChildren: () => import('./ventas/ventas.module').then(m => m.VentasModule),
+    loadChildren: () => import('./pages/ventas/ventas.module').then(m => m.VentasModule),
     canActivate: [AuthGaurdService],
   },
   {

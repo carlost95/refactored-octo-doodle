@@ -1,22 +1,23 @@
-import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit, Input } from '@angular/core';
-import { Pedido } from 'src/app/modelo/Pedido';
-import { Articulo } from 'src/app/modelo/Articulo';
-import { MovimientoArticuloDTO } from 'src/app/modelo/MovimientoArticuloDTO';
-import { ComprasService } from 'src/app/service/compras.service';
-import { Proveedor } from 'src/app/modelo/Proveedor';
-import { ProveedoresService } from '../../app/service/proveedores.service';
-import { proveedor } from '../../environments/global-route';
+import {Component, OnInit, Input} from '@angular/core';
+import {MovimientoArticuloDTO} from '../../modelo/MovimientoArticuloDTO';
+import {Ajuste} from '../../modelo/Ajuste';
+import {ComprasService} from '../../service/compras.service';
+import {ProveedoresService} from '../../service/proveedores.service';
+import {Router, ActivatedRoute} from '@angular/router';
+import {AjustesService} from '../../service/ajustes.service';
+import {Articulo} from '../../modelo/Articulo';
+import {Proveedor} from '../../modelo/Proveedor';
 
 @Component({
-  selector: 'app-pedidos',
-  templateUrl: './pedidos.component.html',
-  styleUrls: ['./pedidos.component.css'],
+  selector: 'app-ajustes',
+  templateUrl: './ajustes.component.html',
+  styleUrls: ['./ajustes.component.css']
 })
-export class PedidosComponent implements OnInit {
+export class AjustesComponent implements OnInit {
   @Input() consultar: boolean;
 
-  pedido: Pedido = new Pedido();
+  ajuste: Ajuste = new Ajuste();
+  busqueda = '';
 
   articulos: Articulo[] = [];
 
@@ -27,7 +28,7 @@ export class PedidosComponent implements OnInit {
   stockArticulo: number[] = [];
   proveedores: Proveedor[] = [];
   // tslint:disable-next-line: ban-types
-  razonSocial: String = '';
+  proveedorSelect: String = '';
   movimientoFilter: MovimientoArticuloDTO[] = [];
   movimientosPrevios: StockArticulo[] = [];
   stockArticuloPorPedido: StockArticulo[] = [];
@@ -39,20 +40,20 @@ export class PedidosComponent implements OnInit {
     private comprasService: ComprasService,
     private proveedorService: ProveedoresService,
     private route: Router,
-    private active: ActivatedRoute
-  ) { }
+    private active: ActivatedRoute,
+    private ajusteService: AjustesService
+  ) {
+  }
 
   // tslint:disable-next-line: typedef
   async ngOnInit() {
-    if (this.route.url === '/compras/agregar-pedido') {
+    if (this.route.url === '/abm-compras/agregar-ajuste') {
       console.log('agregar');
-    }
-    else {
-      const idPedido = Number(this.active.snapshot.paramMap.get('id'));
-      await this.comprasService
-        .listarPedidoId(idPedido)
+    } else {
+      const idAjuste = Number(this.active.snapshot.paramMap.get('id'));
+      await this.ajusteService.listarAjusteId(idAjuste)
         .toPromise()
-        .then((data) => (this.pedido = data.data));
+        .then((data) => (this.ajuste = data.data));
     }
 
     await this.getArticulos().then(() => {
@@ -68,39 +69,34 @@ export class PedidosComponent implements OnInit {
       this.getStock();
     });
 
-    this.listaProveedor();
-    //
+    // this.listaProveedor();
   }
+
   // tslint:disable-next-line: typedef
-  guardarPedido(pedido: Pedido) {
-    // console.log(this.articulosStockMovimientoFilter);  
-    this.pedido.id = null;
-    this.pedido.nombre = pedido.nombre.toUpperCase().trim();
-    this.pedido.fecha = pedido.fecha;
+  guardarAjuste(ajuste: Ajuste) {
+    // console.log(this.articulosStockMovimientoFilter);
+    this.ajuste.id = null;
+    this.ajuste.nombre = ajuste.nombre.toUpperCase().trim();
+    this.ajuste.fecha = ajuste.fecha;
 
     this.proveedores.forEach(prov => {
-      if (this.razonSocial === prov.razonSocial) {
-        pedido.proveedorId = prov.id;
-        pedido.razonSocial = prov.razonSocial;
-      }
+      // if (this.proveedorSelect === prov.razonSocial) {
+      //   ajuste.proveedorId = prov.id;
+      //   ajuste.razonSocial = prov.razonSocial;
+      // }
     });
-    this.pedido.proveedorId = pedido.proveedorId;
+    // this.ajuste.proveedorId = ajuste.proveedorId;
 
-    console.warn('--------------MUESTRA DE ID PROVEEDOR------------');
-    console.error(this.pedido.proveedorId);
-
-
-    this.pedido.descripcion = pedido.descripcion.toUpperCase();
-
-    this.comprasService.guardarPedidos(this.pedido).then((data) => {
+    this.ajuste.descripcion = ajuste.descripcion.toUpperCase();
+    this.ajusteService.guardarAjuste(this.ajuste).then((data) => {
       console.log(data);
 
-      this.pedido = data.data;
+      this.ajuste = data.data;
 
       this.articulosStockMovimientoFilter.forEach((artStockMov, index) => {
         if (artStockMov.movimiento.movimiento !== null) {
           this.movimientoArticuloDTO.id = null;
-          this.movimientoArticuloDTO.fecha = pedido.fecha;
+          this.movimientoArticuloDTO.fecha = ajuste.fecha;
           this.movimientoArticuloDTO.articuloId = artStockMov.articulo.id; // this.articulos[index].id;
           this.movimientoArticuloDTO.movimiento =
             artStockMov.movimiento.movimiento; // this.movimientoArticulosDTO[index].movimiento;
@@ -115,7 +111,7 @@ export class PedidosComponent implements OnInit {
       });
     });
 
-    alert('Se guardo un nuevo pedido');
+    alert('Se guardo un nuevo ajuste');
     window.history.back();
   }
 
@@ -141,7 +137,7 @@ export class PedidosComponent implements OnInit {
   async getMovimientos() {
     if (this.consultar) {
       const data = await this.comprasService
-        .getMovimientosPrevios(this.pedido.id)
+        .getMovimientosPrevios(this.ajuste.id)
         .toPromise();
       console.log('getMovimientosPrevios');
       const keys = Object.keys(data.data);
@@ -151,11 +147,12 @@ export class PedidosComponent implements OnInit {
         const stock = new StockArticulo(Number(keys[index]), Number(v));
         movimientosPrev.push(stock);
       });
-      console.log('movimivneto previo-------');
-      console.log(movimientosPrev);
+      // console.log('---------movimiento previo-------');
+      // console.log(movimientosPrev);
       // movimientosPrev = movimientosPrev.filter( m => m.stock !== 0);
       this.movimientosPrevios = movimientosPrev;
-      console.log(movimientosPrev);
+      // console.log(movimientosPrev);
+      // tslint:disable-next-line:variable-name
       this.articulos.forEach((a, index_1) => {
         this.stockArticulo.push(data.data.id);
       });
@@ -166,7 +163,7 @@ export class PedidosComponent implements OnInit {
       const data_1 = await this.comprasService
         .listarStockArticulo()
         .toPromise();
-      console.log('lista');
+      // console.log('lista');
       // tslint:disable-next-line: variable-name
       this.articulos.forEach((a_1, index_2) => {
         this.stockArticulo.push(data_1.data[index_2]);
@@ -177,8 +174,8 @@ export class PedidosComponent implements OnInit {
         });
         this.articulosStockMovimientoFilter = this.articulosStockMovimiento;
       });
-      console.log(this.articulosStockMovimiento);
-      console.log(this.stockArticulo);
+      // console.log(this.articulosStockMovimiento);
+      // console.log(this.stockArticulo);
     }
   }
 
@@ -190,11 +187,12 @@ export class PedidosComponent implements OnInit {
   // tslint:disable-next-line: typedef
   async listarFiltro() {
     this.articulosStockMovimientoFilter = [];
-    if (this.razonSocial === null) {
+    if (this.proveedorSelect === null) {
       this.articulosStockMovimientoFilter = this.articulosStockMovimiento;
     } else {
       await this.articulosStockMovimiento.forEach((artStockMov) => {
-        artStockMov.articulo.proveedorId.razonSocial === this.razonSocial
+        artStockMov.articulo.proveedorId.razonSocial === this.proveedorSelect
+          // tslint:disable-next-line:no-unused-expression
           ? this.articulosStockMovimientoFilter.push(artStockMov) : false;
       });
     }
@@ -211,22 +209,25 @@ export class PedidosComponent implements OnInit {
     });
   }
 
+  // tslint:disable-next-line: typedef
   guardarCarga() {
     console.log('Entre');
   }
 
+  // tslint:disable-next-line: typedef
   async getStock() {
     if (this.consultar) {
       const data = await this.comprasService
-        .getMovimientosStock(this.pedido.id)
+        .getMovimientosStock(this.ajuste.id)
         .toPromise();
       const keys = Object.keys(data.data);
       const value = Object.values(data.data);
       keys.forEach((k, index) => this.stockArticuloPorPedido.push(
         new StockArticulo(Number(k), Number(value[index]))
-      )
+        )
       );
       this.movimientoFilter = [];
+      // tslint:disable-next-line:variable-name
       keys.forEach((k_1, index_1) => {
         const mov = new MovimientoArticuloDTO();
         mov.articuloId = Number(k_1);
@@ -238,10 +239,12 @@ export class PedidosComponent implements OnInit {
       this.movimientosPrevios = this.movimientosPrevios.filter((m) => indexMovpre.includes(m.idArticulo)
       );
       this.stockArticulo.splice(0, this.stockArticulo.length);
+      // tslint:disable-next-line:variable-name
       this.movimientosPrevios.forEach((m_1) => this.stockArticulo.push(m_1.stock)
       );
       this.articulosFilter = this.articulosFilter.filter((a) => keys.includes(String(a.id))
       );
+      // tslint:disable-next-line:variable-name
       this.articulosFilter.forEach((a_1, index_2) => {
         this.articulosStockMovimiento.push({
           articulo: a_1,
@@ -251,7 +254,7 @@ export class PedidosComponent implements OnInit {
         this.articulosStockMovimientoFilter = this.articulosStockMovimiento;
       });
       console.error(this.articulosStockMovimiento);
-      console.error('Soy un fucking error ');
+      console.error(' error ');
     }
   }
 }
@@ -259,8 +262,10 @@ export class PedidosComponent implements OnInit {
 export class StockArticulo {
   idArticulo: number;
   stock: number;
+
   constructor(idArticulo: number, stock: number) {
     this.idArticulo = idArticulo;
     this.stock = stock;
   }
+
 }

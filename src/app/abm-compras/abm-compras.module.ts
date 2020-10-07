@@ -22,7 +22,7 @@ import { AgregarSubRubroComponent } from './agregar-sub-rubro/agregar-sub-rubro.
 import { AgregarAjusteComponent } from './agregar-ajuste/agregar-ajuste.component';
 import { MaterialModule } from '../material/material.module';
 import { ConsultarAjusteComponent } from './consultar-ajuste/consultar-ajuste.component';
-import { SharedModule } from '../../shared/shared.module';
+import { SharedModule } from '../shared/shared.module';
 import { ListarAjusteComponent } from './listar-ajuste/listar-ajuste.component';
 
 @NgModule({

@@ -1,22 +1,21 @@
-import {VentasService} from "./../../service/ventas.service";
 import {Router} from "@angular/router";
-import {Cliente} from "../../modelo/Cliente";
+import {Cliente} from "../../../modelo/Cliente";
 import {Component, OnInit} from "@angular/core";
-import {PdfExportService} from '../../service/pdf-export.service';
-import {ServiceReportService} from '../../service/service-report.service';
+import {PdfExportService} from '../../../service/pdf-export.service';
+import {ServiceReportService} from '../../../service/service-report.service';
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {AgregarClienteComponent} from "../agregar-cliente/agregar-cliente.component";
+import {AgregarClienteComponent} from "./agregar-cliente/agregar-cliente.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {SnackConfirmComponent} from "../../shared/snack-confirm/snack-confirm.component";
-import {Banco} from "../../modelo/Banco";
-import {ConfirmModalComponent} from "../../shared/confirm-modal/confirm-modal.component";
-import {ClienteService} from "../../service/cliente.service";
+import {SnackConfirmComponent} from "../../../shared/snack-confirm/snack-confirm.component";
+import {ConfirmModalComponent} from "../../../shared/confirm-modal/confirm-modal.component";
+import {ClienteService} from "../../../service/cliente.service";
 
 @Component({
-  selector: "app-listar-clientes",
-  templateUrl: "./listar-clientes.component.html"
+  selector: 'app-clientes',
+  templateUrl: './clientes.component.html',
+  styleUrls: ['./clientes.component.scss']
 })
-export class ListarClientesComponent implements OnInit {
+export class ClientesComponent implements OnInit {
   clientes: Cliente[] = null;
   cliente: Cliente = null;
   clientesFilter: Cliente[] = null;
@@ -40,9 +39,6 @@ export class ListarClientesComponent implements OnInit {
       this.clientes = data.data;
       this.clientesFilter = data.data;
     });
-  }
-  modificarCliente(cliente: Cliente) {
-    this.router.navigate(["/ventas/modificar-cliente/" + cliente.id]);
   }
 
   filtrarCliente() {
@@ -145,5 +141,9 @@ export class ListarClientesComponent implements OnInit {
         this.getData();
       }
     });
+  }
+
+  direcciones(id: number) {
+    this.router.navigate([`/ventas/direcciones/${id}`])
   }
 }
