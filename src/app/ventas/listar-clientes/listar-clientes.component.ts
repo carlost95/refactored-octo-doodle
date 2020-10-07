@@ -8,6 +8,9 @@ import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {AgregarClienteComponent} from "../agregar-cliente/agregar-cliente.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SnackConfirmComponent} from "../../shared/snack-confirm/snack-confirm.component";
+import {Banco} from "../../modelo/Banco";
+import {ConfirmModalComponent} from "../../shared/confirm-modal/confirm-modal.component";
+import {ClienteService} from "../../service/cliente.service";
 
 @Component({
   selector: "app-listar-clientes",
@@ -21,31 +24,24 @@ export class ListarClientesComponent implements OnInit {
   busqueda: string = null;
   toUpdate: null;
 
-  constructor(private service: VentasService, private router: Router,
+  constructor(private service: ClienteService,
+              private router: Router,
               private servicePdf: PdfExportService,
               private serviceReport: ServiceReportService,
               public matDialog: MatDialog,
               private _snackBar: MatSnackBar) {}
 
   ngOnInit() {
-    this.service.listarClientesTodos().subscribe((data) => {
+    this.getData();
+  }
+  getData() {
+    this.service.getAll().subscribe((data) => {
       this.clientes = data.data;
       this.clientesFilter = data.data;
     });
   }
-
   modificarCliente(cliente: Cliente) {
     this.router.navigate(["/ventas/modificar-cliente/" + cliente.id]);
-  }
-
-  inhabilitarCliente(cliente: Cliente) {
-    let resultado: boolean;
-    resultado = confirm("¿DESEA ELIMINAR CLIENTE?");
-    if (resultado === true) {
-      this.service.deshabilitarCliente(cliente.id).subscribe((data) => {
-        window.location.reload();
-      });
-    }
   }
 
   filtrarCliente() {
@@ -112,5 +108,27 @@ export class ListarClientesComponent implements OnInit {
       duration: 5 * 1000,
     });
   }
-
+  showModal(cliente: Cliente) {
+    const dialogConfig = new MatDialogConfig();
+    // The user can't close the dialog by clicking outside its body
+    dialogConfig.disableClose = true;
+    dialogConfig.id = "modal-component";
+    dialogConfig.height = '300px';
+    dialogConfig.width = '350px';
+    dialogConfig.data = {
+      message: 'Desea cambiar estado?',
+      title: 'Cambio estado',
+      state: cliente.estado
+    };
+    const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
+    modalDialog.afterClosed().subscribe(result => {
+      if (result.state) {
+        this.service.changeStatus(cliente.id).subscribe(result => {
+          this.getData();
+        })
+      } else {
+        this.getData();
+      }
+    });
+  }
 }

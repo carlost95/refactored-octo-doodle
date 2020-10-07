@@ -1,9 +1,7 @@
-import {VentasService} from "./../../service/ventas.service";
 import {Cliente} from "./../../modelo/Cliente";
 import {Component, Inject, Input, OnInit} from "@angular/core";
 import {FormBuilder, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Banco} from "../../modelo/Banco";
 import {ClienteService} from "../../service/cliente.service";
 
 @Component({
@@ -28,7 +26,10 @@ export class AgregarClienteComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.service.getAll().subscribe(resp => this.clients = resp.data);
+    this.service.getAll().subscribe(resp => {
+      this.clients = resp.data;
+      console.log(resp);
+    });
 
     if (this.data) {
       this.clientForm = this.formBuilder.group({
@@ -49,10 +50,9 @@ export class AgregarClienteComponent implements OnInit {
       })
     }
   }
-
   validar({target}) {
     const {value: dni} = target;
-    const finded = this.clients.find(c => c.dni.toLowerCase().trim() === dni.toLowerCase().trim());
+    const finded = this.clients.find(c => dni === c.dni);
     this.duplicateDni = finded ? true : false;
   }
 
@@ -73,7 +73,7 @@ export class AgregarClienteComponent implements OnInit {
   makeDTO() {
     this.client.apellido = (this.clientForm.controls.apellido.value).trim();
     this.client.nombre = (this.clientForm.controls.nombre.value).trim();
-    this.client.dni = (this.clientForm.controls.dni.value).trim;
+    this.client.dni = (this.clientForm.controls.dni.value).trim();
     this.client.mail = (this.clientForm.controls.mail.value).trim();
     if (this.updating) {
       this.client.id = this.clientForm.controls.id.value;

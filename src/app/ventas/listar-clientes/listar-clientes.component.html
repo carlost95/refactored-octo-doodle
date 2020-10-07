@@ -101,6 +101,13 @@
               <td>{{ cliente.apellido | uppercase }}</td>
               <td>{{ cliente.dni }}</td>
               <td>
+                <mat-slide-toggle
+                  [checked]="cliente.estado"
+                  (click)="showModal(cliente)"
+                  color="primary"
+                ></mat-slide-toggle>
+              </td>
+              <td>
                 <button class="btn btn-default m-0 p-0" title="Consultar">
                   <svg
                     version="1.1"
@@ -134,25 +141,7 @@
                     />
                   </svg>
                 </button>
-                &nbsp;
-                <button
-                  (click)="inhabilitarCliente(cliente)"
-                  class="btn btn-default m-0 p-0"
-                  title="deshabilitar "
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg "
-                    width="20 "
-                    height="22 "
-                    viewBox="0 0 12 16 "
-                  >
-                    <path
-                      fill-rule="evenodd "
-                      d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48
-            1.48L7.48 8z "
-                    />
-                  </svg>
-                </button>
+
               </td>
             </tr>
           </tbody>
@@ -161,8 +150,4 @@
     </div>
   </div>
 
-
-  <button mat-stroked-button (click)="openSnackBar()" aria-label="Show an example snack-bar">
-    Pizza party
-  </button>
 </div>

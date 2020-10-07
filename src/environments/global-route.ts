@@ -27,7 +27,8 @@ export const subRubro = {
 }
 
 export const cliente = {
-  path: '/clientes'
+  path: '/clientes',
+  status: '/status'
 }
 
 export const ajuste = {
