@@ -55,7 +55,6 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
   proveedoresFilter: Proveedor[] = null;
   idProveedor: number = 1;
   nombreProveedor: string = null;
-  // articuloDTOStorage: ArticuloDTO = new ArticuloDTO();
   subs: any;
   private previousUrl: string;
   articuloStorage: ArticuloStorage = new ArticuloStorage();
@@ -75,7 +74,8 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
 
   // tslint:disable-next-line:typedef
   async ngOnInit() {
-    this.unidadMedidaService.listarUnidadMedidaTodos().subscribe(data => {
+    this.unidadMedidaService.listarUnidadMedidaHabilitados().subscribe(data => {
+      // tslint:disable-next-line:only-arrow-functions typedef
       this.unidadMedidas = Object.keys(data.data).map(function(key) {
         return data.data[key];
       });
@@ -84,7 +84,7 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
       );
     });
 
-    let rubroPromise = await this.rubroService
+    const rubroPromise = await this.rubroService
       .listarRubrosHabilitados()
       .toPromise()
       .then(data => {
@@ -224,6 +224,7 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
     );
   }
 
+  // tslint:disable-next-line:typedef
   listarUnidadMedida(filterVal: any) {
     if (filterVal == '0') {
       this.unidadMedidasFilter = this.unidadMedidas;
@@ -292,29 +293,28 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
     localStorage.setItem('articuloStorage', JSON.stringify(this.articuloStorage));
   }
 
-  newMarca() {
-    this.openDialog();
-  }
+  // newMarca() {
+  //   this.openDialog();
+  // }
 
-
-  openDialog(): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.id = 'modal-component';
-    dialogConfig.height = '400px';
-    dialogConfig.width = '300px';
-    dialogConfig.data = null;
-    this.matDialog.open(AgregarMarcaComponent, dialogConfig);
-
-    this.marcaService.listarMarcaHabilitados().subscribe(data => {
-      this.marcas = Object.keys(data.data).map(function(key) {
-        return data.data[key];
-      });
-      this.marcasFilter = this.marcas.sort(
-        (a, b) => a.nombre.length - b.nombre.length
-      );
-    });
-  }
+  // openDialog(): void {
+  //   const dialogConfig = new MatDialogConfig();
+  //   dialogConfig.disableClose = true;
+  //   dialogConfig.id = 'modal-component';
+  //   dialogConfig.height = '400px';
+  //   dialogConfig.width = '300px';
+  //   dialogConfig.data = null;
+  //   this.matDialog.open(AgregarMarcaComponent, dialogConfig);
+  //
+  //   this.marcaService.listarMarcaHabilitados().subscribe(data => {
+  //     this.marcas = Object.keys(data.data).map(function(key) {
+  //       return data.data[key];
+  //     });
+  //     this.marcasFilter = this.marcas.sort(
+  //       (a, b) => a.nombre.length - b.nombre.length
+  //     );
+  //   });
+  // }
 }
 
 export class ArticuloStorage {
