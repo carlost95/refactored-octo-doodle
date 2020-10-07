@@ -1,0 +1,101 @@
+<div class="container">
+  <div class="card">
+    <header class="row mt-4 ml-3 mb-3">
+      <i
+        class="col-md-2 m-0 fas fa-chevron-left fa-3x"
+        style="margin-right: 100%"
+        (click)="backPage()"
+      ></i>
+
+      <h1 class="m-0 col-md-10" style="padding-left: 10rem !important">
+        Direcciones del cliente
+      </h1>
+    </header>
+
+    <div class="row card-body">
+      <section class="container">
+        <div class="row col-12 d-flex justify-content-between">
+          <label class="col-5 m-0 p-0"><h3>Busqueda:</h3></label>
+
+          <div class="col-12 m-0 p-0 aligth">
+<!--            <input-->
+<!--              class="col-12 position-relative has-icon-right searchDiv"-->
+<!--              type="text"-->
+<!--              [(ngModel)]="busqueda"-->
+<!--              class="form-control searchText"-->
+<!--              placeholder="ingrese busqueda"-->
+<!--              (keyup)="filtrarCliente()"-->
+<!--            />-->
+          </div>
+        </div>
+
+        <br/>
+        <!-- </div>
+      <div class="container"> -->
+        <div class="row col-12 d-flex justify-content-end">
+          <button class="btn btn-outline-danger" >
+            <i class="fas fa-file-pdf fa-2x"></i>
+          </button>
+          &nbsp;
+          <button class="btn btn-outline-success" >
+            <i class="far fa-file-excel fa-2x"></i>
+          </button>
+          &nbsp;
+          <button
+            mat-raised-button
+            color="primary"
+            title="Nueva Marca"
+          >
+            <i class="fas fa-user"></i>
+            Nuevo Cliente
+          </button>
+        </div>
+      </section>
+
+      <div
+        class="card-body p-0"
+        style="width: 1100px; height: 450px; overflow: auto;"
+      >
+        <table class="table table-striped">
+          <thead class="thead-dark">
+          <tr class="text-center">
+            <th scope="col ">Nombre</th>
+            <th scope="col ">Apellido</th>
+            <th scope="col ">D.N.I.</th>
+            <th scope="col ">Habilitacion</th>
+            <th scope="col*2 ">Opciones</th>
+          </tr>
+          </thead>
+          <tbody >
+          <tr class="text-center">
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+            <td>
+              <mat-slide-toggle
+                color="primary"
+              ></mat-slide-toggle>
+            </td>
+            <td>
+              <button class="btn btn-default m-0 p-0" title="Consultar">
+                <i class="fas fa-info-circle"></i>
+              </button>
+              &nbsp;
+              <button
+                class="btn btn-default m-0 p-0"
+                title="Modificar "
+                (click)="newDireccion()"
+              >
+                <i class="fas fa-user-edit"></i>
+
+              </button>
+
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>

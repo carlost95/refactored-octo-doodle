@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { PedidosComponent } from './pedidos/pedidos.component';
 import { AjustesComponent } from './ajustes/ajustes.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
-import {MaterialModule} from '../app/material/material.module';
+import {MaterialModule} from '../material/material.module';
 
 
 

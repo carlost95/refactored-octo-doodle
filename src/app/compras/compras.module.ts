@@ -2,7 +2,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ComprasComponent } from "./compras.component";
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { SharedModule } from "../../shared/shared.module";
+import { SharedModule } from "../shared/shared.module";
 
 import { ComprasRoutingModule } from "./compras-routing.module";
 import { SubMenuComponent } from "./sub-menu/sub-menu.component";
