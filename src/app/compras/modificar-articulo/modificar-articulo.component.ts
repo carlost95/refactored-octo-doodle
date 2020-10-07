@@ -1,20 +1,24 @@
-import { Proveedor } from "./../../modelo/Proveedor";
-import { Marca } from "./../../modelo/Marca";
-import { SubRubro } from "./../../modelo/SubRubro";
-import { UnidadMedida } from "./../../modelo/UnidadMedida";
-import { AbmComprasService } from "./../../service/abm-compras.service";
-import { ActivatedRoute } from "@angular/router";
-import { ComprasService } from "./../../service/compras.service";
-import { Rubro } from "./../../modelo/Rubro";
-import { ArticuloDTO } from "./../../modelo/ArticuloDTO";
-import { Articulo } from "./../../modelo/Articulo";
-import { Component, OnInit } from "@angular/core";
-import { Key } from "protractor";
+import { Proveedor } from './../../modelo/Proveedor';
+import { Marca } from './../../modelo/Marca';
+import { SubRubro } from './../../modelo/SubRubro';
+import { UnidadMedida } from './../../modelo/UnidadMedida';
+import { AbmComprasService } from './../../service/abm-compras.service';
+import { ActivatedRoute } from '@angular/router';
+import { ComprasService } from '../../service/compras.service';
+import { Rubro } from './../../modelo/Rubro';
+import { ArticuloDTO } from './../../modelo/ArticuloDTO';
+import { Articulo } from './../../modelo/Articulo';
+import { Component, OnInit } from '@angular/core';
+import { Key } from 'protractor';
+import {SubRubroService} from '../../service/sub-rubro.service';
+import {RubrosService} from '../../service/rubros.service';
+import {MarcasService} from '../../service/marcas.service';
+import {UnidadMedidaService} from '../../service/unidad-medida.service';
 
 @Component({
-  selector: "app-modificar-articulo",
-  templateUrl: "./modificar-articulo.component.html",
-  styleUrls: ["./modificar-articulo.component.css"]
+  selector: 'app-modificar-articulo',
+  templateUrl: './modificar-articulo.component.html',
+  styleUrls: ['./modificar-articulo.component.css']
 })
 export class ModificarArticuloComponent implements OnInit {
   articulo: Articulo = new Articulo();
@@ -57,16 +61,21 @@ export class ModificarArticuloComponent implements OnInit {
 
   constructor(
     private serviceAbmCompra: AbmComprasService,
+    private subRubroService: SubRubroService,
+    private rubroService: RubrosService,
     private serviceCompra: ComprasService,
+    private marcasService: MarcasService,
+    private unidadMedidaService: UnidadMedidaService,
     private id: ActivatedRoute
   ) {}
 
+  // tslint:disable-next-line:typedef
   async ngOnInit() {
     let id: number;
-    this.id.params.subscribe(data => (id = data["id"]));
-    console.log("se muestra -->" + id);
+    this.id.params.subscribe(data => (id = data.id));
+    console.log('se muestra -->' + id);
 
-    let promise = await this.serviceCompra
+    const promise = await this.serviceCompra
       .listarArticuloId(id)
       .toPromise()
       .then(data => {
@@ -74,23 +83,23 @@ export class ModificarArticuloComponent implements OnInit {
         console.log(this.articulo);
       });
 
-    this.serviceAbmCompra.listarUnidadMedidaHabilitados().subscribe(data => {
+    this.unidadMedidaService.listarUnidadMedidaHabilitados().subscribe(data => {
       this.unidadMedidas = data.data;
       // console.log(data.data);
       this.unidadMedidaSelected = this.articulo.unidadMedidaId;
     });
 
-    this.serviceAbmCompra.listarRubrosHabilitados().subscribe(data => {
+    this.rubroService.listarRubrosHabilitados().subscribe(data => {
       this.rubros = data.data;
       this.rubroSelected = this.articulo.rubroId;
     });
 
-    this.serviceAbmCompra.listarSubRubrosHabilitados().subscribe(data => {
+    this.subRubroService.listarSubRubrosHabilitados().subscribe(data => {
       this.subRubros = data.data;
       this.subRubroSelected = this.articulo.subRubroId;
     });
 
-    this.serviceAbmCompra.listarMarcaHabilitados().subscribe(data => {
+    this.marcasService.listarMarcaHabilitados().subscribe(data => {
       this.marcas = data.data;
       this.marcaSelected = this.articulo.marcaId;
     });
@@ -101,11 +110,13 @@ export class ModificarArticuloComponent implements OnInit {
     });
   }
 
+  // tslint:disable-next-line:typedef
   volverAtras() {
     window.history.back();
   }
 
   // -----------------
+  // tslint:disable-next-line:typedef
   actualizarArticulo(articulo: Articulo) {
     this.articuloDTO.nombre = this.articulo.nombre;
     this.articuloDTO.id = articulo.id;
@@ -124,7 +135,7 @@ export class ModificarArticuloComponent implements OnInit {
 
     this.serviceCompra.actualizarArticulo(this.articuloDTO).subscribe(data => {
       this.articuloDTO = data;
-      alert("SE ACTUALIZO EL SUB RUBRO " + this.articuloDTO.nombre);
+      alert('SE ACTUALIZO EL SUB RUBRO ' + this.articuloDTO.nombre);
       window.history.back();
     });
   }

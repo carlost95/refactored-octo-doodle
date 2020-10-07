@@ -80,15 +80,12 @@ export class AjustesComponent implements OnInit {
     this.ajuste.fecha = ajuste.fecha;
 
     this.proveedores.forEach(prov => {
-      if (this.proveedorSelect === prov.razonSocial) {
-        ajuste.proveedorId = prov.id;
-        ajuste.razonSocial = prov.razonSocial;
-      }
+      // if (this.proveedorSelect === prov.razonSocial) {
+      //   ajuste.proveedorId = prov.id;
+      //   ajuste.razonSocial = prov.razonSocial;
+      // }
     });
-    this.ajuste.proveedorId = ajuste.proveedorId;
-
-    // console.warn('--------------MUESTRA DE ID PROVEEDOR------------');
-    // console.error(this.ajuste.proveedorId);
+    // this.ajuste.proveedorId = ajuste.proveedorId;
 
     this.ajuste.descripcion = ajuste.descripcion.toUpperCase();
     this.ajusteService.guardarAjuste(this.ajuste).then((data) => {

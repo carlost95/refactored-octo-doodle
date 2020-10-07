@@ -1,29 +1,32 @@
-import { LogisticaModule } from './../../logistica/logistica.module';
-import { LoginComponent } from './../../login/login.component';
-import { SubRubro } from "./../../modelo/SubRubro";
-import { Proveedor } from "./../../modelo/Proveedor";
-import { Marca } from "./../../modelo/Marca";
-import { Rubro } from "./../../modelo/Rubro";
-import { AbmComprasService } from "src/app/service/abm-compras.service";
-import { Router, NavigationEnd, RoutesRecognized } from "@angular/router";
-import { ComprasService } from "./../../service/compras.service";
-import { UnidadMedida } from "./../../modelo/UnidadMedida";
-import { ArticuloDTO } from "./../../modelo/ArticuloDTO";
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { filter, pairwise, map } from 'rxjs/operators';
-import { resolve } from 'url';
-import { Observable } from 'rxjs';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { AgregarMarcaComponent } from '../../abm-compras/agregar-marca/agregar-marca.component';
-import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
-import { FormBuilder } from '@angular/forms';
-import { MarcasService } from '../../service/marcas.service';
+import {LogisticaModule} from './../../logistica/logistica.module';
+import {LoginComponent} from './../../login/login.component';
+import {SubRubro} from './../../modelo/SubRubro';
+import {Proveedor} from './../../modelo/Proveedor';
+import {Marca} from './../../modelo/Marca';
+import {Rubro} from './../../modelo/Rubro';
+import {AbmComprasService} from 'src/app/service/abm-compras.service';
+import {Router, NavigationEnd, RoutesRecognized} from '@angular/router';
+import {ComprasService} from './../../service/compras.service';
+import {UnidadMedida} from './../../modelo/UnidadMedida';
+import {ArticuloDTO} from './../../modelo/ArticuloDTO';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {filter, pairwise, map} from 'rxjs/operators';
+import {resolve} from 'url';
+import {Observable} from 'rxjs';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {AgregarMarcaComponent} from '../../abm-compras/agregar-marca/agregar-marca.component';
+import {ConfirmModalComponent} from '../../shared/confirm-modal/confirm-modal.component';
+import {FormBuilder} from '@angular/forms';
+import {MarcasService} from '../../service/marcas.service';
+import {SubRubroService} from '../../service/sub-rubro.service';
+import {RubrosService} from '../../service/rubros.service';
+import {UnidadMedidaService} from '../../service/unidad-medida.service';
 
 
 @Component({
-  selector: "app-agregar-articulo",
-  templateUrl: "./agregar-articulo.component.html",
-  styleUrls: ["./agregar-articulo.component.css"]
+  selector: 'app-agregar-articulo',
+  templateUrl: './agregar-articulo.component.html',
+  styleUrls: ['./agregar-articulo.component.css']
 })
 export class AgregarArticuloComponent implements OnInit, OnDestroy {
   articuloDTO: ArticuloDTO = new ArticuloDTO();
@@ -61,14 +64,19 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
   constructor(
     private serviceAbmCompra: AbmComprasService,
     private serviceCompra: ComprasService,
+    private subRubroService: SubRubroService,
     private marcaService: MarcasService,
+    private rubroService: RubrosService,
+    private unidadMedidaService: UnidadMedidaService,
     private formBuilder: FormBuilder,
     public matDialog: MatDialog,
-    private router: Router) { }
+    private router: Router) {
+  }
 
+  // tslint:disable-next-line:typedef
   async ngOnInit() {
-    this.serviceAbmCompra.listarUnidadMedidaTodos().subscribe(data => {
-      this.unidadMedidas = Object.keys(data.data).map(function (key) {
+    this.unidadMedidaService.listarUnidadMedidaTodos().subscribe(data => {
+      this.unidadMedidas = Object.keys(data.data).map(function(key) {
         return data.data[key];
       });
       this.unidadMedidasFilter = this.unidadMedidas.sort(
@@ -76,7 +84,7 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
       );
     });
 
-    let rubroPromise = await this.serviceAbmCompra
+    let rubroPromise = await this.rubroService
       .listarRubrosHabilitados()
       .toPromise()
       .then(data => {
@@ -85,16 +93,16 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
         this.rubroFilter.sort((a, b) => a.nombre.length - b.nombre.length);
       });
 
-    this.serviceAbmCompra.listarSubRubrosHabilitados().subscribe(data => {
-      this.subRubros = Object.keys(data.data).map(function (key) {
+    this.subRubroService.listarSubRubrosHabilitados().subscribe(data => {
+      this.subRubros = Object.keys(data.data).map(function(key) {
         return data.data[key];
       });
       this.subRubroFilter = this.subRubros;
       this.subRubroFilter.sort((a, b) => a.nombre.length - b.nombre.length);
     });
 
-    this.serviceAbmCompra.listarMarcaHabilitados().subscribe(data => {
-      this.marcas = Object.keys(data.data).map(function (key) {
+    this.marcaService.listarMarcaHabilitados().subscribe(data => {
+      this.marcas = Object.keys(data.data).map(function(key) {
         return data.data[key];
       });
       this.marcasFilter = this.marcas.sort(
@@ -102,7 +110,7 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
       );
     });
     await this.serviceCompra.listarProveedoresHabilitados().subscribe(data => {
-      this.proveedores = Object.keys(data.data).map(function (key) {
+      this.proveedores = Object.keys(data.data).map(function(key) {
         return data.data[key];
       });
       this.proveedoresFilter = this.proveedores.sort(
@@ -114,6 +122,7 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
 
   }
 
+  // tslint:disable-next-line:typedef
   async getDataFromLocalStorage() {
     if (localStorage.getItem('listar') === 'false') {
 
@@ -130,6 +139,7 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
   volverAtras() {
     window.history.back();
   }
+
   nuevoArticulo(articuloDTO: ArticuloDTO) {
     // this.articuloDTO.unidadMedidaId = 1;
 
@@ -205,31 +215,37 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
 
     this.serviceCompra.guardarArticulo(this.articuloDTO).subscribe(
       resp => {
-        alert("SE GUARDO UN NUEVO ARTICULO");
+        alert('SE GUARDO UN NUEVO ARTICULO');
         window.history.back();
       },
       error => {
-        alert("Se produjo un error en la carga");
+        alert('Se produjo un error en la carga');
       }
     );
   }
+
   listarUnidadMedida(filterVal: any) {
-    if (filterVal == "0") this.unidadMedidasFilter = this.unidadMedidas;
-    else
+    if (filterVal == '0') {
+      this.unidadMedidasFilter = this.unidadMedidas;
+    } else {
       this.unidadMedidasFilter = this.unidadMedidas.filter(
         item => item.nombre == filterVal
       );
+    }
   }
+
   listarRubros(filterVal: any) {
-    if (filterVal == "0") this.rubroFilter = this.rubros;
-    else
+    if (filterVal == '0') {
+      this.rubroFilter = this.rubros;
+    } else {
       this.rubroFilter = this.rubros.filter(item => item.nombre == filterVal);
+    }
 
     // TODO: VAlidar que no sea nulo rubroFilter
     let idRubro = this.rubroFilter[0].id;
 
-    this.serviceAbmCompra.listarSubRubrosPorIdRubro(idRubro).subscribe(data => {
-      this.subRubros = Object.keys(data.data).map(function (key) {
+    this.subRubroService.listarSubRubrosPorIdRubro(idRubro).subscribe(data => {
+      this.subRubros = Object.keys(data.data).map(function(key) {
         return data.data[key];
       });
       console.log(this.subRubros);
@@ -237,25 +253,33 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
       this.subRubroFilter.sort((a, b) => a.nombre.length - b.nombre.length);
     });
   }
+
   listarSubRubros(filterVal: any) {
-    if (filterVal == "0") this.subRubroFilter = this.subRubros;
-    else
+    if (filterVal == '0') {
+      this.subRubroFilter = this.subRubros;
+    } else {
       this.subRubroFilter = this.subRubros.filter(
         item => item.nombre == filterVal
       );
+    }
   }
 
   listarMarcas(filterVal: any) {
-    if (filterVal == '0') this.marcasFilter = this.marcas;
-    else
+    if (filterVal == '0') {
+      this.marcasFilter = this.marcas;
+    } else {
       this.marcasFilter = this.marcas.filter(item => item.nombre == filterVal);
+    }
   }
+
   listarProveedores(filterVal: any) {
-    if (filterVal == "0") this.proveedoresFilter = this.proveedores;
-    else
+    if (filterVal == '0') {
+      this.proveedoresFilter = this.proveedores;
+    } else {
       this.proveedoresFilter = this.proveedores.filter(
         item => item.razonSocial == filterVal
       );
+    }
   }
 
   ngOnDestroy(): void {
@@ -277,13 +301,13 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
-    dialogConfig.height = '400px'
+    dialogConfig.height = '400px';
     dialogConfig.width = '300px';
     dialogConfig.data = null;
     this.matDialog.open(AgregarMarcaComponent, dialogConfig);
 
     this.marcaService.listarMarcaHabilitados().subscribe(data => {
-      this.marcas = Object.keys(data.data).map(function (key) {
+      this.marcas = Object.keys(data.data).map(function(key) {
         return data.data[key];
       });
       this.marcasFilter = this.marcas.sort(
@@ -292,6 +316,7 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
     });
   }
 }
+
 export class ArticuloStorage {
   unidadMedida: string;
   rubro: string;

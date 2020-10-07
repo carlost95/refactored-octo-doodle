@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 import { ComprasService } from '../../service/compras.service';
 import { Ajuste } from '../../modelo/Ajuste';
 import { Component, OnInit } from '@angular/core';
-import * as _ from "lodash";
+import * as _ from 'lodash';
+import {AjustesService} from '../../service/ajustes.service';
 
 
 @Component({
@@ -17,14 +18,18 @@ export class ListarAjusteComponent implements OnInit {
   ajustesFilter: Ajuste[] = [];
   busqueda: string = null;
   busquedaFecha: string = null;
-  searchDesde: string = '';
-  searchHasta: string = '';
+  searchDesde = '';
+  searchHasta = '';
   rows: any[];
   proveedores: Proveedor[] = [];
   razonSocial: string;
 
-  constructor(private serviceCompra: ComprasService, private serviceAbmCompra: AbmComprasService, private router: Router) { }
+  constructor(private serviceCompra: ComprasService,
+              private serviceAbmCompra: AbmComprasService,
+              private router: Router,
+              private ajusteService: AjustesService) { }
 
+  // tslint:disable-next-line:typedef
   ngOnInit() {
     this.fetchEvent().then(() => {
       console.log(this.ajustes);
@@ -32,8 +37,9 @@ export class ListarAjusteComponent implements OnInit {
 
   }
 
+  // tslint:disable-next-line:typedef
   fetchEvent() {
-    return this.serviceAbmCompra.listarAjustesTodos()
+    return this.ajusteService.listarAjusteTodos()
       .toPromise()
       .then(data => {
         this.ajustes = data.data;
@@ -41,7 +47,7 @@ export class ListarAjusteComponent implements OnInit {
 
         this.ajustes.forEach((p, index) => {
           console.log(p.fecha);
-        })
+        });
       });
   }
   jsonStringDate(jdate): string {
@@ -49,7 +55,7 @@ export class ListarAjusteComponent implements OnInit {
       const resp = new Date(jdate);
       return resp.toISOString().substring(0, 10);
     }
-    return "";
+    return '';
   }
   // deshabilitarPedido(pedido: Pedido) {
   //   let resultado: boolean;
@@ -60,6 +66,8 @@ export class ListarAjusteComponent implements OnInit {
   //     });
   //   }
   // }
+
+  // tslint:disable-next-line:typedef
   filtarAjusteNombre(event: any) {
     if (this.busqueda !== null) {
       this.ajustesFilter = this.ajustes.filter(item => {
@@ -72,9 +80,10 @@ export class ListarAjusteComponent implements OnInit {
     }
   }
 
+  // tslint:disable-next-line:typedef
   updateFilterDateDesde() {
     let val = null;
-    if (this.searchDesde != null && this.searchDesde !== "") {
+    if (this.searchDesde != null && this.searchDesde !== '') {
       val = new Date(this.searchDesde);
       this.ajustesFilter = [];
       this.ajustesFilter = this.ajustes.filter(element => {
@@ -86,9 +95,10 @@ export class ListarAjusteComponent implements OnInit {
     this.orderRows();
   }
 
+  // tslint:disable-next-line:typedef
   updateFilterDateHasta() {
     let val = null;
-    if (this.searchHasta != null && this.searchHasta !== "") {
+    if (this.searchHasta != null && this.searchHasta !== '') {
       val = new Date(this.searchHasta);
       this.ajustesFilter = this.ajustesFilter.filter(element => {
         return new Date(element.fecha).valueOf() <= val.valueOf();
@@ -99,17 +109,21 @@ export class ListarAjusteComponent implements OnInit {
 
     this.orderRows();
   }
+  // tslint:disable-next-line:typedef
   orderRows() {
-    this.ajustesFilter = _.orderBy(this.ajustesFilter, ["fecha"], ["desc"]);
+    this.ajustesFilter = _.orderBy(this.ajustesFilter, ['fecha'], ['desc']);
   }
 
+  // tslint:disable-next-line:typedef
   backPage() {
     window.history.back();
   }
 
+  // tslint:disable-next-line:typedef
   consultarAjuste(ajuste: Ajuste) {
     this.router.navigate(['consultar-ajuste/']);
   }
+  // tslint:disable-next-line:typedef
   filtarPedidoProveedor({ target }) {
 
   }
