@@ -61,7 +61,8 @@ export class AgregarClienteComponent implements OnInit {
   }
 
   close() {
-    this.dialogRef.close();
+    this.data.save = false;
+    this.dialogRef.close(false);
   }
 
   onSubmit() {
@@ -92,14 +93,14 @@ export class AgregarClienteComponent implements OnInit {
   save() {
     this.service.save(this.client).subscribe(data => {
       this.client = data.data;
-      this.dialogRef.close();
+      this.dialogRef.close(true);
     });
   }
 
   update() {
     this.service.update(this.client).subscribe(data => {
       this.client = data.data;
-      this.dialogRef.close();
+      this.dialogRef.close(true);
     });
   }
 }

@@ -110,7 +110,9 @@ export class ListarClientesComponent implements OnInit {
     };
     const modalDialog = this.matDialog.open(AgregarClienteComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
-      this.openSnackBar();
+      if(result){
+        this.openSnackBar();
+      }
       this.getData();
     })
   }
