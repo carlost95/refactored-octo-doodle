@@ -9,18 +9,27 @@ import {Router, NavigationEnd, RoutesRecognized} from '@angular/router';
 import {ComprasService} from './../../service/compras.service';
 import {UnidadMedida} from './../../modelo/UnidadMedida';
 import {ArticuloDTO} from './../../modelo/ArticuloDTO';
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Component, OnInit, OnDestroy, Inject} from '@angular/core';
 import {filter, pairwise, map} from 'rxjs/operators';
 import {resolve} from 'url';
 import {Observable} from 'rxjs';
-import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
 import {AgregarMarcaComponent} from '../../abm-compras/agregar-marca/agregar-marca.component';
 import {ConfirmModalComponent} from '../../shared/confirm-modal/confirm-modal.component';
-import {FormBuilder} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MarcasService} from '../../service/marcas.service';
 import {SubRubroService} from '../../service/sub-rubro.service';
 import {RubrosService} from '../../service/rubros.service';
 import {UnidadMedidaService} from '../../service/unidad-medida.service';
+import {AgregarRubroComponent} from '../../abm-compras/agregar-rubro/agregar-rubro.component';
+import {AgregarProveedorComponent} from '../agregar-proveedor/agregar-proveedor.component';
+import {ProveedoresService} from '../../service/proveedores.service';
+import {AgregarSubRubroComponent} from '../../abm-compras/agregar-sub-rubro/agregar-sub-rubro.component';
+import {AgregarUnidadMedidaComponent} from '../../abm-compras/agregar-unidad-medida/agregar-unidad-medida.component';
+import {Banco} from '../../modelo/Banco';
+import {BancosService} from '../../service/bancos.service';
+import {AgregarBancoComponent} from '../../abm-compras/agregar-banco/agregar-banco.component';
+import {Articulo} from '../../modelo/Articulo';
 
 
 @Component({
@@ -33,7 +42,7 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
 
   unidadMedidas: UnidadMedida[] = null;
   unidadMedidasFilter: UnidadMedida[] = null;
-  idUnidadMedida: number = 1;
+  idUnidadMedida = 1;
   nombreUnidadMedida: string = null;
 
   rubros: Rubro[] = [];
@@ -48,28 +57,43 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
 
   marcas: Marca[] = null;
   marcasFilter: Marca[] = null;
-  idMarca: number = 1;
+  idMarca = 1;
   nombreMarca: string = null;
 
   proveedores: Proveedor[] = null;
   proveedoresFilter: Proveedor[] = null;
-  idProveedor: number = 1;
+  idProveedor = 1;
   nombreProveedor: string = null;
   subs: any;
   private previousUrl: string;
   articuloStorage: ArticuloStorage = new ArticuloStorage();
 
 
+  // nuevos de prueba
+  errorInForm = false;
+  submitted = false;
+  updating = false;
+  codigoRepe = false;
+  nombreRepe = false;
+  abreviaturaRepe = false;
+
+  articulos: ArticuloDTO[] = [];
+
+
   constructor(
-    private serviceAbmCompra: AbmComprasService,
     private serviceCompra: ComprasService,
     private subRubroService: SubRubroService,
     private marcaService: MarcasService,
     private rubroService: RubrosService,
     private unidadMedidaService: UnidadMedidaService,
+    private proveedorService: ProveedoresService,
     private formBuilder: FormBuilder,
     public matDialog: MatDialog,
-    private router: Router) {
+    // private router: Router,
+    // private service: BancosService,
+    // public dialogRef: MatDialogRef<AgregarArticuloComponent>,
+    // @Inject(MAT_DIALOG_DATA) public data: ArticuloDTO
+  ) {
   }
 
   // tslint:disable-next-line:typedef
@@ -92,7 +116,11 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
         this.rubroFilter = this.rubros;
         this.rubroFilter.sort((a, b) => a.nombre.length - b.nombre.length);
       });
-
+    this.serviceCompra.listarArticuloTodos().subscribe(data => {
+      this.articulos = data.data;
+      console.warn('muetra de todos los articulos');
+      console.warn(this.articulos);
+    });
     this.subRubroService.listarSubRubrosHabilitados().subscribe(data => {
       this.subRubros = Object.keys(data.data).map(function(key) {
         return data.data[key];
@@ -149,7 +177,7 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
       }
     });
 
-    for (var i = 0; i < this.unidadMedidas.length; i++) {
+    for (let i = 0; i < this.unidadMedidas.length; i++) {
       if (this.unidadMedidas[i].nombre == this.articuloStorage.unidadMedida) {
         this.articuloDTO.unidadMedidaId = this.unidadMedidas[i].id;
       }
@@ -160,7 +188,7 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
       }
     });
 
-    for (var i = 0; i < this.rubros.length; i++) {
+    for (let i = 0; i < this.rubros.length; i++) {
       if (this.rubros[i].nombre == this.articuloStorage.rubro) {
         this.articuloDTO.rubroId = this.rubros[i].id;
       }
@@ -172,7 +200,7 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
       }
     });
 
-    for (var i = 0; i < this.subRubros.length; i++) {
+    for (let i = 0; i < this.subRubros.length; i++) {
       if (this.subRubros[i].nombre == this.articuloStorage.subRubro) {
         this.articuloDTO.subRubroId = this.subRubros[i].id;
       }
@@ -184,7 +212,7 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
       }
     });
 
-    for (var i = 0; i < this.marcas.length; i++) {
+    for (let i = 0; i < this.marcas.length; i++) {
       if (this.marcas[i].nombre == this.articuloStorage.marca) {
         this.articuloDTO.marcaId = this.marcas[i].id;
       }
@@ -195,7 +223,7 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
       }
     });
 
-    for (var i = 0; i < this.proveedores.length; i++) {
+    for (let i = 0; i < this.proveedores.length; i++) {
       if (this.proveedores[i].razonSocial == this.articuloStorage.proveedor) {
         this.articuloDTO.proveedorId = this.proveedores[i].id;
       }
@@ -243,7 +271,7 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
     }
 
     // TODO: VAlidar que no sea nulo rubroFilter
-    let idRubro = this.rubroFilter[0].id;
+    const idRubro = this.rubroFilter[0].id;
 
     this.subRubroService.listarSubRubrosPorIdRubro(idRubro).subscribe(data => {
       this.subRubros = Object.keys(data.data).map(function(key) {
@@ -284,7 +312,7 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    let list = localStorage.getItem('listar');
+    const list = localStorage.getItem('listar');
 
     if (list === 'true') {
       localStorage.setItem('listar', 'false');
@@ -293,27 +321,210 @@ export class AgregarArticuloComponent implements OnInit, OnDestroy {
     localStorage.setItem('articuloStorage', JSON.stringify(this.articuloStorage));
   }
 
-  // newMarca() {
-  //   this.openDialog();
-  // }
+  // tslint:disable-next-line:typedef
+  newMarca() {
+    this.openDialog();
+  }
 
-  // openDialog(): void {
-  //   const dialogConfig = new MatDialogConfig();
-  //   dialogConfig.disableClose = true;
-  //   dialogConfig.id = 'modal-component';
-  //   dialogConfig.height = '400px';
-  //   dialogConfig.width = '300px';
-  //   dialogConfig.data = null;
-  //   this.matDialog.open(AgregarMarcaComponent, dialogConfig);
+  openDialog(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'modal-component';
+    dialogConfig.height = '400px';
+    dialogConfig.width = '300px';
+    dialogConfig.data = null;
+    this.matDialog.open(AgregarMarcaComponent, dialogConfig);
+    this.marcaService.listarMarcaHabilitados().subscribe(data => {
+      this.marcas = Object.keys(data.data).map(function(key) {
+        return data.data[key];
+      });
+      this.marcasFilter = this.marcas.sort(
+        (a, b) => a.nombre.length - b.nombre.length
+      );
+    });
+  }
+
+  // tslint:disable-next-line:typedef
+  newRubro(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'modal-component';
+    dialogConfig.height = '400px';
+    dialogConfig.width = '300px';
+    dialogConfig.data = null;
+    this.matDialog.open(AgregarRubroComponent, dialogConfig);
+    this.rubroService.listarRubrosHabilitados().subscribe(data => {
+      this.rubros = Object.keys(data.data).map(function(key) {
+        return data.data[key];
+      });
+      this.rubroFilter = this.rubros.sort(
+        (a, b) => a.nombre.length - b.nombre.length
+      );
+    });
+  }
+
+
+  newProveedor(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'modal-component';
+    dialogConfig.height = '600px';
+    dialogConfig.width = '400px';
+    dialogConfig.data = null;
+    this.matDialog.open(AgregarProveedorComponent, dialogConfig);
+    this.proveedorService.listarProveedoresHabilitados().subscribe(data => {
+      this.proveedores = Object.keys(data.data).map(function(key) {
+        return data.data[key];
+      });
+      this.proveedoresFilter = this.proveedores.sort(
+        (a, b) => a.razonSocial.length - b.razonSocial.length
+      );
+    });
+  }
+
+  newSubRubro(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'modal-component';
+    dialogConfig.height = '400px';
+    dialogConfig.width = '300px';
+    dialogConfig.data = null;
+    this.matDialog.open(AgregarSubRubroComponent, dialogConfig);
+    this.subRubroService.listarSubRubrosHabilitados().subscribe(data => {
+      this.subRubros = Object.keys(data.data).map(function(key) {
+        return data.data[key];
+      });
+      this.subRubroFilter = this.subRubros.sort(
+        (a, b) => a.nombre.length - b.nombre.length
+      );
+    });
+  }
+
+  newUnidadMedida(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'modal-component';
+    dialogConfig.height = '400px';
+    dialogConfig.width = '300px';
+    dialogConfig.data = null;
+    this.matDialog.open(AgregarUnidadMedidaComponent, dialogConfig);
+    this.unidadMedidaService.listarUnidadMedidaHabilitados().subscribe(data => {
+      this.unidadMedidas = Object.keys(data.data).map(function(key) {
+        return data.data[key];
+      });
+      this.unidadMedidasFilter = this.unidadMedidas.sort(
+        (a, b) => a.nombre.length - b.nombre.length
+      );
+    });
+  }
+
+  // tslint:disable-next-line:typedef
+  validarcodigo({target}) {
+    const {value: nombre} = target;
+    const finded = this.articulos.find(p => p.codigoArt.toLowerCase() === nombre.toLowerCase());
+    this.codigoRepe = (finded !== undefined) ? true : false;
+  }
+  // tslint:disable-next-line:typedef
+  validarNombre({target}) {
+    const {value: nombre} = target;
+    const finded = this.articulos.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
+    this.nombreRepe = (finded !== undefined) ? true : false;
+  }
+  // tslint:disable-next-line:typedef
+  validarAbreviatura({target}) {
+    const {value: nombre} = target;
+    const finded = this.articulos.find(p => p.abreviatura.toLowerCase() === nombre.toLowerCase());
+    this.abreviaturaRepe = (finded !== undefined) ? true : false;
+  }
+
+  // banco: Banco = new Banco();
+  // bancoForm: FormGroup;
+  // errorInForm: boolean = false;
+  // submitted = false;
+  // updating = false;
+  // nombreRepe = false;
+  // abreRepe = false;
+  // bancos: Banco[] = [];
   //
-  //   this.marcaService.listarMarcaHabilitados().subscribe(data => {
-  //     this.marcas = Object.keys(data.data).map(function(key) {
-  //       return data.data[key];
-  //     });
-  //     this.marcasFilter = this.marcas.sort(
-  //       (a, b) => a.nombre.length - b.nombre.length
-  //     );
+  // constructor(private service: BancosService,
+  //             private formBuilder: FormBuilder,
+  //             public dialogRef: MatDialogRef<AgregarArticuloComponent>,
+  //             @Inject(MAT_DIALOG_DATA) public data: Banco) {
+  // }
+  //
+  //
+  // ngOnInit() {
+  //   this.service.listarBancosTodos().subscribe(resp => this.bancos = resp.data);
+  //
+  //   if (this.data) {
+  //     this.bancoForm = this.formBuilder.group({
+  //       id: [this.data.id, null],
+  //       nombre: [this.data.nombre, Validators.required],
+  //       abreviatura: [this.data.abreviatura, Validators.required]
+  //     })
+  //     this.updating = true;
+  //   } else {
+  //     this.bancoForm = this.formBuilder.group({
+  //       nombre: ['', Validators.required],
+  //       abreviatura: ['', null]
+  //     })
+  //   }
+  //
+  // }
+  //
+  // close() {
+  //   this.dialogRef.close();
+  // }
+  //
+  // onSubmit() {
+  //   this.submitted = true;
+  //   this.errorInForm = this.submitted && this.bancoForm.invalid;
+  //   if (this.errorInForm || this.nombreRepe || this.abreRepe) {
+  //     this.bancoForm.controls.nombre.markAsTouched();
+  //     this.bancoForm.controls.abreviatura.markAsTouched();
+  //     console.log('Error en los datos')
+  //   } else {
+  //     this.makeDTO();
+  //
+  //   }
+  //
+  // }
+  //
+  // makeDTO() {
+  //   this.banco.nombre = this.bancoForm.controls.nombre.value;
+  //   this.banco.abreviatura = this.bancoForm.controls.abreviatura.value;
+  //   if (this.updating) {
+  //     this.banco.id = this.bancoForm.controls.id.value;
+  //     this.update();
+  //   } else {
+  //     this.save();
+  //   }
+  // }
+  //
+  //
+  // save() {
+  //   this.service.guardarBanco(this.banco).subscribe(data => {
+  //     this.banco = data.data;
+  //     this.dialogRef.close();
   //   });
+  // }
+  //
+  // private update() {
+  //   this.service.actualizarBanco(this.banco).subscribe(data => {
+  //     this.banco = data.data;
+  //     this.dialogRef.close();
+  //   });
+  // }
+  // // tslint:disable-next-line: typedef
+  // validar({ target }) {
+  //   const { value: nombre } = target;
+  //   const finded = this.bancos.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
+  //   const finded2 = this.bancos.find(p => p.abreviatura.toLowerCase() === nombre.toLowerCase());
+  //   this.nombreRepe = (finded !== undefined) ? true : false;
+  //   this.abreRepe = (finded2 !== undefined) ? true : false;
+  // }
+  //
+  // ngOnDestroy(): void {
   // }
 }
 
