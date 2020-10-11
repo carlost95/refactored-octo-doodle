@@ -1,6 +1,6 @@
 <div class="container" ng-controller="articulo">
   <div class="card">
-       <header class="row mt-4 ml-3 mb-3">
+    <header class="row mt-4 ml-3 mb-3">
       <i
         class="col-md-2 m-0 fas fa-chevron-left fa-3x"
         style="margin-right: 100%"
@@ -33,7 +33,7 @@
 
         <div class="row col-12 d-flex justify-content-end">
           <button class="btn btn-outline-danger" (click)="exportarPDF()">
-                <i class="far fa-file-pdf fa-lg" title="exportar pdf"></i>
+            <i class="far fa-file-pdf fa-lg" title="exportar pdf"></i>
           </button>
           &nbsp;
 
@@ -42,15 +42,22 @@
           </button>
           &nbsp;
 
-          <button
-            class="btn btn-warning"
-            [routerLink]="['/compras/agregar-articulo']"
-            routerLinkActive="router-link-active"
-            title="Articulo"
+          <button mat-raised-button color="primary"
+                  title="Articulo"
+                  (click)="newArticulo()"
           >
             <i class="fas fa-shopping-cart" title="nuevo articulo"></i>
             Nuevo Articulo
           </button>
+          <!--          <button-->
+          <!--            class="btn btn-warning"-->
+          <!--            [routerLink]="['/compras/agregar-articulo']"-->
+          <!--            routerLinkActive="router-link-active"-->
+          <!--            title="Articulo"-->
+          <!--          >-->
+          <!--            <i class="fas fa-shopping-cart" title="nuevo articulo"></i>-->
+          <!--            Nuevo Articulo-->
+          <!--          </button>-->
         </div>
       </div>
       <div
@@ -60,10 +67,10 @@
         <table class="table table-striped" id="listArt" #listArt>
           <thead class="thead-dark">
           <tr class="text-center">
-            <th scope="col">Cod</th>
+            <th scope="col">Codigo</th>
             <th scope="col">Nombre</th>
-            <th scope="col">Stock min</th>
-            <th scope="col">Stock max</th>
+<!--            <th scope="col">Stock min</th>-->
+<!--            <th scope="col">Stock max</th>-->
             <th scope="col">Unid med</th>
             <th scope="col">Rubro</th>
             <th *ngIf="export" scope="col*2">Opciones</th>
@@ -73,8 +80,8 @@
           <tr *ngFor="let articulo of articulosFilter" class="text-center">
             <td>{{ articulo.codigoArt }}</td>
             <td>{{ articulo.nombre }}</td>
-            <td>{{ articulo.stockMin }}</td>
-            <td>{{ articulo.stockMax }}</td>
+<!--            <td>{{ articulo.stockMin }}</td>-->
+<!--            <td>{{ articulo.stockMax }}</td>-->
             <td *ngIf="articulo.unidadMedidaId == null"></td>
             <td *ngIf="articulo.unidadMedidaId != null">
               {{ articulo.unidadMedidaId.abreviatura }}

@@ -7,6 +7,7 @@ import {Router, ActivatedRoute} from '@angular/router';
 import {AjustesService} from '../../service/ajustes.service';
 import {Articulo} from '../../modelo/Articulo';
 import {Proveedor} from '../../modelo/Proveedor';
+import {ArticulosService} from '../../service/articulos.service';
 
 @Component({
   selector: 'app-ajustes',
@@ -38,6 +39,7 @@ export class AjustesComponent implements OnInit {
 
   constructor(
     private comprasService: ComprasService,
+    private articuloService: ArticulosService,
     private proveedorService: ProveedoresService,
     private route: Router,
     private active: ActivatedRoute,
@@ -127,7 +129,7 @@ export class AjustesComponent implements OnInit {
 
   // tslint:disable-next-line: typedef
   async getArticulos() {
-    const data = await this.comprasService.listarArticuloHabilitados()
+    const data = await this.articuloService.listarArticuloHabilitados()
       .toPromise();
     this.articulos = data.data;
     this.articulosFilter = this.articulos;
@@ -160,7 +162,7 @@ export class AjustesComponent implements OnInit {
       );
     } else {
       // tslint:disable-next-line: variable-name
-      const data_1 = await this.comprasService
+      const data_1 = await this.articuloService
         .listarStockArticulo()
         .toPromise();
       // console.log('lista');
@@ -201,7 +203,7 @@ export class AjustesComponent implements OnInit {
   // tslint:disable-next-line: typedef
   async actualizarStockFiltro(articulosFilter: Articulo[]) {
     this.stockArticulo = [];
-    const data = await this.comprasService
+    const data = await this.articuloService
       .listarStockArticulo()
       .toPromise();
     articulosFilter.forEach((a, index) => {

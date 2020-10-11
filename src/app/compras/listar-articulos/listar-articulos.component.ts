@@ -1,14 +1,18 @@
-import { Router } from '@angular/router';
-import { ComprasService } from './../../service/compras.service';
-import { Articulo } from './../../modelo/Articulo';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import {Router} from '@angular/router';
+import {ComprasService} from './../../service/compras.service';
+import {Articulo} from './../../modelo/Articulo';
+import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 // import jsPDF from "jspdf";
 // import 'jspdf-autotable';
-import { ExcelExportService } from '../../service/excel-export.service';
-import { ArticuloExcel } from '../../modelo/ArticuloExcel';
+import {ExcelExportService} from '../../service/excel-export.service';
+import {ArticuloExcel} from '../../modelo/ArticuloExcel';
 // import { async } from "@angular/core/testing";
-import { ServiceReportService } from '../../service/service-report.service';
-import { PdfExportService } from '../../service/pdf-export.service';
+import {ServiceReportService} from '../../service/service-report.service';
+import {PdfExportService} from '../../service/pdf-export.service';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {AgregarSubRubroComponent} from '../../abm-compras/agregar-sub-rubro/agregar-sub-rubro.component';
+import {AgregarArticuloComponent} from '../agregar-articulo/agregar-articulo.component';
+import {ArticulosService} from '../../service/articulos.service';
 
 @Component({
   selector: 'app-listar-articulos',
@@ -29,15 +33,20 @@ export class ListarArticulosComponent implements OnInit {
   busquedaRubro: string = null;
   busquedaCodigo: string = null;
   loaded: boolean = false;
+  toUpdateArticulo: Articulo;
 
-  export: boolean = true;
+  export = true;
+
   constructor(
     private serviceCompra: ComprasService,
+    private articuloService: ArticulosService,
     private router: Router,
     private excelService: ExcelExportService,
     private serviceReport: ServiceReportService,
-    private servicePdf: PdfExportService
-  ) { }
+    private servicePdf: PdfExportService,
+    public matDialog: MatDialog
+  ) {
+  }
 
   // tslint:disable-next-line: typedef
   ngOnInit() {
@@ -50,7 +59,7 @@ export class ListarArticulosComponent implements OnInit {
 
   // tslint:disable-next-line: typedef
   async fetchEvent() {
-    const data = await this.serviceCompra
+    const data = await this.articuloService
       .listarArticuloTodos()
       .toPromise();
     this.articulos = data.data;
@@ -61,16 +70,18 @@ export class ListarArticulosComponent implements OnInit {
   modificarArticulo(articulo: Articulo) {
     this.router.navigate(['compras/modificar-articulo/' + articulo.id]);
   }
+
   // tslint:disable-next-line: typedef
   deshabilitarArticulo(articulo: Articulo) {
     let resultado: boolean;
     resultado = confirm('¿DESEA DESHABILITAR ESTE ARTICULO?');
     if (resultado === true) {
-      this.serviceCompra.desabilitarArticulo(articulo.id).subscribe((data) => {
+      this.articuloService.desabilitarArticulo(articulo.id).subscribe((data) => {
         window.location.reload();
       });
     }
   }
+
   // tslint:disable-next-line: typedef
   filtrarArticulo() {
     this.busqueda = this.busqueda.toLowerCase();
@@ -92,6 +103,7 @@ export class ListarArticulosComponent implements OnInit {
   backPage() {
     window.history.back();
   }
+
   // tslint:disable-next-line: typedef
   exportarPDF() {
     this.serviceReport.getReporteArticuloPdf().subscribe(resp => {
@@ -113,5 +125,28 @@ export class ListarArticulosComponent implements OnInit {
     }
 
     this.excelService.exportToExcel(this.articulosExcel, 'Reporte Articulos');
+  }
+
+  // tslint:disable-next-line:typedef
+  newArticulo() {
+    this.toUpdateArticulo = null;
+    this.openDialog();
+  }
+
+  // tslint:disable-next-line:typedef
+  openDialog() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'modal-component';
+    dialogConfig.height = '700px';
+    dialogConfig.width = '900px';
+    dialogConfig.data = this.toUpdateArticulo;
+    const modalDialog = this.matDialog.open(AgregarArticuloComponent, dialogConfig);
+    modalDialog.afterClosed().subscribe(result => {
+      this.articuloService.listarArticuloTodos().subscribe(data => {
+        this.articulos = data.data;
+        this.articulosFilter = data.data;
+      });
+    });
   }
 }
