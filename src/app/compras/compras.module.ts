@@ -18,6 +18,7 @@ import { ExcelExportService } from '../service/excel-export.service';
 import { AgregarMarcaComponent } from '../abm-compras/agregar-marca/agregar-marca.component';
 import { AbmComprasModule } from '../abm-compras/abm-compras.module';
 import { MaterialModule } from '../material/material.module';
+import {PaginacionPipe} from './paginacion.pipe';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import { MaterialModule } from '../material/material.module';
     ListarPedidoComponent,
     AgregarPedidoComponent,
     ConsultarPedidoComponent,
+    PaginacionPipe,
     // ListarPreciosComponent,
     // ListarRubroComponent,
     // ListarSubrubroComponent

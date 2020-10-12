@@ -103,13 +103,15 @@ export class AgregarArticuloComponent implements OnInit {
         codigo: [this.data.codigoArt, Validators.required],
         nombre: [this.data.nombre, Validators.required],
         abreviatura: [this.data.abreviatura, Validators.required],
-        stockMin: [this.data.stockMin, Validators.required],
-        stockMax: [this.data.stockMax, Validators.required],
+        stockMin: [this.data.stockMin, null],
+        stockMax: [this.data.stockMax, null],
         unidadMedidaId: [this.data.unidadMedidaId, Validators.required],
         rubroId: [this.data.rubroId, Validators.required],
         subRubroId: [this.data.subRubroId, null],
         marcaId: [this.data.marcaId, null],
         proveedorId: [this.data.proveedorId, Validators.required],
+        costo: [this.data.costo, Validators.required],
+        precio: [this.data.precio, Validators.required]
       });
       this.updating = true;
     } else {
@@ -124,6 +126,9 @@ export class AgregarArticuloComponent implements OnInit {
         subRubroId: ['', null],
         marcaId: ['', null],
         proveedorId: ['', Validators.required],
+        costo: ['', Validators.required],
+        precio: ['', Validators.required]
+
       });
     }
   }
@@ -136,6 +141,12 @@ export class AgregarArticuloComponent implements OnInit {
     if (this.errorInForm || this.codigoRepe || this.nombreRepe || this.abreviaturaRepe) {
       this.articuloForm.controls.codigo.markAsTouched();
       this.articuloForm.controls.nombre.markAsTouched();
+      this.articuloForm.controls.abreviatura.markAsTouched();
+      this.articuloForm.controls.unidadMedidaId.markAsTouched();
+      this.articuloForm.controls.rubroId.markAsTouched();
+      this.articuloForm.controls.proveedorId.markAsTouched();
+      this.articuloForm.controls.costo.markAsTouched();
+      this.articuloForm.controls.precio.markAsTouched();
       console.log('Error en los datos');
     } else {
       this.makeDTO();
@@ -233,7 +244,6 @@ export class AgregarArticuloComponent implements OnInit {
   }
 
 
-
   // tslint:disable-next-line:typedef
   openDialogRubro(): void {
     const dialogConfig = new MatDialogConfig();
@@ -250,6 +260,7 @@ export class AgregarArticuloComponent implements OnInit {
     });
 
   }
+
   openDialogSubRubro(): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -264,6 +275,7 @@ export class AgregarArticuloComponent implements OnInit {
       });
     });
   }
+
 // tslint:disable-next-line:typedef
   openDialogMarca(): void {
     const dialogConfig = new MatDialogConfig();
@@ -279,6 +291,7 @@ export class AgregarArticuloComponent implements OnInit {
       });
     });
   }
+
   openDialogProveedor(): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;

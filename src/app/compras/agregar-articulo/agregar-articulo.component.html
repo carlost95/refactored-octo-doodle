@@ -1,5 +1,5 @@
-<div class="container">
-  <div class="card">
+<!--<div class="container" style="color: white">-->
+  <div class="container">
     <div class="py-3">
       <h1 style="text-align: center" *ngIf="!updating">Agregar nuevo articulo</h1>
       <h1 style="text-align: center" *ngIf="updating">Actualizar articulo</h1>
@@ -8,7 +8,7 @@
     <section>
       <form [formGroup]="articuloForm" class="py-2">
         <div class="form-row justify-content-center">
-          <mat-form-field class="col-md-5" appearance="legacy">
+          <mat-form-field class="col-md-5 py-3" appearance="legacy">
             <mat-label>Codigo</mat-label>
             <input matInput formControlName="codigo" required
                    autocomplete="off"
@@ -43,7 +43,7 @@
               </mat-icon>
             </button>
           </div>
-          <mat-form-field class="col-md-5" appearance="legacy">
+          <mat-form-field class="col-md-5 py-3" appearance="legacy">
             <mat-label> Nombre</mat-label>
             <input matInput formControlName="nombre" required
                    autocomplete="off"
@@ -78,7 +78,7 @@
             </button>
           </div>
 
-          <mat-form-field class="col-md-5" appearance="legacy">
+          <mat-form-field class="col-md-5 py-3" appearance="legacy">
             <mat-label>Abreviatura</mat-label>
             <input matInput formControlName="abreviatura" required
                    autocomplete="off"
@@ -112,13 +112,13 @@
               </mat-icon>
             </button>
           </div>
-          <mat-form-field class="col-md-3" appearance="legacy">
+          <mat-form-field class="col-md-3 py-3" appearance="legacy">
             <mat-label>Stock min</mat-label>
             <input matInput formControlName="stockMin"
                    autocomplete="off" type="number" min="0" maxlength="8"
                    oninput="this.value=this.value.slice(0,this.maxLength|| 0/0);this.value=(this.value< 0) ? (0/0) : this.value;"/>
           </mat-form-field>
-          <mat-form-field class="col-md-2" appearance="legacy">
+          <mat-form-field class="col-md-2 py-3" appearance="legacy">
             <mat-label>Stock max</mat-label>
             <input matInput formControlName="stockMax"
                    autocomplete="off" type="number" min="0" maxlength="8"
@@ -147,18 +147,25 @@
               </mat-icon>
             </button>
           </div>
-          <mat-form-field class="col-md-3" appearance="legacy">
+          <mat-form-field class="col-md-3 py-3" appearance="legacy">
             <mat-label>Costo</mat-label>
             <input matInput formControlName="costo"
                    autocomplete="off" type="number" min="0" maxlength="8"
                    oninput="this.value=this.value.slice(0,this.maxLength|| 0/0);this.value=(this.value< 0) ? (0/0) : this.value;"/>
+            <mat-error *ngIf="articuloForm.controls.costo.errors">
+              Costo es <strong>requerido</strong>
+            </mat-error>
           </mat-form-field>
-          <mat-form-field class="col-md-2" appearance="legacy">
+          <mat-form-field class="col-md-2 py-3" appearance="legacy">
             <mat-label>Precio</mat-label>
             <input matInput formControlName="precio"
                    autocomplete="off" type="number" min="0" maxlength="8"
                    oninput="this.value=this.value.slice(0,this.maxLength|| 0/0);this.value=(this.value< 0) ? (0/0) : this.value;"/>
+            <mat-error *ngIf="articuloForm.controls.nombre.errors">
+              Precio es <strong>requerido</strong>
+            </mat-error>
           </mat-form-field>
+
           <mat-form-field class="col-md-5" appearance="fill">
             <mat-label> Proveedor</mat-label>
             <mat-select
@@ -201,5 +208,5 @@
       &nbsp;
     </div>
   </div>
-</div>
+<!--</div>-->
 
