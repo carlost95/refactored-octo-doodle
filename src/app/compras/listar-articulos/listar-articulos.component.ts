@@ -10,7 +10,6 @@ import {PdfExportService} from '../../service/pdf-export.service';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {AgregarArticuloComponent} from '../agregar-articulo/agregar-articulo.component';
 import {ArticulosService} from '../../service/articulos.service';
-import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
 
 @Component({
@@ -44,12 +43,14 @@ export class ListarArticulosComponent implements OnInit {
   toUpdateArticulo: Articulo;
 
   export = true;
-  //PAGINATOR
+
   // tslint:disable-next-line:variable-name
   page_number = 1;
   // tslint:disable-next-line:variable-name
   page_size = 5;
-  pageSizeOptions = [5, 7];
+  pageSizeOptions = [5, 6, 7];
+
+  articuloAll: Articulo [] = [];
 
 
   // tslint:disable-next-line: typedef
@@ -69,6 +70,7 @@ export class ListarArticulosComponent implements OnInit {
     this.articulos = data.data;
     // tslint:disable-next-line:one-variable-per-declaration
     this.articulosFilter = this.articulos;
+    this.articuloAll = data.data;
     console.log('-----------ARTICULOS-------------');
     console.warn(this.articulos);
 
@@ -80,6 +82,7 @@ export class ListarArticulosComponent implements OnInit {
     this.page_size = e.pageSize;
     this.page_number = e.pageIndex + 1;
   }
+
   // tslint:disable-next-line:typedef
   applyFilter(event: Event) {
     // const filterValue = (event.target as HTMLInputElement).value;
@@ -89,6 +92,7 @@ export class ListarArticulosComponent implements OnInit {
     //   this.articulosFilter.paginator.firstPage();
     // }
   }
+
   // tslint:disable-next-line: typedef
   modificarArticulo(articulo: Articulo) {
     this.toUpdateArticulo = articulo;
@@ -110,17 +114,23 @@ export class ListarArticulosComponent implements OnInit {
   // tslint:disable-next-line: typedef
   filtrarArticulo() {
     this.busqueda = this.busqueda.toLowerCase();
-    this.articulosFilter = this.articulos;
+    this.articulosFilter = this.articuloAll;
 
     if (this.busqueda !== null) {
-      this.articulosFilter = this.articulos.filter((item) => {
+      this.page_number = 1;
+
+      this.articulosFilter = this.articuloAll.filter((item) => {
         const inName = item.nombre.toLowerCase().indexOf(this.busqueda) !== -1;
         const inLastName =
           item.codigoArt.toLowerCase().indexOf(this.busqueda) !== -1;
         const inDocument =
           item.rubroId.nombre.toLowerCase().indexOf(this.busqueda) !== -1;
         return inName || inLastName || inDocument;
+
       });
+      console.warn('--------------------------');
+      console.log(this.articulosFilter);
+
     }
   }
 

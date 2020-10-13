@@ -28,7 +28,7 @@ export class ArticulosService {
 
   // tslint:disable-next-line:typedef
   guardarArticulo(articuloDTO: ArticuloDTO) {
-    return this.http.post<ArticuloDTO>(this.url, articuloDTO);
+    return this.http.post<Response>(this.url, articuloDTO);
   }
 
   // tslint:disable-next-line:typedef

@@ -28,7 +28,6 @@ import {ArticulosService} from '../../service/articulos.service';
   templateUrl: './agregar-articulo.component.html',
   styleUrls: ['./agregar-articulo.component.css']
 })
-// export class AgregarArticuloComponent implements OnInit, OnDestroy {
 export class AgregarArticuloComponent implements OnInit {
 
   articulos: Articulo[] = [];
@@ -81,7 +80,6 @@ export class AgregarArticuloComponent implements OnInit {
 
   // tslint:disable-next-line:typedef
   ngOnInit() {
-
     this.unidadMedidaService.listarUnidadMedidaHabilitados().subscribe(resp =>
       this.unidadMedidas = resp.data);
     this.rubroService.listarRubrosHabilitados().subscribe(resp =>
@@ -161,11 +159,41 @@ export class AgregarArticuloComponent implements OnInit {
     this.articuloDTO.abreviatura = this.articuloForm.controls.abreviatura.value;
     this.articuloDTO.stockMin = this.articuloForm.controls.stockMin.value;
     this.articuloDTO.stockMax = this.articuloForm.controls.stockMax.value;
+    this.articuloDTO.costo = this.articuloForm.controls.costo.value;
+    this.articuloDTO.precio = this.articuloForm.controls.precio.value;
 
     if (this.unidadMedidaSelect !== null) {
-      this.unidadMedidas.forEach(rub => {
-        if (this.unidadMedidaSelect.toLowerCase() === rub.nombre.toLowerCase()) {
-          this.articuloDTO.unidadMedidaId = rub.id;
+      this.unidadMedidas.forEach(unid => {
+        if (this.unidadMedidaSelect.toLowerCase() === unid.nombre.toLowerCase()) {
+          this.articuloDTO.unidadMedidaId = unid.id;
+        }
+      });
+    }
+    if (this.rubroSelect !== null) {
+      this.rubros.forEach(rub => {
+        if (this.rubroSelect.toLowerCase() === rub.nombre.toLowerCase()) {
+          this.articuloDTO.rubroId = rub.id;
+        }
+      });
+    }
+    if (this.subRubroSelect !== null) {
+      this.subRubros.forEach(subRub => {
+        if (this.subRubroSelect.toLowerCase() === subRub.nombre.toLowerCase()) {
+          this.articuloDTO.subRubroId = subRub.id;
+        }
+      });
+    }
+    if (this.marcaSelect !== null) {
+      this.marcas.forEach(marca => {
+        if (this.marcaSelect.toLowerCase() === marca.nombre.toLowerCase()) {
+          this.articuloDTO.marcaId = marca.id;
+        }
+      });
+    }
+    if (this.proveedorSelect !== null) {
+      this.proveedores.forEach(prov => {
+        if (this.proveedorSelect.toLowerCase() === prov.razonSocial.toLowerCase()) {
+          this.articuloDTO.proveedorId = prov.id;
         }
       });
     }
@@ -178,19 +206,20 @@ export class AgregarArticuloComponent implements OnInit {
     }
   }
 
+  // tslint:disable-next-line:typedef
   update() {
-    // this.subRubroService.actualizarSubRubro(this.subRubroDTO).subscribe(data => {
-    //   this.subRubroDTO = data.data;
-    //   this.dialogRef.close();
-    // });
+    this.articulosService.actualizarArticulo(this.articuloDTO).subscribe(data => {
+      this.articuloDTO = data.data;
+      this.dialogRef.close();
+    });
   }
 
   // tslint:disable-next-line: typedef
   save() {
-    // this.subRubroService.guardarSubRubro(this.subRubroDTO).subscribe(data => {
-    //   this.subRubroDTO = data.data;
-    //   this.dialogRef.close();
-    // });
+    this.articulosService.guardarArticulo(this.articuloDTO).subscribe(data => {
+      this.articuloDTO = data.data;
+      this.dialogRef.close();
+    });
   }
 
   // tslint:disable-next-line:typedef
