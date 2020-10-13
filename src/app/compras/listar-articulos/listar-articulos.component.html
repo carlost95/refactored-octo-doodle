@@ -1,11 +1,8 @@
-<div class="container" ng-controller="articulo">
+<div class="container">
   <div class="card">
-       <header class="row mt-4 ml-3 mb-3">
-      <i
-        class="col-md-2 m-0 fas fa-chevron-left fa-3x"
-        style="margin-right: 100%"
-        (click)="backPage()"
-      ></i>
+    <header class="row mt-4 ml-3 mb-3">
+      <i class=" col-md-2 m-0 fas fa-chevron-left fa-3x"
+         style="margin-right: 100%" (click)="backPage()"></i>
       <h1 class="m-0 col-md-10" style="padding-left: 10rem !important">
         Lista de articulos
       </h1>
@@ -28,53 +25,41 @@
             />
           </div>
         </div>
-
-        <br/>
-
+        <br>
         <div class="row col-12 d-flex justify-content-end">
           <button class="btn btn-outline-danger" (click)="exportarPDF()">
-                <i class="far fa-file-pdf fa-lg" title="exportar pdf" style="color: black"></i>
+            <i class="far fa-file-pdf fa-lg" title="exportar pdf"></i>
           </button>
           &nbsp;
-
           <button class="btn btn-outline-success" (click)="exportarExcel()">
-            <i class="far fa-file-excel fa-lg" title="exportar excel" style="color: black"></i>
+            <i class="far fa-file-excel fa-lg" title="exportar excel"></i>
           </button>
           &nbsp;
-
-          <button
-            class="btn btn-warning"
-            [routerLink]="['/compras/agregar-articulo']"
-            routerLinkActive="router-link-active"
-            title="Articulo"
-          >
+          <button mat-raised-button color="primary"
+                  title="Articulo"
+                  (click)="newArticulo()">
             <i class="fas fa-shopping-cart" title="nuevo articulo"></i>
             Nuevo Articulo
           </button>
         </div>
       </div>
-      <div
-        class="card-body p-0"
-        style="width: 1100px; height: 450px; overflow: auto"
-      >
-        <table class="table table-striped" id="listArt" #listArt>
+      <div class="card-body p-0">
+        <table class="table table-striped">
           <thead class="thead-dark">
           <tr class="text-center">
-            <th scope="col">Cod</th>
+            <th scope="col">Codigo</th>
             <th scope="col">Nombre</th>
-            <th scope="col">Stock min</th>
-            <th scope="col">Stock max</th>
+            <th scope="col">Precio</th>
             <th scope="col">Unid med</th>
             <th scope="col">Rubro</th>
-            <th *ngIf="export" scope="col*2">Opciones</th>
+            <th scope="col*2">Opciones</th>
           </tr>
           </thead>
           <tbody *ngIf="articulos != null">
-          <tr *ngFor="let articulo of articulosFilter" class="text-center">
+          <tr *ngFor="let articulo of articulosFilter | paginacion : page_size : page_number" class="text-center">
             <td>{{ articulo.codigoArt }}</td>
             <td>{{ articulo.nombre }}</td>
-            <td>{{ articulo.stockMin }}</td>
-            <td>{{ articulo.stockMax }}</td>
+            <td>{{ articulo.precio }}</td>
             <td *ngIf="articulo.unidadMedidaId == null"></td>
             <td *ngIf="articulo.unidadMedidaId != null">
               {{ articulo.unidadMedidaId.abreviatura }}
@@ -101,8 +86,16 @@
               </button>
             </td>
           </tr>
+
           </tbody>
+
         </table>
+        <mat-paginator [length]="this.articulosFilter.length"
+                       [pageSize]="page_size"
+                       [pageSizeOptions]="pageSizeOptions"
+                       (page)="handlePage($event)"
+                       showFirstLastButtons>
+        </mat-paginator>
       </div>
     </div>
   </div>

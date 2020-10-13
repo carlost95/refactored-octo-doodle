@@ -28,27 +28,27 @@ export class ComprasService {
   }
 
   // SERVICE TO ARTICULOS
-  listarArticuloTodos() {
-    return this.http.get<Response>(this.Url + "/articulos");
-  }
-  listarArticuloHabilitados() {
-    return this.http.get<Response>(this.Url + "/articulos/habilitados");
-  }
-  guardarArticulo(articuloDTO: ArticuloDTO) {
-    return this.http.post<ArticuloDTO>(this.Url + "/articulos/", articuloDTO);
-  }
-  actualizarArticulo(articuloDTO: ArticuloDTO) {
-    return this.http.put<ArticuloDTO>(this.Url + "/articulos/", articuloDTO);
-  }
-  listarArticuloId(id: number) {
-    return this.http.get<Response>(this.Url + "/articulos/" + id);
-  }
-  desabilitarArticulo(id: number) {
-    return this.http.delete(this.Url + "/articulos/" + id);
-  }
-  listarStockArticulo() {
-    return this.http.get<Response>(this.Url + "/movimientos/stock");
-  }
+  // listarArticuloTodos() {
+  //   return this.http.get<Response>(this.Url + "/articulos");
+  // }
+  // listarArticuloHabilitados() {
+  //   return this.http.get<Response>(this.Url + "/articulos/habilitados");
+  // }
+  // guardarArticulo(articuloDTO: ArticuloDTO) {
+  //   return this.http.post<ArticuloDTO>(this.Url + "/articulos/", articuloDTO);
+  // }
+  // actualizarArticulo(articuloDTO: ArticuloDTO) {
+  //   return this.http.put<ArticuloDTO>(this.Url + "/articulos/", articuloDTO);
+  // }
+  // listarArticuloId(id: number) {
+  //   return this.http.get<Response>(this.Url + "/articulos/" + id);
+  // }
+  // desabilitarArticulo(id: number) {
+  //   return this.http.delete(this.Url + "/articulos/" + id);
+  // }
+  // listarStockArticulo() {
+  //   return this.http.get<Response>(this.Url + "/movimientos/stock");
+  // }
   // SERVICE THE PEDIDO
   listarPedidoTodos() {
     return this.http.get<Response>(this.Url + "/pedidos");

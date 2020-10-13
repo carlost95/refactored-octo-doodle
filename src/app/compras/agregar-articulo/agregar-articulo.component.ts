@@ -1,26 +1,26 @@
-import {LogisticaModule} from './../../logistica/logistica.module';
-import {LoginComponent} from './../../login/login.component';
 import {SubRubro} from './../../modelo/SubRubro';
 import {Proveedor} from './../../modelo/Proveedor';
 import {Marca} from './../../modelo/Marca';
 import {Rubro} from './../../modelo/Rubro';
-import {AbmComprasService} from 'src/app/service/abm-compras.service';
-import {Router, NavigationEnd, RoutesRecognized} from '@angular/router';
 import {ComprasService} from './../../service/compras.service';
 import {UnidadMedida} from './../../modelo/UnidadMedida';
 import {ArticuloDTO} from './../../modelo/ArticuloDTO';
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {filter, pairwise, map} from 'rxjs/operators';
-import {resolve} from 'url';
-import {Observable} from 'rxjs';
-import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {Component, OnInit, OnDestroy, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
 import {AgregarMarcaComponent} from '../../abm-compras/agregar-marca/agregar-marca.component';
 import {ConfirmModalComponent} from '../../shared/confirm-modal/confirm-modal.component';
-import {FormBuilder} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MarcasService} from '../../service/marcas.service';
 import {SubRubroService} from '../../service/sub-rubro.service';
 import {RubrosService} from '../../service/rubros.service';
 import {UnidadMedidaService} from '../../service/unidad-medida.service';
+import {AgregarRubroComponent} from '../../abm-compras/agregar-rubro/agregar-rubro.component';
+import {AgregarProveedorComponent} from '../agregar-proveedor/agregar-proveedor.component';
+import {ProveedoresService} from '../../service/proveedores.service';
+import {AgregarSubRubroComponent} from '../../abm-compras/agregar-sub-rubro/agregar-sub-rubro.component';
+import {AgregarUnidadMedidaComponent} from '../../abm-compras/agregar-unidad-medida/agregar-unidad-medida.component';
+import {Articulo} from '../../modelo/Articulo';
+import {ArticulosService} from '../../service/articulos.service';
 
 
 @Component({
@@ -28,299 +28,333 @@ import {UnidadMedidaService} from '../../service/unidad-medida.service';
   templateUrl: './agregar-articulo.component.html',
   styleUrls: ['./agregar-articulo.component.css']
 })
-export class AgregarArticuloComponent implements OnInit, OnDestroy {
-  articuloDTO: ArticuloDTO = new ArticuloDTO();
+export class AgregarArticuloComponent implements OnInit {
 
+  articulos: Articulo[] = [];
   unidadMedidas: UnidadMedida[] = null;
-  unidadMedidasFilter: UnidadMedida[] = null;
-  idUnidadMedida: number = 1;
-  nombreUnidadMedida: string = null;
-
-  rubros: Rubro[] = [];
-  rubroFilter: Rubro[] = [];
-  idRubro: number = null;
-  nombreRubro: string = null;
-
+  rubros: Rubro[] = null;
   subRubros: SubRubro[] = null;
-  subRubroFilter: SubRubro[] = null;
-  idSubRubro: number = null;
-  nombreSubRubro: string = null;
-
   marcas: Marca[] = null;
-  marcasFilter: Marca[] = null;
-  idMarca: number = 1;
-  nombreMarca: string = null;
-
   proveedores: Proveedor[] = null;
-  proveedoresFilter: Proveedor[] = null;
-  idProveedor: number = 1;
-  nombreProveedor: string = null;
-  subs: any;
-  private previousUrl: string;
-  articuloStorage: ArticuloStorage = new ArticuloStorage();
+
+
+  unidadMedidaSelect: string = null;
+  rubroSelect: string = null;
+  subRubroSelect: string = null;
+  marcaSelect: string = null;
+  proveedorSelect: string = null;
+
+  unidadToUpdate: UnidadMedida = new UnidadMedida();
+  rubroToUpdate: Rubro = new Rubro();
+  subRubroToUpdate: SubRubro = new SubRubro();
+  marcaToUpdate: Marca = new Marca();
+  proveedorToUpdate: Proveedor = new Proveedor();
+
+  errorInForm = false;
+  submitted = false;
+  updating = false;
+  codigoRepe = false;
+  nombreRepe = false;
+  abreviaturaRepe = false;
+  articuloForm: FormGroup;
+
+  articulo: Articulo = new Articulo();
+  articuloDTO: ArticuloDTO = new ArticuloDTO();
 
 
   constructor(
-    private serviceAbmCompra: AbmComprasService,
     private serviceCompra: ComprasService,
+    private articulosService: ArticulosService,
     private subRubroService: SubRubroService,
     private marcaService: MarcasService,
     private rubroService: RubrosService,
     private unidadMedidaService: UnidadMedidaService,
+    private proveedorService: ProveedoresService,
     private formBuilder: FormBuilder,
     public matDialog: MatDialog,
-    private router: Router) {
+    public matDialogUnidMed: MatDialog,
+    public dialogRef: MatDialogRef<AgregarArticuloComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: Articulo
+  ) {
   }
 
   // tslint:disable-next-line:typedef
-  async ngOnInit() {
-    this.unidadMedidaService.listarUnidadMedidaHabilitados().subscribe(data => {
-      // tslint:disable-next-line:only-arrow-functions typedef
-      this.unidadMedidas = Object.keys(data.data).map(function(key) {
-        return data.data[key];
-      });
-      this.unidadMedidasFilter = this.unidadMedidas.sort(
-        (a, b) => a.nombre.length - b.nombre.length
-      );
-    });
+  ngOnInit() {
+    this.unidadMedidaService.listarUnidadMedidaHabilitados().subscribe(resp =>
+      this.unidadMedidas = resp.data);
+    this.rubroService.listarRubrosHabilitados().subscribe(resp =>
+      this.rubros = resp.data);
+    this.subRubroService.listarSubRubrosHabilitados().subscribe(resp =>
+      this.subRubros = resp.data);
+    this.marcaService.listarMarcaHabilitados().subscribe(resp =>
+      this.marcas = resp.data);
+    this.proveedorService.listarProveedoresHabilitados().subscribe(resp =>
+      this.proveedores = resp.data);
+    this.articulosService.listarArticuloTodos().subscribe(resp =>
+      this.articulos = resp.data);
 
-    const rubroPromise = await this.rubroService
-      .listarRubrosHabilitados()
-      .toPromise()
-      .then(data => {
-        this.rubros = Object.keys(data.data).map(key => data.data[key]);
-        this.rubroFilter = this.rubros;
-        this.rubroFilter.sort((a, b) => a.nombre.length - b.nombre.length);
-      });
+    if (this.data) {
+      this.unidadMedidaSelect = this.data.unidadMedidaId.nombre;
 
-    this.subRubroService.listarSubRubrosHabilitados().subscribe(data => {
-      this.subRubros = Object.keys(data.data).map(function(key) {
-        return data.data[key];
+      this.articuloForm = this.formBuilder.group({
+        id: [this.data.id, null],
+        codigo: [this.data.codigoArt, Validators.required],
+        nombre: [this.data.nombre, Validators.required],
+        abreviatura: [this.data.abreviatura, Validators.required],
+        stockMin: [this.data.stockMin, null],
+        stockMax: [this.data.stockMax, null],
+        unidadMedidaId: [this.data.unidadMedidaId, Validators.required],
+        rubroId: [this.data.rubroId, Validators.required],
+        subRubroId: [this.data.subRubroId, null],
+        marcaId: [this.data.marcaId, null],
+        proveedorId: [this.data.proveedorId, Validators.required],
+        costo: [this.data.costo, Validators.required],
+        precio: [this.data.precio, Validators.required]
       });
-      this.subRubroFilter = this.subRubros;
-      this.subRubroFilter.sort((a, b) => a.nombre.length - b.nombre.length);
-    });
+      this.updating = true;
+    } else {
+      this.articuloForm = this.formBuilder.group({
+        codigo: ['', Validators.required],
+        nombre: ['', Validators.required],
+        abreviatura: ['', Validators.required],
+        stockMin: ['', null],
+        stockMax: ['', null],
+        unidadMedidaId: ['', Validators.required],
+        rubroId: ['', Validators.required],
+        subRubroId: ['', null],
+        marcaId: ['', null],
+        proveedorId: ['', Validators.required],
+        costo: ['', Validators.required],
+        precio: ['', Validators.required]
 
-    this.marcaService.listarMarcaHabilitados().subscribe(data => {
-      this.marcas = Object.keys(data.data).map(function(key) {
-        return data.data[key];
       });
-      this.marcasFilter = this.marcas.sort(
-        (a, b) => a.nombre.length - b.nombre.length
-      );
-    });
-    await this.serviceCompra.listarProveedoresHabilitados().subscribe(data => {
-      this.proveedores = Object.keys(data.data).map(function(key) {
-        return data.data[key];
-      });
-      this.proveedoresFilter = this.proveedores.sort(
-        (a, b) => a.razonSocial.length - b.razonSocial.length
-      );
-    });
-
-    await this.getDataFromLocalStorage().then(() => console.log('Resolve!'));
-
+    }
   }
 
   // tslint:disable-next-line:typedef
-  async getDataFromLocalStorage() {
-    if (localStorage.getItem('listar') === 'false') {
+  onSubmit() {
+    this.submitted = true;
+    this.errorInForm = this.submitted && this.articuloForm.invalid;
 
-      const promise = new Promise(resolve => {
-        setTimeout(() => {
-          // this.nombreUnidadMedida = localStorage.getItem('nombreUnidadMedida');
-          this.articuloStorage = JSON.parse(localStorage.getItem('articuloStorage'));
-          this.articuloDTO = JSON.parse(localStorage.getItem('articuloDTO'));
-        }, 100);
-      });
+    if (this.errorInForm || this.codigoRepe || this.nombreRepe || this.abreviaturaRepe) {
+      this.articuloForm.controls.codigo.markAsTouched();
+      this.articuloForm.controls.nombre.markAsTouched();
+      this.articuloForm.controls.abreviatura.markAsTouched();
+      this.articuloForm.controls.unidadMedidaId.markAsTouched();
+      this.articuloForm.controls.rubroId.markAsTouched();
+      this.articuloForm.controls.proveedorId.markAsTouched();
+      this.articuloForm.controls.costo.markAsTouched();
+      this.articuloForm.controls.precio.markAsTouched();
+      console.log('Error en los datos');
+    } else {
+      this.makeDTO();
+
     }
-  }
-
-  volverAtras() {
-    window.history.back();
-  }
-
-  nuevoArticulo(articuloDTO: ArticuloDTO) {
-    // this.articuloDTO.unidadMedidaId = 1;
-
-    this.unidadMedidas.forEach(unidadMedida => {
-      if (unidadMedida.nombre == this.articuloStorage.unidadMedida) {
-        this.articuloDTO.id = unidadMedida.id;
-      }
-    });
-
-    for (var i = 0; i < this.unidadMedidas.length; i++) {
-      if (this.unidadMedidas[i].nombre == this.articuloStorage.unidadMedida) {
-        this.articuloDTO.unidadMedidaId = this.unidadMedidas[i].id;
-      }
-    }
-    this.rubros.forEach(rubro => {
-      if (rubro.nombre == this.articuloStorage.rubro) {
-        this.articuloDTO.id = rubro.id;
-      }
-    });
-
-    for (var i = 0; i < this.rubros.length; i++) {
-      if (this.rubros[i].nombre == this.articuloStorage.rubro) {
-        this.articuloDTO.rubroId = this.rubros[i].id;
-      }
-    }
-
-    this.subRubros.forEach(subSubro => {
-      if (subSubro.nombre == this.articuloStorage.subRubro) {
-        this.articuloDTO.id = subSubro.id;
-      }
-    });
-
-    for (var i = 0; i < this.subRubros.length; i++) {
-      if (this.subRubros[i].nombre == this.articuloStorage.subRubro) {
-        this.articuloDTO.subRubroId = this.subRubros[i].id;
-      }
-    }
-
-    this.marcas.forEach(marca => {
-      if (marca.nombre == this.articuloStorage.marca) {
-        this.articuloDTO.id = marca.id;
-      }
-    });
-
-    for (var i = 0; i < this.marcas.length; i++) {
-      if (this.marcas[i].nombre == this.articuloStorage.marca) {
-        this.articuloDTO.marcaId = this.marcas[i].id;
-      }
-    }
-    this.proveedores.forEach(proveedor => {
-      if (proveedor.razonSocial == this.articuloStorage.proveedor) {
-        this.articuloDTO.id = proveedor.id;
-      }
-    });
-
-    for (var i = 0; i < this.proveedores.length; i++) {
-      if (this.proveedores[i].razonSocial == this.articuloStorage.proveedor) {
-        this.articuloDTO.proveedorId = this.proveedores[i].id;
-      }
-    }
-    articuloDTO.habilitacion = 1;
-    this.articuloDTO.habilitacion = 1;
-    this.articuloDTO.id = null;
-    this.articuloDTO.nombre = articuloDTO.nombre.toUpperCase();
-    this.articuloDTO.abreviatura = articuloDTO.abreviatura.toUpperCase();
-    this.articuloDTO.codigoArt = articuloDTO.codigoArt.toUpperCase();
-    this.articuloDTO.stockMin = articuloDTO.stockMin;
-    this.articuloDTO.stockMax = articuloDTO.stockMax;
-    this.articuloDTO.marcaId = articuloDTO.marcaId;
-    this.articuloDTO.proveedorId = articuloDTO.proveedorId;
-    this.articuloDTO.rubroId = articuloDTO.rubroId;
-    this.articuloDTO.subRubroId = articuloDTO.subRubroId;
-
-    this.serviceCompra.guardarArticulo(this.articuloDTO).subscribe(
-      resp => {
-        alert('SE GUARDO UN NUEVO ARTICULO');
-        window.history.back();
-      },
-      error => {
-        alert('Se produjo un error en la carga');
-      }
-    );
   }
 
   // tslint:disable-next-line:typedef
-  listarUnidadMedida(filterVal: any) {
-    if (filterVal == '0') {
-      this.unidadMedidasFilter = this.unidadMedidas;
+  makeDTO() {
+    this.articuloDTO.codigoArt = this.articuloForm.controls.codigo.value;
+    this.articuloDTO.nombre = this.articuloForm.controls.nombre.value;
+    this.articuloDTO.abreviatura = this.articuloForm.controls.abreviatura.value;
+    this.articuloDTO.stockMin = this.articuloForm.controls.stockMin.value;
+    this.articuloDTO.stockMax = this.articuloForm.controls.stockMax.value;
+    this.articuloDTO.costo = this.articuloForm.controls.costo.value;
+    this.articuloDTO.precio = this.articuloForm.controls.precio.value;
+
+    if (this.unidadMedidaSelect !== null) {
+      this.unidadMedidas.forEach(unid => {
+        if (this.unidadMedidaSelect.toLowerCase() === unid.nombre.toLowerCase()) {
+          this.articuloDTO.unidadMedidaId = unid.id;
+        }
+      });
+    }
+    if (this.rubroSelect !== null) {
+      this.rubros.forEach(rub => {
+        if (this.rubroSelect.toLowerCase() === rub.nombre.toLowerCase()) {
+          this.articuloDTO.rubroId = rub.id;
+        }
+      });
+    }
+    if (this.subRubroSelect !== null) {
+      this.subRubros.forEach(subRub => {
+        if (this.subRubroSelect.toLowerCase() === subRub.nombre.toLowerCase()) {
+          this.articuloDTO.subRubroId = subRub.id;
+        }
+      });
+    }
+    if (this.marcaSelect !== null) {
+      this.marcas.forEach(marca => {
+        if (this.marcaSelect.toLowerCase() === marca.nombre.toLowerCase()) {
+          this.articuloDTO.marcaId = marca.id;
+        }
+      });
+    }
+    if (this.proveedorSelect !== null) {
+      this.proveedores.forEach(prov => {
+        if (this.proveedorSelect.toLowerCase() === prov.razonSocial.toLowerCase()) {
+          this.articuloDTO.proveedorId = prov.id;
+        }
+      });
+    }
+
+    if (this.updating) {
+      this.articuloDTO.id = this.articuloForm.controls.id.value;
+      this.update();
     } else {
-      this.unidadMedidasFilter = this.unidadMedidas.filter(
-        item => item.nombre == filterVal
-      );
+      this.save();
     }
   }
 
-  listarRubros(filterVal: any) {
-    if (filterVal == '0') {
-      this.rubroFilter = this.rubros;
-    } else {
-      this.rubroFilter = this.rubros.filter(item => item.nombre == filterVal);
-    }
-
-    // TODO: VAlidar que no sea nulo rubroFilter
-    let idRubro = this.rubroFilter[0].id;
-
-    this.subRubroService.listarSubRubrosPorIdRubro(idRubro).subscribe(data => {
-      this.subRubros = Object.keys(data.data).map(function(key) {
-        return data.data[key];
-      });
-      console.log(this.subRubros);
-      this.subRubroFilter = this.subRubros;
-      this.subRubroFilter.sort((a, b) => a.nombre.length - b.nombre.length);
+  // tslint:disable-next-line:typedef
+  update() {
+    this.articulosService.actualizarArticulo(this.articuloDTO).subscribe(data => {
+      this.articuloDTO = data.data;
+      this.dialogRef.close();
     });
   }
 
-  listarSubRubros(filterVal: any) {
-    if (filterVal == '0') {
-      this.subRubroFilter = this.subRubros;
-    } else {
-      this.subRubroFilter = this.subRubros.filter(
-        item => item.nombre == filterVal
-      );
-    }
+  // tslint:disable-next-line: typedef
+  save() {
+    this.articulosService.guardarArticulo(this.articuloDTO).subscribe(data => {
+      this.articuloDTO = data.data;
+      this.dialogRef.close();
+    });
   }
 
-  listarMarcas(filterVal: any) {
-    if (filterVal == '0') {
-      this.marcasFilter = this.marcas;
-    } else {
-      this.marcasFilter = this.marcas.filter(item => item.nombre == filterVal);
-    }
+  // tslint:disable-next-line:typedef
+  closeForm() {
+    this.dialogRef.close();
   }
 
-  listarProveedores(filterVal: any) {
-    if (filterVal == '0') {
-      this.proveedoresFilter = this.proveedores;
-    } else {
-      this.proveedoresFilter = this.proveedores.filter(
-        item => item.razonSocial == filterVal
-      );
-    }
+  // tslint:disable-next-line:typedef
+  newUnidadMedida() {
+    this.unidadToUpdate = null;
+    this.openDialogUnidadMedida();
   }
 
-  ngOnDestroy(): void {
-    let list = localStorage.getItem('listar');
-
-    if (list === 'true') {
-      localStorage.setItem('listar', 'false');
-    }
-    localStorage.setItem('articuloDTO', JSON.stringify(this.articuloDTO));
-    localStorage.setItem('articuloStorage', JSON.stringify(this.articuloStorage));
+  // tslint:disable-next-line:typedef
+  newRubro() {
+    this.rubroToUpdate = null;
+    this.openDialogRubro();
   }
 
-  // newMarca() {
-  //   this.openDialog();
-  // }
+  // tslint:disable-next-line:typedef
+  newSubRubro() {
+    this.subRubroToUpdate = null;
+    this.openDialogSubRubro();
+  }
 
-  // openDialog(): void {
-  //   const dialogConfig = new MatDialogConfig();
-  //   dialogConfig.disableClose = true;
-  //   dialogConfig.id = 'modal-component';
-  //   dialogConfig.height = '400px';
-  //   dialogConfig.width = '300px';
-  //   dialogConfig.data = null;
-  //   this.matDialog.open(AgregarMarcaComponent, dialogConfig);
-  //
-  //   this.marcaService.listarMarcaHabilitados().subscribe(data => {
-  //     this.marcas = Object.keys(data.data).map(function(key) {
-  //       return data.data[key];
-  //     });
-  //     this.marcasFilter = this.marcas.sort(
-  //       (a, b) => a.nombre.length - b.nombre.length
-  //     );
-  //   });
-  // }
-}
+  // tslint:disable-next-line:typedef
+  newMarca() {
+    this.marcaToUpdate = null;
+    this.openDialogMarca();
+  }
 
-export class ArticuloStorage {
-  unidadMedida: string;
-  rubro: string;
-  subRubro: string;
-  marca: string;
-  proveedor: string;
+  // tslint:disable-next-line:typedef
+  newProveedor() {
+    this.proveedorToUpdate = null;
+    this.openDialogProveedor();
+  }
+
+  openDialogUnidadMedida(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'modalUnidadmedida-component';
+    dialogConfig.height = '400px';
+    dialogConfig.width = '300px';
+    dialogConfig.data = this.unidadToUpdate;
+    const modalDialog = this.matDialog.open(AgregarUnidadMedidaComponent, dialogConfig);
+    modalDialog.afterClosed().subscribe(result => {
+      this.unidadMedidaService.listarUnidadMedidaHabilitados().subscribe(data => {
+        this.unidadMedidas = data.data;
+      });
+    });
+  }
+
+
+  // tslint:disable-next-line:typedef
+  openDialogRubro(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'modalRubro-component';
+    dialogConfig.height = '400px';
+    dialogConfig.width = '300px';
+    dialogConfig.data = this.rubroToUpdate;
+    const modalDialog = this.matDialog.open(AgregarRubroComponent, dialogConfig);
+    modalDialog.afterClosed().subscribe(result => {
+      this.rubroService.listarRubrosHabilitados().subscribe(data => {
+        this.rubros = data.data;
+      });
+    });
+
+  }
+
+  openDialogSubRubro(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'modalSubRubro-component';
+    dialogConfig.height = '500px';
+    dialogConfig.width = '350px';
+    dialogConfig.data = this.subRubroToUpdate;
+    const modalDialog = this.matDialog.open(AgregarSubRubroComponent, dialogConfig);
+    modalDialog.afterClosed().subscribe(result => {
+      this.subRubroService.listarSubRubrosHabilitados().subscribe(data => {
+        this.subRubros = data.data;
+      });
+    });
+  }
+
+// tslint:disable-next-line:typedef
+  openDialogMarca(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'modalMarca-component';
+    dialogConfig.height = '400px';
+    dialogConfig.width = '300px';
+    dialogConfig.data = this.marcaToUpdate;
+    const modalDialog = this.matDialog.open(AgregarMarcaComponent, dialogConfig);
+    modalDialog.afterClosed().subscribe(result => {
+      this.marcaService.listarMarcaHabilitados().subscribe(data => {
+        this.subRubros = data.data;
+      });
+    });
+  }
+
+  openDialogProveedor(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'modalProveedor-component';
+    dialogConfig.height = '600px';
+    dialogConfig.width = '400px';
+    dialogConfig.data = this.proveedorToUpdate;
+    const modalDialog = this.matDialog.open(AgregarProveedorComponent, dialogConfig);
+    modalDialog.afterClosed().subscribe(result => {
+      this.proveedorService.listarProveedoresHabilitados().subscribe(data => {
+        this.proveedores = data.data;
+      });
+    });
+  }
+
+  // tslint:disable-next-line:typedef
+  validarcodigo({target}) {
+    const {value: nombre} = target;
+    console.log('NOMBRE-------', nombre);
+    const finded = this.articulos.find(p => p.codigoArt.toLowerCase() === nombre.toLowerCase());
+    this.codigoRepe = (finded !== undefined) ? true : false;
+  }
+
+  // tslint:disable-next-line:typedef
+  validarNombre({target}) {
+    const {value: nombre} = target;
+    const finded = this.articulos.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
+    this.nombreRepe = (finded !== undefined) ? true : false;
+  }
+
+  // tslint:disable-next-line:typedef
+  validarAbreviatura({target}) {
+    const {value: nombre} = target;
+    const finded = this.articulos.find(p => p.abreviatura.toLowerCase() === nombre.toLowerCase());
+    this.abreviaturaRepe = (finded !== undefined) ? true : false;
+  }
 }
