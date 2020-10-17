@@ -6,5 +6,5 @@ export class Direccion {
   estado: boolean;
   clienteId: number;
   distritoId: number;
-  ubicacion: Ubicacion;
+  // ubicacion: Ubicacion;
 }

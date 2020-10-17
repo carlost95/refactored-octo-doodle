@@ -35,3 +35,7 @@ export const ajuste = {
   path: '/ajustes',
   status: '/status'
 }
+
+export const direccion = {
+  path: '/direcciones'
+}

@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
+import {DireccionesService} from "../../../service/direcciones.service";
+import {Direccion} from "../../../modelo/Direccion";
 
 @Component({
   selector: 'app-direcciones',
@@ -8,12 +10,24 @@ import {Router} from "@angular/router";
 })
 export class DireccionesComponent implements OnInit {
 
+  direcciones: Direccion [];
+  idClient: number;
+
   constructor(
-    private router: Router
+    private route: ActivatedRoute,
+    private router: Router,
+    private direccionService: DireccionesService
   ) {
   }
 
   ngOnInit(): void {
+    this.route.params.subscribe(p => {
+      this.idClient = p['id'];
+      this.direccionService.getByClientId(this.idClient).subscribe(resp => {
+        this.direcciones = resp.data;
+        console.error(resp);
+      })
+    })
   }
 
   backPage() {
@@ -22,5 +36,9 @@ export class DireccionesComponent implements OnInit {
 
   newDireccion() {
     this.router.navigate([`/ventas/agregar-direccion/1`])
+  }
+
+  showModal(cliente: any) {
+
   }
 }
