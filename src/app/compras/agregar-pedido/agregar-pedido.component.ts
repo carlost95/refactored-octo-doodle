@@ -5,6 +5,7 @@ import { Articulo } from "./../../modelo/Articulo";
 import { ComprasService } from "./../../service/compras.service";
 import { Pedido } from "./../../modelo/Pedido";
 import { Component, OnInit } from "@angular/core";
+import {ArticulosService} from '../../service/articulos.service';
 
 @Component({
   selector: "app-agregar-pedido",
@@ -25,7 +26,10 @@ export class AgregarPedidoComponent implements OnInit {
   razonSocial: string  = ' ';
   movimientoFilter: MovimientoArticuloDTO[] = [];
 
-  constructor(private comprasService: ComprasService) {}
+  constructor(
+    private comprasService: ComprasService,
+    private articuloService: ArticulosService
+  ) {}
 
   async ngOnInit() {
     await this.fetchEvent2().then(() => {
@@ -108,7 +112,7 @@ export class AgregarPedidoComponent implements OnInit {
     });
   }
   fetchEvent2() {
-    return this.comprasService
+    return this.articuloService
       .listarArticuloHabilitados()
       .toPromise()
       .then(data => {
@@ -117,7 +121,7 @@ export class AgregarPedidoComponent implements OnInit {
       });
   }
   fetchEvent() {
-    return this.comprasService
+    return this.articuloService
       .listarStockArticulo()
       .toPromise()
       .then(data => {
@@ -189,7 +193,7 @@ export class AgregarPedidoComponent implements OnInit {
 
   actualizarStockFiltro(articulosFilter: Articulo[] ) {
     this.stockArticulo = [];
-    return this.comprasService
+    return this.articuloService
     .listarStockArticulo()
     .toPromise()
     .then(data => {

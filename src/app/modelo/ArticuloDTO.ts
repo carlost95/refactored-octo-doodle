@@ -5,6 +5,8 @@ export class ArticuloDTO {
   codigoArt: string;
   stockMin: number;
   stockMax: number;
+  costo: number;
+  precio: number;
   proveedorId: number;
   unidadMedidaId: number;
   marcaId: number;

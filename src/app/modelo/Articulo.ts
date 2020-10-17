@@ -16,5 +16,7 @@ export class Articulo{
   marcaId: Marca;
   rubroId: Rubro;
   subRubroId: SubRubro;
+  costo: number;
+  precio: number;
 
 }

@@ -1,297 +1,212 @@
-<div class="container" ng-controller="sub Rubros">
-  <div class="card m-2">
-    <h1 class="text-center">CARGA DE ARTICULOS</h1>
-    <div class="card-body">
-      <!-- <table class="table col-md-6"> -->
-      <table class="table table-borderless col-md border-0">
-        <thead class="thead-dark was-validated">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="column col-md-6">
-              <tr>
-                <td>
-                  <label class="btn btn-default" for="codigoArt"
-                  >Codigo
-                  </label>
-                </td>
-                <td>
-                  <input
-                    [(ngModel)]="articuloDTO.codigoArt"
-                    type="text "
-                    class="form-control"
-                    placeholder="ingrese codigo"
-                    required="true"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label class="btn btn-default" for="nombre"> Nombre</label>
-                </td>
-                <td>
-                  <input
-                    [(ngModel)]="articuloDTO.nombre"
-                    type="text "
-                    class="form-control"
-                    placeholder="ingrese nombre"
-                    required="true"
-                  />
-                </td>
-              </tr>
+<!--<div class="container" style="color: white">-->
+  <div class="container">
+    <div class="py-3">
+      <h1 style="text-align: center" *ngIf="!updating">Agregar nuevo articulo</h1>
+      <h1 style="text-align: center" *ngIf="updating">Actualizar articulo</h1>
+    </div>
+    <hr>
+    <section>
+      <form [formGroup]="articuloForm" class="py-2">
+        <div class="form-row justify-content-center">
+          <mat-form-field class="col-md-5 py-3" appearance="legacy">
+            <mat-label>Codigo</mat-label>
+            <input matInput formControlName="codigo" required
+                   autocomplete="off"
+                   (keyup)="validarcodigo($event)"/>
+            <mat-error *ngIf="articuloForm.controls.codigo.errors">
+              Código es <strong>requerido</strong>
+            </mat-error>
+            <label *ngIf="codigoRepe" style="color: #f44336; font-size: 75%"> Códígo repetido</label>
+          </mat-form-field>
 
-              <tr>
-                <td>
-                  <label for="abreviatura"> Abreviatura</label>
-                </td>
-                <td>
-                  <input
-                    [(ngModel)]="articuloDTO.abreviatura"
-                    type="text "
-                    class="form-control"
-                    placeholder="ingrese abreviatura "
-                    required="true"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label for="stock min"> Stock min</label>
-                </td>
-                <td>
-                  <input
-                    [(ngModel)]="articuloDTO.stockMin"
-                    type="text "
-                    class="form-control"
-                    placeholder="ingrese abreviatura "
-                    required="true"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label for="stock min"> Stock max</label>
-                </td>
-                <td>
-                  <input
-                    [(ngModel)]="articuloDTO.stockMax"
-                    type="text "
-                    class="form-control"
-                    placeholder="ingrese abreviatura "
-                    required="true"
-                  />
-                </td>
-              </tr>
-            </div>
-            <div class="column col-md-6">
-              <tr>
-                <td>
-                  <label for="unidadMedida"> Unidad Medida</label>
-                </td>
-                <td>
-                  <select
-                    (change)="listarUnidadMedida($event.target.value)"
-                    [(ngModel)]="articuloStorage.unidadMedida"
-                    class="form-control"
-                  >
-                    <option *ngFor="let unidadMedida of unidadMedidas">
-                      {{ unidadMedida.nombre }}
-                    </option>
-                  </select>
-                </td>
-                <td>
-                  <button
-                    class="btn btn-outline-success"
-                    [routerLink]="['/abm-compras/agregar-unidad-medida']"
-                    routerLinkActive="router-link-active "
-                    style="margin-left: 50px"
-                  >
-                    <svg
-                      version="1.1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
-                    >
-                      <title>UNIDAD DE MEDIDA</title>
-                      <path
-                        d="M14.249 0.438l-13.811 13.813c-0.584 0.584-0.584 1.538 0.002 2.124l3.185 3.187c0.584 0.584 1.541 0.586 2.124 0.002l13.813-13.813c0.584-0.585 0.584-1.541 0-2.125l-3.186-3.188c-0.587-0.586-1.542-0.583-2.127 0zM3.929 15.312l-0.759 0.759-1.896-1.897 0.759-0.759 1.896 1.897zM6.965 15.312l-0.759 0.759-3.415-3.415 0.759-0.76 3.415 3.416zM6.965 12.276l-0.759 0.759-1.898-1.896 0.76-0.76 1.897 1.897zM8.483 10.758l-0.759 0.759-1.896-1.896 0.759-0.76 1.896 1.897zM11.518 10.758l-0.759 0.759-3.414-3.414 0.759-0.759 3.414 3.414zM11.518 7.723l-0.759 0.759-1.896-1.896 0.759-0.759 1.896 1.896zM13.036 6.206l-0.759 0.759-1.897-1.897 0.759-0.759 1.897 1.897zM16.072 6.206l-0.76 0.759-3.414-3.415 0.759-0.76 3.415 3.416zM16.071 3.171l-0.759 0.759-1.896-1.898 0.759-0.758 1.896 1.897z"
-                      ></path>
-                    </svg>
-                    +
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label for="rubro"> RUBRO</label>
-                </td>
-                <td>
-                  <select
-                    (change)="listarRubros($event.target.value)"
-                    [(ngModel)]="articuloStorage.rubro"
-                    class="form-control"
-                  >
-                    <option *ngFor="let rubro of rubros">
-                      {{ rubro.nombre }}
-                    </option>
-                  </select>
-                </td>
-                <td>
-                  <button
-                    class="btn btn-outline-success"
-                    [routerLink]="['/abm-compras/agregar-rubro']"
-                    routerLinkActive="router-link-active "
-                    style="margin-left: 50px"
-                  >
-                    <svg
-                      version="1.1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 14 16"
-                    >
-                      <title>RUBROS</title>
-                      <path
-                        d="M13 2H1v2h12V2zM0 4a1 1 0 0 0 1 1v9a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H1a1 1 0 0 0-1 1v2zm2 1h10v9H2V5zm2 3h6V7H4v1z"
-                      />
-                    </svg>
-                    +
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label for="sub-rubro"> SUB RUBRO</label>
-                </td>
-                <td>
-                  <select
-                    (change)="listarSubRubros($event.target.value)"
-                    [(ngModel)]="articuloStorage.subRubro"
-                    class="form-control"
-                  >
-                    <option *ngFor="let subRubro of subRubros">
-                      {{ subRubro.nombre }}
-                    </option>
-                  </select>
-                </td>
-                <td>
-                  <button
-                    class="btn btn-outline-success"
-                    [routerLink]="['/abm-compras/agregar-sub-rubro']"
-                    routerLinkActive="router-link-active "
-                    style="margin-left: 50px"
-                  >
-                    <svg
-                      version="1.1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
-                    >
-                      <title>SUB-RUBROS</title>
-                      <path
-                        d="M18.405 4.799c-0.111-0.44-0.655-0.799-1.21-0.799h-6.814c-0.554 0-1.33-0.318-1.722-0.707l-0.596-0.588c-0.392-0.389-1.167-0.705-1.721-0.705h-3.255c-0.555 0-1.059 0.447-1.12 0.994l-0.292 3.006h16.931l-0.201-1.201zM19.412 7h-18.824c-0.342 0-0.61 0.294-0.577 0.635l0.923 9.669c0.037 0.394 0.369 0.696 0.766 0.696h16.6c0.397 0 0.728-0.302 0.766-0.696l0.923-9.669c0.033-0.341-0.235-0.635-0.577-0.635z"
-                      ></path>
-                    </svg>
-                    +
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label for="marca"> MARCA</label>
-                </td>
-                <td>
-                  <select
-                    (change)="listarMarcas($event.target.value)"
-                    [(ngModel)]="articuloStorage.marca"
-                    class="form-control"
-                  >
-                    <option *ngFor="let marca of marcas">
-                      {{ marca.nombre }}
-                    </option>
-                  </select>
-                </td>
-                <td>
-                  <button
-                    class="btn btn-outline-success"
-                    style="margin-left: 50px"
-                    (click)="openDialog()"
-                  >
-                    <svg
-                      version="1.1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
-                    >
-                      <title>MARCA</title>
-                      <path
-                        d="M19.388 0.405c-0.111-0.314-0.454-0.48-0.769-0.371s-0.481 0.455-0.372 0.77c0.929 2.67-0.915 4.664-2.321 5.732l-0.568-0.814c-0.191-0.273-0.618-0.5-0.95-0.504l-3.188 0.014c-0.332-0.006-0.825 0.146-1.097 0.338l-9.394 6.587c-0.455 0.32-0.565 0.947-0.247 1.404l4.269 6.108c0.32 0.455 0.831 0.4 1.287 0.082l9.394-6.588c0.27-0.191 0.582-0.603 0.692-0.918l0.998-3.145c0.11-0.314 0.043-0.793-0.148-1.066l-0.346-0.496c1.888-1.447 3.848-4.004 2.76-7.133zM15.017 9.763c-0.727 0.51-1.731 0.332-2.24-0.396-0.511-0.73-0.333-1.734 0.395-2.246 0.578-0.405 1.328-0.376 1.868 0.017-0.272 0.164-0.459 0.26-0.494 0.275-0.301 0.143-0.43 0.504-0.288 0.805 0.104 0.219 0.321 0.348 0.547 0.348 0.086 0 0.174-0.020 0.257-0.059 0.194-0.092 0.402-0.201 0.619-0.33 0.097 0.594-0.139 1.217-0.664 1.586z"
-                      ></path>
-                    </svg>
-                    +
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label for="proveedor"> PROVEEDOR</label>
-                </td>
-                <td>
-                  <select
-                    (change)="listarProveedores($event.target.value)"
-                    [(ngModel)]="articuloStorage.proveedor"
-                    class="form-control"
-                  >
-                    <option *ngFor="let proveedor of proveedores">
-                      {{ proveedor.razonSocial }}
-                    </option>
-                  </select>
-                </td>
-                <td>
-                  <button
-                    class="btn btn-outline-success"
-                    [routerLink]="['/compras/agregar-proveedor']"
-                    routerLinkActive="router-link-active"
-                    style="margin-left: 50px"
-                  >
-                    <svg
-                      version="1.1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 32 32"
-                    >
-                      <title>PROVEEDOR</title>
-                      <path
-                        d="M10 6c0-3.314 2.686-6 6-6s6 2.686 6 6c0 3.314-2.686 6-6 6s-6-2.686-6-6zM24.002 14h-1.107l-6.222 12.633 2.327-11.633-3-3-3 3 2.327 11.633-6.222-12.633h-1.107c-3.998 0-3.998 2.687-3.998 6v10h24v-10c0-3.313 0-6-3.998-6z"
-                      ></path>
-                    </svg>
-                    +
-                  </button>
-                </td>
-              </tr>
-            </div>
+          <mat-form-field class="col-md-5" appearance="fill">
+            <mat-label> Unidad de Medida</mat-label>
+            <mat-select
+              [(ngModel)]="unidadMedidaSelect"
+              name="unidad medida"
+              formControlName="unidadMedidaId"
+              autocomplete="off">
+              <mat-option *ngFor="let unMed of unidadMedidas" [value]="unMed.nombre">
+                {{ unMed.nombre }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="articuloForm.controls.unidadMedidaId.errors">
+              unidad de medida es<strong> requerido</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <div class="col-md-1" *ngIf="!updating">
+            <button mat-fab color="primary"
+                    (click)="newUnidadMedida()">
+              <mat-icon>
+                <i class="fas fa-ruler"></i>
+              </mat-icon>
+            </button>
           </div>
-        </div>
-        <hr/>
+          <mat-form-field class="col-md-5 py-3" appearance="legacy">
+            <mat-label> Nombre</mat-label>
+            <input matInput formControlName="nombre" required
+                   autocomplete="off"
+                   (keyup)="validarNombre($event)"/>
+            <mat-error *ngIf="articuloForm.controls.nombre.errors">
+              Nombre es <strong>requerido</strong>
+            </mat-error>
+            <label *ngIf="nombreRepe" style="color: #f44336; font-size: 75%">Nombre repetido</label>
+          </mat-form-field>
 
-        <div class="text-right">
-          <button (click)="volverAtras()" class="btn btn-outline-danger">
-            CANCELAR
-          </button>
+          <mat-form-field class="col-md-5" appearance="fill">
+            <mat-label> Rubro</mat-label>
+            <mat-select
+              [(ngModel)]="rubroSelect"
+              name="rubro"
+              formControlName="rubroId"
+              autocomplete="off">
+              <mat-option *ngFor="let rub of rubros" [value]="rub.nombre">
+                {{ rub.nombre }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="articuloForm.controls.rubroId.errors">
+              rubro es<strong> requerido</strong>
+            </mat-error>
+          </mat-form-field>
+          <div class="col-md-1" *ngIf="!updating">
+            <button mat-fab color="primary"
+                    (click)="newRubro()">
+              <mat-icon>
+                <i class="fas fa-archive"></i>
+              </mat-icon>
+            </button>
+          </div>
 
-          &nbsp; &nbsp;
-          <button
-            (click)="nuevoArticulo(articuloDTO)"
-            class="btn btn-warning"
-          >
-            ACEPTAR
-          </button>
+          <mat-form-field class="col-md-5 py-3" appearance="legacy">
+            <mat-label>Abreviatura</mat-label>
+            <input matInput formControlName="abreviatura" required
+                   autocomplete="off"
+                   (keyup)="validarAbreviatura($event)"/>
+            <mat-error *ngIf="articuloForm.controls.abreviatura.errors">
+              Abrevaitura es <strong>requerido</strong>
+            </mat-error>
+            <label *ngIf="abreviaturaRepe" style="color: #f44336; font-size: 75%">Abreviatura esta repetido</label>
+          </mat-form-field>
+
+          <mat-form-field class="col-md-5" appearance="fill">
+            <mat-label> SubRubro</mat-label>
+            <mat-select
+              [(ngModel)]="subRubroSelect"
+              name="rubro"
+              formControlName="subRubroId"
+              autocomplete="off">
+              <mat-option *ngFor="let subRub of subRubros" [value]="subRub.nombre">
+                {{ subRub.nombre }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="articuloForm.controls.subRubroId.errors">
+              rubro es<strong> requerido</strong>
+            </mat-error>
+          </mat-form-field>
+          <div class="col-md-1" *ngIf="!updating">
+            <button mat-fab color="primary"
+                    (click)="newSubRubro()">
+              <mat-icon>
+                <i class="fas fa-folder-open"></i>
+              </mat-icon>
+            </button>
+          </div>
+          <mat-form-field class="col-md-3 py-3" appearance="legacy">
+            <mat-label>Stock min</mat-label>
+            <input matInput formControlName="stockMin"
+                   autocomplete="off" type="number" min="0" maxlength="8"
+                   oninput="this.value=this.value.slice(0,this.maxLength|| 0/0);this.value=(this.value< 0) ? (0/0) : this.value;"/>
+          </mat-form-field>
+          <mat-form-field class="col-md-2 py-3" appearance="legacy">
+            <mat-label>Stock max</mat-label>
+            <input matInput formControlName="stockMax"
+                   autocomplete="off" type="number" min="0" maxlength="8"
+                   oninput="this.value=this.value.slice(0,this.maxLength|| 0/0);this.value=(this.value< 0) ? (0/0) : this.value;"/>
+          </mat-form-field>
+          <mat-form-field class="col-md-5" appearance="fill">
+            <mat-label> Marca</mat-label>
+            <mat-select
+              [(ngModel)]="marcaSelect"
+              name="marca"
+              formControlName="marcaId"
+              autocomplete="off">
+              <mat-option *ngFor="let marca of marcas" [value]="marca.nombre">
+                {{ marca.nombre }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="articuloForm.controls.marcaId.errors">
+              marca es<strong> requerido</strong>
+            </mat-error>
+          </mat-form-field>
+          <div class="col-md-1" *ngIf="!updating">
+            <button mat-fab color="primary"
+                    (click)="newMarca()">
+              <mat-icon>
+                <i class="fas fa-tag"></i>
+              </mat-icon>
+            </button>
+          </div>
+          <mat-form-field class="col-md-3 py-3" appearance="legacy">
+            <mat-label>Costo</mat-label>
+            <input matInput formControlName="costo"
+                   autocomplete="off" type="number" min="0" maxlength="8"
+                   oninput="this.value=this.value.slice(0,this.maxLength|| 0/0);this.value=(this.value< 0) ? (0/0) : this.value;"/>
+            <mat-error *ngIf="articuloForm.controls.costo.errors">
+              Costo es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="col-md-2 py-3" appearance="legacy">
+            <mat-label>Precio</mat-label>
+            <input matInput formControlName="precio"
+                   autocomplete="off" type="number" min="0" maxlength="8"
+                   oninput="this.value=this.value.slice(0,this.maxLength|| 0/0);this.value=(this.value< 0) ? (0/0) : this.value;"/>
+            <mat-error *ngIf="articuloForm.controls.nombre.errors">
+              Precio es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="col-md-5" appearance="fill">
+            <mat-label> Proveedor</mat-label>
+            <mat-select
+              [(ngModel)]="proveedorSelect"
+              name="proveedor"
+              formControlName="proveedorId"
+              autocomplete="off">
+              <mat-option *ngFor="let prov of proveedores" [value]="prov.razonSocial">
+                {{ prov.razonSocial }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="articuloForm.controls.proveedorId.errors">
+              proveedor es<strong> requerido</strong>
+            </mat-error>
+          </mat-form-field>
+          <div class="col-md-1" *ngIf="!updating">
+            <button mat-fab color="primary"
+                    (click)="newProveedor()">
+              <mat-icon>
+                <i class="fas fa-user-tie"></i>
+              </mat-icon>
+            </button>
+          </div>
+
         </div>
-        </thead>
-      </table>
+
+      </form>
+    </section>
+    <hr>
+    <div class="text-right py-3">
+      <button (click)="closeForm()" class="btn btn-outline-danger">
+        Cancelar
+      </button>
+      &nbsp;
+      &nbsp;
+      <button (click)="onSubmit()" class="btn btn-warning">
+        Aceptar
+      </button>
+      &nbsp;
+      &nbsp;
     </div>
   </div>
-</div>
+<!--</div>-->
+
