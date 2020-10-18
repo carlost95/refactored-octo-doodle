@@ -43,3 +43,7 @@ export const articulos = {
 export const direccion = {
   path: '/direcciones'
 }
+
+export const distrito = {
+  path: '/distritos'
+}
