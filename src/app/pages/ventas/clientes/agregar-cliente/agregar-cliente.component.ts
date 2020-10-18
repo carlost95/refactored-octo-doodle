@@ -1,10 +1,8 @@
-import {VentasService} from "./../../service/ventas.service";
-import {Cliente} from "./../../modelo/Cliente";
+import {Cliente} from "../../../../modelo/Cliente";
 import {Component, Inject, Input, OnInit} from "@angular/core";
 import {FormBuilder, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Banco} from "../../modelo/Banco";
-import {ClienteService} from "../../service/cliente.service";
+import {ClienteService} from "../../../../service/cliente.service";
 
 @Component({
   selector: "app-agregar-cliente",
@@ -14,6 +12,7 @@ import {ClienteService} from "../../service/cliente.service";
 export class AgregarClienteComponent implements OnInit {
   client: Cliente = new Cliente();
   updating: boolean = false;
+  consultar: boolean = false;
   clientForm: any;
   clients: Cliente[] = [];
   duplicateDni: boolean = false;
@@ -24,22 +23,28 @@ export class AgregarClienteComponent implements OnInit {
   constructor(private service: ClienteService,
               private formBuilder: FormBuilder,
               public dialogRef: MatDialogRef<AgregarClienteComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: Cliente) {
+              @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
   ngOnInit() {
-    this.service.getAll().subscribe(resp => this.clients = resp.data);
+    this.service.getAll().subscribe(resp => {
+      this.clients = resp.data;
+      console.log(resp);
+    });
+    const {cliente} = this.data;
 
-    if (this.data) {
+    if (cliente) {
+      this.consultar = this.data.consultar;
+
       this.clientForm = this.formBuilder.group({
-        id: [this.data.id, null],
-        apellido: [this.data.apellido, Validators.required],
-        nombre: [this.data.nombre, Validators.required],
-        dni: [this.data.dni, Validators.required],
-        mail: [this.data.mail, null],
-        estado: [this.data.estado, null],
+        id: [cliente.id, null],
+        apellido: [{value: cliente.apellido, disabled: this.consultar}, Validators.required],
+        nombre: [{value: cliente.nombre, disabled: this.consultar}, Validators.required],
+        dni: [{value: cliente.dni, disabled: this.consultar}, Validators.required],
+        mail: [{value: cliente.mail, disabled: this.consultar}, null],
+        estado: [{value: cliente.estado, disabled: this.consultar}, null],
       });
-      this.updating = true;
+      this.updating = !this.consultar;
     } else {
       this.clientForm = this.formBuilder.group({
         apellido: ['', Validators.required],
@@ -49,15 +54,15 @@ export class AgregarClienteComponent implements OnInit {
       })
     }
   }
-
   validar({target}) {
     const {value: dni} = target;
-    const finded = this.clients.find(c => c.dni.toLowerCase().trim() === dni.toLowerCase().trim());
+    const finded = this.clients.find(c => dni === c.dni);
     this.duplicateDni = finded ? true : false;
   }
 
   close() {
-    this.dialogRef.close();
+    this.data.save = false;
+    this.dialogRef.close(false);
   }
 
   onSubmit() {
@@ -73,7 +78,7 @@ export class AgregarClienteComponent implements OnInit {
   makeDTO() {
     this.client.apellido = (this.clientForm.controls.apellido.value).trim();
     this.client.nombre = (this.clientForm.controls.nombre.value).trim();
-    this.client.dni = (this.clientForm.controls.dni.value).trim;
+    this.client.dni = (this.clientForm.controls.dni.value).trim();
     this.client.mail = (this.clientForm.controls.mail.value).trim();
     if (this.updating) {
       this.client.id = this.clientForm.controls.id.value;
@@ -88,14 +93,14 @@ export class AgregarClienteComponent implements OnInit {
   save() {
     this.service.save(this.client).subscribe(data => {
       this.client = data.data;
-      this.dialogRef.close();
+      this.dialogRef.close(true);
     });
   }
 
   update() {
-    // this.service.actualizarBanco(this.banco).subscribe(data => {
-    //   this.banco = data.data;
-    //   this.dialogRef.close();
-    // });
+    this.service.update(this.client).subscribe(data => {
+      this.client = data.data;
+      this.dialogRef.close(true);
+    });
   }
 }

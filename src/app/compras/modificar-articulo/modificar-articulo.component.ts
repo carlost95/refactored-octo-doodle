@@ -14,6 +14,7 @@ import {SubRubroService} from '../../service/sub-rubro.service';
 import {RubrosService} from '../../service/rubros.service';
 import {MarcasService} from '../../service/marcas.service';
 import {UnidadMedidaService} from '../../service/unidad-medida.service';
+import {ArticulosService} from '../../service/articulos.service';
 
 @Component({
   selector: 'app-modificar-articulo',
@@ -63,7 +64,8 @@ export class ModificarArticuloComponent implements OnInit {
     private serviceAbmCompra: AbmComprasService,
     private subRubroService: SubRubroService,
     private rubroService: RubrosService,
-    private serviceCompra: ComprasService,
+    private serviceCompra: ArticulosService,
+    private serviceCompra1: ComprasService,
     private marcasService: MarcasService,
     private unidadMedidaService: UnidadMedidaService,
     private id: ActivatedRoute
@@ -104,7 +106,7 @@ export class ModificarArticuloComponent implements OnInit {
       this.marcaSelected = this.articulo.marcaId;
     });
 
-    this.serviceCompra.listarProveedoresHabilitados().subscribe(data => {
+    this.serviceCompra1.listarProveedoresHabilitados().subscribe(data => {
       this.proveedores = data.data;
       this.proveedorSelected = this.articulo.proveedorId;
     });
@@ -134,7 +136,7 @@ export class ModificarArticuloComponent implements OnInit {
     console.log(this.articuloDTO);
 
     this.serviceCompra.actualizarArticulo(this.articuloDTO).subscribe(data => {
-      this.articuloDTO = data;
+      this.articuloDTO = data.data;
       alert('SE ACTUALIZO EL SUB RUBRO ' + this.articuloDTO.nombre);
       window.history.back();
     });
