@@ -52,6 +52,7 @@
             <th scope="col">Precio</th>
             <th scope="col">Unid med</th>
             <th scope="col">Rubro</th>
+            <th scope="col">Habilitacion</th>
             <th scope="col*2">Opciones</th>
           </tr>
           </thead>
@@ -68,7 +69,19 @@
             <td *ngIf="articulo.rubroId != null">
               {{ articulo.rubroId.nombre }}
             </td>
-            <td *ngIf="export">
+            <td>
+              <mat-slide-toggle
+                [checked]="articulo.habilitacion"
+                (click)="showModal(articulo)"
+                color="primary"
+              ></mat-slide-toggle>
+            </td>
+            <td>
+              <button class="btn btn-default m-0 p-0" title="Consultar"
+                      (click)="consultarArticulo(articulo)">
+                <i class="fas fa-info-circle"></i>
+              </button>
+              &nbsp;
               <button
                 class="btn btn-default m-0 p-0"
                 title="Modificar "
@@ -76,19 +89,10 @@
               >
                 <i class="fas fa-pencil-alt"></i>
               </button>
-              &nbsp;
-              <button
-                class="btn btn-default m-0 p-0"
-                title="Eliminar "
-                (click)="deshabilitarArticulo(articulo)"
-              >
-                <i class="fas fa-trash-alt" title="deshabilitar articulo"></i>
-              </button>
+
             </td>
           </tr>
-
           </tbody>
-
         </table>
         <mat-paginator [length]="this.articulosFilter.length"
                        [pageSize]="page_size"

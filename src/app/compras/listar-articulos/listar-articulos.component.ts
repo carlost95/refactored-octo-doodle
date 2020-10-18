@@ -11,6 +11,7 @@ import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {AgregarArticuloComponent} from '../agregar-articulo/agregar-articulo.component';
 import {ArticulosService} from '../../service/articulos.service';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
+import {ConfirmModalComponent} from '../../shared/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-listar-articulos',
@@ -41,6 +42,7 @@ export class ListarArticulosComponent implements OnInit {
 
   busqueda: string = null;
   toUpdateArticulo: Articulo;
+  consultingArticulo: boolean;
 
   export = true;
 
@@ -84,18 +86,17 @@ export class ListarArticulosComponent implements OnInit {
   }
 
   // tslint:disable-next-line:typedef
-  applyFilter(event: Event) {
-    // const filterValue = (event.target as HTMLInputElement).value;
-    // this.articulosFilter.filter = filterValue.trim().toLowerCase();
-    //
-    // if (this.articulosFilter.paginator) {
-    //   this.articulosFilter.paginator.firstPage();
-    // }
+  consultarArticulo(articulo: Articulo) {
+    console.log(articulo);
+    this.toUpdateArticulo = articulo;
+    this.consultingArticulo = true;
+    this.openDialog();
   }
 
   // tslint:disable-next-line: typedef
   modificarArticulo(articulo: Articulo) {
     this.toUpdateArticulo = articulo;
+    this.consultingArticulo = false;
     this.openDialog();
 
   }
@@ -128,9 +129,6 @@ export class ListarArticulosComponent implements OnInit {
         return inName || inLastName || inDocument;
 
       });
-      console.warn('--------------------------');
-      console.log(this.articulosFilter);
-
     }
   }
 
@@ -142,6 +140,7 @@ export class ListarArticulosComponent implements OnInit {
   // tslint:disable-next-line:typedef
   newArticulo() {
     this.toUpdateArticulo = null;
+    this.consultingArticulo = false;
     this.openDialog();
   }
 
@@ -150,9 +149,10 @@ export class ListarArticulosComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
-    // dialogConfig.height = '700px';
-    // dialogConfig.width = '900px';
-    dialogConfig.data = this.toUpdateArticulo;
+    dialogConfig.data = {
+      article: this.toUpdateArticulo,
+      consulting: this.consultingArticulo
+    };
     const modalDialog = this.matDialog.open(AgregarArticuloComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       this.articuloService.listarArticuloTodos().subscribe(data => {
@@ -184,37 +184,38 @@ export class ListarArticulosComponent implements OnInit {
 
     this.excelService.exportToExcel(this.articulosExcel, 'Reporte Articulos');
   }
+  // tslint:disable-next-line:typedef
+  showModal(articulo: Articulo){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'modal-component';
+    dialogConfig.height = '300px';
+    dialogConfig.width = '350px';
+    dialogConfig.data = {
+      message: '¿Desea cambiar estado?',
+      title: 'Cambio estado',
+      state: articulo.habilitacion
+    };
+    const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
+    modalDialog.afterClosed().subscribe(result => {
+      if (result.state) {
+        // tslint:disable-next-line:no-shadowed-variable
+        this.articuloService.cambiarHabilitacion(articulo.id).subscribe(result => {
+          this.getData();
+        });
+      } else {
+        this.getData();
+      }
+    });
+  }
+  // tslint:disable-next-line: typedef
+  getData() {
+    this.articuloService.listarArticuloTodos().subscribe(data => {
+      this.articulos = data.data;
+      this.articulosFilter = data.data;
+    });
+  }
 
 }
-
-// const ELEMENT_DATA: PeriodicElement[] = [
-//   {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-//   {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-//   {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-//   {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-//   {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-//   {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-//   {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-//   {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-//   {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-//   {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-//   {position: 11, name: 'Sodium', weight: 22.9897, symbol: 'Na'},
-//   {position: 12, name: 'Magnesium', weight: 24.305, symbol: 'Mg'},
-//   {position: 13, name: 'Aluminum', weight: 26.9815, symbol: 'Al'},
-//   {position: 14, name: 'Silicon', weight: 28.0855, symbol: 'Si'},
-//   {position: 15, name: 'Phosphorus', weight: 30.9738, symbol: 'P'},
-//   {position: 16, name: 'Sulfur', weight: 32.065, symbol: 'S'},
-//   {position: 17, name: 'Chlorine', weight: 35.453, symbol: 'Cl'},
-//   {position: 18, name: 'Argon', weight: 39.948, symbol: 'Ar'},
-//   {position: 19, name: 'Potassium', weight: 39.0983, symbol: 'K'},
-//   {position: 20, name: 'Calcium', weight: 40.078, symbol: 'Ca'},
-// ];
-// export class PeriodicElement {
-//   name: string;
-//   position: number;
-//   weight: number;
-//   symbol: string;
-// }
-
 
 

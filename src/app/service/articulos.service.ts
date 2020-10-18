@@ -50,4 +50,9 @@ export class ArticulosService {
   listarStockArticulo() {
     return this.http.get<Response>(this.url + '/movimientos/stock');
   }
+
+  // tslint:disable-next-line:typedef
+  cambiarHabilitacion(id: number){
+    return this.http.put<Response>(this.url + '/' + id , id);
+  }
 }
