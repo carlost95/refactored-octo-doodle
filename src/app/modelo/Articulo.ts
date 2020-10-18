@@ -4,7 +4,7 @@ import { Marca } from './Marca';
 import { UnidadMedida } from './UnidadMedida';
 import { Proveedor } from './Proveedor';
 export class Articulo{
-  id : number;
+  id: number;
   nombre: string;
   abreviatura: string;
   codigoArt: string;

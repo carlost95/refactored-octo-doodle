@@ -5,10 +5,9 @@ import {Rubro} from './../../modelo/Rubro';
 import {ComprasService} from './../../service/compras.service';
 import {UnidadMedida} from './../../modelo/UnidadMedida';
 import {ArticuloDTO} from './../../modelo/ArticuloDTO';
-import {Component, OnInit, OnDestroy, Inject} from '@angular/core';
+import {Component, OnInit, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
 import {AgregarMarcaComponent} from '../../abm-compras/agregar-marca/agregar-marca.component';
-import {ConfirmModalComponent} from '../../shared/confirm-modal/confirm-modal.component';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MarcasService} from '../../service/marcas.service';
 import {SubRubroService} from '../../service/sub-rubro.service';
@@ -38,11 +37,11 @@ export class AgregarArticuloComponent implements OnInit {
   proveedores: Proveedor[] = null;
 
 
-  unidadMedidaSelect: string = null;
-  rubroSelect: string = null;
-  subRubroSelect: string = null;
-  marcaSelect: string = null;
-  proveedorSelect: string = null;
+  unidadMedidaSelect: number;
+  rubroSelect: number;
+  subRubroSelect: number;
+  marcaSelect: number;
+  proveedorSelect: number;
 
   unidadToUpdate: UnidadMedida = new UnidadMedida();
   rubroToUpdate: Rubro = new Rubro();
@@ -53,6 +52,7 @@ export class AgregarArticuloComponent implements OnInit {
   errorInForm = false;
   submitted = false;
   updating = false;
+  consulting = false;
   codigoRepe = false;
   nombreRepe = false;
   abreviaturaRepe = false;
@@ -72,10 +72,8 @@ export class AgregarArticuloComponent implements OnInit {
     private proveedorService: ProveedoresService,
     private formBuilder: FormBuilder,
     public matDialog: MatDialog,
-    public matDialogUnidMed: MatDialog,
     public dialogRef: MatDialogRef<AgregarArticuloComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Articulo
-  ) {
+    @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
   // tslint:disable-next-line:typedef
@@ -93,25 +91,35 @@ export class AgregarArticuloComponent implements OnInit {
     this.articulosService.listarArticuloTodos().subscribe(resp =>
       this.articulos = resp.data);
 
-    if (this.data) {
-      this.unidadMedidaSelect = this.data.unidadMedidaId.nombre;
+    const {article} = this.data;
+
+    console.warn('----------------------------');
+    console.log(article);
+
+    if (article) {
+      this.unidadMedidaSelect = article.unidadMedidaId.id;
+      this.rubroSelect = article.rubroId.id;
+      this.subRubroSelect = article.subRubroId.id;
+      this.marcaSelect = article.marcaId.id;
+      this.proveedorSelect = article.proveedorId.id;
+      this.consulting = this.data.consulting;
 
       this.articuloForm = this.formBuilder.group({
-        id: [this.data.id, null],
-        codigo: [this.data.codigoArt, Validators.required],
-        nombre: [this.data.nombre, Validators.required],
-        abreviatura: [this.data.abreviatura, Validators.required],
-        stockMin: [this.data.stockMin, null],
-        stockMax: [this.data.stockMax, null],
-        unidadMedidaId: [this.data.unidadMedidaId, Validators.required],
-        rubroId: [this.data.rubroId, Validators.required],
-        subRubroId: [this.data.subRubroId, null],
-        marcaId: [this.data.marcaId, null],
-        proveedorId: [this.data.proveedorId, Validators.required],
-        costo: [this.data.costo, Validators.required],
-        precio: [this.data.precio, Validators.required]
+        id: [article.id, null],
+        codigo: [{value: article.codigoArt, disabled: this.consulting}, Validators.required],
+        nombre: [{value: article.nombre, disabled: this.consulting}, Validators.required],
+        abreviatura: [{value: article.abreviatura, disabled: this.consulting}, Validators.required],
+        stockMin: [{value: article.stockMin, disabled: this.consulting}, null],
+        stockMax: [{value: article.stockMax, disabled: this.consulting}, null],
+        unidadMedidaId: [{value: article.unidadMedidaId, disabled: this.consulting}, Validators.required],
+        rubroId: [{value: article.rubroId, disabled: this.consulting}, Validators.required],
+        subRubroId: [{value: article.subRubroId, disabled: this.consulting}, null],
+        marcaId: [{value: article.marcaId, disabled: this.consulting}, null],
+        proveedorId: [{value: article.proveedorId, disabled: this.consulting}, Validators.required],
+        costo: [{value: article.costo, disabled: this.consulting}, Validators.required],
+        precio: [{value: article.precio, disabled: this.consulting}, Validators.required]
       });
-      this.updating = true;
+      this.updating = !this.consulting;
     } else {
       this.articuloForm = this.formBuilder.group({
         codigo: ['', Validators.required],
@@ -145,7 +153,7 @@ export class AgregarArticuloComponent implements OnInit {
       this.articuloForm.controls.proveedorId.markAsTouched();
       this.articuloForm.controls.costo.markAsTouched();
       this.articuloForm.controls.precio.markAsTouched();
-      console.log('Error en los datos');
+      console.log('Error en validacion de datos');
     } else {
       this.makeDTO();
 
@@ -154,49 +162,48 @@ export class AgregarArticuloComponent implements OnInit {
 
   // tslint:disable-next-line:typedef
   makeDTO() {
-    this.articuloDTO.codigoArt = this.articuloForm.controls.codigo.value;
-    this.articuloDTO.nombre = this.articuloForm.controls.nombre.value;
-    this.articuloDTO.abreviatura = this.articuloForm.controls.abreviatura.value;
-    this.articuloDTO.stockMin = this.articuloForm.controls.stockMin.value;
-    this.articuloDTO.stockMax = this.articuloForm.controls.stockMax.value;
-    this.articuloDTO.costo = this.articuloForm.controls.costo.value;
-    this.articuloDTO.precio = this.articuloForm.controls.precio.value;
+    this.articuloDTO.codigoArt = (this.articuloForm.controls.codigo.value).trim();
+    this.articuloDTO.nombre = (this.articuloForm.controls.nombre.value).trim();
+    this.articuloDTO.abreviatura = (this.articuloForm.controls.abreviatura.value).trim();
+    this.articuloDTO.stockMin = (this.articuloForm.controls.stockMin.value);
+    this.articuloDTO.stockMax = (this.articuloForm.controls.stockMax.value);
+    this.articuloDTO.costo = (this.articuloForm.controls.costo.value);
+    this.articuloDTO.precio = (this.articuloForm.controls.precio.value);
 
-    if (this.unidadMedidaSelect !== null) {
-      this.unidadMedidas.forEach(unid => {
-        if (this.unidadMedidaSelect.toLowerCase() === unid.nombre.toLowerCase()) {
-          this.articuloDTO.unidadMedidaId = unid.id;
-        }
-      });
-    }
-    if (this.rubroSelect !== null) {
-      this.rubros.forEach(rub => {
-        if (this.rubroSelect.toLowerCase() === rub.nombre.toLowerCase()) {
-          this.articuloDTO.rubroId = rub.id;
-        }
-      });
-    }
-    if (this.subRubroSelect !== null) {
-      this.subRubros.forEach(subRub => {
-        if (this.subRubroSelect.toLowerCase() === subRub.nombre.toLowerCase()) {
-          this.articuloDTO.subRubroId = subRub.id;
-        }
-      });
-    }
-    if (this.marcaSelect !== null) {
-      this.marcas.forEach(marca => {
-        if (this.marcaSelect.toLowerCase() === marca.nombre.toLowerCase()) {
-          this.articuloDTO.marcaId = marca.id;
-        }
-      });
-    }
-    if (this.proveedorSelect !== null) {
-      this.proveedores.forEach(prov => {
-        if (this.proveedorSelect.toLowerCase() === prov.razonSocial.toLowerCase()) {
-          this.articuloDTO.proveedorId = prov.id;
-        }
-      });
-    }
+    this.articuloDTO.unidadMedidaId = this.unidadMedidaSelect;
+    this.articuloDTO.rubroId = this.rubroSelect;
+    this.articuloDTO.subRubroId = this.subRubroSelect;
+    this.articuloDTO.marcaId = this.marcaSelect;
+    this.articuloDTO.proveedorId = this.proveedorSelect;
+
+    // if (this.rubroSelect !== null) {
+    //   this.rubros.forEach(rub => {
+    //     if (this.rubroSelect.toLowerCase() === rub.nombre.toLowerCase()) {
+    //       this.articuloDTO.rubroId = rub.id;
+    //     }
+    //   });
+    // }
+    // if (this.subRubroSelect !== null) {
+    //   this.subRubros.forEach(subRub => {
+    //     if (this.subRubroSelect.toLowerCase() === subRub.nombre.toLowerCase()) {
+    //       this.articuloDTO.subRubroId = subRub.id;
+    //     }
+    //   });
+    // }
+    // if (this.marcaSelect !== null) {
+    //   this.marcas.forEach(marca => {
+    //     if (this.marcaSelect.toLowerCase() === marca.nombre.toLowerCase()) {
+    //       this.articuloDTO.marcaId = marca.id;
+    //     }
+    //   });
+    // }
+    // if (this.proveedorSelect !== null) {
+    //   this.proveedores.forEach(prov => {
+    //     if (this.proveedorSelect.toLowerCase() === prov.razonSocial.toLowerCase()) {
+    //       this.articuloDTO.proveedorId = prov.id;
+    //     }
+    //   });
+    // }
 
     if (this.updating) {
       this.articuloDTO.id = this.articuloForm.controls.id.value;
@@ -216,6 +223,7 @@ export class AgregarArticuloComponent implements OnInit {
 
   // tslint:disable-next-line: typedef
   save() {
+    console.warn(this.articuloDTO);
     this.articulosService.guardarArticulo(this.articuloDTO).subscribe(data => {
       this.articuloDTO = data.data;
       this.dialogRef.close();
@@ -339,7 +347,6 @@ export class AgregarArticuloComponent implements OnInit {
   // tslint:disable-next-line:typedef
   validarcodigo({target}) {
     const {value: nombre} = target;
-    console.log('NOMBRE-------', nombre);
     const finded = this.articulos.find(p => p.codigoArt.toLowerCase() === nombre.toLowerCase());
     this.codigoRepe = (finded !== undefined) ? true : false;
   }

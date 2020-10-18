@@ -102,7 +102,7 @@ export class ClientesComponent implements OnInit {
     dialogConfig.width = '300px';
     dialogConfig.data = {
       cliente: this.toUpdate,
-      consultar: this.consulting
+      consulting: this.consulting
     };
     const modalDialog = this.matDialog.open(AgregarClienteComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
