@@ -1,10 +1,8 @@
 <div class="container" ng-controller="pedido">
   <div class="card m-1">
     <header class="row mt-4 ml-3 mb-3">
-      <i
-        class="col-md-2 m-0 fas fa-chevron-left fa-3x"
-        style="margin-right: 100%"
-        (click)="backPage()"
+      <i class="col-md-2 m-0 fas fa-chevron-left fa-3x"
+         style="margin-right: 100%" (click)="backPage()"
       ></i>
       <h1 class="m-0 col-md-10" style="padding-left: 10rem !important">
         Lista de Ajustes
@@ -19,108 +17,61 @@
               <h4>Busqueda Ajuste</h4>
             </label>
 
-            <input
-              type="text "
-              [(ngModel)]="busqueda"
-              class="form-control"
-              placeholder="ingrese nombre "
-              (keyup)="filtarPedidoProveedor($event)"
-            />
+            <input type="text " [(ngModel)]="busqueda" class="form-control"
+                   placeholder="ingrese nombre " (keyup)="filtrarAjusteNombre($event)"/>
           </div>
           <div class="col-3 m-0 p-0 justify-content-between">
             <label>
               <h4>Fecha Desde</h4>
             </label>
 
-            <input
-              type="date"
-              name="search2"
-              class="form-control"
-              [(ngModel)]="searchDesde"
-              placeholder="Desde..."
-              (change)="updateFilterDateDesde()"
-            />
+            <input type="date" name="search2" class="form-control"
+                   [(ngModel)]="searchDesde" placeholder="Desde..."
+                   (change)="updateFilterDateDesde()"/>
           </div>
           <div class="col-3 m-0 p-0 justify-content-end">
             <label>
               <h4>Fecha Hasta</h4>
             </label>
 
-            <input
-              type="date"
-              name="search3"
-              class="form-control"
-              [(ngModel)]="searchHasta"
-              placeholder="Hasta..."
-              (change)="updateFilterDateHasta()"
-            />
+            <input type="date" name="search3" class="form-control"
+                   [(ngModel)]="searchHasta" placeholder="Hasta..."
+                   (change)="updateFilterDateHasta()"/>
           </div>
         </div>
-        <br />
+        <br/>
 
         <div class="row col-12 justify-content-end">
-          <button
-            class="btn btn-warning"
-            [routerLink]="['/abm-compras/agregar-ajuste']"
-            routerLinkActive="router-link-active "
-          >
-            <!-- <svg
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 32 32"
-            >
-              <title>PEDIDO</title>
-              <path
-                d="M32 18l-4-8h-6v-4c0-1.1-0.9-2-2-2h-18c-1.1 0-2 0.9-2 2v16l2 2h2.536c-0.341 0.588-0.536 1.271-0.536 2 0 2.209 1.791 4 4 4s4-1.791 4-4c0-0.729-0.196-1.412-0.536-2h11.073c-0.341 0.588-0.537 1.271-0.537 2 0 2.209 1.791 4 4 4s4-1.791 4-4c0-0.729-0.196-1.412-0.537-2h2.537v-6zM22 18v-6h4.146l3 6h-7.146z"
-              ></path>
-            </svg> -->
-            <i class="fas fa-wrench"></i>
+          <button class="btn btn-warning" [routerLink]="['/abm-compras/agregar-ajuste']"
+                  routerLinkActive="router-link-active"><i class="fas fa-wrench"></i>
             Nuevo Ajuste
           </button>
         </div>
       </div>
     </div>
 
-    <div
-      class="card-body p-0"
-      style="width: 1100px; height: 400px; overflow: auto"
-    >
+    <div class="card-body p-0"
+         style="width: 1100px; height: 460px; overflow: auto">
       <table class="table table-striped">
         <thead class="thead-dark">
-          <tr class="text-center">
-            <th scope="col ">Nombre</th>
-            <th scope="col ">Fecha</th>
-            <th scope="col*2 ">Opciones</th>
-          </tr>
+        <tr class="text-center">
+          <th scope="col ">Nombre</th>
+          <th scope="col ">Fecha</th>
+          <th scope="col*2 ">Opciones</th>
+        </tr>
         </thead>
         <tbody *ngIf="ajustes != null">
-          <tr *ngFor="let ajuste of ajustesFilter" class="text-center">
-            <td>{{ ajuste.nombre }}</td>
-            <td>{{ ajuste.fecha | date: "dd-MM-yyyy" }}</td>
-            <td>
-              <button
-                class="btn btn-default m-0 p-0"
-                title="consulta "
-                [routerLink]="['/compras/consultar-ajuste/']"
-                routerLinkActive="router-link-active "
-              >
-                <svg
-                  version="1.1 "
-                  xmlns="http://www.w3.org/2000/svg "
-                  width="20 "
-                  height="30 "
-                  viewBox="0 0 20 20 "
-                >
-                  <title>consulta</title>
-                  <path
-                    d="M15 0h-4c-0.553 0-1 0.447-1 1l0.023 0.222c1.102 0 2 0.897 2 2v11.359l0.977-1.181 3 3.6v-16c0-0.553-0.447-1-1-1zM9.023 3h-4.023c-0.553 0-1 0.447-1 1v16l3-3.6 3 3.6v-16c0-0.553-0.424-1-0.977-1z "
-                  ></path>
-                </svg>
-              </button>
-            </td>
-          </tr>
+        <tr *ngFor="let ajuste of ajustesFilter" class="text-center">
+          <td>{{ ajuste.nombre }}</td>
+          <td>{{ ajuste.fecha | date: "dd-MM-yyyy" }}</td>
+          <td>
+            <button class="btn btn-default m-0 p-0" title="consulta "
+                    [routerLink]="['/abm-compras/consultar-ajuste/'+ ajuste.id]"
+                    routerLinkActive="router-link-active ">
+              <i class="fas fa-info-circle"></i>
+            </button>
+          </td>
+        </tr>
         </tbody>
       </table>
     </div>

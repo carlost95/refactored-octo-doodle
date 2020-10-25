@@ -1,7 +1,6 @@
 import { ConsultarPedidoComponent } from './consultar-pedido/consultar-pedido.component';
 import { AgregarPedidoComponent } from './agregar-pedido/agregar-pedido.component';
 import { ListarPedidoComponent } from './listar-pedido/listar-pedido.component';
-import { ModificarArticuloComponent } from './modificar-articulo/modificar-articulo.component';
 import { AgregarArticuloComponent } from './agregar-articulo/agregar-articulo.component';
 import { AgregarProveedorComponent } from './agregar-proveedor/agregar-proveedor.component';
 import { ListarArticulosComponent } from './listar-articulos/listar-articulos.component';
@@ -20,11 +19,7 @@ const routes: Routes = [
     {path: 'agregar-proveedor', component: AgregarProveedorComponent},
     {path: 'agregar-articulo', component: AgregarArticuloComponent},
     {path: 'agregar-pedido', component: AgregarPedidoComponent},
-    {path: 'modificar-articulo/:id', component: ModificarArticuloComponent},
     {path: 'consultar-pedido/:id', component: ConsultarPedidoComponent}
-    // {path: 'listar-precios', component: ListarPreciosComponent},
-    // {path: 'listar-rubros', component: ListarRubroComponent},
-    // {path: 'listar-subrubros', component: ListarSubrubroComponent}
 
   ]}
 ];

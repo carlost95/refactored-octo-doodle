@@ -1,5 +1,5 @@
 import {Router} from '@angular/router';
-import {ComprasService} from './../../service/compras.service';
+import {PedidosService} from '../../service/pedidos.service';
 import {Articulo} from './../../modelo/Articulo';
 
 import {Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
@@ -23,7 +23,7 @@ import {ConfirmModalComponent} from '../../shared/confirm-modal/confirm-modal.co
 export class ListarArticulosComponent implements OnInit {
 
   constructor(
-    private serviceCompra: ComprasService,
+    private serviceCompra: PedidosService,
     private articuloService: ArticulosService,
     private router: Router,
     private excelService: ExcelExportService,
