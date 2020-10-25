@@ -122,7 +122,7 @@ export class AjustesComponent implements OnInit {
       this.ajusteForm.controls.nombre.markAsTouched();
       this.ajusteForm.controls.fecha.markAsTouched();
       this.ajusteForm.controls.descripcion.markAsTouched();
-      this.ajusteForm.controls.proveedor.markAsTouched();
+      this.ajusteForm.controls.proveedorId.markAsTouched();
     } else {
       console.log('CARGA DE MOVIMIENTOS');
       this.makeDTO();

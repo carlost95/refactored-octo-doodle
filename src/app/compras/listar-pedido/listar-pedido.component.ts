@@ -52,7 +52,7 @@ export class ListarPedidoComponent implements OnInit {
   }
 
   // tslint:disable-next-line: typedef
-  filtarPedidoProveedor(event: any) {
+  filtarPedido(event: any) {
     if (this.busqueda !== null) {
       this.pedidosFilter = this.pedidos.filter(item => {
           const inName = item.nombre.toLowerCase().indexOf(this.busqueda) !== -1;

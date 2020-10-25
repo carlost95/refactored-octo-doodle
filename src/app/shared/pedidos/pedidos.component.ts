@@ -9,6 +9,11 @@ import {ProveedoresService} from '../../service/proveedores.service';
 import {proveedor} from '../../../environments/global-route';
 import {ArticulosService} from '../../service/articulos.service';
 import {MovimientosService} from '../../service/movimientos.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AjustesService} from '../../service/ajustes.service';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {Ajuste} from '../../modelo/Ajuste';
+import {ConfirmModalComponent} from '../confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-pedidos',
@@ -19,6 +24,8 @@ export class PedidosComponent implements OnInit {
   @Input() consultar: boolean;
 
   pedido: Pedido = new Pedido();
+  pedidoDTO: Pedido = new Pedido();
+  pedidos: Pedido[] = [];
 
   articulos: Articulo[] = [];
 
@@ -37,26 +44,52 @@ export class PedidosComponent implements OnInit {
   articulosStockMovimiento: any[] = [];
   articulosStockMovimientoFilter: any[] = [];
 
+  proveedorId: number;
+  nombreRepe: boolean;
+  pedidoForm: FormGroup;
+  errorInForm = false;
+  submitted = false;
+
   constructor(
     private pedidoService: PedidosService,
     private articuloService: ArticulosService,
     private proveedorService: ProveedoresService,
     private movimientosService: MovimientosService,
     private route: Router,
-    private active: ActivatedRoute
+    private active: ActivatedRoute,
+    private ajusteService: AjustesService,
+    private formBuilder: FormBuilder,
+    public matDialog: MatDialog,
   ) {
   }
 
   // tslint:disable-next-line: typedef
   async ngOnInit() {
     if (this.route.url === '/compras/agregar-pedido') {
-      console.log('agregar');
+      console.log('AGREGAR AJUSTE');
+      this.pedidoForm = this.formBuilder.group({
+        nombre: ['', Validators.required],
+        fecha: ['', Validators.required],
+        descripcion: ['', null],
+        proveedorId: ['', Validators.required],
+      });
     } else {
       const idPedido = Number(this.active.snapshot.paramMap.get('id'));
       await this.pedidoService.listarPedidoId(idPedido)
         .toPromise()
         .then((data) => (this.pedido = data.data));
+      this.proveedorId = this.pedido.proveedorId;
+
+      this.pedidoForm = this.formBuilder.group({
+        id: [this.pedido.id, null],
+        nombre: [{value: this.pedido.nombre, disabled: this.consultar}, Validators.required],
+        fecha: [{value: this.pedido.fecha, disabled: this.consultar}, Validators.required],
+        descripcion: [{value: this.pedido.descripcion, disabled: this.consultar}, null],
+        proveedorId: [{value: this.pedido.proveedorId, disabled: this.consultar}, Validators.required],
+      });
     }
+    this.pedidoService.listarPedidoTodos().subscribe(resp =>
+      this.pedidos = resp.data);
 
     await this.getArticulos().then(() => {
       this.articulos.forEach((a, index) => {
@@ -69,50 +102,82 @@ export class PedidosComponent implements OnInit {
 
     this.getMovimientos().then(() => {
       this.getStock();
-    });
+      this.listaProveedor();
 
-    this.listaProveedor();
-    //
+    });
   }
 
-  // tslint:disable-next-line: typedef
-  guardarPedido(pedido: Pedido) {
-    this.pedido.id = null;
-    this.pedido.nombre = pedido.nombre.toUpperCase().trim();
-    this.pedido.fecha = pedido.fecha;
+  // tslint:disable-next-line:typedef
+  onSubmit() {
+    this.submitted = true;
+    this.errorInForm = this.submitted && this.pedidoForm.invalid;
 
-    this.proveedores.forEach(prov => {
-      if (this.razonSocial === prov.razonSocial) {
-        pedido.proveedorId = prov.id;
-        pedido.razonSocial = prov.razonSocial;
-      }
-    });
-    this.pedido.proveedorId = pedido.proveedorId;
-    this.pedido.descripcion = pedido.descripcion.toUpperCase();
+    if (this.errorInForm || this.nombreRepe) {
+      this.pedidoForm.controls.nombre.markAsTouched();
+      this.pedidoForm.controls.fecha.markAsTouched();
+      this.pedidoForm.controls.descripcion.markAsTouched();
+      this.pedidoForm.controls.proveedor.markAsTouched();
+    } else {
+      console.log('CARGA DE MOVIMIENTOS');
+      this.makeDTO();
+    }
+
+  }
+
+  // tslint:disable-next-line:typedef
+  async makeDTO() {
+    this.pedido = new Pedido();
+
+    this.pedido.id = null;
+    this.pedido.nombre = (this.pedidoForm.controls.nombre.value).trim();
+    this.pedido.fecha = (this.pedidoForm.controls.fecha.value).trim();
+    this.pedido.descripcion = (this.pedidoForm.controls.descripcion.value).trim();
+    this.pedido.proveedorId = this.pedidoForm.controls.proveedorId.value;
+
+    await this.proveedorService.listarProveedorId(this.pedido.proveedorId)
+      .toPromise().then((data) => (this.pedidoDTO = data.data));
+    this.pedido.razonSocial = this.pedidoDTO.razonSocial;
+
+    console.log('pedido');
+    console.warn(this.pedido);
+
     this.pedidoService.guardarPedidos(this.pedido).then((data) => {
       console.log(data);
-
       this.pedido = data.data;
 
-      this.articulosStockMovimientoFilter.forEach((artStockMov, index) => {
-        if (artStockMov.movimiento.movimiento !== null) {
-          this.movimientoArticuloDTO.id = null;
-          this.movimientoArticuloDTO.fecha = pedido.fecha;
-          this.movimientoArticuloDTO.articuloId = artStockMov.articulo.id;
-          this.movimientoArticuloDTO.movimiento =
-            artStockMov.movimiento.movimiento;
-          this.movimientoArticuloDTO.pedidoId = data.data.id;
+    this.articulosStockMovimientoFilter.forEach((artStockMov, index) => {
+      if (artStockMov.movimiento.movimiento !== null) {
+        this.movimientoArticuloDTO.id = null;
+        this.movimientoArticuloDTO.fecha = this.pedido.fecha;
+        this.movimientoArticuloDTO.articuloId = artStockMov.articulo.id;
+        this.movimientoArticuloDTO.movimiento = artStockMov.movimiento.movimiento;
+        this.movimientoArticuloDTO.pedidoId = this.pedido.id;
 
-          this.movimientosService.guardarMovimientoPedido(this.movimientoArticuloDTO)
-            .subscribe((resp) => {
-              console.log('Ingreso a los movimientos');
-            });
-        }
+        this.movimientosService.guardarMovimientoPedido(this.movimientoArticuloDTO)
+          .subscribe((resp) => {
+          });
+      }
       });
     });
+    this.showModal();
+  }
 
-    alert('Se guardo un nuevo pedido');
-    window.history.back();
+  // tslint:disable-next-line:typedef
+  showModal() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'modal-component';
+    dialogConfig.height = '280px';
+    dialogConfig.width = '350px';
+    dialogConfig.data = {
+      message: 'Se guardo un nuevo pedido',
+      title: 'Carga de Pedido',
+      status: 'alert'
+    };
+    const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
+    modalDialog.afterClosed().subscribe(result => {
+      window.history.back();
+    });
   }
 
   // tslint:disable-next-line: typedef
@@ -139,7 +204,6 @@ export class PedidosComponent implements OnInit {
       const data = await this.movimientosService
         .getMovimientosPreviosPedidos(this.pedido.id)
         .toPromise();
-      console.log('getMovimientosPrevios');
       const keys = Object.keys(data.data);
       const value = Object.values(data.data);
       const movimientosPrev = [];
@@ -148,7 +212,6 @@ export class PedidosComponent implements OnInit {
         movimientosPrev.push(stock);
       });
       this.movimientosPrevios = movimientosPrev;
-      console.log(movimientosPrev);
       // tslint:disable-next-line:variable-name
       this.articulos.forEach((a, index_1) => {
         this.stockArticulo.push(data.data.id);
@@ -180,11 +243,11 @@ export class PedidosComponent implements OnInit {
   // tslint:disable-next-line: typedef
   async listarFiltro() {
     this.articulosStockMovimientoFilter = [];
-    if (this.razonSocial === null) {
+    if (this.proveedorId === null) {
       this.articulosStockMovimientoFilter = this.articulosStockMovimiento;
     } else {
       await this.articulosStockMovimiento.forEach((artStockMov) => {
-        artStockMov.articulo.proveedorId.razonSocial === this.razonSocial
+        artStockMov.articulo.proveedorId.id === this.proveedorId
           // tslint:disable-next-line:no-unused-expression
           ? this.articulosStockMovimientoFilter.push(artStockMov) : false;
       });
@@ -247,6 +310,13 @@ export class PedidosComponent implements OnInit {
         this.articulosStockMovimientoFilter = this.articulosStockMovimiento;
       });
     }
+  }
+
+  // tslint:disable-next-line:typedef
+  validarNombre({target}) {
+    const {value: nombre} = target;
+    const finded = this.pedidos.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
+    this.nombreRepe = (finded !== undefined) ? true : false;
   }
 }
 
