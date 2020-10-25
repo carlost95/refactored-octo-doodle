@@ -39,3 +39,11 @@ export const articulos = {
   path: '/articulos',
   status: '/status'
 };
+export const movimientos = {
+  path: '/movimientos',
+  status: '/status'
+};
+export const pedidos = {
+  path: '/pedidos',
+  status: '/status'
+};

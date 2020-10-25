@@ -12,6 +12,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 // import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
 
 @NgModule({
   imports: [
@@ -26,9 +28,9 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     MatIconModule,
     MatSlideToggleModule,
     MatSnackBarModule,
-    // BrowserAnimationsModule,
+    MatNativeDateModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
   ],
   exports: [
     MatToolbarModule,
@@ -42,8 +44,10 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     MatSlideToggleModule,
     MatSnackBarModule,
     MatTableModule,
-    MatPaginatorModule
-  ],
+    MatPaginatorModule,
+    MatDatepickerModule,
+
+],
 })
 export class MaterialModule {
 }

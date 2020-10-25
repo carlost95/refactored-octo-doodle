@@ -1,13 +1,14 @@
-import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit, Input } from '@angular/core';
-import { Pedido } from 'src/app/modelo/Pedido';
-import { Articulo } from 'src/app/modelo/Articulo';
-import { MovimientoArticuloDTO } from 'src/app/modelo/MovimientoArticuloDTO';
-import { ComprasService } from 'src/app/service/compras.service';
-import { Proveedor } from 'src/app/modelo/Proveedor';
-import { ProveedoresService } from '../../service/proveedores.service';
-import { proveedor } from '../../../environments/global-route';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Component, OnInit, Input} from '@angular/core';
+import {Pedido} from 'src/app/modelo/Pedido';
+import {Articulo} from 'src/app/modelo/Articulo';
+import {MovimientoArticuloDTO} from 'src/app/modelo/MovimientoArticuloDTO';
+import {PedidosService} from 'src/app/service/pedidos.service';
+import {Proveedor} from 'src/app/modelo/Proveedor';
+import {ProveedoresService} from '../../service/proveedores.service';
+import {proveedor} from '../../../environments/global-route';
 import {ArticulosService} from '../../service/articulos.service';
+import {MovimientosService} from '../../service/movimientos.service';
 
 @Component({
   selector: 'app-pedidos',
@@ -37,22 +38,22 @@ export class PedidosComponent implements OnInit {
   articulosStockMovimientoFilter: any[] = [];
 
   constructor(
-    private comprasService: ComprasService,
+    private pedidoService: PedidosService,
     private articuloService: ArticulosService,
     private proveedorService: ProveedoresService,
+    private movimientosService: MovimientosService,
     private route: Router,
     private active: ActivatedRoute
-  ) { }
+  ) {
+  }
 
   // tslint:disable-next-line: typedef
   async ngOnInit() {
     if (this.route.url === '/compras/agregar-pedido') {
       console.log('agregar');
-    }
-    else {
+    } else {
       const idPedido = Number(this.active.snapshot.paramMap.get('id'));
-      await this.comprasService
-        .listarPedidoId(idPedido)
+      await this.pedidoService.listarPedidoId(idPedido)
         .toPromise()
         .then((data) => (this.pedido = data.data));
     }
@@ -73,9 +74,9 @@ export class PedidosComponent implements OnInit {
     this.listaProveedor();
     //
   }
+
   // tslint:disable-next-line: typedef
   guardarPedido(pedido: Pedido) {
-    // console.log(this.articulosStockMovimientoFilter);
     this.pedido.id = null;
     this.pedido.nombre = pedido.nombre.toUpperCase().trim();
     this.pedido.fecha = pedido.fecha;
@@ -87,14 +88,8 @@ export class PedidosComponent implements OnInit {
       }
     });
     this.pedido.proveedorId = pedido.proveedorId;
-
-    console.warn('--------------MUESTRA DE ID PROVEEDOR------------');
-    console.error(this.pedido.proveedorId);
-
-
     this.pedido.descripcion = pedido.descripcion.toUpperCase();
-
-    this.comprasService.guardarPedidos(this.pedido).then((data) => {
+    this.pedidoService.guardarPedidos(this.pedido).then((data) => {
       console.log(data);
 
       this.pedido = data.data;
@@ -103,13 +98,12 @@ export class PedidosComponent implements OnInit {
         if (artStockMov.movimiento.movimiento !== null) {
           this.movimientoArticuloDTO.id = null;
           this.movimientoArticuloDTO.fecha = pedido.fecha;
-          this.movimientoArticuloDTO.articuloId = artStockMov.articulo.id; // this.articulos[index].id;
+          this.movimientoArticuloDTO.articuloId = artStockMov.articulo.id;
           this.movimientoArticuloDTO.movimiento =
-            artStockMov.movimiento.movimiento; // this.movimientoArticulosDTO[index].movimiento;
+            artStockMov.movimiento.movimiento;
           this.movimientoArticuloDTO.pedidoId = data.data.id;
 
-          this.comprasService
-            .guardarMovimiento(this.movimientoArticuloDTO)
+          this.movimientosService.guardarMovimientoPedido(this.movimientoArticuloDTO)
             .subscribe((resp) => {
               console.log('Ingreso a los movimientos');
             });
@@ -142,8 +136,8 @@ export class PedidosComponent implements OnInit {
   // tslint:disable-next-line: typedef
   async getMovimientos() {
     if (this.consultar) {
-      const data = await this.comprasService
-        .getMovimientosPrevios(this.pedido.id)
+      const data = await this.movimientosService
+        .getMovimientosPreviosPedidos(this.pedido.id)
         .toPromise();
       console.log('getMovimientosPrevios');
       const keys = Object.keys(data.data);
@@ -153,11 +147,9 @@ export class PedidosComponent implements OnInit {
         const stock = new StockArticulo(Number(keys[index]), Number(v));
         movimientosPrev.push(stock);
       });
-      console.log('movimivneto previo-------');
-      console.log(movimientosPrev);
-      // movimientosPrev = movimientosPrev.filter( m => m.stock !== 0);
       this.movimientosPrevios = movimientosPrev;
       console.log(movimientosPrev);
+      // tslint:disable-next-line:variable-name
       this.articulos.forEach((a, index_1) => {
         this.stockArticulo.push(data.data.id);
       });
@@ -165,10 +157,8 @@ export class PedidosComponent implements OnInit {
       );
     } else {
       // tslint:disable-next-line: variable-name
-      const data_1 = await this.articuloService
-        .listarStockArticulo()
+      const data_1 = await this.movimientosService.listarStockArticuloPedido()
         .toPromise();
-      console.log('lista');
       // tslint:disable-next-line: variable-name
       this.articulos.forEach((a_1, index_2) => {
         this.stockArticulo.push(data_1.data[index_2]);
@@ -179,8 +169,6 @@ export class PedidosComponent implements OnInit {
         });
         this.articulosStockMovimientoFilter = this.articulosStockMovimiento;
       });
-      console.log(this.articulosStockMovimiento);
-      console.log(this.stockArticulo);
     }
   }
 
@@ -197,6 +185,7 @@ export class PedidosComponent implements OnInit {
     } else {
       await this.articulosStockMovimiento.forEach((artStockMov) => {
         artStockMov.articulo.proveedorId.razonSocial === this.razonSocial
+          // tslint:disable-next-line:no-unused-expression
           ? this.articulosStockMovimientoFilter.push(artStockMov) : false;
       });
     }
@@ -205,30 +194,33 @@ export class PedidosComponent implements OnInit {
   // tslint:disable-next-line: typedef
   async actualizarStockFiltro(articulosFilter: Articulo[]) {
     this.stockArticulo = [];
-    const data = await this.articuloService
-      .listarStockArticulo()
+    const data = await this.movimientosService
+      .listarStockArticuloPedido()
       .toPromise();
     articulosFilter.forEach((a, index) => {
       this.stockArticulo.push(data.data[a.id]);
     });
   }
 
+  // tslint:disable-next-line:typedef
   guardarCarga() {
     console.log('Entre');
   }
 
+  // tslint:disable-next-line:typedef
   async getStock() {
     if (this.consultar) {
-      const data = await this.comprasService
-        .getMovimientosStock(this.pedido.id)
+      const data = await this.movimientosService
+        .getMovimientosStockPedido(this.pedido.id)
         .toPromise();
       const keys = Object.keys(data.data);
       const value = Object.values(data.data);
       keys.forEach((k, index) => this.stockArticuloPorPedido.push(
         new StockArticulo(Number(k), Number(value[index]))
-      )
+        )
       );
       this.movimientoFilter = [];
+      // tslint:disable-next-line:variable-name
       keys.forEach((k_1, index_1) => {
         const mov = new MovimientoArticuloDTO();
         mov.articuloId = Number(k_1);
@@ -240,10 +232,12 @@ export class PedidosComponent implements OnInit {
       this.movimientosPrevios = this.movimientosPrevios.filter((m) => indexMovpre.includes(m.idArticulo)
       );
       this.stockArticulo.splice(0, this.stockArticulo.length);
+      // tslint:disable-next-line:variable-name
       this.movimientosPrevios.forEach((m_1) => this.stockArticulo.push(m_1.stock)
       );
       this.articulosFilter = this.articulosFilter.filter((a) => keys.includes(String(a.id))
       );
+      // tslint:disable-next-line:variable-name
       this.articulosFilter.forEach((a_1, index_2) => {
         this.articulosStockMovimiento.push({
           articulo: a_1,
@@ -252,8 +246,6 @@ export class PedidosComponent implements OnInit {
         });
         this.articulosStockMovimientoFilter = this.articulosStockMovimiento;
       });
-      console.error(this.articulosStockMovimiento);
-      console.error('Soy un fucking error ');
     }
   }
 }
@@ -261,6 +253,7 @@ export class PedidosComponent implements OnInit {
 export class StockArticulo {
   idArticulo: number;
   stock: number;
+
   constructor(idArticulo: number, stock: number) {
     this.idArticulo = idArticulo;
     this.stock = stock;

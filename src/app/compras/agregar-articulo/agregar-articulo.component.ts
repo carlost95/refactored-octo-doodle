@@ -2,7 +2,7 @@ import {SubRubro} from './../../modelo/SubRubro';
 import {Proveedor} from './../../modelo/Proveedor';
 import {Marca} from './../../modelo/Marca';
 import {Rubro} from './../../modelo/Rubro';
-import {ComprasService} from './../../service/compras.service';
+import {PedidosService} from '../../service/pedidos.service';
 import {UnidadMedida} from './../../modelo/UnidadMedida';
 import {ArticuloDTO} from './../../modelo/ArticuloDTO';
 import {Component, OnInit, Inject} from '@angular/core';
@@ -63,7 +63,7 @@ export class AgregarArticuloComponent implements OnInit {
 
 
   constructor(
-    private serviceCompra: ComprasService,
+    private serviceCompra: PedidosService,
     private articulosService: ArticulosService,
     private subRubroService: SubRubroService,
     private marcaService: MarcasService,
@@ -175,35 +175,6 @@ export class AgregarArticuloComponent implements OnInit {
     this.articuloDTO.subRubroId = this.subRubroSelect;
     this.articuloDTO.marcaId = this.marcaSelect;
     this.articuloDTO.proveedorId = this.proveedorSelect;
-
-    // if (this.rubroSelect !== null) {
-    //   this.rubros.forEach(rub => {
-    //     if (this.rubroSelect.toLowerCase() === rub.nombre.toLowerCase()) {
-    //       this.articuloDTO.rubroId = rub.id;
-    //     }
-    //   });
-    // }
-    // if (this.subRubroSelect !== null) {
-    //   this.subRubros.forEach(subRub => {
-    //     if (this.subRubroSelect.toLowerCase() === subRub.nombre.toLowerCase()) {
-    //       this.articuloDTO.subRubroId = subRub.id;
-    //     }
-    //   });
-    // }
-    // if (this.marcaSelect !== null) {
-    //   this.marcas.forEach(marca => {
-    //     if (this.marcaSelect.toLowerCase() === marca.nombre.toLowerCase()) {
-    //       this.articuloDTO.marcaId = marca.id;
-    //     }
-    //   });
-    // }
-    // if (this.proveedorSelect !== null) {
-    //   this.proveedores.forEach(prov => {
-    //     if (this.proveedorSelect.toLowerCase() === prov.razonSocial.toLowerCase()) {
-    //       this.articuloDTO.proveedorId = prov.id;
-    //     }
-    //   });
-    // }
 
     if (this.updating) {
       this.articuloDTO.id = this.articuloForm.controls.id.value;

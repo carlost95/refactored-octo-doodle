@@ -1,4 +1,4 @@
-import { ComprasService } from 'src/app/service/compras.service';
+import { PedidosService } from 'src/app/service/pedidos.service';
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Pedido } from 'src/app/modelo/Pedido';

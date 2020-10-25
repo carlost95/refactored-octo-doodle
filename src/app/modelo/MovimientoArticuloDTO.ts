@@ -5,4 +5,6 @@ export class MovimientoArticuloDTO {
   articuloId: number;
   ajusteId: number;
   pedidoId: number;
+  facturaId: number;
+  remitoId: number;
 }

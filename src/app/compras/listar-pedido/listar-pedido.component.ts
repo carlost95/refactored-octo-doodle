@@ -1,32 +1,30 @@
-import { Proveedor } from './../../modelo/Proveedor';
-import { Articulo } from "./../../modelo/Articulo";
-import { ListarArticulosComponent } from "./../listar-articulos/listar-articulos.component";
-import { Router } from "@angular/router";
-import { ComprasService } from "./../../service/compras.service";
-import { Pedido } from "./../../modelo/Pedido";
-import { Component, OnInit } from "@angular/core";
-import * as _ from "lodash";
+import {Proveedor} from './../../modelo/Proveedor';
+import {Router} from '@angular/router';
+import {PedidosService} from '../../service/pedidos.service';
+import {Pedido} from './../../modelo/Pedido';
+import {Component, OnInit} from '@angular/core';
+import * as _ from 'lodash';
 
 @Component({
-  selector: "app-listar-pedido",
-  templateUrl: "./listar-pedido.component.html",
-  styleUrls: ["./listar-pedido.component.css"]
+  selector: 'app-listar-pedido',
+  templateUrl: './listar-pedido.component.html',
+  styleUrls: ['./listar-pedido.component.css']
 })
 export class ListarPedidoComponent implements OnInit {
   pedidos: Pedido[] = [];
   pedidosFilter: Pedido[] = [];
   busqueda: string = null;
-  busquedaFecha: string = null;
-  searchDesde: string = "";
-  searchHasta: string = "";
-  rows: any[];
+  searchDesde = '';
+  searchHasta = '';
   proveedores: Proveedor[] = [];
   razonSocial: string;
 
   //
   //
-  constructor(private serviceCompra: ComprasService, private router: Router) { }
+  constructor(private pedidoService: PedidosService, private router: Router) {
+  }
 
+  // tslint:disable-next-line:typedef
   ngOnInit() {
     this.fetchEvent().then(() => {
       console.log(this.pedidos);
@@ -36,41 +34,31 @@ export class ListarPedidoComponent implements OnInit {
 
   // tslint:disable-next-line: typedef
   async fetchEvent() {
-    const data = await this.serviceCompra
+    const data = await this.pedidoService
       .listarPedidoTodos()
       .toPromise();
     this.pedidos = data.data;
-    console.log('fechas: ');
     this.pedidosFilter = this.pedidos;
     this.pedidos.forEach((p, index) => {
-      console.log(p.fecha);
     });
   }
+
   jsonStringDate(jdate): string {
     if (jdate != null) {
       const resp = new Date(jdate);
       return resp.toISOString().substring(0, 10);
     }
-    return "";
-  }
-  deshabilitarPedido(pedido: Pedido) {
-    let resultado: boolean;
-    resultado = confirm("¿DESEA DESHABILITAR ESTE PEDIDO?");
-    if (resultado === true) {
-      this.serviceCompra.desabilitarPedido(pedido.id).subscribe(data => {
-        window.location.reload();
-      });
-    }
+    return '';
   }
 
   // tslint:disable-next-line: typedef
   filtarPedidoProveedor(event: any) {
     if (this.busqueda !== null) {
       this.pedidosFilter = this.pedidos.filter(item => {
-        const inName = item.nombre.toLowerCase().indexOf(this.busqueda) !== -1;
-        const inLastName = item.razonSocial.toLowerCase().indexOf(this.busqueda) !== -1;
-        return inName || inLastName;
-      }
+          const inName = item.nombre.toLowerCase().indexOf(this.busqueda) !== -1;
+          const inLastName = item.razonSocial.toLowerCase().indexOf(this.busqueda) !== -1;
+          return inName || inLastName;
+        }
       );
     }
   }
@@ -78,7 +66,7 @@ export class ListarPedidoComponent implements OnInit {
   // tslint:disable-next-line: typedef
   updateFilterDateDesde() {
     let val = null;
-    if (this.searchDesde != null && this.searchDesde !== "") {
+    if (this.searchDesde != null && this.searchDesde !== '') {
       val = new Date(this.searchDesde);
       this.pedidosFilter = [];
       this.pedidosFilter = this.pedidos.filter(element => {
@@ -105,6 +93,7 @@ export class ListarPedidoComponent implements OnInit {
 
     this.orderRows();
   }
+
   // tslint:disable-next-line: typedef
   orderRows() {
     this.pedidosFilter = _.orderBy(this.pedidosFilter, ['fecha'], ['desc']);
@@ -115,8 +104,4 @@ export class ListarPedidoComponent implements OnInit {
     window.history.back();
   }
 
-  // tslint:disable-next-line: typedef
-  consultarPedido(pedido: Pedido) {
-    this.router.navigate(['consultar-pedido/']);
-  }
 }
