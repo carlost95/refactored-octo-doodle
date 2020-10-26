@@ -1,13 +1,13 @@
-import { Rubro } from './../../modelo/Rubro';
-import { Component, OnInit } from '@angular/core';
-import { RubrosService } from '../../service/rubros.service';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
-import { AgregarRubroComponent } from '../agregar-rubro/agregar-rubro.component';
-import { ServiceReportService } from '../../service/service-report.service';
-import { PdfExportService } from '../../service/pdf-export.service';
-import { ExcelExportService } from '../../service/excel-export.service';
-import { RubroExcel } from '../../modelo/RubroExcel';
+import {Rubro} from './../../modelo/Rubro';
+import {Component, OnInit} from '@angular/core';
+import {RubrosService} from '../../service/rubros.service';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {ConfirmModalComponent} from '../../shared/confirm-modal/confirm-modal.component';
+import {AgregarRubroComponent} from '../agregar-rubro/agregar-rubro.component';
+import {ServiceReportService} from '../../service/service-report.service';
+import {PdfExportService} from '../../service/pdf-export.service';
+import {ExcelExportService} from '../../service/excel-export.service';
+import {RubroExcel} from '../../modelo/RubroExcel';
 
 
 @Component({
@@ -19,7 +19,7 @@ export class ListarRubroComponent implements OnInit {
   rubro: Rubro = null;
   rubros: Rubro[] = null;
   rubrosFilter: Rubro[] = null;
-  busquedaNombre: string = null;
+  consulting: boolean;
   busqueda: string = null;
   toUpdateRubro: Rubro;
   rubroExcel: RubroExcel;
@@ -31,7 +31,8 @@ export class ListarRubroComponent implements OnInit {
     private servicePdf: PdfExportService,
     private excelService: ExcelExportService,
     public matDialog: MatDialog
-  ) { }
+  ) {
+  }
 
   // tslint:disable-next-line: typedef
   ngOnInit() {
@@ -40,12 +41,7 @@ export class ListarRubroComponent implements OnInit {
       this.rubrosFilter = this.rubros;
     });
   }
-  // tslint:disable-next-line: typedef
-  modificarRubro(rubro: Rubro) {
-    this.toUpdateRubro = rubro;
-    this.openDialog();
 
-  }
   // tslint:disable-next-line: typedef
   filtrarRubro(event: any) {
     if (this.busqueda !== null) {
@@ -63,12 +59,49 @@ export class ListarRubroComponent implements OnInit {
   backPage() {
     window.history.back();
   }
+
   // tslint:disable-next-line: typedef
   newRubro() {
     this.toUpdateRubro = null;
+    this.consulting = false;
+    this.openDialog();
+  }
+
+  // tslint:disable-next-line: typedef
+  modificarRubro(rubro: Rubro) {
+    this.toUpdateRubro = rubro;
+    this.consulting = false;
     this.openDialog();
 
   }
+
+  // tslint:disable-next-line:typedef
+  consultarRubro(rubro: Rubro) {
+    this.toUpdateRubro = rubro;
+    this.consulting = true;
+    this.openDialog();
+  }
+
+
+  openDialog(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'modal-component';
+    dialogConfig.height = '400px';
+    dialogConfig.width = '300px';
+    dialogConfig.data = {
+      newRubro: this.toUpdateRubro,
+      consulting: this.consulting
+    };
+    const modalDialog = this.matDialog.open(AgregarRubroComponent, dialogConfig);
+    modalDialog.afterClosed().subscribe(result => {
+      this.serviceRubro.listarRubrosTodos().subscribe(data => {
+        this.rubros = data.data;
+        this.rubrosFilter = data.data;
+      });
+    });
+  }
+
   // tslint:disable-next-line: typedef
   showModal(rubro: Rubro) {
     const dialogConfig = new MatDialogConfig();
@@ -87,27 +120,13 @@ export class ListarRubroComponent implements OnInit {
       if (result.state) {
         this.serviceRubro.cambiarHabilitacion(rubro.id).subscribe(result => {
           this.getData();
-        })
+        });
       } else {
         this.getData();
       }
     });
   }
-  openDialog(): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.id = 'modal-component';
-    dialogConfig.height = '400px';
-    dialogConfig.width = '300px';
-    dialogConfig.data = this.toUpdateRubro;
-    const modalDialog = this.matDialog.open(AgregarRubroComponent, dialogConfig);
-    modalDialog.afterClosed().subscribe(result => {
-      this.serviceRubro.listarRubrosTodos().subscribe(data => {
-        this.rubros = data.data;
-        this.rubrosFilter = data.data;
-      });
-    });
-  }
+
   // tslint:disable-next-line: typedef
   getData() {
     this.serviceRubro.listarRubrosTodos().subscribe(data => {
@@ -115,6 +134,7 @@ export class ListarRubroComponent implements OnInit {
       this.rubrosFilter = data.data;
     });
   }
+
   exportarExcel(): void {
     // tslint:disable-next-line: prefer-for-of
     for (let index = 0; index < this.rubrosFilter.length; index++) {
@@ -129,6 +149,7 @@ export class ListarRubroComponent implements OnInit {
     }
     this.excelService.exportToExcel(this.rubrosExcel, 'Reporte Rubros');
   }
+
   // tslint:disable-next-line: typedef
   exportarPDF() {
     this.serviceReport.getReporteRubroPdf().subscribe(resp => {
