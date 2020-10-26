@@ -1,9 +1,9 @@
-import { AbmComprasService } from './../../service/abm-compras.service';
-import { Rubro } from './../../modelo/Rubro';
-import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { RubrosService } from '../../service/rubros.service';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {AbmComprasService} from './../../service/abm-compras.service';
+import {Rubro} from './../../modelo/Rubro';
+import {Component, OnInit, Inject} from '@angular/core';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {RubrosService} from '../../service/rubros.service';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-agregar-rubro',
@@ -18,48 +18,56 @@ export class AgregarRubroComponent implements OnInit {
   errorInForm = false;
   submitted = false;
   updating = false;
+  consulting = false;
   nombreRepe = false;
 
   constructor(
     private rubroService: RubrosService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AgregarRubroComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Rubro) { }
+    @Inject(MAT_DIALOG_DATA) public data: any) {
+  }
 
   // tslint:disable-next-line: typedef
   ngOnInit() {
     this.rubroService.listarRubrosTodos().subscribe(resp => this.rubros = resp.data);
-    if (this.data) {
+    const {newRubro} = this.data;
+
+    if (newRubro) {
+      this.consulting = this.data.consulting;
       this.rubroForm = this.formBuilder.group({
-        id: [this.data.id, null],
-        nombre: [this.data.nombre, Validators.required],
-        descripcion: [this.data.descripcion, null]
+        id: [{value: newRubro.id, disabled: this.consulting}, null],
+        nombre: [{value: newRubro.nombre, disabled: this.consulting}, Validators.required],
+        descripcion: [{value: newRubro.descripcion, disabled: this.consulting}, null]
       });
-      this.updating = true;
+      this.updating = !this.consulting;
     } else {
       this.rubroForm = this.formBuilder.group({
         nombre: ['', Validators.required],
         descripcion: ['', null]
-      })
+      });
     }
   }
+
   // tslint:disable-next-line: typedef
   close() {
     this.dialogRef.close();
   }
+
   // tslint:disable-next-line: typedef
   onSubmit() {
     this.submitted = true;
     this.errorInForm = this.submitted && this.rubroForm.invalid;
+
     if (this.errorInForm || this.nombreRepe) {
       this.rubroForm.controls.nombre.markAsTouched();
-      console.log('Error en los datos')
+      console.log('Error en los datos');
     } else {
       this.makeDTO();
 
     }
-
   }
+
   // tslint:disable-next-line: typedef
   makeDTO() {
     this.rubro.nombre = this.rubroForm.controls.nombre.value;
@@ -71,6 +79,7 @@ export class AgregarRubroComponent implements OnInit {
       this.save();
     }
   }
+
   // tslint:disable-next-line: typedef
   save() {
     this.rubroService.guardarRubro(this.rubro).subscribe(data => {
@@ -86,9 +95,10 @@ export class AgregarRubroComponent implements OnInit {
       this.dialogRef.close();
     });
   }
+
   // tslint:disable-next-line: typedef
-  validar({ target }) {
-    const { value: nombre } = target;
+  validar({target}) {
+    const {value: nombre} = target;
     const finded = this.rubros.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
     this.nombreRepe = (finded !== undefined) ? true : false;
   }
