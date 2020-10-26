@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { UnidadMedidaService } from '../../service/unidad-medida.service';
-import { ServiceReportService } from '../../service/service-report.service';
-import { PdfExportService } from '../../service/pdf-export.service';
-import { ExcelExportService } from '../../service/excel-export.service';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { AgregarUnidadMedidaComponent } from '../agregar-unidad-medida/agregar-unidad-medida.component';
-import { UnidadMedida } from '../../modelo/UnidadMedida';
-import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
-import { UnidadMedidaExcel } from '../../modelo/UnidadMedidaExcel';
+import {Component, OnInit} from '@angular/core';
+import {UnidadMedidaService} from '../../service/unidad-medida.service';
+import {ServiceReportService} from '../../service/service-report.service';
+import {PdfExportService} from '../../service/pdf-export.service';
+import {ExcelExportService} from '../../service/excel-export.service';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {AgregarUnidadMedidaComponent} from '../agregar-unidad-medida/agregar-unidad-medida.component';
+import {UnidadMedida} from '../../modelo/UnidadMedida';
+import {ConfirmModalComponent} from '../../shared/confirm-modal/confirm-modal.component';
+import {UnidadMedidaExcel} from '../../modelo/UnidadMedidaExcel';
 
 @Component({
   selector: 'app-listar-unidad-medida',
@@ -16,13 +16,13 @@ import { UnidadMedidaExcel } from '../../modelo/UnidadMedidaExcel';
 })
 export class ListarUnidadMedidaComponent implements OnInit {
 
-  unidadMedida: UnidadMedida = null;
   unidadMedidas: UnidadMedida[] = null;
   unidadMedidaFilter: UnidadMedida[] = null;
   busqueda: string = null;
   toUpdateUnidadMedida: UnidadMedida;
   unidadMedidaExcel: UnidadMedidaExcel;
   unidadMedidasExcel: UnidadMedidaExcel[] = [];
+  private consulting: boolean;
 
   constructor(
     private unidadMedidaService: UnidadMedidaService,
@@ -30,7 +30,8 @@ export class ListarUnidadMedidaComponent implements OnInit {
     private servicePdf: PdfExportService,
     private excelService: ExcelExportService,
     public matDialog: MatDialog
-  ) { }
+  ) {
+  }
 
   // tslint:disable-next-line: typedef
   ngOnInit() {
@@ -41,21 +42,44 @@ export class ListarUnidadMedidaComponent implements OnInit {
   }
 
   // tslint:disable-next-line: typedef
-  modificarUnidadMedida(unidadMedida: UnidadMedida) {
-    this.toUpdateUnidadMedida = unidadMedida;
+  newUnidadMedida() {
+    this.toUpdateUnidadMedida = null;
+    this.consulting = false;
     this.openDialog();
   }
+
   // tslint:disable-next-line: typedef
-  filtarUnidadMedida(event: any) {
-    this.busqueda = this.busqueda.toLowerCase();
-    this.unidadMedidaFilter = this.unidadMedidas;
-    if (this.busqueda !== null) {
-      this.unidadMedidaFilter = this.unidadMedidas.filter(item => {
-        const nombre = item.nombre.toLowerCase().indexOf(this.busqueda) !== -1;
-        const abreviatura = item.abreviatura.toLowerCase().indexOf(this.busqueda) !== -1;
-        return nombre || abreviatura;
+  modificarUnidadMedida(unidadMedida: UnidadMedida) {
+    this.toUpdateUnidadMedida = unidadMedida;
+    this.consulting = false;
+    this.openDialog();
+  }
+
+  // tslint:disable-next-line:typedef
+  consultarUnidadMedida(unidadMedida: UnidadMedida) {
+    this.toUpdateUnidadMedida = unidadMedida;
+    this.consulting = true;
+    this.openDialog();
+  }
+
+  // tslint:disable-next-line: typedef
+  openDialog() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'modal-component';
+    dialogConfig.height = '400px';
+    dialogConfig.width = '300px';
+    dialogConfig.data = {
+      unidMed: this.toUpdateUnidadMedida,
+      consulting: this.consulting
+    };
+    const modalDialog = this.matDialog.open(AgregarUnidadMedidaComponent, dialogConfig);
+    modalDialog.afterClosed().subscribe(result => {
+      this.unidadMedidaService.listarUnidadMedidaTodos().subscribe(data => {
+        this.unidadMedidas = data.data;
+        this.unidadMedidaFilter = data.data;
       });
-    }
+    });
   }
 
   // tslint:disable-next-line: typedef
@@ -89,38 +113,32 @@ export class ListarUnidadMedidaComponent implements OnInit {
       this.unidadMedidaFilter = data.data;
     });
   }
+
   // tslint:disable-next-line: typedef
   backPage() {
     window.history.back();
   }
-  // tslint:disable-next-line: typedef
-  newUnidadMedida() {
-    this.toUpdateUnidadMedida = null;
-    this.openDialog();
-  }
 
   // tslint:disable-next-line: typedef
-  openDialog() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.id = 'modal-component';
-    dialogConfig.height = '400px';
-    dialogConfig.width = '300px';
-    dialogConfig.data = this.toUpdateUnidadMedida;
-    const modalDialog = this.matDialog.open(AgregarUnidadMedidaComponent, dialogConfig);
-    modalDialog.afterClosed().subscribe(result => {
-      this.unidadMedidaService.listarUnidadMedidaTodos().subscribe(data => {
-        this.unidadMedidas = data.data;
-        this.unidadMedidaFilter = data.data;
+  filtarUnidadMedida(event: any) {
+    this.busqueda = this.busqueda.toLowerCase();
+    this.unidadMedidaFilter = this.unidadMedidas;
+    if (this.busqueda !== null) {
+      this.unidadMedidaFilter = this.unidadMedidas.filter(item => {
+        const nombre = item.nombre.toLowerCase().indexOf(this.busqueda) !== -1;
+        const abreviatura = item.abreviatura.toLowerCase().indexOf(this.busqueda) !== -1;
+        return nombre || abreviatura;
       });
-    });
+    }
   }
+
   // tslint:disable-next-line: typedef
   exportarPDF() {
     this.serviceReport.getReporteUnidadMedidaPdf().subscribe(resp => {
       this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
     });
   }
+
   // tslint:disable-next-line: typedef
   exportarExcel() {
     // tslint:disable-next-line: prefer-for-of

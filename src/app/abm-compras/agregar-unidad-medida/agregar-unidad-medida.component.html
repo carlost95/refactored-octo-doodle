@@ -1,59 +1,48 @@
 <div class="modal-content-wrapper">
   <header class="modal-header">
-    <h1 class="modal-title" *ngIf="!updating">Nueva Unidad Medida</h1>
-    <h1 class="modal-title" *ngIf="updating">Actualizar Unidad Medida</h1>
+    <h1 class="modal-title" *ngIf="!updating && !consulting">Agregar unidad medida</h1>
+    <h1 class="modal-title" *ngIf="updating" style="text-align: center">Actualización unidad medida</h1>
+    <h1 class="modal-title" *ngIf="consulting">Consulta unidad medida</h1>
   </header>
   <section class="modal-body">
     <form [formGroup]="unidadMedidaForm">
       <p>
         <mat-form-field appearance="legacy">
           <mat-label>Nombre</mat-label>
-          <input
-            matInput
-            formControlName="nombre"
-            required
-            autocomplete="off"
-            (keyup)="validar($event)"
-          />
+          <input matInput formControlName="nombre"
+                 required autocomplete="off"
+                 (keyup)="validar($event)"/>
           <mat-error *ngIf="unidadMedidaForm.controls.nombre.errors">
             Nombre es<strong> requerido</strong>
           </mat-error>
         </mat-form-field>
-        <br />
-        <label
-          class="m-0 p-0"
-          *ngIf="nombreRepe"
-          style="color: #f44336; font-size: 75%"
-          >Nombre repetido</label
-        >
+        <br/>
+        <label class="m-0 p-0" *ngIf="nombreRepe"
+               style="color: #f44336; font-size: 75%">Nombre repetido
+        </label>
       </p>
       <p>
         <mat-form-field appearance="legacy">
           <mat-label>Abreviatura</mat-label>
-          <input
-            class="text-area"
-            matInput
-            formControlName="abreviatura"
-            required
-            autocomplete="off"
-            (keyup)="validar($event)"
-          />
+          <input class="text-area" matInput
+                 formControlName="abreviatura" required
+                 autocomplete="off" (keyup)="validar($event)"/>
           <mat-error *ngIf="unidadMedidaForm.controls.abreviatura.errors">
             Abreviatura es<strong> requerido</strong>
           </mat-error>
         </mat-form-field>
-        <br />
-        <label
-          class="m-0 p-0"
-          *ngIf="abrevRepe"
-          style="color: #f44336; font-size: 75%"
-          >Nombre repetido</label
-        >
+        <br/>
+        <label class="m-0 p-0" *ngIf="abrevRepe"
+               style="color: #f44336; font-size: 75%">Nombre repetido
+        </label>
       </p>
     </form>
   </section>
-  <footer class="modal-footer">
+  <footer class="modal-footer" *ngIf="!consulting">
     <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>
     <button class="btn btn-warning" (click)="onSubmit()">Guardar</button>
+  </footer>
+  <footer class="modal-footer" *ngIf="consulting">
+    <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>
   </footer>
 </div>

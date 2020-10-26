@@ -1,9 +1,9 @@
-import { AbmComprasService } from './../../service/abm-compras.service';
-import { UnidadMedida } from './../../modelo/UnidadMedida';
-import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { UnidadMedidaService } from 'src/app/service/unidad-medida.service';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {AbmComprasService} from './../../service/abm-compras.service';
+import {UnidadMedida} from './../../modelo/UnidadMedida';
+import {Component, OnInit, Inject} from '@angular/core';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {UnidadMedidaService} from 'src/app/service/unidad-medida.service';
+import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-agregar-unidad-medida',
@@ -13,30 +13,37 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class AgregarUnidadMedidaComponent implements OnInit {
 
   unidadMedida: UnidadMedida = new UnidadMedida();
-  updating = false;
   unidadMedidaForm: FormGroup;
   unidadMedidas: UnidadMedida[] = [];
   errorInForm = false;
   submitted = false;
   nombreRepe = false;
   abrevRepe = false;
+  updating = false;
+  consulting = false;
+
 
   constructor(
     private unididadMedidaService: UnidadMedidaService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AgregarUnidadMedidaComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: UnidadMedida) { }
+    @Inject(MAT_DIALOG_DATA) public data: any) {
+  }
 
   // tslint:disable-next-line: typedef
   ngOnInit() {
-    this.unididadMedidaService.listarUnidadMedidaTodos().subscribe(resp => this.unidadMedidas = resp.data);
-    if (this.data) {
+    this.unididadMedidaService.listarUnidadMedidaTodos().subscribe(resp =>
+      this.unidadMedidas = resp.data);
+    const {unidMed} = this.data;
+    if (unidMed) {
+      this.consulting = this.data.consulting;
+
       this.unidadMedidaForm = this.formBuilder.group({
-        id: [this.data.id, null],
-        nombre: [this.data.nombre, Validators.required],
-        abreviatura: [this.data.abreviatura, Validators.required]
+        id: [{value: unidMed.id, disabled: this.consulting}, null],
+        nombre: [{value: unidMed.nombre, disabled: this.consulting}, Validators.required],
+        abreviatura: [{value: unidMed.descripcion, disabled: this.consulting}, Validators.required]
       });
-      this.updating = true;
+      this.updating = !this.consulting;
     } else {
       this.unidadMedidaForm = this.formBuilder.group({
         nombre: ['', Validators.required],
@@ -52,7 +59,7 @@ export class AgregarUnidadMedidaComponent implements OnInit {
     if (this.errorInForm || this.nombreRepe || this.abrevRepe) {
       this.unidadMedidaForm.controls.nombre.markAsTouched();
       this.unidadMedidaForm.controls.abreviatura.markAsTouched();
-      console.log('Error en los datos')
+      console.log('Error en los datos');
     } else {
       this.makeDTO();
     }
@@ -69,6 +76,7 @@ export class AgregarUnidadMedidaComponent implements OnInit {
       this.save();
     }
   }
+
   // tslint:disable-next-line: typedef
   private save() {
     this.unididadMedidaService.guardarUnidadMedida(this.unidadMedida).subscribe(data => {
@@ -84,9 +92,10 @@ export class AgregarUnidadMedidaComponent implements OnInit {
       this.dialogRef.close();
     });
   }
+
   // tslint:disable-next-line: typedef
-  public validar({ target }) {
-    const { value: nombre } = target;
+  public validar({target}) {
+    const {value: nombre} = target;
     const finded = this.unidadMedidas.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
     const finded1 = this.unidadMedidas.find(p => p.abreviatura.toLowerCase() === nombre.toLowerCase());
     this.nombreRepe = (finded !== undefined) ? true : false;
