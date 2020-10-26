@@ -1,17 +1,17 @@
 import {Router} from '@angular/router';
-import {PedidosService} from '../../service/pedidos.service';
-import {Articulo} from './../../modelo/Articulo';
+import {PedidosService} from '../../../service/pedidos.service';
+import {Articulo} from '../../../modelo/Articulo';
 
 import {Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
-import {ExcelExportService} from '../../service/excel-export.service';
-import {ArticuloExcel} from '../../modelo/ArticuloExcel';
-import {ServiceReportService} from '../../service/service-report.service';
-import {PdfExportService} from '../../service/pdf-export.service';
+import {ExcelExportService} from '../../../service/excel-export.service';
+import {ArticuloExcel} from '../../../modelo/ArticuloExcel';
+import {ServiceReportService} from '../../../service/service-report.service';
+import {PdfExportService} from '../../../service/pdf-export.service';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {AgregarArticuloComponent} from '../agregar-articulo/agregar-articulo.component';
-import {ArticulosService} from '../../service/articulos.service';
+import {ArticulosService} from '../../../service/articulos.service';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
-import {ConfirmModalComponent} from '../../shared/confirm-modal/confirm-modal.component';
+import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-listar-articulos',

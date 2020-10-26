@@ -1,15 +1,15 @@
-import { Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
-import { ServiceReportService } from '../../service/service-report.service';
-import { PdfExportService } from 'src/app/service/pdf-export.service';
-import { ExcelExportService } from 'src/app/service/excel-export.service';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
-import { ProveedoresService } from '../../service/proveedores.service';
-import { Proveedor } from '../../modelo/Proveedor';
-import { AgregarProveedorComponent } from '../agregar-proveedor/agregar-proveedor.component';
-import { proveedor } from '../../../environments/global-route';
-import { ProveedorExcel } from '../../modelo/ProveedorExcel';
+import {Router} from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {ServiceReportService} from '../../../service/service-report.service';
+import {PdfExportService} from 'src/app/service/pdf-export.service';
+import {ExcelExportService} from 'src/app/service/excel-export.service';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal.component';
+import {ProveedoresService} from '../../../service/proveedores.service';
+import {Proveedor} from '../../../modelo/Proveedor';
+import {AgregarProveedorComponent} from '../agregar-proveedor/agregar-proveedor.component';
+import {proveedor} from '../../../../environments/global-route';
+import {ProveedorExcel} from '../../../modelo/ProveedorExcel';
 
 @Component({
   selector: 'app-listar-proveedor',
@@ -22,6 +22,7 @@ export class ListarProveedorComponent implements OnInit {
   proveedoresFilter: Proveedor[] = null;
   busqueda: string = null;
   toUpdateProveedor: any = null;
+  consulting: boolean;
   proveedoresExcel: ProveedorExcel[] = [];
   proveedorExcel: ProveedorExcel;
 
@@ -31,7 +32,8 @@ export class ListarProveedorComponent implements OnInit {
     public matDialog: MatDialog,
     private excelService: ExcelExportService,
     private serviceReport: ServiceReportService,
-    private servicePdf: PdfExportService) { }
+    private servicePdf: PdfExportService) {
+  }
 
   // tslint:disable-next-line: typedef
   ngOnInit() {
@@ -40,6 +42,7 @@ export class ListarProveedorComponent implements OnInit {
       this.proveedoresFilter = data.data;
     });
   }
+
   // tslint:disable-next-line: typedef
   filtrarProveedor(event: any) {
     this.busqueda = this.busqueda.toLowerCase();
@@ -51,6 +54,7 @@ export class ListarProveedorComponent implements OnInit {
       });
     }
   }
+
   // tslint:disable-next-line: typedef
   exportarExcel() {
     // tslint:disable-next-line: prefer-for-of
@@ -67,27 +71,40 @@ export class ListarProveedorComponent implements OnInit {
     }
     this.excelService.exportToExcel(this.proveedoresExcel, 'Reporte Proveedores');
   }
+
   // tslint:disable-next-line: typedef
   exportarPDF() {
     this.serviceReport.getReporteProveedorPdf().subscribe(resp => {
       this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
     });
   }
+
   // tslint:disable-next-line: typedef
   newProveedor() {
     this.toUpdateProveedor = null;
+    this.consulting = false;
+    this.openDialogProveedor();
+  }
+
+  // tslint:disable-next-line:typedef no-shadowed-variable
+  modificarProveedor(proveedor: Proveedor) {
+    this.toUpdateProveedor = proveedor;
+    this.consulting = false;
+    this.openDialogProveedor();
+  }
+
+  // tslint:disable-next-line:typedef no-shadowed-variable
+  consultarProveedor(proveedor: Proveedor) {
+    this.toUpdateProveedor = proveedor;
+    this.consulting = true;
     this.openDialogProveedor();
   }
 
   // tslint:disable-next-line: typedef
-  modificarProveedor(proveedor: Proveedor) {
-    this.toUpdateProveedor = proveedor;
-    this.openDialogProveedor();
-  }
-  // tslint:disable-next-line: typedef
   backPage() {
     window.history.back();
   }
+
   openDialogProveedor(): void {
     const dialogConfig = new MatDialogConfig();
     // The user can't close the dialog by clicking outside its body
@@ -95,7 +112,10 @@ export class ListarProveedorComponent implements OnInit {
     dialogConfig.id = 'modal-component';
     dialogConfig.height = '600px';
     dialogConfig.width = '400px';
-    dialogConfig.data = this.toUpdateProveedor;
+    dialogConfig.data = {
+      provider: this.toUpdateProveedor,
+      consulting: this.consulting
+    };
     const modalDialog = this.matDialog.open(AgregarProveedorComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       this.proveedorService.listarProveedoresTodos().subscribe(data => {
@@ -104,7 +124,8 @@ export class ListarProveedorComponent implements OnInit {
       });
     });
   }
-  // tslint:disable-next-line: typedef
+
+  // tslint:disable-next-line:typedef no-shadowed-variable
   showModal(proveedor: Proveedor) {
     const dialogConfig = new MatDialogConfig();
     // The user can't close the dialog by clicking outside its body
@@ -120,6 +141,7 @@ export class ListarProveedorComponent implements OnInit {
     const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       if (result.state) {
+        // tslint:disable-next-line:no-shadowed-variable
         this.proveedorService.cambiarHabilitacion(proveedor.id).subscribe(result => {
           this.getData();
         });
@@ -128,6 +150,7 @@ export class ListarProveedorComponent implements OnInit {
       }
     });
   }
+
   // tslint:disable-next-line: typedef
   getData() {
     this.proveedorService.listarProveedoresTodos().subscribe(data => {
@@ -135,4 +158,6 @@ export class ListarProveedorComponent implements OnInit {
       this.proveedoresFilter = data.data;
     });
   }
+
+
 }

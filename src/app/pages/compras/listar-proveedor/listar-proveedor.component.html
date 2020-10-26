@@ -1,0 +1,85 @@
+<div class="container" ng-controller="Proveedores">
+  <div class="card m-1">
+    <header class="row mt-4 ml-3 mb-3">
+      <i
+        class="col-md-2 m-0 fas fa-chevron-left fa-3x"
+        style="margin-right: 100%"
+        (click)="backPage()"
+      ></i>
+      <h1 class="m-0 col-md-10" style="padding-left: 10rem !important">
+        Lista de Proveedores
+      </h1>
+    </header>
+
+    <div class="row card-body">
+      <div class="container">
+        <div class="row col-12 d-flex justify-content-start">
+          <label class="col-5 m-0 p-0">
+            <h3>Busqueda:</h3>
+          </label>
+
+          <div class="col-12 m-0 p-0 aligth">
+            <input class="col-12 position-relative has-icon-right searchDiv"
+                   type="text" [(ngModel)]="busqueda"
+                   class="form-control searchText" placeholder="ingrese busqueda"
+                   (keyup)="filtrarProveedor($event)"/>
+          </div>
+        </div>
+        <br/>
+        <div class="row col-12 d-flex justify-content-end">
+          <button class="btn btn-outline-danger" (click)="exportarPDF()">
+            <i class="far fa-file-pdf fa-lg" title="exportar pdf"></i>
+          </button>
+          &nbsp;
+          <button class="btn btn-outline-success" (click)="exportarExcel()">
+            <i class="far fa-file-excel fa-lg" title="exportar excel"></i>
+          </button>
+          &nbsp;
+          <button class="btn btn-warning" (click)="newProveedor()"
+                  title="Nueva Marca"> Nuevo Proveedor
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="card-body p-0"
+      style="width: 1100px; height: 400px; overflow: auto"
+    >
+      <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr class="text-center">
+          <th scope="col ">Razon Social</th>
+          <th scope="col ">Celular</th>
+          <th scope="col ">Tel. Fijo</th>
+          <th scope="col ">Habilitado</th>
+          <th scope="col*2 ">Opciones</th>
+        </tr>
+        </thead>
+        <tbody *ngIf="proveedores != null">
+        <tr *ngFor="let proveedor of proveedoresFilter" class="text-center">
+          <td>{{ proveedor.razonSocial }}</td>
+          <td>{{ proveedor.celular }}</td>
+          <td>{{ proveedor.telefono }}</td>
+          <td>
+            <mat-slide-toggle [checked]="proveedor.habilitado"
+                              (click)="showModal(proveedor)" color="primary">
+            </mat-slide-toggle>
+          </td>
+
+          <td>
+            <button class="btn btn-default m-0 p-0" title="Consultar"
+                    (click)="consultarProveedor(proveedor)">
+              <i class="fas fa-info-circle"></i>
+            </button>
+            &nbsp;
+            <button class="btn btn-default m-0 p-0" title="Modificar "
+                    (click)="modificarProveedor(proveedor)">
+              <i class="fas fa-pencil-alt"></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
