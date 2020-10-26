@@ -7,7 +7,7 @@ import {ConfirmDialogComponent} from './confirm-dialog/confirm-dialog.component'
 import {MaterialModule} from '../material/material.module';
 import {PaginacionPipe} from './paginacion.pipe';
 import {MatPaginatorIntl} from '@angular/material/paginator';
-import {CustomMatPaginatorIntl} from '../compras/paginacion-es';
+import {CustomMatPaginatorIntl} from '../pages/compras/paginacion-es';
 
 
 @NgModule({
