@@ -1,14 +1,14 @@
-import { SubRubroDTO } from './../../modelo/SubRubroDTO';
-import { SubRubro } from './../../modelo/SubRubro';
-import { Component, OnInit } from '@angular/core';
-import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { ServiceReportService } from '../../service/service-report.service';
-import { PdfExportService } from '../../service/pdf-export.service';
-import { ExcelExportService } from '../../service/excel-export.service';
-import { AgregarSubRubroComponent } from '../agregar-sub-rubro/agregar-sub-rubro.component';
-import { SubRubroService } from '../../service/sub-rubro.service';
-import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
-import { SubRubroExcel } from '../../modelo/SubRubroExcel';
+import {SubRubroDTO} from './../../modelo/SubRubroDTO';
+import {SubRubro} from './../../modelo/SubRubro';
+import {Component, OnInit} from '@angular/core';
+import {MatDialogConfig, MatDialog} from '@angular/material/dialog';
+import {ServiceReportService} from '../../service/service-report.service';
+import {PdfExportService} from '../../service/pdf-export.service';
+import {ExcelExportService} from '../../service/excel-export.service';
+import {AgregarSubRubroComponent} from '../agregar-sub-rubro/agregar-sub-rubro.component';
+import {SubRubroService} from '../../service/sub-rubro.service';
+import {ConfirmModalComponent} from '../../shared/confirm-modal/confirm-modal.component';
+import {SubRubroExcel} from '../../modelo/SubRubroExcel';
 
 @Component({
   selector: 'app-listar-sub-rubro',
@@ -16,16 +16,13 @@ import { SubRubroExcel } from '../../modelo/SubRubroExcel';
   styleUrls: ['./listar-sub-rubro.component.css']
 })
 export class ListarSubRubroComponent implements OnInit {
-  subRubro: SubRubro = null;
   subRubros: SubRubro[] = null;
   subRubrosFilter: SubRubro[] = null;
-  nombreRubros: string[] = null;
-  busquedaNombre: string = null;
   busqueda: string = null;
   toUpdateSubRubro: SubRubro;
-  toUpdateSubRubroDTO: SubRubroDTO;
   subRubroExcel: SubRubroExcel;
   subRubrosExcel: SubRubroExcel[] = [];
+  consulting: boolean;
 
   constructor(
     private subRubroService: SubRubroService,
@@ -33,8 +30,8 @@ export class ListarSubRubroComponent implements OnInit {
     private servicePdf: PdfExportService,
     private excelService: ExcelExportService,
     public matDialog: MatDialog
-
-  ) { }
+  ) {
+  }
 
   // tslint:disable-next-line: typedef
   ngOnInit() {
@@ -47,22 +44,38 @@ export class ListarSubRubroComponent implements OnInit {
 
 
   }
+
+  // tslint:disable-next-line: typedef
+  newSubRubro() {
+    this.toUpdateSubRubro = null;
+    this.consulting = false;
+    this.openDialog();
+  }
+
   // tslint:disable-next-line: typedef
   modificarSubRubro(subRubro: SubRubro) {
-    console.warn('muetra de Id');
-    console.error(subRubro);
     this.toUpdateSubRubro = subRubro;
+    this.consulting = false;
     this.openDialog();
-    // this.router.navigate(["abm-compras/modificar-sub-rubro/" + subRubro.id]);
-
   }
+
+  // tslint:disable-next-line:typedef
+  consultarSubRubro(subRubro: SubRubro) {
+    this.toUpdateSubRubro = subRubro;
+    this.consulting = true;
+    this.openDialog();
+  }
+
   openDialog(): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
     dialogConfig.height = '500px';
     dialogConfig.width = '350px';
-    dialogConfig.data = this.toUpdateSubRubro;
+    dialogConfig.data = {
+      newSubRubro: this.toUpdateSubRubro,
+      consulting: this.consulting
+    };
     const modalDialog = this.matDialog.open(AgregarSubRubroComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       this.subRubroService.listarSubRubrosTodos().subscribe(data => {
@@ -90,12 +103,13 @@ export class ListarSubRubroComponent implements OnInit {
       if (result.state) {
         this.subRubroService.cambiarHabilitacion(subRubro.id).subscribe(result => {
           this.getData();
-        })
+        });
       } else {
         this.getData();
       }
     });
   }
+
   // tslint:disable-next-line: typedef
   getData() {
     this.subRubroService.listarSubRubrosTodos().subscribe(data => {
@@ -103,11 +117,7 @@ export class ListarSubRubroComponent implements OnInit {
       this.subRubrosFilter = data.data;
     });
   }
-  // tslint:disable-next-line: typedef
-  newSubRubro() {
-    this.toUpdateSubRubro = null;
-    this.openDialog();
-  }
+
   // tslint:disable-next-line: typedef
   filtrarSubRubro(event: any) {
     if (this.busqueda !== null) {
@@ -125,6 +135,7 @@ export class ListarSubRubroComponent implements OnInit {
   backPage() {
     window.history.back();
   }
+
   // tslint:disable-next-line: typedef
   exportarPDF() {
     this.serviceReport.getReporteSubRubroPdf().subscribe(resp => {

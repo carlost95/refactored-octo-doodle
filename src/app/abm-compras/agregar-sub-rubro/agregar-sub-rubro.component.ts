@@ -1,11 +1,11 @@
-import { SubRubroDTO } from './../../modelo/SubRubroDTO';
-import { Rubro } from './../../modelo/Rubro';
-import { SubRubro } from './../../modelo/SubRubro';
-import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { SubRubroService } from 'src/app/service/sub-rubro.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { RubrosService } from '../../service/rubros.service';
+import {SubRubroDTO} from './../../modelo/SubRubroDTO';
+import {Rubro} from './../../modelo/Rubro';
+import {SubRubro} from './../../modelo/SubRubro';
+import {Component, Inject, OnInit} from '@angular/core';
+import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {SubRubroService} from 'src/app/service/sub-rubro.service';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {RubrosService} from '../../service/rubros.service';
 
 @Component({
   selector: 'app-agregar-sub-rubro',
@@ -14,15 +14,14 @@ import { RubrosService } from '../../service/rubros.service';
 })
 export class AgregarSubRubroComponent implements OnInit {
   subRubroDTO: SubRubroDTO = new SubRubroDTO();
-  subRubro: SubRubro = new SubRubro();
   subRubros: SubRubroDTO[] = null;
   rubros: Rubro[] = null;
   rubroSelected: string = null;
-  subRubroFilter: Rubro[] = null;
   subRubroForm: FormGroup;
   submitted = false;
   errorInForm = false;
   updating = false;
+  consulting = false;
   nombreRepe = false;
 
   constructor(
@@ -30,7 +29,8 @@ export class AgregarSubRubroComponent implements OnInit {
     private rubroService: RubrosService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AgregarSubRubroComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: SubRubro) { }
+    @Inject(MAT_DIALOG_DATA) public data: any) {
+  }
 
   // tslint:disable-next-line: typedef
   ngOnInit() {
@@ -38,16 +38,20 @@ export class AgregarSubRubroComponent implements OnInit {
       this.rubros = datas.data);
     this.subRubroService.listarSubRubrosTodos().subscribe(resp =>
       this.subRubros = resp.data);
-    if (this.data) {
-      this.rubroSelected = this.data.rubroId.nombre;
+
+    const {newSubRubro} = this.data;
+
+    if (newSubRubro) {
+      this.rubroSelected = newSubRubro.rubroId.nombre;
+      this.consulting = this.data.consulting;
 
       this.subRubroForm = this.formBuilder.group({
-        id: [this.data.id, null],
-        nombre: [this.data.nombre, Validators.required],
-        descripcion: [this.data.descripcion, null],
-        rubroId: [this.data.rubroId, Validators.required]
+        id: [{value: newSubRubro.id, disabled: this.consulting}, null],
+        nombre: [{value: newSubRubro.nombre, disabled: this.consulting}, Validators.required],
+        descripcion: [{value: newSubRubro.descripcion, disabled: this.consulting}, null],
+        rubroId: [{value: newSubRubro.rubroId, disabled: this.consulting}, Validators.required]
       });
-      this.updating = true;
+      this.updating = !this.consulting;
     } else {
       this.subRubroForm = this.formBuilder.group({
         nombre: ['', Validators.required],
@@ -76,6 +80,7 @@ export class AgregarSubRubroComponent implements OnInit {
 
     }
   }
+
   // tslint:disable-next-line: typedef
   makeDTO() {
     this.subRubroDTO.nombre = this.subRubroForm.controls.nombre.value;
@@ -88,12 +93,6 @@ export class AgregarSubRubroComponent implements OnInit {
         }
       });
     }
-    console.warn(this.rubroSelected);
-    console.warn('------------------');
-    console.warn(this.subRubroDTO);
-
-
-
     if (this.updating) {
       this.subRubroDTO.id = this.subRubroForm.controls.id.value;
       this.update();
@@ -101,6 +100,7 @@ export class AgregarSubRubroComponent implements OnInit {
       this.save();
     }
   }
+
   // tslint:disable-next-line: typedef
   update() {
     this.subRubroService.actualizarSubRubro(this.subRubroDTO).subscribe(data => {
@@ -108,6 +108,7 @@ export class AgregarSubRubroComponent implements OnInit {
       this.dialogRef.close();
     });
   }
+
   // tslint:disable-next-line: typedef
   save() {
     this.subRubroService.guardarSubRubro(this.subRubroDTO).subscribe(data => {
@@ -117,8 +118,8 @@ export class AgregarSubRubroComponent implements OnInit {
   }
 
   // tslint:disable-next-line: typedef
-  validar({ target }) {
-    const { value: nombre } = target;
+  validar({target}) {
+    const {value: nombre} = target;
     const finded = this.subRubros.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
     this.nombreRepe = (finded !== undefined) ? true : false;
   }
