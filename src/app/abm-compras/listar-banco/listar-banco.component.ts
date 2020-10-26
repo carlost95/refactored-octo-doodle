@@ -1,27 +1,27 @@
-import { Banco } from "../../modelo/Banco";
-import { Router } from "@angular/router";
-import { Component, Inject, OnInit } from "@angular/core";
-import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
-import { AgregarBancoComponent } from "../agregar-banco/agregar-banco.component";
-import { ConfirmModalComponent } from "../../shared/confirm-modal/confirm-modal.component";
-import { BancosService } from "../../service/bancos.service";
-import { ServiceReportService } from '../../service/service-report.service';
-import { PdfExportService } from '../../service/pdf-export.service';
-import { BancoExcel } from '../../modelo/BancoExcel';
-import { ExcelExportService } from '../../service/excel-export.service';
+import {Banco} from '../../modelo/Banco';
+import {Router} from '@angular/router';
+import {Component, Inject, OnInit} from '@angular/core';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {AgregarBancoComponent} from '../agregar-banco/agregar-banco.component';
+import {ConfirmModalComponent} from '../../shared/confirm-modal/confirm-modal.component';
+import {BancosService} from '../../service/bancos.service';
+import {ServiceReportService} from '../../service/service-report.service';
+import {PdfExportService} from '../../service/pdf-export.service';
+import {BancoExcel} from '../../modelo/BancoExcel';
+import {ExcelExportService} from '../../service/excel-export.service';
 
 @Component({
-  selector: "app-listar-banco",
-  templateUrl: "./listar-banco.component.html",
-  styleUrls: ["./listar-banco.component.css"]
+  selector: 'app-listar-banco',
+  templateUrl: './listar-banco.component.html',
+  styleUrls: ['./listar-banco.component.css']
 })
 export class ListarBancoComponent implements OnInit {
   banco: Banco = null;
   bancos: Banco[] = null;
   bancoFilter: Banco[] = null;
   busqueda: string = null;
-  displayedColumns: string[] = ['nombre', 'abreviatura'];
   toUpdateBank: Banco;
+  consultingBank: boolean;
   bancoExcel: BancoExcel;
   bancosExcel: BancoExcel[] = [];
 
@@ -58,20 +58,35 @@ export class ListarBancoComponent implements OnInit {
   // tslint:disable-next-line: typedef
   newBanco() {
     this.toUpdateBank = null;
+    this.consultingBank = false;
     this.openDialog();
   }
+
+  // tslint:disable-next-line:typedef
   modificarBanco(banco: Banco) {
     this.toUpdateBank = banco;
+    this.consultingBank = false;
     this.openDialog();
   }
+
+  // tslint:disable-next-line:typedef
+  consultarBanco(banco: Banco) {
+    this.toUpdateBank = banco;
+    this.consultingBank = true;
+    this.openDialog();
+  }
+
   openDialog(): void {
     const dialogConfig = new MatDialogConfig();
     // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
-    dialogConfig.id = "modal-component";
-    dialogConfig.height = '400px'
+    dialogConfig.id = 'modal-component';
+    dialogConfig.height = '400px';
     dialogConfig.width = '300px';
-    dialogConfig.data = this.toUpdateBank;
+    dialogConfig.data = {
+      bank: this.toUpdateBank,
+      consulting: this.consultingBank
+    };
     const modalDialog = this.matDialog.open(AgregarBancoComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       this.service.listarBancosTodos().subscribe(data => {
@@ -81,32 +96,31 @@ export class ListarBancoComponent implements OnInit {
     });
   }
 
+  // tslint:disable-next-line:typedef
   backPage() {
     window.history.back();
   }
 
-  changeSwitch(banco: Banco) {
-
-  }
-
+  // tslint:disable-next-line:typedef
   showModal(banco: Banco) {
     const dialogConfig = new MatDialogConfig();
     // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
-    dialogConfig.id = "modal-component";
+    dialogConfig.id = 'modal-component';
     dialogConfig.height = '300px';
     dialogConfig.width = '350px';
     dialogConfig.data = {
-      message: 'Desea cambiar estado?',
+      message: '¿Desea cambiar estado?',
       title: 'Cambio estado',
       state: banco.habilitado
     };
     const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       if (result.state) {
+        // tslint:disable-next-line:no-shadowed-variable
         this.service.cambiarHabilitacion(banco.id).subscribe(result => {
           this.getData();
-        })
+        });
       } else {
         this.getData();
       }
@@ -120,17 +134,18 @@ export class ListarBancoComponent implements OnInit {
       this.bancoFilter = data.data;
     });
   }
+
   // tslint:disable-next-line: typedef
   exportarExcel() {
     // tslint:disable-next-line: prefer-for-of
     for (let index = 0; index < this.bancoFilter.length; index++) {
-      this.bancoExcel = new BancoExcel(0, '', '')
+      this.bancoExcel = new BancoExcel(0, '', '');
       if (this.bancoFilter[index] !== null) {
         this.bancoExcel.id = this.bancoFilter[index].id;
         this.bancoExcel.nombre = this.bancoFilter[index].nombre;
         this.bancoExcel.abreviatura = this.bancoFilter[index].abreviatura;
       }
-      this.bancosExcel.push(this.bancoExcel)
+      this.bancosExcel.push(this.bancoExcel);
     }
     this.excelService.exportToExcel(this.bancosExcel, 'Reporte Banco');
   }

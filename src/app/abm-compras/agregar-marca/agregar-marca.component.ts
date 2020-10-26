@@ -1,9 +1,9 @@
-import { AbmComprasService } from './../../service/abm-compras.service';
-import { Marca } from './../../modelo/Marca';
-import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MarcasService } from '../../service/marcas.service';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {AbmComprasService} from './../../service/abm-compras.service';
+import {Marca} from './../../modelo/Marca';
+import {Component, OnInit, Inject} from '@angular/core';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {MarcasService} from '../../service/marcas.service';
+import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-agregar-marca',
@@ -13,9 +13,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class AgregarMarcaComponent implements OnInit {
   marca: Marca = new Marca();
   marcaForm: FormGroup;
-  errorInForm: boolean = false;
+  errorInForm = false;
   submitted = false;
   updating = false;
+  consulting: false;
   nombreRepe = false;
   abreRepe = false;
   marcas: Marca[] = [];
@@ -24,30 +25,35 @@ export class AgregarMarcaComponent implements OnInit {
     private marcaService: MarcasService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AgregarMarcaComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Marca) { }
+    @Inject(MAT_DIALOG_DATA) public data: any) {
+  }
 
   // tslint:disable-next-line: typedef
   ngOnInit() {
     this.marcaService.listarMarcaTodos().subscribe(resp => this.marcas = resp.data);
 
-    if (this.data) {
+    const {mark} = this.data;
+    if (mark) {
+      this.consulting = this.data.consulting;
       this.marcaForm = this.formBuilder.group({
         id: [this.data.id, null],
-        nombre: [this.data.nombre, Validators.required],
-        abreviatura: [this.data.abreviatura, Validators.required]
-      })
-      this.updating = true;
+        nombre: [{value: mark.nombre, disabled: this.consulting}, Validators.required],
+        abreviatura: [{value: mark.abreviatura, disabled: this.consulting}, Validators.required]
+      });
+      this.updating = !this.consulting;
     } else {
       this.marcaForm = this.formBuilder.group({
         nombre: ['', Validators.required],
         abreviatura: ['', Validators.required]
-      })
+      });
     }
   }
+
   // tslint:disable-next-line: typedef
   close() {
     this.dialogRef.close();
   }
+
   // tslint:disable-next-line: typedef
   onSubmit() {
     this.submitted = true;
@@ -55,13 +61,12 @@ export class AgregarMarcaComponent implements OnInit {
     if (this.errorInForm || this.nombreRepe || this.abreRepe) {
       this.marcaForm.controls.nombre.markAsTouched();
       this.marcaForm.controls.abreviatura.markAsTouched();
-      console.log('Error en los datos')
+      console.log('Error en los datos');
     } else {
       this.makeDTO();
-
     }
-
   }
+
   // tslint:disable-next-line: typedef
   makeDTO() {
     this.marca.nombre = this.marcaForm.controls.nombre.value;
@@ -73,6 +78,7 @@ export class AgregarMarcaComponent implements OnInit {
       this.save();
     }
   }
+
   // tslint:disable-next-line: typedef
   save() {
     this.marcaService.guardarMarca(this.marca).subscribe(data => {
@@ -88,12 +94,18 @@ export class AgregarMarcaComponent implements OnInit {
       this.dialogRef.close();
     });
   }
+
   // tslint:disable-next-line: typedef
-  validar({ target }) {
-    const { value: nombre } = target;
+  validarNombre({target}) {
+    const {value: nombre} = target;
     const finded = this.marcas.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
-    const finded2 = this.marcas.find(p => p.abreviatura.toLowerCase() === nombre.toLowerCase());
     this.nombreRepe = (finded !== undefined) ? true : false;
-    this.abreRepe = (finded2 !== undefined) ? true : false;
+  }
+
+  // tslint:disable-next-line: typedef
+  validarAbreviatura({target}) {
+    const {value: nombre} = target;
+    const finded = this.marcas.find(p => p.abreviatura.toLowerCase() === nombre.toLowerCase());
+    this.abreRepe = (finded !== undefined) ? true : false;
   }
 }
