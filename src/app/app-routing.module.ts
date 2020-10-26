@@ -1,5 +1,5 @@
-import { LogoutComponent } from "./logout/logout.component";
-import { LoginComponent } from "./login/login.component";
+import { LogoutComponent } from "./pages/logout/logout.component";
+import { LoginComponent } from "./pages/login/login.component";
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 import { AuthGaurdService } from "./service/auth-gaurd.service";
@@ -22,17 +22,17 @@ const routes: Routes = [
   },
   {
     path: "abm-compras",
-    loadChildren: () => import('./abm-compras/abm-compras.module').then(m => m.AbmComprasModule),
+    loadChildren: () => import('./pages/abm-compras/abm-compras.module').then(m => m.AbmComprasModule),
     canActivate: [AuthGaurdService],
   },
   {
     path: "seguridad",
-    loadChildren: () => import('./seguridad/seguridad.module').then(m => m.SeguridadModule),
+    loadChildren: () => import('./pages/seguridad/seguridad.module').then(m => m.SeguridadModule),
     canActivate: [AuthGaurdService],
   },
   {
     path: "logistica",
-    loadChildren: () => import('./logistica/logistica.module').then(m => m.LogisticaModule),
+    loadChildren: () => import('./pages/logistica/logistica.module').then(m => m.LogisticaModule),
     canActivate: [AuthGaurdService],
   },
   { path: "login", component: LoginComponent },

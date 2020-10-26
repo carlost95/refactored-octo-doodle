@@ -14,7 +14,7 @@ import {ListarPedidoComponent} from './listar-pedido/listar-pedido.component';
 import {AgregarPedidoComponent} from './agregar-pedido/agregar-pedido.component';
 import {ConsultarPedidoComponent} from './consultar-pedido/consultar-pedido.component';
 import {ExcelExportService} from '../../service/excel-export.service';
-import {AbmComprasModule} from '../../abm-compras/abm-compras.module';
+import {AbmComprasModule} from '../abm-compras/abm-compras.module';
 import {MaterialModule} from '../../material/material.module';
 import {PaginacionPipe} from './paginacion.pipe';
 import {MatPaginatorIntl} from '@angular/material/paginator';
