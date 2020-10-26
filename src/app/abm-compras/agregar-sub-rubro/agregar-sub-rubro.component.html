@@ -1,52 +1,38 @@
 <div class="modal-content-wrapper">
   <header class="modal-header">
-    <h1 class="modal-title" *ngIf="!updating">Nuevo SubRubro</h1>
-    <h1 class="modal-title" *ngIf="updating">Actualizar SubRubro</h1>
+    <h1 class="modal-title" *ngIf="!updating && !consulting">Carga de subRubro</h1>
+    <h1 class="modal-title" *ngIf="updating">Actualización de sbRubro</h1>
+    <h1 class="modal-title" *ngIf="consulting">Consulta de subRubro</h1>
   </header>
   <section class="modal-body">
     <form [formGroup]="subRubroForm">
       <p>
         <mat-form-field appearance="legacy">
           <mat-label>Nombre</mat-label>
-          <input
-            matInput
-            formControlName="nombre"
-            required
-            autocomplete="off"
-            (keyup)="validar($event)"
-          />
+          <input matInput formControlName="nombre"
+                 required autocomplete="off"
+                 (keyup)="validar($event)"/>
           <mat-error *ngIf="subRubroForm.controls.nombre.errors">
             Nombre es<strong> requerido</strong>
           </mat-error>
         </mat-form-field>
-        <br />
-        <label
-          class="m-0 p-0"
-          *ngIf="nombreRepe"
-          style="color: #f44336; font-size: 75%"
-          >Nombre repetido</label
-        >
+        <br/>
+        <label class="m-0 p-0" *ngIf="nombreRepe"
+               style="color: #f44336; font-size: 75%">Nombre repetido
+        </label>
       </p>
       <p>
         <mat-form-field appearance="legacy">
           <mat-label>Descripcion</mat-label>
-          <input
-            class="text-area"
-            matInput
-            formControlName="descripcion"
-            autocomplete="off"
-          />
+          <input class="text-area" matInput
+                 formControlName="descripcion" autocomplete="off"/>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field appearance="fill">
           <mat-label>Rubro</mat-label>
-          <mat-select
-            [(ngModel)]="rubroSelected"
-            name="rubro"
-            formControlName="rubroId"
-            autocomplete="off"
-          >
+          <mat-select [(ngModel)]="rubroSelected" name="rubro"
+                      formControlName="rubroId" autocomplete="off">
             <mat-option *ngFor="let rub of rubros" [value]="rub.nombre">
               {{ rub.nombre }}
             </mat-option>
@@ -58,8 +44,11 @@
       </p>
     </form>
   </section>
-  <footer class="modal-footer">
+  <footer class="modal-footer" *ngIf="!consulting">
     <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>
     <button class="btn btn-warning" (click)="onSubmit()">Guardar</button>
+  </footer>
+  <footer class="modal-footer" *ngIf="consulting">
+    <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>
   </footer>
 </div>
