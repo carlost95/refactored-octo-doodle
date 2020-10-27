@@ -1,4 +1,4 @@
-import { FormaPago } from "../../../modelo/FormaPago";
+import { FormaPago } from "../../../models/FormaPago";
 import { ActivatedRoute } from "@angular/router";
 import { Router } from "@angular/router";
 import { AbmComprasService } from "../../../service/abm-compras.service";

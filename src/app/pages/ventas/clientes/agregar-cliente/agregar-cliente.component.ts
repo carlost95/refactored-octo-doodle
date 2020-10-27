@@ -1,4 +1,4 @@
-import {Cliente} from "../../../../modelo/Cliente";
+import {Cliente} from "../../../../models/Cliente";
 import {Component, Inject, Input, OnInit} from "@angular/core";
 import {FormBuilder, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";

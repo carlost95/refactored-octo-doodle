@@ -1,6 +1,6 @@
 import { Router } from "@angular/router";
 import { AbmComprasService } from "../../../service/abm-compras.service";
-import { FormaPago } from "../../../modelo/FormaPago";
+import { FormaPago } from "../../../models/FormaPago";
 import { Component, OnInit } from "@angular/core";
 
 @Component({

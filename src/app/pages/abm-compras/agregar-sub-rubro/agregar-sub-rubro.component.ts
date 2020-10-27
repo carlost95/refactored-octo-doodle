@@ -1,6 +1,6 @@
-import {SubRubroDTO} from '../../../modelo/SubRubroDTO';
-import {Rubro} from '../../../modelo/Rubro';
-import {SubRubro} from '../../../modelo/SubRubro';
+import {SubRubroDTO} from '../../../models/SubRubroDTO';
+import {Rubro} from '../../../models/Rubro';
+import {SubRubro} from '../../../models/SubRubro';
 import {Component, Inject, OnInit} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {SubRubroService} from 'src/app/service/sub-rubro.service';

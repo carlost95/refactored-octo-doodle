@@ -1,8 +1,8 @@
-import {Proveedor} from '../../../modelo/Proveedor';
+import {Proveedor} from '../../../models/Proveedor';
 import {AbmComprasService} from '../../../service/abm-compras.service';
 import {Router} from '@angular/router';
 import {PedidosService} from '../../../service/pedidos.service';
-import {Ajuste} from '../../../modelo/Ajuste';
+import {Ajuste} from '../../../models/Ajuste';
 import {Component, OnInit} from '@angular/core';
 import * as _ from 'lodash';
 import {AjustesService} from '../../../service/ajustes.service';

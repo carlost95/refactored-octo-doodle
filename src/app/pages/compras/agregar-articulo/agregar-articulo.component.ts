@@ -1,10 +1,10 @@
-import {SubRubro} from '../../../modelo/SubRubro';
-import {Proveedor} from '../../../modelo/Proveedor';
-import {Marca} from '../../../modelo/Marca';
-import {Rubro} from '../../../modelo/Rubro';
+import {SubRubro} from '../../../models/SubRubro';
+import {Proveedor} from '../../../models/Proveedor';
+import {Marca} from '../../../models/Marca';
+import {Rubro} from '../../../models/Rubro';
 import {PedidosService} from '../../../service/pedidos.service';
-import {UnidadMedida} from '../../../modelo/UnidadMedida';
-import {ArticuloDTO} from '../../../modelo/ArticuloDTO';
+import {UnidadMedida} from '../../../models/UnidadMedida';
+import {ArticuloDTO} from '../../../models/ArticuloDTO';
 import {Component, OnInit, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
 import {AgregarMarcaComponent} from '../../abm-compras/agregar-marca/agregar-marca.component';
@@ -18,7 +18,7 @@ import {AgregarProveedorComponent} from '../agregar-proveedor/agregar-proveedor.
 import {ProveedoresService} from '../../../service/proveedores.service';
 import {AgregarSubRubroComponent} from '../../abm-compras/agregar-sub-rubro/agregar-sub-rubro.component';
 import {AgregarUnidadMedidaComponent} from '../../abm-compras/agregar-unidad-medida/agregar-unidad-medida.component';
-import {Articulo} from '../../../modelo/Articulo';
+import {Articulo} from '../../../models/Articulo';
 import {ArticulosService} from '../../../service/articulos.service';
 
 

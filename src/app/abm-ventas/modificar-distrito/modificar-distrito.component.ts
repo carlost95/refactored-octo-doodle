@@ -1,8 +1,8 @@
 import { AbmVentasService } from "../../service/abm-ventas.service";
-import { Departamento } from "../../modelo/Departamento";
+import { Departamento } from "../../models/Departamento";
 import { ActivatedRoute } from "@angular/router";
 import { VentasService } from "src/app/service/ventas.service";
-import { Distrito } from "../../modelo/Distrito";
+import { Distrito } from "../../models/Distrito";
 import { Component, OnInit } from "@angular/core";
 
 @Component({

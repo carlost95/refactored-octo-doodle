@@ -1,5 +1,5 @@
-import {ArticuloDTO} from './../modelo/ArticuloDTO';
-import {Response} from './../modelo/Response';
+import {ArticuloDTO} from '../models/ArticuloDTO';
+import {Response} from '../models/Response';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment.prod';

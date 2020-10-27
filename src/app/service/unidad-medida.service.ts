@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment.prod';
 import { unidadMedida } from '../../environments/global-route';
-import { Response } from '../modelo/Response';
-import { UnidadMedida } from '../modelo/UnidadMedida';
+import { Response } from '../models/Response';
+import { UnidadMedida } from '../models/UnidadMedida';
 
 @Injectable({
   providedIn: 'root'

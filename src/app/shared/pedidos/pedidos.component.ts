@@ -1,10 +1,10 @@
 import {ActivatedRoute, Router} from '@angular/router';
 import {Component, OnInit, Input} from '@angular/core';
-import {Pedido} from 'src/app/modelo/Pedido';
-import {Articulo} from 'src/app/modelo/Articulo';
-import {MovimientoArticuloDTO} from 'src/app/modelo/MovimientoArticuloDTO';
+import {Pedido} from 'src/app/models/Pedido';
+import {Articulo} from 'src/app/models/Articulo';
+import {MovimientoArticuloDTO} from 'src/app/models/MovimientoArticuloDTO';
 import {PedidosService} from 'src/app/service/pedidos.service';
-import {Proveedor} from 'src/app/modelo/Proveedor';
+import {Proveedor} from 'src/app/models/Proveedor';
 import {ProveedoresService} from '../../service/proveedores.service';
 import {proveedor} from '../../../environments/global-route';
 import {ArticulosService} from '../../service/articulos.service';
@@ -12,7 +12,7 @@ import {MovimientosService} from '../../service/movimientos.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AjustesService} from '../../service/ajustes.service';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {Ajuste} from '../../modelo/Ajuste';
+import {Ajuste} from '../../models/Ajuste';
 import {ConfirmModalComponent} from '../confirm-modal/confirm-modal.component';
 
 @Component({

@@ -1,12 +1,12 @@
 import {Component, OnInit, Input} from '@angular/core';
-import {MovimientoArticuloDTO} from '../../modelo/MovimientoArticuloDTO';
-import {Ajuste} from '../../modelo/Ajuste';
+import {MovimientoArticuloDTO} from '../../models/MovimientoArticuloDTO';
+import {Ajuste} from '../../models/Ajuste';
 import {PedidosService} from '../../service/pedidos.service';
 import {ProveedoresService} from '../../service/proveedores.service';
 import {Router, ActivatedRoute} from '@angular/router';
 import {AjustesService} from '../../service/ajustes.service';
-import {Articulo} from '../../modelo/Articulo';
-import {Proveedor} from '../../modelo/Proveedor';
+import {Articulo} from '../../models/Articulo';
+import {Proveedor} from '../../models/Proveedor';
 import {ArticulosService} from '../../service/articulos.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MovimientosService} from '../../service/movimientos.service';

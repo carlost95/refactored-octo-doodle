@@ -1,10 +1,14 @@
 import { LogoutComponent } from "./pages/logout/logout.component";
-import { LoginComponent } from "./pages/login/login.component";
+import { LoginComponent } from './auth/login.component';
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 import { AuthGaurdService } from "./service/auth-gaurd.service";
+import {IndexComponent} from './index/index.component';
 
 const routes: Routes = [
+  {path: '', component: IndexComponent},
+  {path: 'login', component: LoginComponent},
+  {path: 'logout', component: LoginComponent},
   {
     path: "ventas",
     loadChildren: () => import('./pages/ventas/ventas.module').then(m => m.VentasModule),
@@ -35,13 +39,13 @@ const routes: Routes = [
     loadChildren: () => import('./pages/logistica/logistica.module').then(m => m.LogisticaModule),
     canActivate: [AuthGaurdService],
   },
-  { path: "login", component: LoginComponent },
-  {
-    path: "logout",
-    component: LogoutComponent,
-    canActivate: [AuthGaurdService],
-  },
-  { path: "**", pathMatch: "full", redirectTo: "ventas" },
+  // { path: "login", component: LoginComponent },
+  // {
+  //   path: "logout",
+  //   component: LogoutComponent,
+  //   canActivate: [AuthGaurdService],
+  // },
+  // { path: "**", pathMatch: "full", redirectTo: "ventas" },
 ];
 
 @NgModule({

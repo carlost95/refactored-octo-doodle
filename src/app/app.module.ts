@@ -14,9 +14,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MaterialModule} from './material/material.module';
 import { ConfirmModalComponent } from './shared/confirm-modal/confirm-modal.component';
 import { SnackConfirmComponent } from './shared/snack-confirm/snack-confirm.component';
+import { RegsitroComponent } from './auth/regsitro.component';
+import { IndexComponent } from './index/index.component';
 // import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
 @NgModule({
-  declarations: [AppComponent, MenuComponent, LoginComponent, LogoutComponent, ConfirmModalComponent, SnackConfirmComponent],
+  declarations: [AppComponent, MenuComponent, LoginComponent, LogoutComponent, ConfirmModalComponent, SnackConfirmComponent, RegsitroComponent, IndexComponent],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule, BrowserAnimationsModule, MaterialModule],
   providers: [
     VentasService,

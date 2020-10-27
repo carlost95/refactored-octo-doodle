@@ -1,5 +1,5 @@
 import {Router} from "@angular/router";
-import {Cliente} from "../../../modelo/Cliente";
+import {Cliente} from "../../../models/Cliente";
 import {Component, OnInit} from "@angular/core";
 import {PdfExportService} from '../../../service/pdf-export.service';
 import {ServiceReportService} from '../../../service/service-report.service';

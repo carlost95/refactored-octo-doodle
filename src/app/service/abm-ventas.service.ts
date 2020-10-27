@@ -1,8 +1,8 @@
-import { Distrito } from "./../modelo/Distrito";
-import { Departamento } from "./../modelo/Departamento";
+import { Distrito } from "../models/Distrito";
+import { Departamento } from "../models/Departamento";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Response } from "../modelo/Response";
+import { Response } from "../models/Response";
 import {environment} from "../../environments/environment.prod";
 
 @Injectable({

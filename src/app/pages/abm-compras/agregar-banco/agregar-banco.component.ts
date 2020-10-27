@@ -1,4 +1,4 @@
-import {Banco} from '../../../modelo/Banco';
+import {Banco} from '../../../models/Banco';
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators} from '@angular/forms';

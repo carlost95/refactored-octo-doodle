@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment.prod';
 import { rubro } from '../../environments/global-route';
-import { Response } from '../modelo/Response';
-import { Rubro } from '../modelo/Rubro';
+import { Response } from '../models/Response';
+import { Rubro } from '../models/Rubro';
 
 @Injectable({
   providedIn: 'root'

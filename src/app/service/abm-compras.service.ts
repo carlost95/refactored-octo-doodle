@@ -1,14 +1,14 @@
-import { Ajuste } from './../modelo/Ajuste';
-import { SubRubroDTO } from './../modelo/SubRubroDTO';
-import { SubRubro } from './../modelo/SubRubro';
-import { Rubro } from './../modelo/Rubro';
-import { UnidadMedida } from './../modelo/UnidadMedida';
-import { FormaPago } from './../modelo/FormaPago';
-import { Marca } from './../modelo/Marca';
-import { Banco } from "./../modelo/Banco";
+import { Ajuste } from '../models/Ajuste';
+import { SubRubroDTO } from '../models/SubRubroDTO';
+import { SubRubro } from '../models/SubRubro';
+import { Rubro } from '../models/Rubro';
+import { UnidadMedida } from '../models/UnidadMedida';
+import { FormaPago } from '../models/FormaPago';
+import { Marca } from '../models/Marca';
+import { Banco } from "../models/Banco";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Response } from "../modelo/Response";
+import { Response } from "../models/Response";
 import { environment } from "../../environments/environment.prod";
 
 @Injectable({

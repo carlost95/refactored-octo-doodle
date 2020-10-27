@@ -1,5 +1,5 @@
 import { AbmVentasService } from '../../service/abm-ventas.service';
-import { Distrito } from "../../modelo/Distrito";
+import { Distrito } from "../../models/Distrito";
 import { VentasService } from "src/app/service/ventas.service";
 import { Router } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
