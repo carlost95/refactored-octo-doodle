@@ -3,10 +3,11 @@
     <i class="fas fa-home"></i>
   </a>
 
-  <div
-    *ngIf="autenticacion.usuarioLogeado()"
-    class="collapse navbar-collapse"
-    id="navbarSupportedContent">
+  <!--  <div-->
+  <!--    *ngIf="autenticacion.usuarioLogeado()"-->
+  <!--    class="collapse navbar-collapse"-->
+  <!--    id="navbarSupportedContent">-->
+  <div>
     <ul class="navbar-nav">
       <li class="nav-item">
         <a class="nav-link" [routerLink]="['ventas']"
@@ -74,12 +75,13 @@
       </li>
     </ul>
   </div>
-  <div *ngIf="!autenticacion.usuarioLogeado()" class="collapse navbar-collapse">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" [routerLink]="['login']" routerLinkActive="active"
-        >INICIAR SESION</a>
-      </li>
-    </ul>
-  </div>
+  <!--  <div *ngIf="!autenticacion.usuarioLogeado()" class="collapse navbar-collapse">-->
+  <!--    <ul class="navbar-nav mr-auto">-->
+  <!--      <li class="nav-item">-->
+  <!--        <a class="nav-link" [routerLink]="['login']" routerLinkActive="active"-->
+  <!--        >INICIAR SESION</a>-->
+  <!--      </li>-->
+  <!--    </ul>-->
+  <!--  </div>-->
+
 </nav>
