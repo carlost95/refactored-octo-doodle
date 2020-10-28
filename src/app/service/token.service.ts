@@ -29,7 +29,7 @@ export class TokenService {
   }
 
   public getUserName(): string {
-    return sessionStorage.getItem(TOKEN_KEY);
+    return sessionStorage.getItem(USERNAME_KEY);
   }
 
   public setAuthorities(authorities: string[]): void {
@@ -40,7 +40,7 @@ export class TokenService {
   public getAuthorities(): string [] {
     this.roles = [];
     if (sessionStorage.getItem(AUTHORITIES_KEY)) {
-      JSON.parse(sessionStorage.getItem(AUTHORITIES_KEY)).foreach(authority => {
+      JSON.parse(sessionStorage.getItem(AUTHORITIES_KEY)).forEach(authority => {
         this.roles.push(authority.authority);
       });
     }

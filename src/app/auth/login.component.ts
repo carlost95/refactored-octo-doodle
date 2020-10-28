@@ -38,15 +38,16 @@ export class LoginComponent implements OnInit {
         this.isLogged = true;
         this.isLoginsFail = false;
         this.tokenService.setToken(data.token);
-        this.tokenService.setUserName(data.nombreUsuaario);
+        this.tokenService.setUserName(data.nombreUsuario);
         this.tokenService.setAuthorities(data.authorities);
         this.roles = data.authorities;
+        this.router.navigate(['/']);
       },
       err => {
         this.isLogged = false;
         this.isLoginsFail = true;
-        this.errMsj = err.error.mesaje;
-        console.log(this.errMsj);
+        this.errMsj = err.error.message;
+        // console.log(this.errMsj);
       });
   }
 }
