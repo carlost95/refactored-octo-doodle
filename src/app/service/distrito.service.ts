@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {Response} from "../modelo/Response";
-import {Distrito} from "../modelo/Distrito";
+import {Response} from "../models/Response";
+import {Distrito} from "../models/Distrito";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment.prod";
 import {distrito} from "../../environments/global-route";

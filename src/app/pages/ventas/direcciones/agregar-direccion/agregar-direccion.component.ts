@@ -1,12 +1,12 @@
 import {AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Direccion} from "../../../../modelo/Direccion";
+import {Direccion} from "../../../../models/Direccion";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DistritoService} from "../../../../service/distrito.service";
-import {Distrito} from "../../../../modelo/Distrito";
+import {Distrito} from "../../../../models/Distrito";
 import {DireccionesService} from "../../../../service/direcciones.service";
 import {MapMarker} from "@angular/google-maps";
-import {Ubicacion} from "../../../../modelo/Ubicacion";
+import {Ubicacion} from "../../../../models/Ubicacion";
 import LatLng = google.maps.LatLng;
 
 @Component({

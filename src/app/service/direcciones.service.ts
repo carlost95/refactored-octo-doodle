@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment.prod";
 import {direccion} from "../../environments/global-route";
-import {Response} from "../modelo/Response";
-import {Direccion} from "../modelo/Direccion";
+import {Direccion} from "../models/Direccion";
+import {Response} from "../models/Response";
+
+
 
 @Injectable({
   providedIn: 'root'

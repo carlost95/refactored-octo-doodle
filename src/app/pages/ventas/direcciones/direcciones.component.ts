@@ -1,11 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {DireccionesService} from "../../../service/direcciones.service";
-import {Direccion} from "../../../modelo/Direccion";
+import {Direccion} from "../../../models/Direccion";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {AgregarArticuloComponent} from "../../../compras/agregar-articulo/agregar-articulo.component";
 import {AgregarDireccionComponent} from "./agregar-direccion/agregar-direccion.component";
-import {toNumbers} from "@angular/compiler-cli/src/diagnostics/typescript_version";
 import {SnackConfirmComponent} from "../../../shared/snack-confirm/snack-confirm.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 

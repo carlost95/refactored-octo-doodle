@@ -7,8 +7,7 @@ import {AppComponent} from './app.component';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {MenuComponent} from './menu/menu.component';
-import {LoginComponent} from './pages/login/login.component';
-import {LogoutComponent} from './pages/logout/logout.component';
+import {LoginComponent} from './auth/login.component';
 import {ExcelExportService} from "./service/excel-export.service";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModule} from './material/material.module';
@@ -23,7 +22,6 @@ import {SnackConfirmComponent} from './shared/snack-confirm/snack-confirm.compon
   declarations: [AppComponent,
     MenuComponent,
     LoginComponent,
-    LogoutComponent,
     ConfirmModalComponent,
     SnackConfirmComponent,
     IndexComponent],
