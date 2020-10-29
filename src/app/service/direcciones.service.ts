@@ -23,4 +23,8 @@ export class DireccionesService {
   save(direccion: Direccion){
     return this.http.post<Response>(this.url, direccion);
   }
+
+  update(direccion: Direccion){
+    return this.http.put<Response>(this.url, direccion);
+  }
 }

@@ -13,39 +13,15 @@
 
     <div class="row card-body">
       <section class="container">
-        <div class="row col-12 d-flex justify-content-between">
-          <label class="col-5 m-0 p-0"><h3>Busqueda:</h3></label>
-
-          <div class="col-12 m-0 p-0 aligth">
-            <input
-              class="col-12 position-relative has-icon-right searchDiv"
-              type="text"
-              class="form-control searchText"
-              placeholder="ingrese busqueda"
-            />
-<!--            [(ngModel)]="busqueda"-->
-<!--            (keyup)="filtrarCliente()"-->
-          </div>
-        </div>
-
         <br/>
-        <!-- </div>
-      <div class="container"> -->
         <div class="row col-12 d-flex justify-content-end">
-          <button class="btn btn-outline-danger" >
-            <i class="fas fa-file-pdf fa-2x"></i>
-          </button>
-
-          <button class="btn btn-outline-success" >
-            <i class="far fa-file-excel fa-2x"></i>
-          </button>
           <button
             mat-raised-button
             color="primary"
             title="Nueva Marca"
             (click)="newDireccion()"
           >
-            <i class="fas fa-map-signs"></i>
+            <i class="fas fa-lg fa-map-marker-alt"></i>
             Nueva Direccion
           </button>
         </div>
@@ -83,7 +59,7 @@
               <button
                 class="btn btn-default m-0 p-0"
                 title="Modificar "
-                (click)="newDireccion()"
+                (click)="newEdit(direccion)"
               >
                 <i class="fas fa-user-edit"></i>
               </button>

@@ -1,3 +1,5 @@
+import {Ubicacion} from "./Ubicacion";
+
 export class Direccion {
   id: number;
   calle: string;
@@ -6,5 +8,6 @@ export class Direccion {
   estado: boolean;
   clienteId: number;
   distritoId: number;
-  // ubicacion: Ubicacion;
+  ubicacion: Ubicacion
+  // ubicacion: {lat: number, lng: number};
 }

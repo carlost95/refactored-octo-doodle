@@ -5,19 +5,25 @@
     <h1 style="text-align: center" *ngIf="updating">Actualizar direccion</h1>
   </div>
   <hr>
-  <section>
-    <form [formGroup]="direccionForm">
+  <section *ngIf="init">
+    <form [formGroup]="direccionForm" *ngIf="this.direccionForm">
       <div class="form-row justify-content-center">
         <mat-form-field class="col-md-5 py-3" appearance="legacy">
           <mat-label>Calle</mat-label>
           <input matInput formControlName="calle" required
                  autocomplete="off"/>
+          <mat-error *ngIf="direccionForm.controls.calle.errors">
+            Campo <strong>requerido</strong>
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field class="col-md-5 py-3" appearance="legacy">
           <mat-label>Numero de Calle</mat-label>
           <input matInput formControlName="numerocalle" required
                  autocomplete="off"/>
+          <mat-error *ngIf="direccionForm.controls.numerocalle.errors">
+            Campo <strong>requerido</strong>
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field class="col-md-10 py-3" appearance="legacy">
@@ -27,30 +33,51 @@
         </mat-form-field>
 
         <mat-form-field class="col-md-5" appearance="fill">
-          <mat-label> Distrito</mat-label>
+          <mat-label>Distrito</mat-label>
           <mat-select
-            name="unidad medida"
+            name="distrito"
             formControlName="distrito"
             autocomplete="off">
             <mat-option *ngFor="let distrito of distritos" [value]="distrito.id">
               {{ distrito.nombre }}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="direccionForm.controls.numerocalle.errors">
+            Campo <strong>requerido</strong>
+          </mat-error>
         </mat-form-field>
 
       </div>
     </form>
   </section>
-  <hr>
-  <div class="text-right py-3">
-    <button (click)="close()" class="btn btn-outline-danger">
-      Cancelar
-    </button>
-    <button class="btn btn-warning" (click)="onSubmit()">
-      Aceptar
-    </button>
-  </div>
 
+  <section *ngIf="!init" class="justify-content-center">
+    <div class="container-maps mr-2">
+      <google-map #map [center]="position">
+        <map-marker *ngIf="showMarker" [position]="position" [label]="label" [title]="'sample'"
+                    [options]="markerOptions"
+                    (positionChanged)="getCurrentPosition()">
+        </map-marker>
+      </google-map>
+    </div>
+  </section>
+  <hr>
+    <div class="text-right py-3">
+      <button (click)="close()" class="btn btn-outline-danger">
+        Cancelar
+      </button>
+      &nbsp;
+      <button class="btn btn-primary" (click)="prevMap()" *ngIf="!init">
+        Anterior
+      </button>
+      &nbsp;
+      <button class="btn btn-warning" (click)="showMap()" *ngIf="init">
+        Siguiente
+      </button>
+      &nbsp;
+      <button class="btn btn-warning" (click)="onSubmit()" *ngIf="!init">
+        Aceptar
+      </button>
+  </div>
 </div>
-<!--</div>-->
 

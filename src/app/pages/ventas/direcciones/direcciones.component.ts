@@ -6,6 +6,8 @@ import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {AgregarArticuloComponent} from "../../../compras/agregar-articulo/agregar-articulo.component";
 import {AgregarDireccionComponent} from "./agregar-direccion/agregar-direccion.component";
 import {toNumbers} from "@angular/compiler-cli/src/diagnostics/typescript_version";
+import {SnackConfirmComponent} from "../../../shared/snack-confirm/snack-confirm.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-direcciones',
@@ -23,7 +25,8 @@ export class DireccionesComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private direccionService: DireccionesService,
-    public matDialog: MatDialog
+    public matDialog: MatDialog,
+    private _snackBar: MatSnackBar
   ) {
   }
 
@@ -50,6 +53,11 @@ export class DireccionesComponent implements OnInit {
     this.openDialog();
   }
 
+  newEdit(direccion: Direccion) {
+    this.toUpdate = direccion;
+    this.openDialog();
+  }
+
   openDialog() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -62,6 +70,19 @@ export class DireccionesComponent implements OnInit {
     const modalDialog = this.matDialog.open(AgregarDireccionComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       this.getDirecciones();
+    });
+
+    modalDialog.afterClosed().subscribe(result => {
+      if(result){
+        this.openSnackBar();
+      }
+    })
+  }
+
+  openSnackBar() {
+    this._snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
     });
   }
 
