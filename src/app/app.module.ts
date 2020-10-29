@@ -7,7 +7,6 @@ import {AppComponent} from './app.component';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {MenuComponent} from './menu/menu.component';
-// import {LoginComponent} from './pages/login/login.component';
 import {ExcelExportService} from './service/excel-export.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModule} from './material/material.module';
@@ -17,7 +16,7 @@ import {IndexComponent} from './index/index.component';
 import {LoginComponent} from './auth/login.component';
 import {LogoutComponent} from './auth/logout.component';
 
-// import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
+
 @NgModule({
   // tslint:disable-next-line:max-line-length
   declarations: [AppComponent,

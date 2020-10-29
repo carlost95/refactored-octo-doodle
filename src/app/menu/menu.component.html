@@ -1,13 +1,14 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">
+  <a class="navbar-brand">
     <i class="fas fa-home"></i>
   </a>
 
-  <!--  <div-->
-  <!--    *ngIf="autenticacion.usuarioLogeado()"-->
-  <!--    class="collapse navbar-collapse"-->
-  <!--    id="navbarSupportedContent">-->
-  <div>
+  <div
+    *ngIf="isLogged"
+    class="collapse navbar-collapse"
+    id="navbarVar">
+    <!--    id="navbarSupportedContent">-->
+
     <ul class="navbar-nav">
       <li class="nav-item">
         <a class="nav-link" [routerLink]="['ventas']"
@@ -44,8 +45,7 @@
             <a class="dropdown-item" [routerLink]="['abm-ventas']"
                routerLinkActive="active">
               <i class="fas fa-file-invoice-dollar"></i>
-              ABM ventas</a
-            >
+              ABM ventas</a>
 
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" [routerLink]="['abm-compras']"
@@ -68,20 +68,15 @@
         </div>
       </li>
     </ul>
+  </div>
+  <div>
     <ul class="navbar-nav ml-auto">
-      <li>
-        <a class="nav-link" [routerLink]="['logout']" routerLinkActive="active"
-        >CERRAR SESION</a>
+      <li class="nav-item" *ngIf="!isLogged">
+        <a class="nav-link" [routerLink]="['login']"> <i class="fas fa-sign-out-alt"></i>INICAR SESION </a>
+      </li>
+      <li class="nav-item" *ngIf="isLogged" (click)="onLogOut()">
+        <a class="nav-link"> <i class="fas fa-door-open"></i>CERRAR SESION</a>
       </li>
     </ul>
   </div>
-  <!--  <div *ngIf="!autenticacion.usuarioLogeado()" class="collapse navbar-collapse">-->
-  <!--    <ul class="navbar-nav mr-auto">-->
-  <!--      <li class="nav-item">-->
-  <!--        <a class="nav-link" [routerLink]="['login']" routerLinkActive="active"-->
-  <!--        >INICIAR SESION</a>-->
-  <!--      </li>-->
-  <!--    </ul>-->
-  <!--  </div>-->
-
 </nav>
