@@ -1,4 +1,4 @@
-import {Marca} from '../../../modelo/Marca';
+import {Marca} from '../../../models/Marca';
 import {Router} from '@angular/router';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal.component';
@@ -8,7 +8,7 @@ import {AgregarMarcaComponent} from '../agregar-marca/agregar-marca.component';
 import {ServiceReportService} from '../../../service/service-report.service';
 import {PdfExportService} from 'src/app/service/pdf-export.service';
 import {ExcelExportService} from 'src/app/service/excel-export.service';
-import {MarcaExcel} from '../../../modelo/MarcaExcel';
+import {MarcaExcel} from '../../../models/MarcaExcel';
 
 @Component({
   selector: 'app-listar-marca',

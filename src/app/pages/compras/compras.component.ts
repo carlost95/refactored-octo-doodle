@@ -13,6 +13,7 @@ export class ComprasComponent implements OnInit {
   ngOnInit() {
   }
 
+  // tslint:disable-next-line:typedef
   validaMenu() {
     if (
       this.router.url.includes('/listar-proveedor') ||

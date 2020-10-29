@@ -1,5 +1,5 @@
 import {AbmComprasService} from '../../../service/abm-compras.service';
-import {Rubro} from '../../../modelo/Rubro';
+import {Rubro} from '../../../models/Rubro';
 import {Component, OnInit, Inject} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {RubrosService} from '../../../service/rubros.service';

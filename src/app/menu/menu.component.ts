@@ -1,12 +1,28 @@
-import { AutenticacionService } from './../service/autenticacion.service';
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {TokenService} from '../service/token.service';
+
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.css'],
 })
 export class MenuComponent implements OnInit {
-  constructor(public autenticacion: AutenticacionService) { }
+  isLogged = false;
 
-  ngOnInit() { }
+  constructor(public tokenService: TokenService) {
+  }
+
+  // tslint:disable-next-line:typedef
+  ngOnInit() {
+    if (this.tokenService.getToken()) {
+      this.isLogged = true;
+    } else {
+      this.isLogged = false;
+    }
+  }
+
+  onLogOut(): void {
+    this.tokenService.logOut();
+    window.location.reload();
+  }
 }

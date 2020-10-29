@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Response } from '../modelo/Response';
-import { Marca } from './../modelo/Marca';
+import { Response } from '../models/Response';
+import { Marca } from '../models/Marca';
 import { environment } from '../../environments/environment.prod';
 import { HttpClient } from '@angular/common/http';
 import { marca } from '../../environments/global-route';

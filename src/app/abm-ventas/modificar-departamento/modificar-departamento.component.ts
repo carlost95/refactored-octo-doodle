@@ -1,5 +1,5 @@
 import { AbmVentasService } from "../../service/abm-ventas.service";
-import { Departamento } from "../../modelo/Departamento";
+import { Departamento } from "../../models/Departamento";
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { __param } from "tslib";

@@ -1,5 +1,5 @@
 import {AbmComprasService} from '../../../service/abm-compras.service';
-import {UnidadMedida} from '../../../modelo/UnidadMedida';
+import {UnidadMedida} from '../../../models/UnidadMedida';
 import {Component, OnInit, Inject} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {UnidadMedidaService} from 'src/app/service/unidad-medida.service';

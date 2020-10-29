@@ -1,5 +1,5 @@
-import {SubRubroDTO} from '../../../modelo/SubRubroDTO';
-import {SubRubro} from '../../../modelo/SubRubro';
+import {SubRubroDTO} from '../../../models/SubRubroDTO';
+import {SubRubro} from '../../../models/SubRubro';
 import {Component, OnInit} from '@angular/core';
 import {MatDialogConfig, MatDialog} from '@angular/material/dialog';
 import {ServiceReportService} from '../../../service/service-report.service';
@@ -8,7 +8,7 @@ import {ExcelExportService} from '../../../service/excel-export.service';
 import {AgregarSubRubroComponent} from '../agregar-sub-rubro/agregar-sub-rubro.component';
 import {SubRubroService} from '../../../service/sub-rubro.service';
 import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal.component';
-import {SubRubroExcel} from '../../../modelo/SubRubroExcel';
+import {SubRubroExcel} from '../../../models/SubRubroExcel';
 
 @Component({
   selector: 'app-listar-sub-rubro',

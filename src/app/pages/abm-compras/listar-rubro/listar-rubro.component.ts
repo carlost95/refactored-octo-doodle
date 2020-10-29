@@ -1,4 +1,4 @@
-import {Rubro} from '../../../modelo/Rubro';
+import {Rubro} from '../../../models/Rubro';
 import {Component, OnInit} from '@angular/core';
 import {RubrosService} from '../../../service/rubros.service';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
@@ -7,7 +7,7 @@ import {AgregarRubroComponent} from '../agregar-rubro/agregar-rubro.component';
 import {ServiceReportService} from '../../../service/service-report.service';
 import {PdfExportService} from '../../../service/pdf-export.service';
 import {ExcelExportService} from '../../../service/excel-export.service';
-import {RubroExcel} from '../../../modelo/RubroExcel';
+import {RubroExcel} from '../../../models/RubroExcel';
 
 
 @Component({

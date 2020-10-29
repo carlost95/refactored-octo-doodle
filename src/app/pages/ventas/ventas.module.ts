@@ -27,5 +27,4 @@ import {GoogleMapsModule} from "@angular/google-maps";
   imports: [CommonModule, VentasRoutingModule, FormsModule, MaterialModule, ReactiveFormsModule, GoogleMapsModule]
   // entryComponents: [ConfirmDialogComponent],
 })
-export class VentasModule {
-}
+export class VentasModule {}

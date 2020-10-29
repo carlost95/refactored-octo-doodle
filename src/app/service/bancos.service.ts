@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {Response} from "../modelo/Response";
-import {Banco} from "../modelo/Banco";
+import {Response} from "../models/Response";
+import {Banco} from "../models/Banco";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment.prod";
 import {banco} from "../../environments/global-route";

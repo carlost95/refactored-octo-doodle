@@ -1,4 +1,4 @@
-import { Cliente } from "../../../modelo/Cliente";
+import { Cliente } from "../../../models/Cliente";
 import { ActivatedRoute } from "@angular/router";
 import { VentasService } from "../../../service/ventas.service";
 import { Component, OnInit } from "@angular/core";

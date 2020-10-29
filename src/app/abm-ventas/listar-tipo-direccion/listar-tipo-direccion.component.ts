@@ -1,4 +1,4 @@
-import { TipoDireccion } from '../../modelo/tipoDireccion';
+import { TipoDireccion } from '../../models/tipoDireccion';
 import { Router } from '@angular/router';
 import { VentasService } from '../../service/ventas.service';
 import { Component, OnInit } from '@angular/core';

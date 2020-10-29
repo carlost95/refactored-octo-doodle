@@ -1,10 +1,10 @@
 import {Router} from '@angular/router';
 import {PedidosService} from '../../../service/pedidos.service';
-import {Articulo} from '../../../modelo/Articulo';
+import {Articulo} from '../../../models/Articulo';
 
 import {Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
 import {ExcelExportService} from '../../../service/excel-export.service';
-import {ArticuloExcel} from '../../../modelo/ArticuloExcel';
+import {ArticuloExcel} from '../../../models/ArticuloExcel';
 import {ServiceReportService} from '../../../service/service-report.service';
 import {PdfExportService} from '../../../service/pdf-export.service';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';

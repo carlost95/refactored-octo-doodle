@@ -1,5 +1,5 @@
 import {AbmComprasService} from '../../../service/abm-compras.service';
-import {Marca} from '../../../modelo/Marca';
+import {Marca} from '../../../models/Marca';
 import {Component, OnInit, Inject} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {MarcasService} from '../../../service/marcas.service';

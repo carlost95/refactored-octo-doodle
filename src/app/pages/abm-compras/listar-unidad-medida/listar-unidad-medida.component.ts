@@ -5,9 +5,9 @@ import {PdfExportService} from '../../../service/pdf-export.service';
 import {ExcelExportService} from '../../../service/excel-export.service';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {AgregarUnidadMedidaComponent} from '../agregar-unidad-medida/agregar-unidad-medida.component';
-import {UnidadMedida} from '../../../modelo/UnidadMedida';
+import {UnidadMedida} from '../../../models/UnidadMedida';
 import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal.component';
-import {UnidadMedidaExcel} from '../../../modelo/UnidadMedidaExcel';
+import {UnidadMedidaExcel} from '../../../models/UnidadMedidaExcel';
 
 @Component({
   selector: 'app-listar-unidad-medida',

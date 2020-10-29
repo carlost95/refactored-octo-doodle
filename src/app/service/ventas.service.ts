@@ -1,8 +1,8 @@
-import { TipoDireccion } from './../modelo/tipoDireccion';
-import { Cliente } from "./../modelo/Cliente";
+import { TipoDireccion } from '../models/tipoDireccion';
+import { Cliente } from "../models/Cliente";
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Response } from "../modelo/Response";
+import { Response } from "../models/Response";
 import { environment } from "../../environments/environment.prod";
 
 @Injectable({

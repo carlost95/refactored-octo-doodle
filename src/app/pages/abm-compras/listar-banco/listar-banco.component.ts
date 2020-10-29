@@ -1,4 +1,4 @@
-import {Banco} from '../../../modelo/Banco';
+import {Banco} from '../../../models/Banco';
 import {Router} from '@angular/router';
 import {Component, Inject, OnInit} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
@@ -7,7 +7,7 @@ import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal
 import {BancosService} from '../../../service/bancos.service';
 import {ServiceReportService} from '../../../service/service-report.service';
 import {PdfExportService} from '../../../service/pdf-export.service';
-import {BancoExcel} from '../../../modelo/BancoExcel';
+import {BancoExcel} from '../../../models/BancoExcel';
 import {ExcelExportService} from '../../../service/excel-export.service';
 
 @Component({

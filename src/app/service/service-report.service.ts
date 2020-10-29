@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment.prod';
-import { Response } from '../modelo/Response';
+import { Response } from '../models/Response';
 import { report } from '../../environments/global-route';
 
 @Injectable({

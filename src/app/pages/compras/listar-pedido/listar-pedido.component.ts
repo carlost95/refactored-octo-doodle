@@ -1,7 +1,7 @@
-import {Proveedor} from '../../../modelo/Proveedor';
+import {Proveedor} from '../../../models/Proveedor';
 import {Router} from '@angular/router';
 import {PedidosService} from '../../../service/pedidos.service';
-import {Pedido} from '../../../modelo/Pedido';
+import {Pedido} from '../../../models/Pedido';
 import {Component, OnInit} from '@angular/core';
 import * as _ from 'lodash';
 

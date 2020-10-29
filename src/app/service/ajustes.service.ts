@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment.prod';
 import {ajuste} from '../../environments/global-route';
-import {Response} from '../modelo/Response';
-import {Ajuste} from '../modelo/Ajuste';
+import {Response} from '../models/Response';
+import {Ajuste} from '../models/Ajuste';
 
 @Injectable({
   providedIn: 'root'

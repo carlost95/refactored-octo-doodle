@@ -6,10 +6,10 @@ import {ExcelExportService} from 'src/app/service/excel-export.service';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal.component';
 import {ProveedoresService} from '../../../service/proveedores.service';
-import {Proveedor} from '../../../modelo/Proveedor';
+import {Proveedor} from '../../../models/Proveedor';
 import {AgregarProveedorComponent} from '../agregar-proveedor/agregar-proveedor.component';
 import {proveedor} from '../../../../environments/global-route';
-import {ProveedorExcel} from '../../../modelo/ProveedorExcel';
+import {ProveedorExcel} from '../../../models/ProveedorExcel';
 
 @Component({
   selector: 'app-listar-proveedor',
