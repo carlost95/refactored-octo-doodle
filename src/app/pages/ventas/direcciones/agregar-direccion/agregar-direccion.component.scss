@@ -1,0 +1,18 @@
+.container-maps {
+  display: flex;
+  margin-top: 25.9px;
+  flex-direction: column;
+  width: 65%;
+}
+
+.container-maps-one {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+
+#map {
+  height: 139px;
+  width: 100%;
+}

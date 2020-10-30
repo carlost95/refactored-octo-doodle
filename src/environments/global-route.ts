@@ -47,3 +47,11 @@ export const pedidos = {
   path: '/pedidos',
   status: '/status'
 };
+
+export const direccion = {
+  path: '/direcciones'
+}
+
+export const distrito = {
+  path: '/distritos'
+}

@@ -37,5 +37,4 @@ import {interceptorProvider} from './interceptors/prod-interceptor.service';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule {}
