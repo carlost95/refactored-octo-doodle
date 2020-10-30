@@ -21,7 +21,7 @@ import {AgregarDireccionComponent} from './direcciones/agregar-direccion/agregar
     ListarDireccionComponent,
     ClientesComponent,
     DireccionesComponent,
-    AgregarDireccionComponent
+    AgregarDireccionComponent,
   ],
   imports: [CommonModule, VentasRoutingModule, FormsModule, MaterialModule, ReactiveFormsModule],
   // entryComponents: [ConfirmDialogComponent],

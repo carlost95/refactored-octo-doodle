@@ -19,7 +19,6 @@ import {MaterialModule} from '../../material/material.module';
 import {PaginacionPipe} from './paginacion.pipe';
 import {MatPaginatorIntl} from '@angular/material/paginator';
 import {CustomMatPaginatorIntl} from './paginacion-es';
-import {AppModule} from '../../app.module';
 
 
 @NgModule({
@@ -36,8 +35,9 @@ import {AppModule} from '../../app.module';
     PaginacionPipe,
   ],
   imports: [CommonModule, ComprasRoutingModule, FormsModule, SharedModule,
-    AbmComprasModule, MaterialModule, ReactiveFormsModule, AppModule],
-  providers: [ExcelExportService,
+    AbmComprasModule, MaterialModule, ReactiveFormsModule],
+  providers: [
+    ExcelExportService,
     {
       provide: MatPaginatorIntl,
       useClass: CustomMatPaginatorIntl

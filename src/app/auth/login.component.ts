@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Output, EventEmitter} from '@angular/core';
 import {TokenService} from '../service/token.service';
 import {AuthService} from '../service/auth.service';
 import {Router} from '@angular/router';
@@ -10,6 +10,7 @@ import {LoginUsuario} from '../models/login-usuario';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  @Output() pressLogin = new EventEmitter<boolean>();
   isLogged = false;
   isLoginsFail = false;
   loginUsuario: LoginUsuario;
@@ -41,7 +42,8 @@ export class LoginComponent implements OnInit {
         this.tokenService.setUserName(data.nombreUsuario);
         this.tokenService.setAuthorities(data.authorities);
         this.roles = data.authorities;
-        this.router.navigate(['/']);
+        this.pressLogin.emit(true);
+        // this.router.navigate(['']);
       },
       err => {
         this.isLogged = false;

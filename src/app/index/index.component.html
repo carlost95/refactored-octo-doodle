@@ -1,3 +1,9 @@
-<app-menu></app-menu>
-<p>index works!</p>
-<h1>prueba de login</h1>
+<div class=" text-center">
+  <div *ngIf="isLogged; else loggedOut" class="m-5">
+    <h1 style="color: #000000" >Bienvenido "{{nombreUsuario}}"</h1>
+  </div>
+
+  <ng-template #loggedOut>
+    <h1 class="m-5">No has iniciado sesión</h1>
+  </ng-template>
+</div>

@@ -9,12 +9,13 @@ import {ComprasComponent} from './compras.component';
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 
-
 const routes: Routes = [
   {
     path: '', component: ComprasComponent,
     children: [
-      {path: 'listar-proveedor', component: ListarProveedorComponent},
+      {
+        path: 'listar-proveedor', component: ListarProveedorComponent,
+      },
       {path: 'listar-articulos', component: ListarArticulosComponent},
       {path: 'listar-pedido', component: ListarPedidoComponent},
       {path: 'agregar-proveedor', component: AgregarProveedorComponent},
