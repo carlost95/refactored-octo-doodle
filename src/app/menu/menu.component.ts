@@ -9,7 +9,7 @@ import {TokenService} from '../service/token.service';
 export class MenuComponent implements OnInit {
   isLogged = false;
 
-  constructor(public tokenService: TokenService) {
+  constructor(private tokenService: TokenService) {
   }
 
   // tslint:disable-next-line:typedef

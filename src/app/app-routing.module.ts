@@ -3,45 +3,46 @@ import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 import {IndexComponent} from './index/index.component';
 import {LogoutComponent} from './auth/logout.component';
+import {ProdGuardService as guard} from './guars/prod-guard.service';
 
 const routes: Routes = [
   {path: '', component: IndexComponent},
-  {path: 'login', component: LoginComponent},
-  {path: 'logout', component: LogoutComponent},
   {
     path: 'ventas',
     loadChildren: () => import('./pages/ventas/ventas.module').then(m => m.VentasModule),
+    canActivate: [guard], data: {expectedRol: ['admin', 'user']}
   },
   {
     path: 'compras',
     loadChildren: () => import('./pages/compras/compras.module').then(m => m.ComprasModule),
+    canActivate: [guard], data: {expectedRol: ['admin', 'user']}
   },
   {
     path: 'abm-ventas',
     loadChildren: () => import('./abm-ventas/abm-ventas.module').then(m => m.AbmVentasModule),
+    canActivate: [guard], data: {expectedRol: ['admin', 'user']}
   },
   {
     path: 'abm-compras',
     loadChildren: () => import('./pages/abm-compras/abm-compras.module').then(m => m.AbmComprasModule),
-    // canActivate: [AuthGaurdService],
+    canActivate: [guard], data: {expectedRol: ['admin', 'user']}
   },
   {
     path: 'seguridad',
     loadChildren: () => import('./pages/seguridad/seguridad.module').then(m => m.SeguridadModule),
-    // canActivate: [AuthGaurdService],
+    canActivate: [guard], data: {expectedRol: ['admin', 'user']}
   },
   {
     path: 'logistica',
     loadChildren: () => import('./pages/logistica/logistica.module').then(m => m.LogisticaModule),
-    // canActivate: [AuthGaurdService],
-  }
-  // { path: "login", component: LoginComponent },
-  // {
-  //   path: "logout",
-  //   component: LogoutComponent,
-  //   canActivate: [AuthGaurdService],
-  // },
-  // { path: "**", pathMatch: "full", redirectTo: "ventas" },
+    canActivate: [guard], data: {expectedRol: ['admin', 'user']}
+  },
+  {path: 'login', component: LoginComponent},
+  {
+    path: 'logout', component: LogoutComponent,
+    canActivate: [guard], data: {expectedRol: ['admin', 'user']}
+  },
+  {path: '**', pathMatch: 'full', redirectTo: ''},
 ];
 
 @NgModule({

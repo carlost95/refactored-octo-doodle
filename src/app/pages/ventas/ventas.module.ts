@@ -22,7 +22,7 @@ import {GoogleMapsModule} from "@angular/google-maps";
     ListarDireccionComponent,
     ClientesComponent,
     DireccionesComponent,
-    AgregarDireccionComponent
+    AgregarDireccionComponent,
   ],
   imports: [CommonModule, VentasRoutingModule, FormsModule, MaterialModule, ReactiveFormsModule, GoogleMapsModule]
   // entryComponents: [ConfirmDialogComponent],

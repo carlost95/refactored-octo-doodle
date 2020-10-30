@@ -1,16 +1,31 @@
-import {Router} from '@angular/router';
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {TokenService} from './service/token.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
-  title = 'CORRALON';
+  isLogged = false;
 
-  constructor(private router: Router) {
+  constructor(private tokenService: TokenService) {
+  }
+
+  // tslint:disable-next-line:typedef use-lifecycle-interface
+  ngOnInit() {
+    if (this.tokenService.getToken()) {
+      console.log(this.tokenService.getToken());
+      this.isLogged = true;
+    } else {
+      this.isLogged = false;
+    }
+  }
+
+  // tslint:disable-next-line:typedef
+  validateLogin($event) {
+    this.isLogged = $event;
   }
 
 }
