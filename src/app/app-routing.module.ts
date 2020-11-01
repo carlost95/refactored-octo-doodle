@@ -29,7 +29,7 @@ const routes: Routes = [
   {
     path: 'seguridad',
     loadChildren: () => import('./pages/seguridad/seguridad.module').then(m => m.SeguridadModule),
-    canActivate: [guard], data: {expectedRol: ['admin', 'user']}
+    canActivate: [guard], data: {expectedRol: ['admin']}
   },
   {
     path: 'logistica',
