@@ -88,17 +88,18 @@ export class LogoutComponent implements OnInit {
     if (this.updating) {
       this.update();
     } else {
-      this.onLogout(this.newUsuario);
+      this.onLogout();
       // this.save();
     }
 
   }
-  onLogout(newUsuario: NewUsuario): void {
-    // this.newUsuario = new NewUsuario(this.nombre, this.nombreUsuario, this.email, this.password);
-    this.authService.nuevo(newUsuario).subscribe(data => {
+
+  // tslint:disable-next-line:typedef
+  async onLogout() {
+    await this.authService.nuevo(this.newUsuario).toPromise().then((data) => {
+        this.newUsuario = data;
         this.isLogout = true;
         this.isLogoutFail = false;
-        // this.router.navigate(['']);
       },
       err => {
         this.isLogout = false;
@@ -106,18 +107,10 @@ export class LogoutComponent implements OnInit {
         this.errMsj = err.error.mensaje;
         console.log(this.errMsj);
       });
-    // this.dialogRef.close();
+    if (this.isLogout) {
+      this.dialogRef.close();
+    }
   }
-
-
-  // tslint:disable-next-line:typedef
-  // validar({target}) {
-  //   const {value: nombre} = target;
-  //   const finded = this.users.find(p => p.nombreUsuario.toLowerCase() === nombre.toLowerCase().trim());
-  //   console.log(finded);
-  //   this.nombreRepe = (finded !== undefined) ? true : false;
-  // }
-
 
 // tslint:disable-next-line:typedef
   close() {
