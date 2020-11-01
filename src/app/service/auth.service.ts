@@ -6,6 +6,7 @@ import {LoginUsuario} from '../models/login-usuario';
 import {JwtDTO} from '../models/jwt-dto';
 import {auth} from '../../environments/global-route';
 import {environment} from '../../environments/environment.prod';
+import {Response} from '../models/Response';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,11 @@ export class AuthService {
 
   constructor(private http: HttpClient) {
     this.url = environment.url + auth.path;
+  }
+
+  // tslint:disable-next-line:typedef
+  public listUsers() {
+    return this.http.get<Response>(this.url);
   }
 
   public nuevo(newUsuario: NewUsuario): Observable<any> {

@@ -3,6 +3,8 @@ import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {AgregarArticuloComponent} from '../../compras/agregar-articulo/agregar-articulo.component';
 import {NewUsuario} from '../../../models/new-usuario';
 import {LogoutComponent} from '../logout/logout.component';
+import {AuthService} from '../../../service/auth.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-list-users',
@@ -10,18 +12,27 @@ import {LogoutComponent} from '../logout/logout.component';
   styleUrls: ['./list-users.component.scss']
 })
 export class ListUsersComponent implements OnInit {
-  usersFilter: any;
-  users: null;
+  usersFilter: NewUsuario[] = [];
+  users: NewUsuario [] = [];
   busqueda: any;
   toUpdateUser: NewUsuario;
   consultingUser: false;
 
   constructor(
     public matDialog: MatDialog,
+    private authService: AuthService,
+    private router: Router
   ) {
   }
 
-  ngOnInit(): void {
+  // tslint:disable-next-line:typedef
+  async ngOnInit() {
+    await this.authService.listUsers().toPromise().then((data) => {
+      this.users = data.data;
+      this.usersFilter = this.users;
+    });
+    //   this.users = resp.data);
+    // this.usersFilter = this.users;
   }
 
   // tslint:disable-next-line:typedef
@@ -53,6 +64,8 @@ export class ListUsersComponent implements OnInit {
 
   // tslint:disable-next-line:typedef
   backPage() {
+    // this.router.navigate('/seguridad');
+    window.history.back();
   }
 
   // tslint:disable-next-line:typedef
