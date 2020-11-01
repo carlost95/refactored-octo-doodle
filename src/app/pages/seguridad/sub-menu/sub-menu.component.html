@@ -1,0 +1,23 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="card-body m-3">
+      <ul class="navbar-nav mr-autor trans">
+        <td>
+          <button [routerLink]="['list-users']" routerLinkActive="active"
+                  class="btn btn-outline-warning" style="width: 250px; height: 150px;" title="usuarios">
+
+            <i class="fas fa-users fa-5x"></i>
+            <h4>Usuarios</h4>
+          </button>
+          &nbsp;
+          <button [routerLink]="['logout']"
+                  routerLinkActive="active" class="btn btn-outline-warning"
+                  style="width: 250px; height: 150px;">
+            <i class="fas fa-user-shield fa-5x"></i>
+            <h4>Roles</h4>
+          </button>
+        </td>
+      </ul>
+    </div>
+  </div>
+</nav>

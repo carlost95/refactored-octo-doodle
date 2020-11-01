@@ -3,7 +3,6 @@ import {ProveedoresService} from '../../../service/proveedores.service';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {Proveedor} from '../../../models/Proveedor';
-import {LoginComponent} from '../../login/login.component';
 
 @Component({
   selector: 'app-agregar-proveedor',
