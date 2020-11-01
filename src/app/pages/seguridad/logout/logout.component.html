@@ -42,21 +42,21 @@
             Contraseña es<strong> requerida</strong>
           </mat-error>
         </mat-form-field>
-        <!--        <mat-form-field [ngClass]="consulting ? 'col-md-6' :'col-md-5'" appearance="fill">-->
-        <!--          <mat-label> Rubro</mat-label>-->
-        <!--          <mat-select-->
-        <!--            [(ngModel)]="rubroSelect"-->
-        <!--            name="rubro"-->
-        <!--            formControlName="rubroId"-->
-        <!--            autocomplete="off">-->
-        <!--            <mat-option *ngFor="let rub of rubros" [value]="rub.id">-->
-        <!--              {{ rub.nombre }}-->
-        <!--            </mat-option>-->
-        <!--          </mat-select>-->
-        <!--          <mat-error *ngIf="articuloForm.controls.rubroId.errors">-->
-        <!--            rubro es<strong> requerido</strong>-->
-        <!--          </mat-error>-->
-        <!--        </mat-form-field>-->
+                <mat-form-field class="col-md-8" appearance="fill">
+                  <mat-label> Rol Usuario</mat-label>
+                  <mat-select
+                    [(ngModel)]="rolSelect"
+                    name="roles"
+                    formControlName="roles"
+                    autocomplete="off">
+                    <mat-option *ngFor="let rol of roles" [value]="rol">
+                      {{ rol }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="userForm.controls.roles.errors">
+                    el rol del usuario es<strong> requerido</strong>
+                  </mat-error>
+                </mat-form-field>
         <mat-error *ngIf="isLogoutFail">
           <strong>{{errMsj}}</strong>
         </mat-error>

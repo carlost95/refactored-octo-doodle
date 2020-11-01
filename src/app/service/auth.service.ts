@@ -23,6 +23,11 @@ export class AuthService {
     return this.http.get<Response>(this.url);
   }
 
+  // tslint:disable-next-line:typedef
+  public updateUser(user: NewUsuario) {
+    return this.http.put<Response>(this.url + '/', user);
+  }
+
   public nuevo(newUsuario: NewUsuario): Observable<any> {
     return this.http.post<any>(this.url + '/nuevo', newUsuario);
   }

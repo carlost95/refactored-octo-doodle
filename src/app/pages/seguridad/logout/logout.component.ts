@@ -25,6 +25,9 @@ export class LogoutComponent implements OnInit {
   submitted = false;
   updating = false;
   consulting: boolean;
+  rolSelect: string;
+  roles: string[] = ['ADMIN', 'USER'];
+
 
   // nombreRepe: boolean;
 
@@ -47,7 +50,8 @@ export class LogoutComponent implements OnInit {
         nombre: [{value: user.nombre, disabled: this.consulting}, Validators.required],
         email: [{value: user.email, disabled: this.consulting}, Validators.required],
         nombreUsuario: [{value: user.nombreUsuario, disabled: this.consulting}, Validators.required],
-        password: [{value: user.password, disabled: this.consulting}, Validators.required]
+        password: [{value: user.password, disabled: this.consulting}, Validators.required],
+        roles: [{value: user.roles, disabled: this.consulting}, Validators.required]
       });
       this.updating = !this.consulting;
     } else {
@@ -55,7 +59,8 @@ export class LogoutComponent implements OnInit {
         nombre: ['', Validators.required],
         email: ['', Validators.required],
         nombreUsuario: ['', Validators.required],
-        password: ['', Validators.required]
+        password: ['', Validators.required],
+        roles: ['', Validators.required]
       });
     }
   }
@@ -71,6 +76,7 @@ export class LogoutComponent implements OnInit {
       this.userForm.controls.email.markAsTouched();
       this.userForm.controls.nombreUsuario.markAsTouched();
       this.userForm.controls.password.markAsTouched();
+      this.userForm.controls.roles.markAsTouched();
       console.log('Error en validacion de datos');
     } else {
       this.makeDTO();
@@ -84,6 +90,14 @@ export class LogoutComponent implements OnInit {
     this.newUsuario.email = (this.userForm.controls.email.value).trim();
     this.newUsuario.nombreUsuario = (this.userForm.controls.nombreUsuario.value).trim();
     this.newUsuario.password = (this.userForm.controls.password.value).trim();
+    if ((this.userForm.controls.roles.value).toLowerCase() !== 'admin') {
+      this.newUsuario.roles.push('user');
+    } else {
+      this.newUsuario.roles.push('admin');
+    }
+
+    console.log('usuario nuevo');
+    console.warn(this.newUsuario);
 
     if (this.updating) {
       this.update();
@@ -120,7 +134,10 @@ export class LogoutComponent implements OnInit {
 
   // tslint:disable-next-line:typedef
   private update() {
-
+    this.authService.updateUser(this.newUsuario).subscribe(data => {
+      this.newUsuario = data.data;
+      this.dialogRef.close();
+    });
   }
 
   // tslint:disable-next-line:typedef

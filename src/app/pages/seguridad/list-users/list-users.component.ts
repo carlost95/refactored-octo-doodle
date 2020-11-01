@@ -16,7 +16,7 @@ export class ListUsersComponent implements OnInit {
   users: NewUsuario [] = [];
   busqueda: any;
   toUpdateUser: NewUsuario;
-  consultingUser: false;
+  consultingUser: boolean;
 
   constructor(
     public matDialog: MatDialog,
@@ -36,18 +36,23 @@ export class ListUsersComponent implements OnInit {
   }
 
   // tslint:disable-next-line:typedef
-  showModal(user: any) {
-
-  }
+  // showModal(user: any) {
+  //
+  // }
 
   // tslint:disable-next-line:typedef
   consultUser(user: NewUsuario) {
+    this.toUpdateUser = user;
+    this.consultingUser = true;
+    this.openDialog();
 
   }
 
   // tslint:disable-next-line:typedef
   modifyUser(user: NewUsuario) {
-
+    this.toUpdateUser = user;
+    this.consultingUser = false;
+    this.openDialog();
   }
 
   // tslint:disable-next-line:typedef
@@ -81,10 +86,10 @@ export class ListUsersComponent implements OnInit {
     };
     const modalDialog = this.matDialog.open(LogoutComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
-      // this.articuloService.listarArticuloTodos().subscribe(data => {
-      //   this.articulos = data.data;
-      //   this.articulosFilter = data.data;
-      // });
+      this.authService.listUsers().subscribe(data => {
+        this.users = data.data;
+        this.usersFilter = data.data;
+      });
     });
   }
 }
