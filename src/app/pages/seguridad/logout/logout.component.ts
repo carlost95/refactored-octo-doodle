@@ -25,7 +25,7 @@ export class LogoutComponent implements OnInit {
   submitted = false;
   updating = false;
   consulting: boolean;
-  rolSelect: string;
+  rolSelect = null;
   roles: string[] = ['ADMIN', 'USER'];
 
 
@@ -45,8 +45,14 @@ export class LogoutComponent implements OnInit {
     }
     const {user} = this.data;
     if (user) {
+      if (user.roles.length > 1) {
+        this.rolSelect = 'ADMIN';
+      } else {
+        this.rolSelect = 'USER';
+      }
       this.consulting = this.data.consulting;
       this.userForm = this.formBuilder.group({
+        id: [user.id, null],
         nombre: [{value: user.nombre, disabled: this.consulting}, Validators.required],
         email: [{value: user.email, disabled: this.consulting}, Validators.required],
         nombreUsuario: [{value: user.nombreUsuario, disabled: this.consulting}, Validators.required],
@@ -56,6 +62,7 @@ export class LogoutComponent implements OnInit {
       this.updating = !this.consulting;
     } else {
       this.userForm = this.formBuilder.group({
+        id: ['', null],
         nombre: ['', Validators.required],
         email: ['', Validators.required],
         nombreUsuario: ['', Validators.required],
@@ -86,6 +93,7 @@ export class LogoutComponent implements OnInit {
 
   // tslint:disable-next-line:typedef
   makeDTO() {
+    this.newUsuario.id = (this.userForm.controls.id.value);
     this.newUsuario.nombre = (this.userForm.controls.nombre.value).trim();
     this.newUsuario.email = (this.userForm.controls.email.value).trim();
     this.newUsuario.nombreUsuario = (this.userForm.controls.nombreUsuario.value).trim();
@@ -96,14 +104,10 @@ export class LogoutComponent implements OnInit {
       this.newUsuario.roles.push('admin');
     }
 
-    console.log('usuario nuevo');
-    console.warn(this.newUsuario);
-
     if (this.updating) {
       this.update();
     } else {
       this.onLogout();
-      // this.save();
     }
 
   }
@@ -133,15 +137,28 @@ export class LogoutComponent implements OnInit {
 
 
   // tslint:disable-next-line:typedef
-  private update() {
-    this.authService.updateUser(this.newUsuario).subscribe(data => {
-      this.newUsuario = data.data;
+  async update() {
+    console.log(this.newUsuario);
+    await this.authService.updateUser(this.newUsuario).toPromise().then((data) => {
+        this.newUsuario = data;
+        this.isLogout = true;
+        this.isLogoutFail = false;
+      },
+      err => {
+        this.isLogout = false;
+        this.isLogoutFail = true;
+        this.errMsj = err.error.mensaje;
+        console.log(this.errMsj);
+      });
+    if (this.isLogout) {
       this.dialogRef.close();
-    });
-  }
+    }
 
-  // tslint:disable-next-line:typedef
-  private save() {
-
+    // this.authService.updateUser(this.newUsuario).subscribe(data => {
+    //   this.newUsuario = data.data;
+    //   if (this.newUsuario !== null) {
+    //     this.dialogRef.close();
+    //   }
+    // });
   }
 }

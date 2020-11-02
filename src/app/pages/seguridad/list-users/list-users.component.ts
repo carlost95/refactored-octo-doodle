@@ -28,6 +28,8 @@ export class ListUsersComponent implements OnInit {
   // tslint:disable-next-line:typedef
   async ngOnInit() {
     await this.authService.listUsers().toPromise().then((data) => {
+      console.warn('-------USERS------');
+      console.log(data.data);
       this.users = data.data;
       this.usersFilter = this.users;
     });
