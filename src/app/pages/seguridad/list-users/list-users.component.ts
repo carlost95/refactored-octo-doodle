@@ -65,7 +65,21 @@ export class ListUsersComponent implements OnInit {
   }
 
   // tslint:disable-next-line:typedef
-  filtrarUser($event: KeyboardEvent) {
+  filtrarUser() {
+    this.busqueda = this.busqueda.toLowerCase();
+    this.usersFilter = this.users;
+
+    if (this.busqueda !== null) {
+
+      this.usersFilter = this.users.filter((item) => {
+        const inName = item.nombre.toLowerCase().indexOf(this.busqueda) !== -1;
+        const inLastName = item.nombreUsuario.toLowerCase().indexOf(this.busqueda) !== -1;
+        const inDocument =
+          item.email.toLowerCase().indexOf(this.busqueda) !== -1;
+        return inName || inLastName || inDocument;
+
+      });
+    }
 
   }
 
