@@ -5,7 +5,7 @@
     <h2 class="text-center" *ngIf="consulting">Consulta de usuario</h2>
   </div>
   <section class="modal-body">
-    <form [formGroup]="userForm">
+    <form [formGroup]="userForm" onSubmit="">
       <div class="form-row justify-content-center">
         <mat-form-field appearance="legacy" class="col-md-8">
           <mat-label>nombre</mat-label>

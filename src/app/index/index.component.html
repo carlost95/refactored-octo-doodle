@@ -1,9 +1,20 @@
 <div class=" text-center">
-  <div *ngIf="isLogged; else loggedOut" class="m-5">
-    <h1 style="color: #000000" >Bienvenido "{{nombreUsuario}}"</h1>
-  </div>
+  <div class="d-flex justify-content-center h-100 centro" >
+    <div class="card">
+      <div *ngIf="isLogged; else loggedOut" class="col-md-12 mt-4 md-display-4">
+        <h1 style="color:white">
+          <b> Bienvenido "{{nombreUsuario}} "</b>
+        </h1>
+        <div>
+          <input type="image" src="../../assets/images/logo.jpg"
+                 class="imgRedonda" title="Corralón Santo Domingo">
+        </div>
+        <h5 style="color: white;text-align: right" class="mt-5">Sistema de stock y logistica </h5>
+      </div>
 
-  <ng-template #loggedOut>
-    <h1 class="m-5">No has iniciado sesión</h1>
-  </ng-template>
+      <ng-template #loggedOut>
+        <h1 class="m-5">No has iniciado sesión</h1>
+      </ng-template>
+    </div>
+  </div>
 </div>
