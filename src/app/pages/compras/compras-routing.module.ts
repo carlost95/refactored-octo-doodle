@@ -8,6 +8,7 @@ import {ListarProveedorComponent} from './listar-proveedor/listar-proveedor.comp
 import {ComprasComponent} from './compras.component';
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
+import {ProdGuardService as guard} from '../../guars/prod-guard.service';
 
 const routes: Routes = [
   {
@@ -15,13 +16,32 @@ const routes: Routes = [
     children: [
       {
         path: 'listar-proveedor', component: ListarProveedorComponent,
+        canActivate: [guard], data: {expectedRol: ['admin', 'user']}
       },
-      {path: 'listar-articulos', component: ListarArticulosComponent},
-      {path: 'listar-pedido', component: ListarPedidoComponent},
-      {path: 'agregar-proveedor', component: AgregarProveedorComponent},
-      {path: 'agregar-articulo', component: AgregarArticuloComponent},
-      {path: 'agregar-pedido', component: AgregarPedidoComponent},
-      {path: 'consultar-pedido/:id', component: ConsultarPedidoComponent}
+      {
+        path: 'listar-articulos', component: ListarArticulosComponent,
+        canActivate: [guard], data: {expectedRol: ['admin', 'user']}
+      },
+      {
+        path: 'listar-pedido', component: ListarPedidoComponent,
+        canActivate: [guard], data: {expectedRol: ['admin', 'user']}
+      },
+      {
+        path: 'agregar-proveedor', component: AgregarProveedorComponent,
+        canActivate: [guard], data: {expectedRol: ['admin']}
+      },
+      {
+        path: 'agregar-articulo', component: AgregarArticuloComponent,
+        canActivate: [guard], data: {expectedRol: ['admin']}
+      },
+      {
+        path: 'agregar-pedido', component: AgregarPedidoComponent,
+        canActivate: [guard], data: {expectedRol: ['admin']}
+      },
+      {
+        path: 'consultar-pedido/:id', component: ConsultarPedidoComponent,
+        canActivate: [guard], data: {expectedRol: ['admin', 'user']}
+      }
 
     ]
   }

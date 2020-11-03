@@ -35,9 +35,8 @@
             <i class="far fa-file-excel fa-lg" title="exportar excel"></i>
           </button>
           &nbsp;
-          <button mat-raised-button color="primary"
-                  title="Articulo"
-                  (click)="newArticulo()">
+          <button mat-raised-button color="primary" title="Articulo"
+                  (click)="newArticulo()" *ngIf="isAdmin">
             <i class="fas fa-shopping-cart" title="nuevo articulo"></i>
             Nuevo Articulo
           </button>
@@ -82,11 +81,8 @@
                 <i class="fas fa-info-circle"></i>
               </button>
               &nbsp;
-              <button
-                class="btn btn-default m-0 p-0"
-                title="Modificar "
-                (click)="modificarArticulo(articulo)"
-              >
+              <button class="btn btn-default m-0 p-0" title="Modificar "
+                      (click)="modificarArticulo(articulo)" *ngIf="isAdmin">
                 <i class="fas fa-pencil-alt"></i>
               </button>
 

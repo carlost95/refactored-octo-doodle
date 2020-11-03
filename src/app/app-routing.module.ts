@@ -2,7 +2,6 @@ import {LoginComponent} from './auth/login.component';
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 import {IndexComponent} from './index/index.component';
-import {LogoutComponent} from './auth/logout.component';
 import {ProdGuardService as guard} from './guars/prod-guard.service';
 
 const routes: Routes = [
@@ -30,7 +29,7 @@ const routes: Routes = [
   {
     path: 'seguridad',
     loadChildren: () => import('./pages/seguridad/seguridad.module').then(m => m.SeguridadModule),
-    canActivate: [guard], data: {expectedRol: ['admin', 'user']}
+    canActivate: [guard], data: {expectedRol: ['admin']}
   },
   {
     path: 'logistica',
@@ -38,10 +37,10 @@ const routes: Routes = [
     canActivate: [guard], data: {expectedRol: ['admin', 'user']}
   },
   {path: 'login', component: LoginComponent},
-  {
-    path: 'logout', component: LogoutComponent,
-    canActivate: [guard], data: {expectedRol: ['admin', 'user']}
-  },
+  // {
+  //   path: 'logout', component: LogoutComponent,
+  //   canActivate: [guard], data: {expectedRol: ['admin', 'user']}
+  // },
   {path: '**', pathMatch: 'full', redirectTo: ''},
 ];
 

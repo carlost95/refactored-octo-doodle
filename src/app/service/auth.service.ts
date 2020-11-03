@@ -4,22 +4,34 @@ import {NewUsuario} from '../models/new-usuario';
 import {Observable} from 'rxjs';
 import {LoginUsuario} from '../models/login-usuario';
 import {JwtDTO} from '../models/jwt-dto';
+import {auth} from '../../environments/global-route';
+import {environment} from '../../environments/environment.prod';
+import {Response} from '../models/Response';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private url: string;
 
-  authURL = 'http://localhost:8081/auth/';
+  constructor(private http: HttpClient) {
+    this.url = environment.url + auth.path;
+  }
 
-  constructor(private httpClient: HttpClient) {
+  // tslint:disable-next-line:typedef
+  public listUsers() {
+    return this.http.get<Response>(this.url);
+  }
+
+  public updateUser(newUsuario: NewUsuario): Observable<any> {
+    return this.http.put<any>(this.url + '/', newUsuario);
   }
 
   public nuevo(newUsuario: NewUsuario): Observable<any> {
-    return this.httpClient.post<any>(this.authURL + 'nuevo', newUsuario);
+    return this.http.post<any>(this.url + '/nuevo', newUsuario);
   }
 
   public login(loginUsuario: LoginUsuario): Observable<JwtDTO> {
-    return this.httpClient.post<JwtDTO>(this.authURL + 'login', loginUsuario);
+    return this.http.post<JwtDTO>(this.url + '/login', loginUsuario);
   }
 }

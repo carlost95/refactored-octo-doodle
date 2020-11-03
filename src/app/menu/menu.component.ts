@@ -8,6 +8,8 @@ import {TokenService} from '../service/token.service';
 })
 export class MenuComponent implements OnInit {
   isLogged = false;
+  roles: string[];
+  isAdmin: boolean;
 
   constructor(private tokenService: TokenService) {
   }
@@ -19,6 +21,12 @@ export class MenuComponent implements OnInit {
     } else {
       this.isLogged = false;
     }
+    this.roles = this.tokenService.getAuthorities();
+    this.roles.forEach(rol => {
+      if (rol === 'ROLE_ADMIN') {
+        this.isAdmin = true;
+      }
+    });
   }
 
   onLogOut(): void {

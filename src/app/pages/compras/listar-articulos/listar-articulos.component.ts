@@ -2,7 +2,7 @@ import {Router} from '@angular/router';
 import {PedidosService} from '../../../service/pedidos.service';
 import {Articulo} from '../../../models/Articulo';
 
-import {Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ExcelExportService} from '../../../service/excel-export.service';
 import {ArticuloExcel} from '../../../models/ArticuloExcel';
 import {ServiceReportService} from '../../../service/service-report.service';
@@ -10,8 +10,9 @@ import {PdfExportService} from '../../../service/pdf-export.service';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {AgregarArticuloComponent} from '../agregar-articulo/agregar-articulo.component';
 import {ArticulosService} from '../../../service/articulos.service';
-import {MatPaginator, PageEvent} from '@angular/material/paginator';
+import {PageEvent} from '@angular/material/paginator';
 import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal.component';
+import {TokenService} from '../../../service/token.service';
 
 @Component({
   selector: 'app-listar-articulos',
@@ -21,6 +22,8 @@ import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal
 
 
 export class ListarArticulosComponent implements OnInit {
+  roles: string[];
+  isAdmin = false;
 
   constructor(
     private serviceCompra: PedidosService,
@@ -30,6 +33,7 @@ export class ListarArticulosComponent implements OnInit {
     private serviceReport: ServiceReportService,
     private servicePdf: PdfExportService,
     public matDialog: MatDialog,
+    private tokenService: TokenService
   ) {
   }
 
@@ -61,7 +65,13 @@ export class ListarArticulosComponent implements OnInit {
     });
     localStorage.clear();
     localStorage.setItem('listar', 'true');
-    // this.dataSource.paginator = this.paginator;
+
+    this.roles = this.tokenService.getAuthorities();
+    this.roles.forEach(rol => {
+      if (rol === 'ROLE_ADMIN') {
+        this.isAdmin = true;
+      }
+    });
   }
 
   // tslint:disable-next-line: typedef
@@ -184,8 +194,9 @@ export class ListarArticulosComponent implements OnInit {
 
     this.excelService.exportToExcel(this.articulosExcel, 'Reporte Articulos');
   }
+
   // tslint:disable-next-line:typedef
-  showModal(articulo: Articulo){
+  showModal(articulo: Articulo) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
@@ -208,6 +219,7 @@ export class ListarArticulosComponent implements OnInit {
       }
     });
   }
+
   // tslint:disable-next-line: typedef
   getData() {
     this.articuloService.listarArticuloTodos().subscribe(data => {
