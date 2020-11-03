@@ -33,21 +33,13 @@ export class ListUsersComponent implements OnInit {
       this.users = data.data;
       this.usersFilter = this.users;
     });
-    //   this.users = resp.data);
-    // this.usersFilter = this.users;
   }
-
-  // tslint:disable-next-line:typedef
-  // showModal(user: any) {
-  //
-  // }
 
   // tslint:disable-next-line:typedef
   consultUser(user: NewUsuario) {
     this.toUpdateUser = user;
     this.consultingUser = true;
     this.openDialog();
-
   }
 
   // tslint:disable-next-line:typedef
@@ -94,7 +86,7 @@ export class ListUsersComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
-    dialogConfig.height = '500px';
+    dialogConfig.height = '600px';
     dialogConfig.width = '400px';
     dialogConfig.data = {
       user: this.toUpdateUser,

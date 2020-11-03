@@ -1,11 +1,11 @@
 <div class="modal-content-wrapper">
-  <header class="modal-header modal-header-size1">
-    <h1 class="modal-title" *ngIf="!updating && !consulting">Carga de usuario</h1>
-    <h1 class="modal-title" *ngIf="updating">Actualizacion de usuario</h1>
-    <h1 class="modal-title" *ngIf="consulting">Consulta de usuario</h1>
-  </header>
+  <div class="modal-header modal-header">
+    <h2 class="text-center" *ngIf="!updating && !consulting">Creacion de usuario</h2>
+    <h2 class="text-center" *ngIf="updating">Actualizacion de usuario</h2>
+    <h2 class="text-center" *ngIf="consulting">Consulta de usuario</h2>
+  </div>
   <section class="modal-body">
-    <form [formGroup]="userForm" class="py-2">
+    <form [formGroup]="userForm">
       <div class="form-row justify-content-center">
         <mat-form-field appearance="legacy" class="col-md-8">
           <mat-label>nombre</mat-label>
@@ -15,24 +15,30 @@
             nombre es<strong> requerido</strong>
           </mat-error>
         </mat-form-field>
-        <br>
         <mat-form-field appearance="legacy" class="col-md-8">
-          <mat-label>Correo Electrínico</mat-label>
+          <mat-label>Correo Electronico</mat-label>
           <input matInput formControlName="email" type="email"
-                 required autocomplete="off"/>
+                 required autocomplete="off"
+                 (keyup)="validarEmail($event)"/>
           <mat-error *ngIf="userForm.controls.email.errors">
             Email es<strong> requerido</strong>
           </mat-error>
+          <label *ngIf="emailRepe" style="color: #f44336; font-size: 75%">
+            <b>el email esta repetido</b>
+          </label>
         </mat-form-field>
-        <br/>
         <mat-form-field appearance="legacy" class="col-md-8">
+          <mat-label>Nombre de usuario</mat-label>
           <input matInput formControlName="nombreUsuario"
-                 required autocomplete="off"/>
+                 required autocomplete="off"
+                 (keyup)="validarNombreUsuario($event)"/>
           <mat-error *ngIf="userForm.controls.nombreUsuario.errors">
-            Nombre de Usuario es<strong> requerido</strong>
+            El nombre de usuario es<strong> requerido</strong>
           </mat-error>
+          <label *ngIf="userNameRepe" style="color: #f44336; font-size: 75%">
+            <b>Nombre de usuario repetido</b>
+          </label>
         </mat-form-field>
-        <br/>
         <mat-form-field appearance="legacy" class="col-md-8">
           <mat-label>Contraseña</mat-label>
           <input matInput formControlName="password" type="password"
@@ -41,98 +47,37 @@
             Contraseña es<strong> requerida</strong>
           </mat-error>
         </mat-form-field>
-                <mat-form-field class="col-md-8" appearance="fill">
-                  <mat-label> Rol Usuario</mat-label>
-                  <mat-select
-                    [(ngModel)]="rolSelect"
-                    name="roles"
-                    formControlName="roles"
-                    autocomplete="off">
-                    <mat-option *ngFor="let rol of roles" [value]="rol">
-                      {{ rol }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="userForm.controls.roles.errors">
-                    el rol del usuario es<strong> requerido</strong>
-                  </mat-error>
-                </mat-form-field>
+        <mat-form-field class="col-md-8" appearance="fill">
+          <mat-label> Rol Usuario</mat-label>
+          <mat-select
+            [(ngModel)]="rolSelect"
+            name="roles"
+            formControlName="roles"
+            autocomplete="off">
+            <mat-option *ngFor="let rol of roles" [value]="rol">
+              {{ rol }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="userForm.controls.roles.errors">
+            el rol del usuario es<strong> requerido</strong>
+          </mat-error>
+        </mat-form-field>
         <mat-error *ngIf="isLogoutFail">
           <strong>{{errMsj}}</strong>
         </mat-error>
       </div>
     </form>
   </section>
-  <footer class="modal-footer" *ngIf="!consulting">
-    <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>
+  <footer class="modal-footer" *ngIf="!consulting && !updating">
+    <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>&nbsp;
     <button class="btn btn-warning" (click)="onSubmit()">Crear Cuenta</button>
+  </footer>
+  <footer class="modal-footer" *ngIf="updating">
+    <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>
+    <button class="btn btn-warning" (click)="onSubmit()">Actualizar Cuenta</button>
   </footer>
   <footer class="modal-footer" *ngIf="consulting">
     <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>
   </footer>
 </div>
 
-<!--<div class="fondo">-->
-<!--<div class="text-center" *ngIf="isLogged; else loggedOut">-->
-<!--  <h2> ¡Usted ya esta Logueado!</h2>-->
-<!--</div>-->
-<!--<ng-template #loggedOut>-->
-<!--<ng-template>-->
-<!--<div class="d-flex justify-content-center mt-4 centro">-->
-<!--  <div class="card">-->
-<!--    <div class="card-header text-center">-->
-<!--      <h3> Registro de Usuario</h3>-->
-<!--    </div>-->
-<!--    <div class="card-body" class="justify-content-center">-->
-<!--      <form #f="ngForm" (ngSubmit)="onLogin()" novalidate>-->
-<!--        <div class="input-group form-group">-->
-<!--          <div class="input-group-prepend">-->
-<!--                           <span class="input-group-text">-->
-<!--                                <i class="fas fa-user"></i>-->
-<!--                           </span>-->
-<!--          </div>-->
-<!--          <input type="text" name="nombre" id="nombre"-->
-<!--                 class="form-control" placeholder="nombre de usuario"-->
-<!--                 [(ngModel)]="nombreUsuario" required autocomplete="off"/>-->
-<!--        </div>-->
-<!--        <br>-->
-<!--        <div class="input-group form-group">-->
-<!--          <div class="input-group-prepend">-->
-<!--                           <span class="input-group-text">-->
-<!--                                <i class="fas fa-user"></i>-->
-<!--                           </span>-->
-<!--          </div>-->
-<!--          <input type="text" name="nombreUsuario" id="nombreUsuario"-->
-<!--                 class="form-control" placeholder="nombre de usuario"-->
-<!--                 [(ngModel)]="nombreUsuario" required autocomplete="off"/>-->
-<!--        </div>-->
-<!--        <br>-->
-<!---->
-<!--        <div class="input-group form-group col-md-11">-->
-<!--          <div class="input-group-prepend">-->
-<!--            <span class="input-group-text"><i class="fas fa-key"></i></span>-->
-<!--          </div>-->
-<!--          <input type="password" class="form-control" name="password"-->
-<!--                 id="password" placeholder="ingrese contraseña"-->
-<!--                 [(ngModel)]="password" required autocomplete="off"/>-->
-<!--        </div>-->
-<!--        <br>-->
-<!--        <div class="form-group text-center">-->
-<!--          <button class="btn btn-outline-warning login_btn" [disabled]="!f.valid">-->
-<!--            Guardar usuario-->
-<!--          </button>-->
-<!--          &nbsp;-->
-<!--          <button class="btn btn-outline-warning login_btn" [disabled]="!f.valid">-->
-<!--            Guardar usuario-->
-<!--          </button>-->
-<!--        </div>-->
-<!--      </form>-->
-<!--    </div>-->
-<!--        <div class="card-footer">-->
-<!--          <div *ngIf="f.submitted && isLoginsFail" style="color: #f44336; font-weight: bold" class="text-center">-->
-<!--            Error en login: {{errMsj}}-->
-<!--          </div>-->
-<!--        </div>-->
-<!--  </div>-->
-<!--</div>-->
-<!--</ng-template>-->
-<!--</div>-->

@@ -19,7 +19,7 @@ export class LogoutComponent implements OnInit {
   errMsj: string;
   isLogged: boolean;
 
-  userForm: FormGroup;
+  userForm: any;
   users: NewUsuario[] = [];
   errorInForm = false;
   submitted = false;
@@ -28,8 +28,8 @@ export class LogoutComponent implements OnInit {
   rolSelect = null;
   roles: string[] = ['ADMIN', 'USER'];
 
-
-  // nombreRepe: boolean;
+  userNameRepe = false;
+  emailRepe = false;
 
   constructor(private formBuilder: FormBuilder,
               private tokenService: TokenService,
@@ -39,13 +39,19 @@ export class LogoutComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
+  // tslint:disable-next-line:typedef
   ngOnInit(): void {
+    this.authService.listUsers().subscribe(data => {
+      this.users = data.data;
+    });
+
     if (this.tokenService.getToken()) {
       this.isLogged = true;
     }
     const {user} = this.data;
     if (user) {
       if (user.roles.length > 1) {
+        // console.log(this.roles);
         this.rolSelect = 'ADMIN';
       } else {
         this.rolSelect = 'USER';
@@ -78,7 +84,7 @@ export class LogoutComponent implements OnInit {
     this.submitted = true;
     this.errorInForm = this.submitted && this.userForm.invalid;
 
-    if (this.errorInForm) {
+    if (this.errorInForm || this.userNameRepe || this.emailRepe) {
       this.userForm.controls.nombre.markAsTouched();
       this.userForm.controls.email.markAsTouched();
       this.userForm.controls.nombreUsuario.markAsTouched();
@@ -135,10 +141,10 @@ export class LogoutComponent implements OnInit {
     this.dialogRef.close();
   }
 
-
   // tslint:disable-next-line:typedef
   async update() {
     console.log(this.newUsuario);
+    console.log(this.newUsuario.roles);
     await this.authService.updateUser(this.newUsuario).toPromise().then((data) => {
         this.newUsuario = data;
         this.isLogout = true;
@@ -153,12 +159,23 @@ export class LogoutComponent implements OnInit {
     if (this.isLogout) {
       this.dialogRef.close();
     }
-
-    // this.authService.updateUser(this.newUsuario).subscribe(data => {
-    //   this.newUsuario = data.data;
-    //   if (this.newUsuario !== null) {
-    //     this.dialogRef.close();
-    //   }
-    // });
   }
+
+  // tslint:disable-next-line:typedef
+  validarNombreUsuario({target}) {
+    const {value: nombre} = target;
+    const finded = this.users.find(p => p.nombreUsuario.toLowerCase() === nombre.toLowerCase());
+    console.log('nombre usuarios');
+    this.userNameRepe = (finded !== undefined) ? true : false;
+  }
+
+  // tslint:disable-next-line:typedef
+  validarEmail({target}) {
+    const {value: nombre} = target;
+    const finded = this.users.find(p => p.email.toLowerCase() === nombre.toLowerCase());
+    console.log('emails');
+
+    this.emailRepe = (finded !== undefined) ? true : false;
+  }
+
 }
