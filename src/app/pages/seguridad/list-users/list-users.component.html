@@ -1,0 +1,72 @@
+<div class="container" ng-controller="Proveedores">
+  <div class="card m-1">
+    <header class="row mt-4 ml-3 mb-0">
+      <i
+        class="col-md-2 m-0 fas fa-chevron-left fa-3x"
+        style="margin-right: 100%"
+        (click)="backPage()"
+      ></i>
+      <h1 class="m-0 col-md-10" style="padding-left: 10rem !important">
+        Lista de Usuarios
+      </h1>
+    </header>
+
+    <div class="row card-body">
+      <div class="container">
+        <div class="row col-12 d-flex justify-content-start">
+          <label class="col-5 m-0 p-0">
+            <h3>Busqueda:</h3>
+          </label>
+
+          <div class="col-12 m-0 p-0 aligth">
+            <input class="col-12 position-relative has-icon-right searchDiv"
+                   type="text" [(ngModel)]="busqueda"
+                   class="form-control searchText" placeholder="ingrese busqueda"
+                   (keyup)="filtrarUser()"/>
+          </div>
+        </div>
+        <br>
+        <div class="row col-12 d-flex justify-content-end">
+          <button mat-raised-button color="primary" title="nuevo usuario"
+                  (click)="newUser()">
+            <i class="fas fa-user-plus fa-lg"></i>
+            Nuevo usuario
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="card-body p-0"
+      style="width: 1090px; height: 470px; overflow: auto"
+    >
+      <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr class="text-center">
+          <th scope="col ">nombre</th>
+          <th scope="col ">usuario</th>
+          <th scope="col ">correo electronico</th>
+          <th scope="col*2 ">Opciones</th>
+        </tr>
+        </thead>
+        <tbody *ngIf="users != null">
+        <tr *ngFor="let user of usersFilter" class="text-center">
+          <td>{{ user.nombre }}</td>
+          <td>{{ user.nombreUsuario }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <button class="btn btn-default m-0 p-0" title="Consultar"
+                    (click)="consultUser(user)">
+              <i class="fas fa-info-circle"></i>
+            </button>
+            &nbsp;
+            <button class="btn btn-default m-0 p-0" title="Modificar "
+                    (click)="modifyUser(user)">
+              <i class="fas fa-pencil-alt"></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

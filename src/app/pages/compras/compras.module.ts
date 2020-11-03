@@ -19,7 +19,7 @@ import {MaterialModule} from '../../material/material.module';
 import {PaginacionPipe} from './paginacion.pipe';
 import {MatPaginatorIntl} from '@angular/material/paginator';
 import {CustomMatPaginatorIntl} from './paginacion-es';
-
+import {interceptorProvider} from '../../interceptors/prod-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -38,6 +38,7 @@ import {CustomMatPaginatorIntl} from './paginacion-es';
     AbmComprasModule, MaterialModule, ReactiveFormsModule],
   providers: [
     ExcelExportService,
+    interceptorProvider,
     {
       provide: MatPaginatorIntl,
       useClass: CustomMatPaginatorIntl

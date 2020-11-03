@@ -13,7 +13,6 @@ import {ConfirmModalComponent} from './shared/confirm-modal/confirm-modal.compon
 import {SnackConfirmComponent} from './shared/snack-confirm/snack-confirm.component';
 import {IndexComponent} from './index/index.component';
 import {LoginComponent} from './auth/login.component';
-import {LogoutComponent} from './auth/logout.component';
 import {interceptorProvider} from './interceptors/prod-interceptor.service';
 
 
@@ -22,7 +21,6 @@ import {interceptorProvider} from './interceptors/prod-interceptor.service';
   declarations: [AppComponent,
     MenuComponent,
     LoginComponent,
-    LogoutComponent,
     ConfirmModalComponent,
     SnackConfirmComponent,
     IndexComponent],

@@ -1,0 +1,39 @@
+.container {
+  height: 100%;
+  width: 100%;
+  align-content: center;
+}
+
+.card {
+  height: 70%;
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 50%;
+  background-color: rgba(0, 0, 0, 0.55) !important;
+}
+
+
+.card-header h3 {
+  color: white;
+}
+
+
+input:focus {
+  outline: 0 0 0 0 !important;
+  box-shadow: 0 0 0 0 !important;
+}
+
+.centro {
+  margin-top: 5%;
+}
+
+.imgRedonda {
+  width: 350px;
+  height: 350px;
+  border-radius: 200px;
+}
+//.imgRedonda1 {
+//  width: 350px;
+//  height: 350px;
+//  border-radius: 200px;
+//}
