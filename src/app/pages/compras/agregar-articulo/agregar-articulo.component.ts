@@ -208,30 +208,35 @@ export class AgregarArticuloComponent implements OnInit {
 
   // tslint:disable-next-line:typedef
   newUnidadMedida() {
+    this.consulting = false;
     this.unidadToUpdate = null;
     this.openDialogUnidadMedida();
   }
 
   // tslint:disable-next-line:typedef
   newRubro() {
+    this.consulting = false;
     this.rubroToUpdate = null;
     this.openDialogRubro();
   }
 
   // tslint:disable-next-line:typedef
   newSubRubro() {
+    this.consulting = false;
     this.subRubroToUpdate = null;
     this.openDialogSubRubro();
   }
 
   // tslint:disable-next-line:typedef
   newMarca() {
+    this.consulting = false;
     this.marcaToUpdate = null;
     this.openDialogMarca();
   }
 
   // tslint:disable-next-line:typedef
   newProveedor() {
+    this.consulting = false;
     this.proveedorToUpdate = null;
     this.openDialogProveedor();
   }
@@ -242,7 +247,10 @@ export class AgregarArticuloComponent implements OnInit {
     dialogConfig.id = 'modalUnidadmedida-component';
     dialogConfig.height = '400px';
     dialogConfig.width = '300px';
-    dialogConfig.data = this.unidadToUpdate;
+    dialogConfig.data = {
+      unidMedida: this.unidadToUpdate,
+      consulting: this.consulting,
+    };
     const modalDialog = this.matDialog.open(AgregarUnidadMedidaComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       this.unidadMedidaService.listarUnidadMedidaHabilitados().subscribe(data => {
