@@ -111,16 +111,6 @@ export class ListarArticulosComponent implements OnInit {
 
   }
 
-  // tslint:disable-next-line: typedef
-  deshabilitarArticulo(articulo: Articulo) {
-    let resultado: boolean;
-    resultado = confirm('¿DESEA DESHABILITAR ESTE ARTICULO?');
-    if (resultado === true) {
-      this.articuloService.desabilitarArticulo(articulo.id).subscribe((data) => {
-        window.location.reload();
-      });
-    }
-  }
 
   // tslint:disable-next-line: typedef
   filtrarArticulo() {

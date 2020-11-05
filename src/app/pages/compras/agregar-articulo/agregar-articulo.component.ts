@@ -208,30 +208,35 @@ export class AgregarArticuloComponent implements OnInit {
 
   // tslint:disable-next-line:typedef
   newUnidadMedida() {
+    this.consulting = false;
     this.unidadToUpdate = null;
     this.openDialogUnidadMedida();
   }
 
   // tslint:disable-next-line:typedef
   newRubro() {
+    this.consulting = false;
     this.rubroToUpdate = null;
     this.openDialogRubro();
   }
 
   // tslint:disable-next-line:typedef
   newSubRubro() {
+    this.consulting = false;
     this.subRubroToUpdate = null;
     this.openDialogSubRubro();
   }
 
   // tslint:disable-next-line:typedef
   newMarca() {
+    this.consulting = false;
     this.marcaToUpdate = null;
     this.openDialogMarca();
   }
 
   // tslint:disable-next-line:typedef
   newProveedor() {
+    this.consulting = false;
     this.proveedorToUpdate = null;
     this.openDialogProveedor();
   }
@@ -240,9 +245,12 @@ export class AgregarArticuloComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modalUnidadmedida-component';
-    dialogConfig.height = '400px';
+    dialogConfig.height = '450px';
     dialogConfig.width = '300px';
-    dialogConfig.data = this.unidadToUpdate;
+    dialogConfig.data = {
+      unidMedida: this.unidadToUpdate,
+      consulting: this.consulting,
+    };
     const modalDialog = this.matDialog.open(AgregarUnidadMedidaComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       this.unidadMedidaService.listarUnidadMedidaHabilitados().subscribe(data => {
@@ -259,7 +267,10 @@ export class AgregarArticuloComponent implements OnInit {
     dialogConfig.id = 'modalRubro-component';
     dialogConfig.height = '400px';
     dialogConfig.width = '300px';
-    dialogConfig.data = this.rubroToUpdate;
+    dialogConfig.data = {
+      rubro: this.rubroToUpdate,
+      consulting: this.consulting
+    };
     const modalDialog = this.matDialog.open(AgregarRubroComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       this.rubroService.listarRubrosHabilitados().subscribe(data => {
@@ -275,7 +286,10 @@ export class AgregarArticuloComponent implements OnInit {
     dialogConfig.id = 'modalSubRubro-component';
     dialogConfig.height = '500px';
     dialogConfig.width = '350px';
-    dialogConfig.data = this.subRubroToUpdate;
+    dialogConfig.data = {
+      subRubro: this.subRubroToUpdate,
+      consulting: this.consulting
+    };
     const modalDialog = this.matDialog.open(AgregarSubRubroComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       this.subRubroService.listarSubRubrosHabilitados().subscribe(data => {
@@ -291,7 +305,10 @@ export class AgregarArticuloComponent implements OnInit {
     dialogConfig.id = 'modalMarca-component';
     dialogConfig.height = '400px';
     dialogConfig.width = '300px';
-    dialogConfig.data = this.marcaToUpdate;
+    dialogConfig.data = {
+      marca: this.marcaToUpdate,
+      consulting: this.consulting
+    };
     const modalDialog = this.matDialog.open(AgregarMarcaComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       this.marcaService.listarMarcaHabilitados().subscribe(data => {
@@ -306,7 +323,10 @@ export class AgregarArticuloComponent implements OnInit {
     dialogConfig.id = 'modalProveedor-component';
     dialogConfig.height = '600px';
     dialogConfig.width = '400px';
-    dialogConfig.data = this.proveedorToUpdate;
+    dialogConfig.data = {
+      proveedor: this.proveedorToUpdate,
+      consulting: this.consulting
+    };
     const modalDialog = this.matDialog.open(AgregarProveedorComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       this.proveedorService.listarProveedoresHabilitados().subscribe(data => {
