@@ -48,11 +48,19 @@ export class DireccionesComponent implements OnInit {
 
   newDireccion() {
     this.toUpdate = null;
+    this.consulting = false;
     this.openDialog();
   }
 
   newEdit(direccion: Direccion) {
     this.toUpdate = direccion;
+    this.consulting = false;
+    this.openDialog();
+  }
+
+  consultar(direccion: Direccion) {
+    this.toUpdate = direccion;
+    this.consulting = true;
     this.openDialog();
   }
 
