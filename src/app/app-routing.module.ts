@@ -18,7 +18,7 @@ const routes: Routes = [
   },
   {
     path: 'abm-ventas',
-    loadChildren: () => import('./abm-ventas/abm-ventas.module').then(m => m.AbmVentasModule),
+    loadChildren: () => import('./pages/abm-ventas/abm-ventas.module').then(m => m.AbmVentasModule),
     canActivate: [guard], data: {expectedRol: ['admin', 'user']}
   },
   {
