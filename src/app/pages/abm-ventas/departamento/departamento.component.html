@@ -5,7 +5,7 @@
         class="col-md-2 m-0 fas fa-chevron-left fa-3x"
         style="margin-right: 100%"
       ></i>
-<!--      (click)="backPage()"-->
+      <!--      (click)="backPage()"-->
 
       <h1 class="m-0 col-md-10" style="padding-left: 14rem !important">
         Departamentos
@@ -24,21 +24,13 @@
               class="form-control searchText"
               placeholder="ingrese busqueda"
             />
-<!--            [(ngModel)]="busqueda"-->
-<!--            (keyup)="filtrarCliente()"-->
+            <!--            [(ngModel)]="busqueda"-->
+            <!--            (keyup)="filtrarCliente()"-->
           </div>
         </div>
 
         <br/>
         <div class="row col-12 d-flex justify-content-end">
-          <button class="btn btn-outline-danger" >
-            <i class="fas fa-file-pdf fa-2x"></i>
-          </button>
-          &nbsp;
-          <button class="btn btn-outline-success">
-            <i class="far fa-file-excel fa-2x"></i>
-          </button>
-          &nbsp;
           <button
             mat-raised-button
             color="primary"
@@ -58,51 +50,38 @@
           <thead class="thead-dark">
           <tr class="text-center">
             <th scope="col ">Nombre</th>
-            <th scope="col ">Apellido</th>
-            <th scope="col ">D.N.I.</th>
+            <th scope="col ">Abreviatura</th>
             <th scope="col ">Habilitacion</th>
-            <th scope="col*2 ">Opciones</th>
+            <th scope="col*2">Opciones</th>
           </tr>
           </thead>
-<!--          <tbody *ngIf="clientes != null">-->
-<!--          <tr *ngFor="let cliente of clientesFilter" class="text-center">-->
-<!--            <td>{{ cliente.nombre | uppercase }}</td>-->
-<!--            <td>{{ cliente.apellido | uppercase }}</td>-->
-<!--            <td>{{ cliente.dni }}</td>-->
-<!--            <td>-->
-<!--              <mat-slide-toggle-->
-<!--                [checked]="cliente.estado"-->
-<!--                (click)="showModal(cliente)"-->
-<!--                color="primary"-->
-<!--              ></mat-slide-toggle>-->
-<!--            </td>-->
-<!--            <td>-->
-<!--              <button class="btn btn-default m-0 p-0" title="Consultar"-->
-<!--                      (click)="readClient(cliente)">-->
-<!--                <i class="fas fa-info-circle"></i>-->
-<!--              </button>-->
-<!--              &nbsp;-->
-<!--              <button-->
-<!--                (click)="editClient(cliente)"-->
-<!--                class="btn btn-default m-0 p-0"-->
-<!--                title="Modificar "-->
-<!--              >-->
-<!--                <i class="fas fa-user-edit"></i>-->
-
-<!--              </button>-->
-
-<!--              <button-->
-<!--                (click)="direcciones(cliente.id)"-->
-<!--                class="btn btn-default m-0 p-0"-->
-<!--                title="Direcciones "-->
-<!--              >-->
-<!--                <i class="fas fa-map-signs"></i>-->
-
-<!--              </button>-->
-
-<!--            </td>-->
-<!--          </tr>-->
-<!--          </tbody>-->
+          <tbody *ngIf="departamentos != null">
+          <tr *ngFor="let departamento of departamentos" class="text-center">
+            <td>{{ departamento.nombre }}</td>
+            <td>{{ departamento.abreviatura }}</td>
+            <td>
+              <mat-slide-toggle
+                [checked]="departamento.habilitado"
+                (click)="showModal(departamento)"
+                color="primary"
+              ></mat-slide-toggle>
+            </td>
+            <td>
+              <button class="btn btn-default m-0 p-0" title="Consultar"
+                      (click)="consultar(departamento)">
+                <i class="fas fa-info-circle"></i>
+              </button>
+              &nbsp;
+              <button
+                (click)="editar(departamento)"
+                class="btn btn-default m-0 p-0"
+                title="Modificar "
+              >
+                <i class="fas fa-user-edit"></i>
+              </button>
+            </td>
+          </tr>
+          </tbody>
         </table>
       </div>
     </div>

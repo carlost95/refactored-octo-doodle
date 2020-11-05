@@ -56,6 +56,12 @@ export const direccion = {
 export const distrito = {
   path: '/distritos'
 };
+
 export const auth = {
   path: '/auth'
+};
+
+export const departamento = {
+  path: '/departamentos',
+  status: '/status'
 };
