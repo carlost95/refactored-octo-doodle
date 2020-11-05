@@ -16,6 +16,7 @@ import { AbmVentasRoutingModule } from "./abm-ventas-routing.module";
 import { AbmVentasComponent } from "./abm-ventas.component";
 import { SubMenuVentasComponent } from "./sub-menu-ventas/sub-menu-ventas.component";
 import { AgregarDepartamentoComponent } from "./agregar-departamento/agregar-departamento.component";
+import { DepartamentoComponent } from './departamento/departamento.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { AgregarDepartamentoComponent } from "./agregar-departamento/agregar-dep
     ListarDistritosComponent,
     ListarTipoDireccionComponent,
     ModificarDistritoComponent,
-    ModificarTipoDireccionComponent
+    ModificarTipoDireccionComponent,
+    DepartamentoComponent
   ],
   imports: [CommonModule, AbmVentasRoutingModule, FormsModule]
 })

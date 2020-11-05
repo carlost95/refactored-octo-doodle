@@ -11,13 +11,15 @@ import { ListarDepartamentoComponent } from "./listar-departamento/listar-depart
 import { AbmVentasComponent } from "./abm-ventas.component";
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
+import {Departamento} from "../../models/Departamento";
+import {DepartamentoComponent} from "./departamento/departamento.component";
 
 const routes: Routes = [
   {
     path: "",
     component: AbmVentasComponent,
     children: [
-      { path: "listar-departamento", component: ListarDepartamentoComponent },
+      { path: "departamentos", component: DepartamentoComponent},
       { path: "listar-distritos", component: ListarDistritosComponent },
       { path: 'listar-tipo-direccion', component: ListarTipoDireccionComponent},
       { path: "agregar-departamento", component: AgregarDepartamentoComponent },
