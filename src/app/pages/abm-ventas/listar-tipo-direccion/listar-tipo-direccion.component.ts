@@ -1,6 +1,6 @@
-import { TipoDireccion } from '../../models/tipoDireccion';
+import { TipoDireccion } from '../../../models/tipoDireccion';
 import { Router } from '@angular/router';
-import { VentasService } from '../../service/ventas.service';
+import { VentasService } from '../../../service/ventas.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({

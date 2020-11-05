@@ -6,6 +6,7 @@ import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {AgregarDireccionComponent} from "./agregar-direccion/agregar-direccion.component";
 import {SnackConfirmComponent} from "../../../shared/snack-confirm/snack-confirm.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {ConfirmModalComponent} from "../../../shared/confirm-modal/confirm-modal.component";
 
 @Component({
   selector: 'app-direcciones',
@@ -38,7 +39,6 @@ export class DireccionesComponent implements OnInit {
   getDirecciones() {
     this.direccionService.getByClientId(this.idClient).subscribe(resp => {
       this.direcciones = resp.data;
-      console.error(resp);
     });
   }
 
@@ -48,11 +48,19 @@ export class DireccionesComponent implements OnInit {
 
   newDireccion() {
     this.toUpdate = null;
+    this.consulting = false;
     this.openDialog();
   }
 
   newEdit(direccion: Direccion) {
     this.toUpdate = direccion;
+    this.consulting = false;
+    this.openDialog();
+  }
+
+  consultar(direccion: Direccion) {
+    this.toUpdate = direccion;
+    this.consulting = true;
     this.openDialog();
   }
 
@@ -71,7 +79,7 @@ export class DireccionesComponent implements OnInit {
     });
 
     modalDialog.afterClosed().subscribe(result => {
-      if(result){
+      if (result) {
         this.openSnackBar();
       }
     })
@@ -84,7 +92,27 @@ export class DireccionesComponent implements OnInit {
     });
   }
 
-  showModal(cliente: any) {
-
+  showModal(direccion: Direccion) {
+    const dialogConfig = new MatDialogConfig();
+    // The user can't close the dialog by clicking outside its body
+    dialogConfig.disableClose = true;
+    dialogConfig.id = "modal-component";
+    dialogConfig.height = '300px';
+    dialogConfig.width = '350px';
+    dialogConfig.data = {
+      message: 'Desea cambiar estado?',
+      title: 'Cambio estado',
+      state: direccion.estado
+    };
+    const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
+    modalDialog.afterClosed().subscribe(result => {
+      if (result.state) {
+        this.direccionService.changeStatus(direccion).subscribe(result => {
+          this.getDirecciones();
+        })
+      } else {
+        this.getDirecciones();
+      }
+    });
   }
 }
