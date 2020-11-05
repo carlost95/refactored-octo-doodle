@@ -29,4 +29,9 @@ export class DireccionesService {
   update(direccion: Direccion){
     return this.http.put<Response>(this.url, direccion);
   }
+
+  changeStatus(direction: Direccion) {
+    console.log(this.url + direccion.status);
+    return this.http.put<Response>(this.url + direccion.status, direction);
+  }
 }

@@ -34,8 +34,8 @@ export class AgregarClienteComponent implements OnInit {
     const {cliente} = this.data;
 
     if (cliente) {
-      this.consultar = this.data.consultar;
-
+      this.consultar = this.data.consulting;
+      console.log(this.consultar ? 'true' : 'false');
       this.clientForm = this.formBuilder.group({
         id: [cliente.id, null],
         apellido: [{value: cliente.apellido, disabled: this.consultar}, Validators.required],

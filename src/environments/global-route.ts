@@ -1,60 +1,61 @@
 export const banco = {
-    path: '/bancos',
-    status: '/status'
+  path: '/bancos',
+  status: '/status'
 };
 export const report = {
-    path: '/reportes'
+  path: '/reportes'
 };
 export const proveedor = {
-    path: '/proveedores',
-    status: '/status'
+  path: '/proveedores',
+  status: '/status'
 };
 export const marca = {
-    path: '/marcas',
-    status: '/status'
+  path: '/marcas',
+  status: '/status'
 };
 export const rubro = {
-    path: '/rubros',
-    status: '/status'
+  path: '/rubros',
+  status: '/status'
 };
 export const unidadMedida = {
-    path: '/unidad-medida',
-    status: '/status'
+  path: '/unidad-medida',
+  status: '/status'
 };
 export const subRubro = {
-    path: '/sub-rubros',
-    status: '/status'
+  path: '/sub-rubros',
+  status: '/status'
 };
 
 export const cliente = {
-    path: '/clientes',
-    status: '/status'
+  path: '/clientes',
+  status: '/status'
 };
 
 export const ajuste = {
-    path: '/ajustes',
-    status: '/status'
+  path: '/ajustes',
+  status: '/status'
 };
 export const articulos = {
-    path: '/articulos',
-    status: '/status'
+  path: '/articulos',
+  status: '/status'
 };
 export const movimientos = {
-    path: '/movimientos',
-    status: '/status'
+  path: '/movimientos',
+  status: '/status'
 };
 export const pedidos = {
-    path: '/pedidos',
-    status: '/status'
+  path: '/pedidos',
+  status: '/status'
 };
 
 export const direccion = {
-    path: '/direcciones'
+  path: '/direcciones',
+  status: '/status'
 };
 
 export const distrito = {
-    path: '/distritos'
+  path: '/distritos'
 };
 export const auth = {
-    path: '/auth'
+  path: '/auth'
 };
