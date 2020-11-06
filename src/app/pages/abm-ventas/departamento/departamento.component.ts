@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DepartamentosService} from "../../../service/departamentos.service";
 import {Departamento} from "../../../models/Departamento";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
@@ -6,6 +6,8 @@ import {AgregarClienteComponent} from "../../ventas/clientes/agregar-cliente/agr
 import {AgregarDepartamentoComponent} from "../agregar-departamento/agregar-departamento.component";
 import {SnackConfirmComponent} from "../../../shared/snack-confirm/snack-confirm.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {Cliente} from "../../../models/Cliente";
+import {ConfirmModalComponent} from "../../../shared/confirm-modal/confirm-modal.component";
 
 @Component({
   selector: 'app-departamento',
@@ -22,13 +24,14 @@ export class DepartamentoComponent implements OnInit {
     private departamentoService: DepartamentosService,
     public matDialog: MatDialog,
     private _snackBar: MatSnackBar
-  ) { }
-
-  ngOnInit(): void {
-   this.getData();
+  ) {
   }
 
-  getData(){
+  ngOnInit(): void {
+    this.getData();
+  }
+
+  getData() {
     this.departamentoService.getAll().subscribe(resp => {
       this.departamentos = resp.data;
       console.log(resp.data)
@@ -36,7 +39,27 @@ export class DepartamentoComponent implements OnInit {
   }
 
   showModal(departamento: Departamento) {
-
+    const dialogConfig = new MatDialogConfig();
+    // The user can't close the dialog by clicking outside its body
+    dialogConfig.disableClose = true;
+    dialogConfig.id = "modal-component";
+    dialogConfig.height = '300px';
+    dialogConfig.width = '350px';
+    dialogConfig.data = {
+      message: 'Desea cambiar estado?',
+      title: 'Cambio estado',
+      state: departamento.estado
+    };
+    const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
+    modalDialog.afterClosed().subscribe(result => {
+      if (result.state) {
+        this.departamentoService.changeStatus(departamento.id).subscribe(result => {
+          this.getData();
+        })
+      } else {
+        this.getData();
+      }
+    });
   }
 
   nuevo() {
@@ -76,7 +99,7 @@ export class DepartamentoComponent implements OnInit {
     };
     const modalDialog = this.matDialog.open(AgregarDepartamentoComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
-      if(result){
+      if (result) {
         this.openSnackBar(result);
       }
       this.getData();

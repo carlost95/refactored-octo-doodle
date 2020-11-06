@@ -29,6 +29,7 @@ export class DepartamentosService {
   }
 
   changeStatus(id: number){
+    console.log(this.url + departamento.status + `/${id}`)
     return this.http.put<Response>(this.url + departamento.status + `/${id}`, null);
   }
 }
