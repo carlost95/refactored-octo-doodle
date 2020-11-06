@@ -7,7 +7,7 @@ import { ListarTipoDireccionComponent } from './listar-tipo-direccion/listar-tip
 import { ModificarDepartamentoComponent } from "./modificar-departamento/modificar-departamento.component";
 import { ModificarTipoDireccionComponent } from './modificar-tipo-direccion/modificar-tipo-direccion.component';
 
-import { FormsModule } from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { ListarDepartamentoComponent } from "./listar-departamento/listar-departamento.component";
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
@@ -34,6 +34,6 @@ import {MaterialModule} from "../../material/material.module";
     ModificarTipoDireccionComponent,
     DepartamentoComponent
   ],
-  imports: [CommonModule, AbmVentasRoutingModule, FormsModule, MaterialModule]
+  imports: [CommonModule, AbmVentasRoutingModule, FormsModule, MaterialModule, ReactiveFormsModule]
 })
 export class AbmVentasModule {}

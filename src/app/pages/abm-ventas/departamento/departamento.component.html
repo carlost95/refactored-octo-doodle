@@ -4,8 +4,8 @@
       <i
         class="col-md-2 m-0 fas fa-chevron-left fa-3x"
         style="margin-right: 100%"
+        (click)="volver()"
       ></i>
-      <!--      (click)="backPage()"-->
 
       <h1 class="m-0 col-md-10" style="padding-left: 14rem !important">
         Departamentos
@@ -35,6 +35,7 @@
             mat-raised-button
             color="primary"
             title="Nuevo departamento"
+            (click)="nuevo()"
           >
             <i class="fas fa-user"></i>
             Nuevo Departamento

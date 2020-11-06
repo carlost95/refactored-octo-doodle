@@ -10,8 +10,6 @@ import {logger} from "codelyzer/util/logger";
 export class AbmVentasComponent implements OnInit {
   constructor(private router: Router) {}
   validMenu() {
-    const validate = this.router.url.includes("/departamentos");
-    console.log(validate ? 'true' : 'false');
     if (
       this.router.url.includes("/listar-distritos") ||
       this.router.url.includes("/departamentos")||

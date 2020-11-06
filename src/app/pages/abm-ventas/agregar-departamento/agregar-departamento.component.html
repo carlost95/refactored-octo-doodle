@@ -1,40 +1,49 @@
-<div class="container" ng-controller="clientes">
-    <div class="card m-2">
-        <h1 class="text-center">CARGA DE DEPARTAMENTOS</h1>
-        <div class="card-body">
-            <table class="table col-md-6 ">
-                <thead class="thead-dark was-validated">
-                    <tr>
-                        <td>
-                            <label for="nombre"> NOMBRE</label>
-                        </td>
-                        <td>
-                            <input [(ngModel)]="departamento.nombre" type="text " :required class="form-control " placeholder="ingrese nombre " required="true">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="abreviatura"> ABREVIATURA</label>
-                        </td>
-                        <td>
-                            <input [(ngModel)]="departamento.abreviatura" type="text " class="form-control " placeholder="ingrese apellido " required="true">
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td>
-
-                            <button (click)="guardarDepartamento(departamento)" class="btn btn-warning ">ACEPTAR</button>
-                        </td>
-                        <td>
-                            <button (click)="cancelar() " class="btn btn-danger " style="margin-left: 10px; ">CANCELAR</button>
-                        </td>
-                    </tr>
-
-                </thead>
-            </table>
-        </div>
-    </div>
-
+<div class="modal-content-wrapper">
+  <header class="modal-header modal-header-size2">
+    <h1 class="modal-title" *ngIf="!updating && !consultar">Nuevo Departamento</h1>
+    <h1 class="modal-title" *ngIf="updating">Actualizar Departamento</h1>
+    <h1 class="modal-title" *ngIf="consultar">Consultar Departamento</h1>
+  </header>
+  <section class="modal-body">
+    <form [formGroup]="departamentoForm">
+      <p>
+        <mat-form-field appearance="legacy">
+          <mat-label>Nombre</mat-label>
+          <input
+            matInput
+            formControlName="nombre"
+            required
+            autocomplete="off"
+            (keyup)="validate($event)"
+          />
+          <mat-error *ngIf="departamentoForm.controls.nombre.errors">
+            Campo <strong> requerido</strong>
+          </mat-error>
+        </mat-form-field>
+        <br>
+        <mat-label class="m-0 p-0" *ngIf="duplicateName"
+               style="color: #f44336; font-size: 75%">
+          Nombre <strong>en uso</strong>
+        </mat-label>
+      </p>
+      <p>
+        <mat-form-field appearance="legacy">
+          <mat-label>Abreviatura</mat-label>
+          <input
+            matInput
+            formControlName="abreviatura"
+            required
+            autocomplete="off"
+          />
+          <mat-error *ngIf="departamentoForm.controls.abreviatura.errors">
+            Campo <strong> requerido</strong>
+          </mat-error>
+        </mat-form-field>
+      </p>
+    </form>
+  </section>
+  <footer class="modal-footer">
+    <button class="btn btn-outline-danger" (click)="close()" >Cerrar</button>
+    <button *ngIf="!consultar" class="btn btn-warning" (click)="onSubmit()">Guardar</button>
+  </footer>
 </div>
