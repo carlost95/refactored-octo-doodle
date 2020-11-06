@@ -52,7 +52,7 @@
           <tr class="text-center">
             <th scope="col ">Nombre</th>
             <th scope="col ">Abreviatura</th>
-            <th scope="col ">Habilitacion</th>
+            <th scope="col ">Estado</th>
             <th scope="col*2">Opciones</th>
           </tr>
           </thead>
@@ -62,7 +62,7 @@
             <td>{{ departamento.abreviatura }}</td>
             <td>
               <mat-slide-toggle
-                [checked]="departamento.habilitado"
+                [checked]="departamento.estado"
                 (click)="showModal(departamento)"
                 color="primary"
               ></mat-slide-toggle>

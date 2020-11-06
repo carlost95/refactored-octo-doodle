@@ -33,8 +33,8 @@ export class AgregarDepartamentoComponent implements OnInit {
       this.departamentoForm = this.formBuilder.group({
         id: [{value: departamento.id, disabled: this.consultar}, Validators.required],
         nombre: [{value: departamento.nombre, disabled: this.consultar}, Validators.required],
-        abreviatura: [{value: departamento.dni, disabled: this.consultar}, Validators.required],
-        habilitado: [{value: departamento.habilitado, disabled: this.consultar}, null],
+        abreviatura: [{value: departamento.abreviatura, disabled: this.consultar}, Validators.required],
+        estado: [{value: departamento.estado, disabled: this.consultar}, null],
       });
       this.updating = !this.consultar;
     } else {
@@ -77,7 +77,7 @@ export class AgregarDepartamentoComponent implements OnInit {
     this.departamento.abreviatura = (this.departamentoForm.controls.abreviatura.value).trim();
     if (this.updating) {
       this.departamento.id = this.departamentoForm.controls.id.value;
-      this.departamento.habilitado = this.departamentoForm.controls.habilitado.value;
+      this.departamento.estado = this.departamentoForm.controls.estado.value;
       this.update();
     } else {
       this.save();
@@ -87,16 +87,23 @@ export class AgregarDepartamentoComponent implements OnInit {
 
   save() {
     this.service.save(this.departamento).subscribe(data => {
-      const {code} = data;
-      this.dialogRef.close(code);
+      this.msgSnack(data);
     });
   }
 
   update() {
     this.service.update(this.departamento).subscribe(data => {
-      const {code} = data;
-      this.dialogRef.close(code);
+      this.msgSnack(data);
     });
+  }
+
+  msgSnack(data){
+    const {msg} = data;
+    if (data.code === 200){
+      this.dialogRef.close(msg);
+    }else{
+      this.dialogRef.close('Error en el proceso');
+    }
   }
 }
 

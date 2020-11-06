@@ -2,5 +2,5 @@ export class Departamento {
     id: number;
     nombre: string;
     abreviatura: string;
-    habilitado: boolean;
+    estado: boolean;
 }
