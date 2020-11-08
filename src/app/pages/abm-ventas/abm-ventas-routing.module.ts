@@ -1,5 +1,5 @@
 import { ModificarDistritoComponent } from './modificar-distrito/modificar-distrito.component';
-import { AgregarDepartamentoComponent } from "./agregar-departamento/agregar-departamento.component";
+import { AgregarDepartamentoComponent } from "./departamento/agregar-departamento/agregar-departamento.component";
 import { AgregarDistritoComponent } from "./agregar-distrito/agregar-distrito.component";
 import { AgregarTipoDireccionComponent } from './agregar-tipo-direccion/agregar-tipo-direccion.component';
 import { ListarDistritosComponent } from "./listar-distritos/listar-distritos.component";

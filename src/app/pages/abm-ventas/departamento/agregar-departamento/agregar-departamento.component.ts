@@ -1,8 +1,8 @@
-import {Departamento} from "../../../models/Departamento";
+import {Departamento} from "../../../../models/Departamento";
 import {Component, Inject, OnInit} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FormBuilder, Validators} from "@angular/forms";
-import {DepartamentosService} from "../../../service/departamentos.service";
+import {DepartamentosService} from "../../../../service/departamentos.service";
 
 @Component({
   selector: "app-agregar-departamento",

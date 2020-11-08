@@ -3,7 +3,7 @@ import {DepartamentosService} from "../../../service/departamentos.service";
 import {Departamento} from "../../../models/Departamento";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {AgregarClienteComponent} from "../../ventas/clientes/agregar-cliente/agregar-cliente.component";
-import {AgregarDepartamentoComponent} from "../agregar-departamento/agregar-departamento.component";
+import {AgregarDepartamentoComponent} from "./agregar-departamento/agregar-departamento.component";
 import {SnackConfirmComponent} from "../../../shared/snack-confirm/snack-confirm.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Cliente} from "../../../models/Cliente";
