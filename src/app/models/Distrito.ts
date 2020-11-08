@@ -3,7 +3,6 @@ export class Distrito {
   id: number;
   nombre: string;
   abreviatura: string;
-  habilitacion: number;
-  idDepartamento: number;
-  departamentoByFkdepartamentosid: Departamento;
+  estado: boolean;
+  departamento: Departamento;
 }

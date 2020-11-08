@@ -16,6 +16,8 @@ export class AgregarDistritoComponent implements OnInit {
   departamentosFilter: Departamento[] = null;
   idDepto: number = 1;
   nombreDepto: string = null;
+  departamentoForm: any;
+  duplicateName: any;
 
   constructor(private service: AbmVentasService, private router: Router) {}
 
@@ -27,35 +29,49 @@ export class AgregarDistritoComponent implements OnInit {
       this.departamentosFilter = this.departamentos;
     });
   }
+
   volverAtras() {
     window.history.back();
   }
+
   nuevoDistrito(distrito: Distrito) {
-    this.distrito.idDepartamento = 1;
-
-    this.departamentos.forEach(departamento => {
-      if (departamento.nombre == this.nombreDepto) {
-        this.distrito.idDepartamento = departamento.id;
-      }
-    });
-
-    for (var i = 0; i < this.departamentos.length; i++) {
-      if (this.departamentos[i].nombre == this.nombreDepto) {
-        this.distrito.idDepartamento = this.departamentos[i].id;
-      }
-    }
-    this.distrito.habilitacion = 1;
-    this.service.guardarDistrito(this.distrito).subscribe(data => {
-      alert("se guardo un nuevo distrto");
-      window.history.back();
-    });
+    // this.distrito.idDepartamento = 1;
+    //
+    // this.departamentos.forEach(departamento => {
+    //   if (departamento.nombre == this.nombreDepto) {
+    //     this.distrito.idDepartamento = departamento.id;
+    //   }
+    // });
+    //
+    // for (var i = 0; i < this.departamentos.length; i++) {
+    //   if (this.departamentos[i].nombre == this.nombreDepto) {
+    //     this.distrito.idDepartamento = this.departamentos[i].id;
+    //   }
+    // }
+    // this.distrito.habilitacion = 1;
+    // this.service.guardarDistrito(this.distrito).subscribe(data => {
+    //   alert("se guardo un nuevo distrto");
+    //   window.history.back();
+    // });
   }
 
   listarDepartamentos(filterVal: any) {
-    if (filterVal == "0") this.departamentosFilter = this.departamentos;
-    else
-      this.departamentosFilter = this.departamentos.filter(
-        item => item.nombre == filterVal
-      );
+    // if (filterVal == "0") this.departamentosFilter = this.departamentos;
+    // else
+    //   this.departamentosFilter = this.departamentos.filter(
+    //     item => item.nombre == filterVal
+    //   );
+  }
+
+  validate($event: KeyboardEvent) {
+
+  }
+
+  close() {
+
+  }
+
+  onSubmit() {
+
   }
 }

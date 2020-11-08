@@ -4,11 +4,10 @@
       <i
         class="col-md-2 m-0 fas fa-chevron-left fa-3x"
         style="margin-right: 100%"
-      ></i>
-      <!--        (click)="volver()"-->
-
+        (click)="volver()">
+      </i>
       <h1 class="m-0 col-md-10" style="padding-left: 14rem !important">
-        Departamentos
+        Distritos
       </h1>
     </header>
 
@@ -34,16 +33,13 @@
           <button
             mat-raised-button
             color="primary"
-            title="Nuevo departamento"
-          >
-<!--            (click)="nuevo()"-->
-
+            title="Nuevo distrito"
+            (click)="nuevo()">
             <i class="fas fa-user"></i>
-            Nuevo Departamento
+            Nuevo Distrito
           </button>
         </div>
       </section>
-
       <div
         class="card-body p-0"
         style="width: 1100px; height: 450px; overflow: auto;"
@@ -57,33 +53,33 @@
             <th scope="col*2">Opciones</th>
           </tr>
           </thead>
-<!--          <tbody *ngIf="departamentos != null">-->
-<!--          <tr *ngFor="let departamento of departamentos" class="text-center">-->
-<!--            <td>{{ departamento.nombre }}</td>-->
-<!--            <td>{{ departamento.abreviatura }}</td>-->
-<!--            <td>-->
-<!--              <mat-slide-toggle-->
-<!--                [checked]="departamento.estado"-->
-<!--                (click)="showModal(departamento)"-->
-<!--                color="primary"-->
-<!--              ></mat-slide-toggle>-->
-<!--            </td>-->
-<!--            <td>-->
-<!--              <button class="btn btn-default m-0 p-0" title="Consultar"-->
-<!--                      (click)="consultar(departamento)">-->
-<!--                <i class="fas fa-info-circle"></i>-->
-<!--              </button>-->
-<!--              &nbsp;-->
-<!--              <button-->
-<!--                (click)="editar(departamento)"-->
-<!--                class="btn btn-default m-0 p-0"-->
-<!--                title="Modificar "-->
-<!--              >-->
-<!--                <i class="fas fa-user-edit"></i>-->
-<!--              </button>-->
-<!--            </td>-->
-<!--          </tr>-->
-<!--          </tbody>-->
+          <tbody *ngIf="distritos != null">
+          <tr *ngFor="let distrito of distritos" class="text-center">
+            <td>{{ distrito.nombre }}</td>
+            <td>{{ distrito.abreviatura }}</td>
+            <td>
+              <mat-slide-toggle
+                [checked]="distrito.estado"
+                (click)="showModal(distrito)"
+                color="primary"
+              ></mat-slide-toggle>
+            </td>
+            <td>
+              <button class="btn btn-default m-0 p-0" title="Consultar"
+                      (click)="consultar(distrito)">
+                <i class="fas fa-info-circle"></i>
+              </button>
+              &nbsp;
+              <button
+                (click)="editar(distrito)"
+                class="btn btn-default m-0 p-0"
+                title="Modificar "
+              >
+                <i class="fas fa-user-edit"></i>
+              </button>
+            </td>
+          </tr>
+          </tbody>
         </table>
       </div>
     </div>
