@@ -19,6 +19,10 @@ export class AgregarDistritoComponent implements OnInit {
   departamentos: Departamento[] = [];
   consultar: boolean = false;
   updating: boolean = false;
+  show = false;
+  duplicateName = false;
+  submitted = false;
+  errorInForm: boolean = false;
 
   constructor(
     private distritoService: DistritoService,
@@ -31,12 +35,13 @@ export class AgregarDistritoComponent implements OnInit {
   ngOnInit() {
     this.departamentoService.getActive().subscribe(resp => {
       this.departamentos = resp.data;
-      this.initForm(resp.data);
+      this.initForm();
     });
   }
 
-  private initForm(data: any) {
+  initForm() {
     const {distrito} = this.data;
+    this.distritos = this.data.distritos;
     if (distrito) {
       this.consultar = this.data.consultar;
       this.distritoForm = this.formBuilder.group({
@@ -50,53 +55,60 @@ export class AgregarDistritoComponent implements OnInit {
     } else {
       this.distritoForm = this.formBuilder.group({
         nombre: ['', Validators.required],
-        abreviatura: ['', Validators.required],
+        abreviatura: ['', null],
         departamento: ['', Validators.required],
-        estado: ['', null],
       })
     }
+    this.show = true;
   }
 
-  nuevoDistrito(distrito: Distrito) {
-    // this.distrito.idDepartamento = 1;
-    //
-    // this.departamentos.forEach(departamento => {
-    //   if (departamento.nombre == this.nombreDepto) {
-    //     this.distrito.idDepartamento = departamento.id;
-    //   }
-    // });
-    //
-    // for (var i = 0; i < this.departamentos.length; i++) {
-    //   if (this.departamentos[i].nombre == this.nombreDepto) {
-    //     this.distrito.idDepartamento = this.departamentos[i].id;
-    //   }
-    // }
-    // this.distrito.habilitacion = 1;
-    // this.service.guardarDistrito(this.distrito).subscribe(data => {
-    //   alert("se guardo un nuevo distrto");
-    //   window.history.back();
-    // });
-  }
-
-  listarDepartamentos(filterVal: any) {
-    // if (filterVal == "0") this.departamentosFilter = this.departamentos;
-    // else
-    //   this.departamentosFilter = this.departamentos.filter(
-    //     item => item.nombre == filterVal
-    //   );
-  }
-
-  validate($event: KeyboardEvent) {
-
+  validate({target}) {
+    const {value: nombre} = target;
+    const exist = this.distritos.find(d => d.nombre === nombre);
+    this.duplicateName = exist ? true : false;
   }
 
   close() {
-
+    this.dialogRef.close()
   }
 
   onSubmit() {
-
+    this.submitted = true;
+    this.errorInForm = this.submitted && this.duplicateName;
+    if (this.errorInForm || this.duplicateName) {
+      this.distritoForm.controls.nombre.markAsTouched();
+      this.distritoForm.controls.departamento.markAsTouched();
+    } else {
+      this.makeDTO();
+    }
   }
 
+  private makeDTO() {
+    const data = this.distritoForm.controls;
+    this.distrito.nombre = data.nombre.value;
+    this.distrito.abreviatura = data.abreviatura.value;
+    const departamento = this.departamentos.find(d => d.id === data.departamento.value);
+    this.distrito.departamento = departamento;
+    if (this.updating) {
+      this.distrito.id = data.id.value;
+      this.distrito.estado = data.estado.value;
+      this.update();
+    } else {
+      this.save();
+    }
+  }
 
+  private update() {
+    console.log(this.distrito)
+    this.distritoService.update(this.distrito).subscribe(data => {
+      this.dialogRef.close(data.msg);
+    });
+  }
+
+  private save() {
+    this.distritoService.save(this.distrito).subscribe(data => {
+      this.dialogRef.close(data.msg);
+    });
+  }
 }
+

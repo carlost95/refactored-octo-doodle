@@ -55,7 +55,7 @@ export const direccion = {
 
 export const distrito = {
   path: '/distritos',
-  status: 'status'
+  status: '/status'
 };
 
 export const auth = {

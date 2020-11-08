@@ -24,27 +24,16 @@ export class DistritoService {
     return this.http.get<Response>(this.url + "/habilitado");
   }
 
-  guardarDistrito(distrito: Distrito) {
-    return this.http.post<Distrito>(this.url + "/", distrito);
+  save(distrito: Distrito){
+    return this.http.post<Response>(this.url, distrito);
   }
 
-  actualizarDistrito(distrito: Distrito) {
-    console.log("Actualizar");
-
-    console.log(distrito);
-
-    return this.http.put<Distrito>(this.url, distrito);
-  }
-
-  listarDistritoId(id: number) {
-    return this.http.get<Response>(this.url + "/" + id);
-  }
-
-  desabilitarDistrito(id: number) {
-    return this.http.delete(this.url + "/" + id);
-  }
 
   changeStatus(id: number) {
     return this.http.put<Response>(this.url + distrito.status + `/${id}`, null);
+  }
+
+  update(distrito: Distrito) {
+    return this.http.put<Response>(this.url, distrito);
   }
 }

@@ -20,11 +20,11 @@
             <input
               class="col-12 position-relative has-icon-right searchDiv"
               type="text"
+              (keyup)="busqueda($event)"
               class="form-control searchText"
               placeholder="ingrese busqueda"
             />
-            <!--            [(ngModel)]="busqueda"-->
-            <!--            (keyup)="filtrarCliente()"-->
+
           </div>
         </div>
 
@@ -54,7 +54,7 @@
           </tr>
           </thead>
           <tbody *ngIf="distritos != null">
-          <tr *ngFor="let distrito of distritos" class="text-center">
+          <tr *ngFor="let distrito of distritosFilter" class="text-center">
             <td>{{ distrito.nombre }}</td>
             <td>{{ distrito.abreviatura }}</td>
             <td>

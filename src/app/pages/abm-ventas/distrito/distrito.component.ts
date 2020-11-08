@@ -18,6 +18,7 @@ export class DistritoComponent implements OnInit {
   distritos: Distrito[];
   private update: Distrito;
   private consulting: boolean = false;
+  distritosFilter: Distrito[];
 
   constructor(
     private distritoService: DistritoService,
@@ -32,6 +33,7 @@ export class DistritoComponent implements OnInit {
   getData() {
     this.distritoService.getDistritos().subscribe(resp => {
       this.distritos = resp.data;
+      this.distritosFilter = resp.data;
     });
   }
 
@@ -40,8 +42,8 @@ export class DistritoComponent implements OnInit {
     // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
     dialogConfig.id = "modal-component";
-    dialogConfig.height = '300px';
-    dialogConfig.width = '350px';
+    dialogConfig.height = '350px';
+    dialogConfig.width = '400px';
     dialogConfig.data = {
       message: 'Desea cambiar estado?',
       title: 'Cambio estado',
@@ -62,20 +64,20 @@ export class DistritoComponent implements OnInit {
   nuevo() {
     this.consulting = false;
     this.update = undefined;
-    this.openDialog()
+    this.openDialog();
 
   }
 
   consultar(distrito: Distrito) {
     this.consulting = true;
     this.update = distrito;
-    this.openDialog()
+    this.openDialog();
   }
 
   editar(distrito: Distrito) {
     this.consulting = false;
     this.update = distrito;
-    this.openDialog()
+    this.openDialog();
   }
 
   volver() {
@@ -86,13 +88,13 @@ export class DistritoComponent implements OnInit {
   openDialog(): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
-    dialogConfig.id = 'modal-component';
+    dialogConfig.id = "modal-component";
     dialogConfig.height = '400px';
-    dialogConfig.width = '300px';
+    dialogConfig.width = '350px';
     dialogConfig.data = {
       distritos: this.distritos,
       distrito: this.update,
-      consulting: this.consulting
+      consultar: this.consulting
     };
     const modalDialog = this.matDialog.open(AgregarDistritoComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
@@ -109,5 +111,14 @@ export class DistritoComponent implements OnInit {
       duration: 5 * 1000,
       data: msg
     });
+  }
+
+  busqueda({target}) {
+    const {value: nombre} = target;
+    if(nombre) {
+      this.distritosFilter = this.distritos.filter(d => d.nombre.includes(nombre));
+    } else {
+      this.distritosFilter = this.distritos;
+    }
   }
 }
