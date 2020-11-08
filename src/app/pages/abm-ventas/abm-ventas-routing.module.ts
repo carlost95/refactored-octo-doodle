@@ -12,16 +12,6 @@ const routes: Routes = [
     children: [
       { path: "departamentos", component: DepartamentoComponent},
       { path: "distritos", component: DistritoComponent },
-      // { path: 'listar-tipo-direccion', component: ListarTipoDireccionComponent},
-      // { path: "agregar-departamento", component: AgregarDepartamentoComponent },
-      { path: "agregar-distrito", component: AgregarDistritoComponent },
-      // {path: 'agregar-tipo-direccion', component: AgregarTipoDireccionComponent},
-      // {
-      //   path: "modificar-departamento/:id",
-      //   component: ModificarDepartamentoComponent
-      // },
-      // {path : "modificar-distrito/:id", component: ModificarDistritoComponent},
-      // {path: 'modificar-tipo-direccion/:id', component: ModificarTipoDireccionComponent}
 
     ]
   }

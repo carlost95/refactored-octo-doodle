@@ -64,5 +64,6 @@ export const auth = {
 
 export const departamento = {
   path: '/departamentos',
-  status: '/status'
+  status: '/status',
+  active: '/active'
 };

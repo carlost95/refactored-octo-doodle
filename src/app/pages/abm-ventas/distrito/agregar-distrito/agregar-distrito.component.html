@@ -6,7 +6,7 @@
 <!--    <h1 class="modal-title" *ngIf="consultar">Consultar Departamento</h1>-->
   </header>
   <section class="modal-body">
-    <form [formGroup]="departamentoForm">
+    <form [formGroup]="distritoForm">
       <p>
         <mat-form-field appearance="legacy">
           <mat-label>Nombre</mat-label>
@@ -17,7 +17,7 @@
             autocomplete="off"
             (keyup)="validate($event)"
           />
-          <mat-error *ngIf="departamentoForm.controls.nombre.errors">
+          <mat-error *ngIf="distritoForm.controls.nombre.errors">
             Campo <strong> requerido</strong>
           </mat-error>
         </mat-form-field>
@@ -37,7 +37,7 @@
             required
             autocomplete="off"
           />
-          <mat-error *ngIf="departamentoForm.controls.abreviatura.errors">
+          <mat-error *ngIf="distritoForm.controls.abreviatura.errors">
             Campo <strong> requerido</strong>
           </mat-error>
         </mat-form-field>

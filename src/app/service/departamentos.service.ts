@@ -20,6 +20,11 @@ export class DepartamentosService {
     return this.http.get<Response>(this.url);
   }
 
+  getActive() {
+    return this.http.get<Response>(this.url + departamento.active);
+  }
+
+
   save(depto: Departamento) {
     return this.http.post<Response>(this.url, depto);
   }
@@ -32,4 +37,6 @@ export class DepartamentosService {
     console.log(this.url + departamento.status + `/${id}`)
     return this.http.put<Response>(this.url + departamento.status + `/${id}`, null);
   }
+
+
 }
