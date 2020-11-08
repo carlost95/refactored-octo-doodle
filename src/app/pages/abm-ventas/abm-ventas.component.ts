@@ -11,15 +11,8 @@ export class AbmVentasComponent implements OnInit {
   constructor(private router: Router) {}
   validMenu() {
     if (
-      this.router.url.includes("/listar-distritos") ||
-      this.router.url.includes("/departamentos")||
-      this.router.url.includes("/listar-tipo-direccion")||
-      this.router.url.includes("/agregar-departamento")||
-      this.router.url.includes("/agregar-distrito")||
-      this.router.url.includes("/agregar-tipo-direccion")||
-      this.router.url.includes("/modificar-distrito")||
-      this.router.url.includes("/modificar-departamento")||
-      this.router.url.includes("/modificar-tipo-direccion")
+      this.router.url.includes("/distritos") ||
+      this.router.url.includes("/departamentos")
     )
       return false;
     else return true;

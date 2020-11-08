@@ -1,5 +1,5 @@
 import { ModificarDistritoComponent } from './modificar-distrito/modificar-distrito.component';
-import { AgregarDistritoComponent } from './agregar-distrito/agregar-distrito.component';
+import { AgregarDistritoComponent } from './distrito/agregar-distrito/agregar-distrito.component';
 import { AgregarTipoDireccionComponent } from './agregar-tipo-direccion/agregar-tipo-direccion.component';
 
 import { ListarDistritosComponent } from './listar-distritos/listar-distritos.component';
@@ -18,6 +18,7 @@ import { SubMenuVentasComponent } from "./sub-menu-ventas/sub-menu-ventas.compon
 import { AgregarDepartamentoComponent } from "./departamento/agregar-departamento/agregar-departamento.component";
 import { DepartamentoComponent } from './departamento/departamento.component';
 import {MaterialModule} from "../../material/material.module";
+import { DistritoComponent } from './distrito/distrito.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import {MaterialModule} from "../../material/material.module";
     ListarTipoDireccionComponent,
     ModificarDistritoComponent,
     ModificarTipoDireccionComponent,
-    DepartamentoComponent
+    DepartamentoComponent,
+    DistritoComponent
   ],
   imports: [CommonModule, AbmVentasRoutingModule, FormsModule, MaterialModule, ReactiveFormsModule]
 })
