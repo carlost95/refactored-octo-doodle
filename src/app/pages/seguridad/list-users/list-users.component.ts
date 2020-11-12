@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {AgregarArticuloComponent} from '../../compras/agregar-articulo/agregar-articulo.component';
 import {NewUsuario} from '../../../models/new-usuario';
-import {LogoutComponent} from '../logout/logout.component';
+import {RegisterComponent} from '../register/register.component';
 import {AuthService} from '../../../service/auth.service';
 import {Router} from '@angular/router';
 
@@ -92,7 +92,7 @@ export class ListUsersComponent implements OnInit {
       user: this.toUpdateUser,
       consulting: this.consultingUser
     };
-    const modalDialog = this.matDialog.open(LogoutComponent, dialogConfig);
+    const modalDialog = this.matDialog.open(RegisterComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       this.authService.listUsers().subscribe(data => {
         this.users = data.data;

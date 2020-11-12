@@ -3,7 +3,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {MenuComponent} from './menu/menu.component';
 import {ExcelExportService} from './service/excel-export.service';
@@ -14,6 +14,7 @@ import {SnackConfirmComponent} from './shared/snack-confirm/snack-confirm.compon
 import {IndexComponent} from './index/index.component';
 import {LoginComponent} from './auth/login.component';
 import {interceptorProvider} from './interceptors/prod-interceptor.service';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 
 @NgModule({
@@ -23,8 +24,9 @@ import {interceptorProvider} from './interceptors/prod-interceptor.service';
     LoginComponent,
     ConfirmModalComponent,
     SnackConfirmComponent,
-    IndexComponent],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule, BrowserAnimationsModule, MaterialModule],
+    IndexComponent,
+    ResetPasswordComponent],
+  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule, BrowserAnimationsModule, MaterialModule, ReactiveFormsModule],
   providers: [
     VentasService,
     ExcelExportService,

@@ -3,7 +3,7 @@
     <h2> ¡Usted ya esta Logueado!</h2>
   </div>
   <ng-template #loggedOut>
-<!--  <ng-template>-->
+    <!--  <ng-template>-->
     <div class="d-flex justify-content-center h-100 centro">
       <div class="card">
         <div class="card-header ">
@@ -26,9 +26,13 @@
               <div class="input-group-prepend">
                 <span class="input-group-text"><i class="fas fa-key"></i></span>
               </div>
-              <input type="password" class="form-control" name="password"
+              <input [type]="viewPassword?'password' :'text'"
+                     class="form-control" name="password"
                      id="password" placeholder="ingrese contraseña"
                      [(ngModel)]="password" required autocomplete="off"/>
+              <button mat-icon-button matSuffix (click)="viewPassword = !viewPassword" style="color: #ffc312">
+                <mat-icon>{{viewPassword ? "visibility_off" : "visibility"}}</mat-icon>
+              </button>
             </div>
             <br>
             <div class="form-group">
