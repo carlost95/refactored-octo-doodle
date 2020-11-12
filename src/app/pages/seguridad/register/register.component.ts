@@ -8,10 +8,10 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-logout',
-  templateUrl: './logout.component.html',
-  styleUrls: ['./logout.component.scss']
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.scss']
 })
-export class LogoutComponent implements OnInit {
+export class RegisterComponent implements OnInit {
   @Output() pressLogin = new EventEmitter<boolean>();
   isLogout = false;
   isLogoutFail = false;
@@ -26,16 +26,17 @@ export class LogoutComponent implements OnInit {
   updating = false;
   consulting: boolean;
   rolSelect = null;
-  roles: string[] = ['ADMIN', 'USER'];
+  roles: string[] = ['ADMIN', 'USER', 'GERENTE'];
 
   userNameRepe = false;
   emailRepe = false;
+  passwordError = false;
 
   constructor(private formBuilder: FormBuilder,
               private tokenService: TokenService,
               private authService: AuthService,
               private router: Router,
-              public dialogRef: MatDialogRef<LogoutComponent>,
+              public dialogRef: MatDialogRef<RegisterComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
@@ -50,17 +51,21 @@ export class LogoutComponent implements OnInit {
     }
     const {user} = this.data;
     if (user) {
-      if (user.roles.length > 1) {
-        // console.log(this.roles);
+      if (user.roles.find(x => x.rolNombre === 'ROLE_GERENTE')) {
+        this.rolSelect = 'GERENTE';
+        console.log(this.rolSelect);
+      } else if (user.roles.find(x => x.rolNombre === 'ROLE_ADMIN')) {
         this.rolSelect = 'ADMIN';
       } else {
         this.rolSelect = 'USER';
+        console.log(this.rolSelect);
+
       }
       this.consulting = this.data.consulting;
       this.userForm = this.formBuilder.group({
         id: [user.id, null],
         nombre: [{value: user.nombre, disabled: this.consulting}, Validators.required],
-        email: [{value: user.email, disabled: this.consulting}, Validators.required],
+        email: [{value: user.email, disabled: this.consulting}, Validators.required, Validators.email],
         nombreUsuario: [{value: user.nombreUsuario, disabled: this.consulting}, Validators.required],
         password: [{value: user.password, disabled: this.consulting}, Validators.required],
         roles: [{value: user.roles, disabled: this.consulting}, Validators.required]
@@ -70,7 +75,7 @@ export class LogoutComponent implements OnInit {
       this.userForm = this.formBuilder.group({
         id: ['', null],
         nombre: ['', Validators.required],
-        email: ['', Validators.required],
+        email: ['', Validators.required, Validators.email],
         nombreUsuario: ['', Validators.required],
         password: ['', Validators.required],
         roles: ['', Validators.required]
@@ -104,15 +109,19 @@ export class LogoutComponent implements OnInit {
     this.newUsuario.email = (this.userForm.controls.email.value).trim();
     this.newUsuario.nombreUsuario = (this.userForm.controls.nombreUsuario.value).trim();
     this.newUsuario.password = (this.userForm.controls.password.value).trim();
-    if ((this.userForm.controls.roles.value).toLowerCase() !== 'admin') {
+    if ((this.userForm.controls.roles.value).toLowerCase() !== 'admin' &&
+      (this.userForm.controls.roles.value).toLowerCase() !== 'gerente') {
       this.newUsuario.roles.push('user');
-    } else {
+    } else if ((this.userForm.controls.roles.value).toLowerCase() === 'admin') {
       this.newUsuario.roles.push('admin');
+    } else {
+      this.newUsuario.roles.push('gerente');
     }
 
     if (this.updating) {
       this.update();
     } else {
+      console.log(this.newUsuario.roles);
       this.onLogout();
     }
 
@@ -178,4 +187,15 @@ export class LogoutComponent implements OnInit {
     this.emailRepe = (finded !== undefined) ? true : false;
   }
 
+  // tslint:disable-next-line:typedef
+  validarPassword({target}) {
+    const {value: password} = target;
+    console.log(password);
+    if (password.length < 8 || password.length > 14) {
+      this.passwordError = true;
+    } else {
+      this.passwordError = false;
+    }
+
+  }
 }

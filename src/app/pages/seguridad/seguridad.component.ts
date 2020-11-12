@@ -18,7 +18,7 @@ export class SeguridadComponent implements OnInit {
   // tslint:disable-next-line:typedef
   validaMenu() {
     if (this.router.url.includes('/list-users') ||
-      this.router.url.includes('/logout') ||
+      this.router.url.includes('/register') ||
       this.router.url.includes('/roles')) {
       return false;
     } else {

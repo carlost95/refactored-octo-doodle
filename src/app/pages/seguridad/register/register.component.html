@@ -42,7 +42,8 @@
         <mat-form-field appearance="legacy" class="col-md-8">
           <mat-label>Contraseña</mat-label>
           <input matInput formControlName="password" type="password"
-                 required autocomplete="off"/>
+                 required autocomplete="off"
+                 (keyup)="validarPassword($event)"/>
           <mat-error *ngIf="userForm.controls.password.errors">
             Contraseña es<strong> requerida</strong>
           </mat-error>
@@ -63,7 +64,7 @@
           </mat-error>
         </mat-form-field>
         <mat-error *ngIf="isLogoutFail">
-          <strong>{{errMsj}}</strong>
+          <strong style="font-size: 100%">{{errMsj}}</strong>
         </mat-error>
       </div>
     </form>
