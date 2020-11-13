@@ -6,6 +6,7 @@ import {Ajuste} from '../../../models/Ajuste';
 import {Component, OnInit} from '@angular/core';
 import * as _ from 'lodash';
 import {AjustesService} from '../../../service/ajustes.service';
+import {TokenService} from '../../../service/token.service';
 
 
 @Component({
@@ -17,21 +18,37 @@ export class ListarAjusteComponent implements OnInit {
   ajustes: Ajuste[] = [];
   ajustesFilter: Ajuste[] = [];
   busqueda: string = null;
-  busquedaFecha: string = null;
   searchDesde = '';
   searchHasta = '';
-  rows: any[];
   proveedores: Proveedor[] = [];
   razonSocial: string;
+  isLogged = false;
+  roles: string[];
+  isAdmin = false;
+  isGerente = false;
 
   constructor(private serviceCompra: PedidosService,
               private serviceAbmCompra: AbmComprasService,
               private router: Router,
-              private ajusteService: AjustesService) {
+              private ajusteService: AjustesService,
+              private tokenService: TokenService
+  ) {
   }
 
-  // tslint:disable-next-line:typedef
-  ngOnInit() {
+  ngOnInit(): void {
+    if (this.tokenService.getToken()) {
+      this.isLogged = true;
+    } else {
+      this.isLogged = false;
+    }
+    this.roles = this.tokenService.getAuthorities();
+    this.roles.forEach(rol => {
+      if (rol === 'ROLE_ADMIN') {
+        this.isAdmin = true;
+      } else if (rol === 'ROLE_GERENTE') {
+        this.isGerente = true;
+      }
+    });
     this.fetchEvent().then(() => {
       console.log(this.ajustes);
     });

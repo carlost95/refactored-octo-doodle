@@ -31,12 +31,7 @@
           </button>
           &nbsp; &nbsp;
           <button mat-raised-button color="primary"
-                  (click)="newBanco()" title="Nuevo Banco" *ngIf="isAdmin">
-            <i class="fas fa-university fa-lg"></i>
-            Nuevo banco
-          </button>
-          <button mat-raised-button color="primary"
-                  (click)="newBanco()" title="Nuevo Banco" *ngIf="isGerente">
+                  (click)="newBanco()" title="Nuevo Banco" *ngIf="isAdmin||isGerente">
             <i class="fas fa-university fa-lg"></i>
             Nuevo banco
           </button>
@@ -60,28 +55,18 @@
         <tr *ngFor="let banco of bancoFilter" class="text-center">
           <td>{{ banco.nombre }}</td>
           <td>{{ banco.abreviatura }}</td>
-          <td *ngIf="isAdmin">
+          <td *ngIf="isAdmin || isGerente">
             <mat-slide-toggle [checked]="banco.habilitado"
                               (click)="showModal(banco)" color="primary">
             </mat-slide-toggle>
           </td>
-          <td *ngIf="isGerente">
-            <mat-slide-toggle [checked]="banco.habilitado"
-                              (click)="showModal(banco)" color="primary">
-            </mat-slide-toggle>
-          </td>
-
           <td>
             <button class="btn btn-default m-0 p-0" title="Consultar"
                     (click)="consultarBanco(banco)">
               <i class="fas fa-info-circle"></i>
             </button>
             <button class="btn btn-default" title="Modificar "
-                    (click)="modificarBanco(banco)" *ngIf="isGerente">
-              <i class="fas fa-pencil-alt"></i>
-            </button>
-            <button class="btn btn-default" title="Modificar "
-                    (click)="modificarBanco(banco)" *ngIf="isAdmin">
+                    (click)="modificarBanco(banco)" *ngIf="isAdmin||isGerente">
               <i class="fas fa-pencil-alt"></i>
             </button>
           </td>

@@ -43,7 +43,7 @@
 
         <div class="row col-12 justify-content-end">
           <button class="btn btn-warning" [routerLink]="['/abm-compras/agregar-ajuste']"
-                  routerLinkActive="router-link-active"><i class="fas fa-wrench"></i>
+                  routerLinkActive="router-link-active" *ngIf="isAdmin || isGerente"><i class="fas fa-wrench"></i>
             Nuevo Ajuste
           </button>
         </div>
