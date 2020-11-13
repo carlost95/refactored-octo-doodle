@@ -4,9 +4,6 @@ import {AgregarRubroComponent} from './agregar-rubro/agregar-rubro.component';
 import {ListarRubroComponent} from './listar-rubro/listar-rubro.component';
 import {AgregarUnidadMedidaComponent} from './agregar-unidad-medida/agregar-unidad-medida.component';
 import {ListarUnidadMedidaComponent} from './listar-unidad-medida/listar-unidad-medida.component';
-import {ModificarFormaPagoComponent} from './modificar-forma-pago/modificar-forma-pago.component';
-import {AgregarFormaPagoComponent} from './agregar-forma-pago/agregar-forma-pago.component';
-import {ListarFormaPagoComponent} from './listar-forma-pago/listar-forma-pago.component';
 import {AgregarMarcaComponent} from './agregar-marca/agregar-marca.component';
 import {ListarMarcaComponent} from './listar-marca/listar-marca.component';
 import {ListarBancoComponent} from './listar-banco/listar-banco.component';
@@ -30,10 +27,6 @@ const routes: Routes = [
       },
       {
         path: 'agregar-marca', component: AgregarMarcaComponent,
-        canActivate: [guard], data: {expectedRol: ['admin', 'gerente']}
-      },
-      {
-        path: 'agregar-forma-pago', component: AgregarFormaPagoComponent,
         canActivate: [guard], data: {expectedRol: ['admin', 'gerente']}
       },
       {
@@ -61,10 +54,6 @@ const routes: Routes = [
         canActivate: [guard], data: {expectedRol: ['admin', 'user', 'gerente']}
       },
       {
-        path: 'listar-forma-pago', component: ListarFormaPagoComponent,
-        canActivate: [guard], data: {expectedRol: ['admin', 'user', 'gerente']}
-      },
-      {
         path: 'listar-unidad-medida', component: ListarUnidadMedidaComponent,
         canActivate: [guard], data: {expectedRol: ['admin', 'user', 'gerente']}
       },
@@ -78,10 +67,6 @@ const routes: Routes = [
       },
       {
         path: 'listar-ajuste', component: ListarAjusteComponent,
-        canActivate: [guard], data: {expectedRol: ['admin', 'user', 'gerente']}
-      },
-      {
-        path: 'modificar-forma-pago/:id', component: ModificarFormaPagoComponent,
         canActivate: [guard], data: {expectedRol: ['admin', 'user', 'gerente']}
       },
       {

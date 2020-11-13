@@ -12,8 +12,6 @@ import {AgregarBancoComponent} from './agregar-banco/agregar-banco.component';
 import {ListarBancoComponent} from './listar-banco/listar-banco.component';
 import {ListarMarcaComponent} from './listar-marca/listar-marca.component';
 import {AgregarMarcaComponent} from './agregar-marca/agregar-marca.component';
-import {ListarFormaPagoComponent} from './listar-forma-pago/listar-forma-pago.component';
-import {AgregarFormaPagoComponent} from './agregar-forma-pago/agregar-forma-pago.component';
 import {ModificarFormaPagoComponent} from './modificar-forma-pago/modificar-forma-pago.component';
 import {ListarUnidadMedidaComponent} from './listar-unidad-medida/listar-unidad-medida.component';
 import {AgregarUnidadMedidaComponent} from './agregar-unidad-medida/agregar-unidad-medida.component';
@@ -34,8 +32,6 @@ import {interceptorProvider} from '../../interceptors/prod-interceptor.service';
     ListarBancoComponent,
     ListarMarcaComponent,
     AgregarMarcaComponent,
-    ListarFormaPagoComponent,
-    AgregarFormaPagoComponent,
     ModificarFormaPagoComponent,
     ListarUnidadMedidaComponent,
     AgregarUnidadMedidaComponent,
