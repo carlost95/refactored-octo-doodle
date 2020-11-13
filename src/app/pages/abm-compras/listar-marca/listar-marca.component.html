@@ -33,7 +33,7 @@
           </button>
           &nbsp;
           <button mat-raised-button color="primary"
-                  (click)="newMarca()" title="Nueva Marca">
+                  (click)="newMarca()" title="Nueva Marca" *ngIf="isAdmin||isGerente">
             <i class="fas fa-tags"></i>
             Nueva Marca
           </button>
@@ -48,7 +48,7 @@
           <tr class="text-center">
             <th scope="col ">Nombre</th>
             <th scope="col ">Abreviatura</th>
-            <th scope="col ">Habilitacion</th>
+            <th scope="col " *ngIf="isAdmin||isGerente">Habilitacion</th>
             <th scope="col*2 ">Opciones</th>
           </tr>
           </thead>
@@ -56,7 +56,7 @@
           <tr *ngFor="let marca of marcaFilter" class="text-center">
             <td>{{ marca.nombre }}</td>
             <td>{{ marca.abreviatura }}</td>
-            <td>
+            <td *ngIf="isAdmin||isGerente">
               <mat-slide-toggle
                 [checked]="marca.habilitacion"
                 (click)="showModal(marca)"
@@ -70,7 +70,7 @@
                 <i class="fas fa-info-circle"></i>
               </button>
               <button class="btn btn-default" title="Modificar "
-                      (click)="modificarMarca(marca)">
+                      (click)="modificarMarca(marca)" *ngIf="isAdmin||isGerente">
                 <i class="fas fa-pencil-alt"></i>
               </button>
             </td>

@@ -9,6 +9,7 @@ import {ServiceReportService} from '../../../service/service-report.service';
 import {PdfExportService} from 'src/app/service/pdf-export.service';
 import {ExcelExportService} from 'src/app/service/excel-export.service';
 import {MarcaExcel} from '../../../models/MarcaExcel';
+import {TokenService} from '../../../service/token.service';
 
 @Component({
   selector: 'app-listar-marca',
@@ -24,6 +25,11 @@ export class ListarMarcaComponent implements OnInit {
   consultingMark: boolean;
   marcaExcel: MarcaExcel;
   marcasExel: MarcaExcel[] = [];
+  //security
+  isLogged = false;
+  roles: string[];
+  isAdmin = false;
+  isGerente = false;
 
   constructor(
     private serviceMarca: MarcasService,
@@ -31,11 +37,24 @@ export class ListarMarcaComponent implements OnInit {
     public matDialog: MatDialog,
     private excelService: ExcelExportService,
     private serviceReport: ServiceReportService,
-    private servicePdf: PdfExportService) {
+    private servicePdf: PdfExportService,
+    private tokenService: TokenService) {
   }
 
-  // tslint:disable-next-line: typedef
-  ngOnInit() {
+  ngOnInit(): void {
+    if (this.tokenService.getToken()) {
+      this.isLogged = true;
+    } else {
+      this.isLogged = false;
+    }
+    this.roles = this.tokenService.getAuthorities();
+    this.roles.forEach(rol => {
+      if (rol === 'ROLE_ADMIN') {
+        this.isAdmin = true;
+      } else if (rol === 'ROLE_GERENTE') {
+        this.isGerente = true;
+      }
+    });
     this.serviceMarca.listarMarcaTodos().subscribe(data => {
       this.marcas = data.data;
       this.marcaFilter = data.data;
