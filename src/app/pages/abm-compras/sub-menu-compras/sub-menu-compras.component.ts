@@ -1,5 +1,6 @@
-import { Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import {Router} from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {TokenService} from '../../../service/token.service';
 
 @Component({
   selector: 'app-sub-menu-compras',
@@ -7,10 +8,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./sub-menu-compras.component.css']
 })
 export class SubMenuComprasComponent implements OnInit {
+  isLogged = false;
 
-  constructor(private router: Router) { }
+  constructor(private tokenService: TokenService) {
+  }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    if (this.tokenService.getToken()) {
+      this.isLogged = true;
+    } else {
+      this.isLogged = false;
+    }
   }
 
 
