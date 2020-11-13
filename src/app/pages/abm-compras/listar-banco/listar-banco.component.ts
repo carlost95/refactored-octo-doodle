@@ -9,6 +9,7 @@ import {ServiceReportService} from '../../../service/service-report.service';
 import {PdfExportService} from '../../../service/pdf-export.service';
 import {BancoExcel} from '../../../models/BancoExcel';
 import {ExcelExportService} from '../../../service/excel-export.service';
+import {TokenService} from '../../../service/token.service';
 
 @Component({
   selector: 'app-listar-banco',
@@ -24,6 +25,10 @@ export class ListarBancoComponent implements OnInit {
   consultingBank: boolean;
   bancoExcel: BancoExcel;
   bancosExcel: BancoExcel[] = [];
+  isLogged = false;
+  roles: string[];
+  isAdmin = false;
+  isGerente = false;
 
   constructor(
     private service: BancosService,
@@ -31,11 +36,26 @@ export class ListarBancoComponent implements OnInit {
     private servicePdf: PdfExportService,
     private excelService: ExcelExportService,
     public matDialog: MatDialog,
+    private router: Router,
+    private tokenService: TokenService
   ) {
   }
 
   // tslint:disable-next-line: typedef
   ngOnInit() {
+    if (this.tokenService.getToken()) {
+      this.isLogged = true;
+    } else {
+      this.isLogged = false;
+    }
+    this.roles = this.tokenService.getAuthorities();
+    this.roles.forEach(rol => {
+      if (rol === 'ROLE_ADMIN') {
+        this.isAdmin = true;
+      } else if (rol === 'ROLE_GERENTE') {
+        this.isGerente = true;
+      }
+    });
     this.service.listarBancosTodos().subscribe(data => {
       this.bancos = data.data;
       this.bancoFilter = data.data;
@@ -96,9 +116,8 @@ export class ListarBancoComponent implements OnInit {
     });
   }
 
-  // tslint:disable-next-line:typedef
-  backPage() {
-    window.history.back();
+  backPage(): void {
+    this.router.navigate(['abm-compras']);
   }
 
   // tslint:disable-next-line:typedef
@@ -127,16 +146,14 @@ export class ListarBancoComponent implements OnInit {
     });
   }
 
-  // tslint:disable-next-line: typedef
-  getData() {
+  getData(): void {
     this.service.listarBancosTodos().subscribe(data => {
       this.bancos = data.data;
       this.bancoFilter = data.data;
     });
   }
 
-  // tslint:disable-next-line: typedef
-  exportarExcel() {
+  exportarExcel(): void {
     // tslint:disable-next-line: prefer-for-of
     for (let index = 0; index < this.bancoFilter.length; index++) {
       this.bancoExcel = new BancoExcel(0, '', '');
@@ -150,8 +167,7 @@ export class ListarBancoComponent implements OnInit {
     this.excelService.exportToExcel(this.bancosExcel, 'Reporte Banco');
   }
 
-  // tslint:disable-next-line: typedef
-  exportarPDF() {
+  exportarPDF(): void {
     this.serviceReport.getReporteBancoPdf().subscribe(resp => {
       this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
     });
