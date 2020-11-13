@@ -25,7 +25,7 @@ export class ListarMarcaComponent implements OnInit {
   consultingMark: boolean;
   marcaExcel: MarcaExcel;
   marcasExel: MarcaExcel[] = [];
-  //security
+
   isLogged = false;
   roles: string[];
   isAdmin = false;
@@ -61,12 +61,7 @@ export class ListarMarcaComponent implements OnInit {
     });
   }
 
-  // tslint:disable-next-line: typedef
-  deshabilitarMarca(marca: Marca) {
-  }
-
-  // tslint:disable-next-line: typedef
-  filtrar(event: any) {
+  filtrar(event: any): void {
     this.busqueda = this.busqueda.toLowerCase();
     this.marcaFilter = this.marcas;
     if (this.busqueda !== null) {
@@ -79,14 +74,12 @@ export class ListarMarcaComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: typedef
-  exportarPDF() {
+  exportarPDF(): void {
     this.serviceReport.getReporteMarcaPdf().subscribe(resp => {
       this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
     });
   }
 
-  // tslint:disable-next-line: typedef
   exportarExcel(): void {
     // tslint:disable-next-line: prefer-for-of
     for (let index = 0; index < this.marcaFilter.length; index++) {
@@ -102,27 +95,23 @@ export class ListarMarcaComponent implements OnInit {
     this.excelService.exportToExcel(this.marcasExel, 'Reporte Marcas');
   }
 
-  // tslint:disable-next-line: typedef
-  backPage() {
-    window.history.back();
+  backPage(): void {
+    this.router.navigate(['abm-compras']);
   }
 
-  // tslint:disable-next-line: typedef
-  newMarca() {
+  newMarca(): void {
     this.toUpdateMarca = null;
     this.consultingMark = false;
     this.openDialog();
   }
 
-  // tslint:disable-next-line: typedef
-  modificarMarca(marca: Marca) {
+  modificarMarca(marca: Marca): void {
     this.toUpdateMarca = marca;
     this.consultingMark = false;
     this.openDialog();
   }
 
-  // tslint:disable-next-line:typedef
-  consultarMarca(marca: Marca) {
+  consultarMarca(marca: Marca): void {
     this.toUpdateMarca = marca;
     this.consultingMark = true;
     this.openDialog();
@@ -147,10 +136,8 @@ export class ListarMarcaComponent implements OnInit {
     });
   }
 
-  // tslint:disable-next-line: typedef
-  showModal(marca: Marca) {
+  showModal(marca: Marca): void {
     const dialogConfig = new MatDialogConfig();
-    // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
     dialogConfig.height = '300px';
@@ -173,8 +160,7 @@ export class ListarMarcaComponent implements OnInit {
     });
   }
 
-  // tslint:disable-next-line: typedef
-  getData() {
+  getData(): void {
     this.serviceMarca.listarMarcaTodos().subscribe(data => {
       this.marcas = data.data;
       this.marcaFilter = data.data;

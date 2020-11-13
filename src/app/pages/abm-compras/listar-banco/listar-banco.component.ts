@@ -25,6 +25,7 @@ export class ListarBancoComponent implements OnInit {
   consultingBank: boolean;
   bancoExcel: BancoExcel;
   bancosExcel: BancoExcel[] = [];
+
   isLogged = false;
   roles: string[];
   isAdmin = false;
@@ -75,22 +76,19 @@ export class ListarBancoComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: typedef
-  newBanco() {
+  newBanco(): void {
     this.toUpdateBank = null;
     this.consultingBank = false;
     this.openDialog();
   }
 
-  // tslint:disable-next-line:typedef
-  modificarBanco(banco: Banco) {
+  modificarBanco(banco: Banco): void {
     this.toUpdateBank = banco;
     this.consultingBank = false;
     this.openDialog();
   }
 
-  // tslint:disable-next-line:typedef
-  consultarBanco(banco: Banco) {
+  consultarBanco(banco: Banco): void {
     this.toUpdateBank = banco;
     this.consultingBank = true;
     this.openDialog();
@@ -120,8 +118,7 @@ export class ListarBancoComponent implements OnInit {
     this.router.navigate(['abm-compras']);
   }
 
-  // tslint:disable-next-line:typedef
-  showModal(banco: Banco) {
+  showModal(banco: Banco): void {
     const dialogConfig = new MatDialogConfig();
     // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;

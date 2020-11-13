@@ -33,7 +33,7 @@
           </button>
           &nbsp;
           <button mat-raised-button color="primary"
-                  (click)="newRubro()" title="Nueva Marca">
+                  (click)="newRubro()" title="Nueva Marca" *ngIf="isAdmin||isGerente">
             <i class="fas fa-archive fa-lg"></i> Nuevo Rubro
           </button>
         </div>
@@ -47,7 +47,7 @@
         <tr class="text-center">
           <th scope="col ">Nombre</th>
           <th scope="col ">Descripcion</th>
-          <th scope="col ">Habilitacion</th>
+          <th scope="col " *ngIf="isAdmin||isGerente">Habilitacion</th>
           <th scope="col*2 ">Opciones</th>
         </tr>
         </thead>
@@ -55,7 +55,7 @@
         <tr *ngFor="let rubro of rubrosFilter" class="text-center">
           <td>{{ rubro.nombre }}</td>
           <td>{{ rubro.descripcion }}</td>
-          <td>
+          <td *ngIf="isAdmin||isGerente">
             <mat-slide-toggle
               [checked]="rubro.habilitacion"
               (click)="showModal(rubro)"
@@ -69,7 +69,7 @@
               <i class="fas fa-info-circle"></i>
             </button>
             <button class="btn btn-default" title="Modificar "
-                    (click)="modificarRubro(rubro)">
+                    (click)="modificarRubro(rubro)" *ngIf="isAdmin||isGerente">
               <i class="fas fa-pencil-alt"></i>
             </button>
           </td>
