@@ -30,8 +30,7 @@ export class DepartamentoComponent implements OnInit {
   constructor(
     private departamentoService: DepartamentosService,
     public matDialog: MatDialog,
-    // tslint:disable-next-line:variable-name
-    private _snackBar: MatSnackBar,
+    private snackBar: MatSnackBar,
     private router: Router,
     private tokenService: TokenService
   ) {
@@ -76,6 +75,7 @@ export class DepartamentoComponent implements OnInit {
     const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       if (result.state) {
+        // tslint:disable-next-line:no-shadowed-variable
         this.departamentoService.changeStatus(departamento.id).subscribe(result => {
           this.getData();
         });
@@ -141,7 +141,7 @@ export class DepartamentoComponent implements OnInit {
   }
 
   openSnackBar(msg: string): void {
-    this._snackBar.openFromComponent(SnackConfirmComponent, {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
       panelClass: ['error-snackbar'],
       duration: 5 * 1000,
       data: msg,

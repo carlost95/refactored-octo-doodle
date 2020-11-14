@@ -1,6 +1,6 @@
 import {Banco} from '../../../models/Banco';
 import {Router} from '@angular/router';
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {AgregarBancoComponent} from '../agregar-banco/agregar-banco.component';
 import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal.component';
@@ -94,7 +94,6 @@ export class ListarBancoComponent implements OnInit {
 
   openDialog(): void {
     const dialogConfig = new MatDialogConfig();
-    // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
     dialogConfig.height = '400px';
@@ -118,7 +117,6 @@ export class ListarBancoComponent implements OnInit {
 
   showModal(banco: Banco): void {
     const dialogConfig = new MatDialogConfig();
-    // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
     dialogConfig.height = '300px';
