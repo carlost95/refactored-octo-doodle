@@ -42,8 +42,7 @@ export class ListarBancoComponent implements OnInit {
   ) {
   }
 
-  // tslint:disable-next-line: typedef
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.tokenService.getToken()) {
       this.isLogged = true;
     } else {
@@ -63,8 +62,7 @@ export class ListarBancoComponent implements OnInit {
     });
   }
 
-  // tslint:disable-next-line: typedef
-  filtrarBanco(event: any) {
+  filtrarBanco(event: any): void {
     this.busqueda = this.busqueda.toLowerCase();
     this.bancoFilter = this.bancos;
     if (this.busqueda !== null) {
