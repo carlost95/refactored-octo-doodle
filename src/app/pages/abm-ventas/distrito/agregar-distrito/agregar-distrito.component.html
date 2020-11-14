@@ -4,44 +4,33 @@
     <h1 class="modal-title" *ngIf="updating">Actualizar Departamento</h1>
     <h1 class="modal-title" *ngIf="consultar">Consultar Departamento</h1>
   </header>
-  <section class="modal-body" >
+  <section class="modal-body">
     <form [formGroup]="distritoForm" class="justify-content-center">
       <mat-form-field appearance="legacy" class="col-md-12">
         <mat-label>Nombre</mat-label>
-        <input
-          matInput
-          formControlName="nombre"
-          required
-          autocomplete="off"
-          (keyup)="validate($event)"
-        />
+        <input matInput formControlName="nombre" required
+               autocomplete="off" (keyup)="validate($event)"/>
         <mat-error *ngIf="distritoForm.controls.nombre.errors">
           Campo <strong> requerido</strong>
         </mat-error>
       </mat-form-field>
       <br>
-      <mat-label class="m-0 pl-3 col-md-12"
-                 *ngIf="duplicateName"
+      <mat-label class="m-0 pl-3 col-md-12" *ngIf="duplicateName"
                  style="color: #f44336; font-size: 75%">
         Nombre <strong>en uso</strong>
       </mat-label>
       <br>
-
-      <mat-form-field appearance="legacy"  class="col-md-12">
+      <mat-form-field appearance="legacy" class="col-md-12">
         <mat-label>Abreviatura</mat-label>
-        <input
-          matInput
-          name="abreviatura"
-          formControlName="abreviatura"
-          required
-          autocomplete="off"
-        />
+        <input matInput name="abreviatura"
+               formControlName="abreviatura" required
+               autocomplete="off"/>
         <mat-error *ngIf="distritoForm.controls.abreviatura.errors">
           Campo <strong> requerido</strong>
         </mat-error>
       </mat-form-field>
       <br>
-      <mat-form-field class="col-md-5" appearance="fill"  class="col-md-12">
+      <mat-form-field class="col-md-5" appearance="fill" class="col-md-12">
         <mat-label>Departamento</mat-label>
         <mat-select
           name="departamento"

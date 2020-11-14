@@ -1,24 +1,24 @@
-import {Departamento} from "../../../../models/Departamento";
-import {Component, Inject, OnInit} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {FormBuilder, Validators} from "@angular/forms";
-import {DepartamentosService} from "../../../../service/departamentos.service";
+import {Departamento} from '../../../../models/Departamento';
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {FormBuilder, Validators} from '@angular/forms';
+import {DepartamentosService} from '../../../../service/departamentos.service';
 
 @Component({
-  selector: "app-agregar-departamento",
-  templateUrl: "./agregar-departamento.component.html",
-  styleUrls: ["./agregar-departamento.component.css"]
+  selector: 'app-agregar-departamento',
+  templateUrl: './agregar-departamento.component.html',
+  styleUrls: ['./agregar-departamento.component.css']
 })
 export class AgregarDepartamentoComponent implements OnInit {
 
   departamento: Departamento = new Departamento();
   response: Response;
-  consultar: boolean = false;
+  consultar = false;
   departamentoForm: any;
-  updating: boolean = false;
+  updating = false;
   submitted: boolean;
   errorInForm: any;
-  duplicateName: Boolean = false;
+  duplicateName = false;
 
   constructor(private service: DepartamentosService,
               private formBuilder: FormBuilder,
@@ -26,7 +26,7 @@ export class AgregarDepartamentoComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     const {departamento} = this.data;
     if (departamento) {
       this.consultar = this.data.consulting;
@@ -45,15 +45,11 @@ export class AgregarDepartamentoComponent implements OnInit {
     }
   }
 
-  cancelar() {
-    window.history.back();
-  }
-
-  close() {
+  close(): void {
     this.dialogRef.close();
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.submitted = true;
     this.errorInForm = this.submitted && this.departamentoForm.invalid;
     if (this.errorInForm || this.duplicateName) {
@@ -64,7 +60,7 @@ export class AgregarDepartamentoComponent implements OnInit {
     }
   }
 
-  validate({target}) {
+  validate({target}): void {
     const {departamentos} = this.data;
     const {value: nombre} = target;
     const finded = departamentos.find(d => nombre === d.nombre);
@@ -72,7 +68,7 @@ export class AgregarDepartamentoComponent implements OnInit {
   }
 
 
-  makeDTO() {
+  makeDTO(): void {
     this.departamento.nombre = (this.departamentoForm.controls.nombre.value).trim();
     this.departamento.abreviatura = (this.departamentoForm.controls.abreviatura.value).trim();
     if (this.updating) {
@@ -85,23 +81,23 @@ export class AgregarDepartamentoComponent implements OnInit {
   }
 
 
-  save() {
+  save(): void {
     this.service.save(this.departamento).subscribe(data => {
       this.msgSnack(data);
     });
   }
 
-  update() {
+  update(): void {
     this.service.update(this.departamento).subscribe(data => {
       this.msgSnack(data);
     });
   }
 
-  msgSnack(data){
+  msgSnack(data): void {
     const {msg} = data;
-    if (data.code === 200){
+    if (data.code === 200) {
       this.dialogRef.close(msg);
-    }else{
+    } else {
       this.dialogRef.close('Error en el proceso');
     }
   }
