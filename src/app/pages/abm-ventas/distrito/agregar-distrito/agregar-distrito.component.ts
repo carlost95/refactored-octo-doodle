@@ -1,15 +1,15 @@
-import { Departamento } from "../../../../models/Departamento";
-import { Distrito } from "../../../../models/Distrito";
-import {Component, Inject, OnInit} from "@angular/core";
-import {DistritoService} from "../../../../service/distrito.service";
-import {DepartamentosService} from "../../../../service/departamentos.service";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {Departamento} from '../../../../models/Departamento';
+import {Distrito} from '../../../../models/Distrito';
+import {Component, Inject, OnInit} from '@angular/core';
+import {DistritoService} from '../../../../service/distrito.service';
+import {DepartamentosService} from '../../../../service/departamentos.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 @Component({
-  selector: "app-agregar-distrito",
-  templateUrl: "./agregar-distrito.component.html",
-  styleUrls: ["./agregar-distrito.component.css"]
+  selector: 'app-agregar-distrito',
+  templateUrl: './agregar-distrito.component.html',
+  styleUrls: ['./agregar-distrito.component.css']
 })
 export class AgregarDistritoComponent implements OnInit {
 
@@ -30,16 +30,17 @@ export class AgregarDistritoComponent implements OnInit {
     public dialogRef: MatDialogRef<AgregarDistritoComponent>,
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any,
-  ) {}
+  ) {
+  }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.departamentoService.getActive().subscribe(resp => {
       this.departamentos = resp.data;
       this.initForm();
     });
   }
 
-  initForm() {
+  initForm(): void {
     const {distrito} = this.data;
     this.distritos = this.data.distritos;
     if (distrito) {
@@ -57,22 +58,22 @@ export class AgregarDistritoComponent implements OnInit {
         nombre: ['', Validators.required],
         abreviatura: ['', null],
         departamento: ['', Validators.required],
-      })
+      });
     }
     this.show = true;
   }
 
-  validate({target}) {
+  validate({target}): void {
     const {value: nombre} = target;
     const exist = this.distritos.find(d => d.nombre === nombre);
     this.duplicateName = exist ? true : false;
   }
 
-  close() {
-    this.dialogRef.close()
+  close(): void {
+    this.dialogRef.close();
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.submitted = true;
     this.errorInForm = this.submitted && this.duplicateName;
     if (this.errorInForm || this.duplicateName) {
@@ -83,7 +84,7 @@ export class AgregarDistritoComponent implements OnInit {
     }
   }
 
-  private makeDTO() {
+  private makeDTO(): void {
     const data = this.distritoForm.controls;
     this.distrito.nombre = data.nombre.value;
     this.distrito.abreviatura = data.abreviatura.value;
@@ -98,14 +99,13 @@ export class AgregarDistritoComponent implements OnInit {
     }
   }
 
-  private update() {
-    console.log(this.distrito)
+  private update(): void {
     this.distritoService.update(this.distrito).subscribe(data => {
       this.dialogRef.close(data.msg);
     });
   }
 
-  private save() {
+  private save(): void {
     this.distritoService.save(this.distrito).subscribe(data => {
       this.dialogRef.close(data.msg);
     });

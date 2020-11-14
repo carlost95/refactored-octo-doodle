@@ -1,4 +1,3 @@
-import {Router} from '@angular/router';
 import {Component, OnInit} from '@angular/core';
 import {TokenService} from '../../../service/token.service';
 
