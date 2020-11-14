@@ -10,6 +10,8 @@ import {PdfExportService} from '../../../service/pdf-export.service';
 import {BancoExcel} from '../../../models/BancoExcel';
 import {ExcelExportService} from '../../../service/excel-export.service';
 import {TokenService} from '../../../service/token.service';
+import {SnackConfirmComponent} from '../../../shared/snack-confirm/snack-confirm.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-listar-banco',
@@ -38,8 +40,8 @@ export class ListarBancoComponent implements OnInit {
     private excelService: ExcelExportService,
     public matDialog: MatDialog,
     private router: Router,
-    private tokenService: TokenService
-  ) {
+    private tokenService: TokenService,
+    private snackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
@@ -108,6 +110,10 @@ export class ListarBancoComponent implements OnInit {
         this.bancos = data.data;
         this.bancoFilter = data.data;
       });
+      if (result) {
+        this.openSnackBar(result);
+      }
+      this.getData();
     });
   }
 
@@ -163,6 +169,14 @@ export class ListarBancoComponent implements OnInit {
   exportarPDF(): void {
     this.serviceReport.getReporteBancoPdf().subscribe(resp => {
       this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
+    });
+  }
+
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
     });
   }
 }

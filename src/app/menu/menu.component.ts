@@ -14,8 +14,7 @@ export class MenuComponent implements OnInit {
   constructor(private tokenService: TokenService) {
   }
 
-  // tslint:disable-next-line:typedef
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.tokenService.getToken()) {
       this.isLogged = true;
     } else {

@@ -10,6 +10,8 @@ import {PdfExportService} from 'src/app/service/pdf-export.service';
 import {ExcelExportService} from 'src/app/service/excel-export.service';
 import {MarcaExcel} from '../../../models/MarcaExcel';
 import {TokenService} from '../../../service/token.service';
+import {SnackConfirmComponent} from '../../../shared/snack-confirm/snack-confirm.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-listar-marca',
@@ -38,7 +40,8 @@ export class ListarMarcaComponent implements OnInit {
     private excelService: ExcelExportService,
     private serviceReport: ServiceReportService,
     private servicePdf: PdfExportService,
-    private tokenService: TokenService) {
+    private tokenService: TokenService,
+    private snackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
@@ -133,6 +136,10 @@ export class ListarMarcaComponent implements OnInit {
         this.marcas = data.data;
         this.marcaFilter = data.data;
       });
+      if (result) {
+        this.openSnackBar(result);
+      }
+      this.getData();
     });
   }
 
@@ -164,6 +171,14 @@ export class ListarMarcaComponent implements OnInit {
     this.serviceMarca.listarMarcaTodos().subscribe(data => {
       this.marcas = data.data;
       this.marcaFilter = data.data;
+    });
+  }
+
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
     });
   }
 }
