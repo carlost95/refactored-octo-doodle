@@ -1,11 +1,11 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {LoginUsuario} from '../models/login-usuario';
-import {TokenService} from '../service/token.service';
-import {AuthService} from '../service/auth.service';
+import {LoginUsuario} from '../../../models/login-usuario';
+import {TokenService} from '../../../service/token.service';
+import {AuthService} from '../../../service/auth.service';
 import {Router} from '@angular/router';
 import {FormGroup} from '@angular/forms';
-import {ResetPasswordUser} from '../models/ResetPasswordUser';
-import {NewUsuario} from '../models/new-usuario';
+import {ResetPasswordUser} from '../../../models/ResetPasswordUser';
+import {NewUsuario} from '../../../models/new-usuario';
 import {logger} from 'codelyzer/util/logger';
 
 @Component({
