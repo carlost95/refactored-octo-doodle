@@ -1,4 +1,3 @@
-import {AbmComprasService} from '../../../service/abm-compras.service';
 import {UnidadMedida} from '../../../models/UnidadMedida';
 import {Component, OnInit, Inject} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
@@ -30,8 +29,7 @@ export class AgregarUnidadMedidaComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
-  // tslint:disable-next-line: typedef
-  ngOnInit() {
+  ngOnInit(): void {
     this.unididadMedidaService.listarUnidadMedidaTodos().subscribe(resp =>
       this.unidadMedidas = resp.data);
     const {unidMed} = this.data;
@@ -52,8 +50,7 @@ export class AgregarUnidadMedidaComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: typedef
-  onSubmit() {
+  onSubmit(): void {
     this.submitted = true;
     this.errorInForm = this.submitted && this.unidadMedidaForm.invalid;
     if (this.errorInForm || this.nombreRepe || this.abrevRepe) {
@@ -65,8 +62,7 @@ export class AgregarUnidadMedidaComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: typedef
-  makeDTO() {
+  makeDTO(): void {
     this.unidadMedida.nombre = this.unidadMedidaForm.controls.nombre.value;
     this.unidadMedida.abreviatura = this.unidadMedidaForm.controls.abreviatura.value;
     if (this.updating) {
@@ -77,24 +73,19 @@ export class AgregarUnidadMedidaComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: typedef
-  private save() {
+  private save(): void {
     this.unididadMedidaService.guardarUnidadMedida(this.unidadMedida).subscribe(data => {
-      this.unidadMedida = data.data;
-      this.dialogRef.close();
+      this.msgSnack(data);
     });
   }
 
-  // tslint:disable-next-line: typedef
-  private update() {
+  private update(): void {
     this.unididadMedidaService.actualizarUnidadMedida(this.unidadMedida).subscribe(data => {
-      this.unidadMedida = data.data;
-      this.dialogRef.close();
+      this.msgSnack(data);
     });
   }
 
-  // tslint:disable-next-line: typedef
-  public validar({target}) {
+  public validar({target}): void {
     const {value: nombre} = target;
     const finded = this.unidadMedidas.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
     const finded1 = this.unidadMedidas.find(p => p.abreviatura.toLowerCase() === nombre.toLowerCase());
@@ -102,9 +93,16 @@ export class AgregarUnidadMedidaComponent implements OnInit {
     this.abrevRepe = (finded1 !== undefined) ? true : false;
   }
 
-  // tslint:disable-next-line: typedef
-  close() {
+  close(): void {
     this.dialogRef.close();
   }
 
+  msgSnack(data): void {
+    const {msg} = data;
+    if (data.code === 200) {
+      this.dialogRef.close(msg);
+    } else {
+      this.dialogRef.close('Error en el proceso');
+    }
+  }
 }

@@ -93,7 +93,6 @@ export class ListarMarcaComponent implements OnInit {
         this.marcaExcel.abreaviatura = this.marcaFilter[index].abreviatura;
       }
       this.marcasExel.push(this.marcaExcel);
-
     }
     this.excelService.exportToExcel(this.marcasExel, 'Reporte Marcas');
   }

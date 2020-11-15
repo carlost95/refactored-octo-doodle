@@ -10,6 +10,8 @@ import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal
 import {SubRubroExcel} from '../../../models/SubRubroExcel';
 import {Router} from '@angular/router';
 import {TokenService} from '../../../service/token.service';
+import {SnackConfirmComponent} from '../../../shared/snack-confirm/snack-confirm.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-listar-sub-rubro',
@@ -37,8 +39,8 @@ export class ListarSubRubroComponent implements OnInit {
     private excelService: ExcelExportService,
     public matDialog: MatDialog,
     private router: Router,
-    private tokenService: TokenService
-  ) {
+    private tokenService: TokenService,
+    private snackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
@@ -97,6 +99,10 @@ export class ListarSubRubroComponent implements OnInit {
         this.subRubros = data.data;
         this.subRubrosFilter = data.data;
       });
+      if (result) {
+        this.openSnackBar(result);
+      }
+      this.getData();
     });
   }
 
@@ -167,6 +173,14 @@ export class ListarSubRubroComponent implements OnInit {
     }
     this.excelService.exportToExcel(this.subRubrosExcel, 'Reporte SubRubros');
 
+  }
+
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
+    });
   }
 
 }

@@ -10,6 +10,8 @@ import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal
 import {UnidadMedidaExcel} from '../../../models/UnidadMedidaExcel';
 import {TokenService} from '../../../service/token.service';
 import {Router} from '@angular/router';
+import {SnackConfirmComponent} from '../../../shared/snack-confirm/snack-confirm.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-listar-unidad-medida',
@@ -38,12 +40,11 @@ export class ListarUnidadMedidaComponent implements OnInit {
     private excelService: ExcelExportService,
     public matDialog: MatDialog,
     private tokenService: TokenService,
-    private router: Router
-  ) {
+    private router: Router,
+    private snackBar: MatSnackBar) {
   }
 
-  // tslint:disable-next-line: typedef
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.tokenService.getToken()) {
       this.isLogged = true;
     } else {
@@ -97,6 +98,10 @@ export class ListarUnidadMedidaComponent implements OnInit {
         this.unidadMedidas = data.data;
         this.unidadMedidaFilter = data.data;
       });
+      if (result) {
+        this.openSnackBar(result);
+      }
+      this.getData();
     });
   }
 
@@ -164,5 +169,13 @@ export class ListarUnidadMedidaComponent implements OnInit {
       this.unidadMedidasExcel.push(this.unidadMedidaExcel);
     }
     this.excelService.exportToExcel(this.unidadMedidasExcel, 'Reporte Unidades Medida');
+  }
+
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
+    });
   }
 }

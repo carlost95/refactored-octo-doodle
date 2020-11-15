@@ -10,6 +10,8 @@ import {ExcelExportService} from '../../../service/excel-export.service';
 import {RubroExcel} from '../../../models/RubroExcel';
 import {TokenService} from '../../../service/token.service';
 import {Router} from '@angular/router';
+import {SnackConfirmComponent} from '../../../shared/snack-confirm/snack-confirm.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 
 @Component({
@@ -39,8 +41,8 @@ export class ListarRubroComponent implements OnInit {
     private servicePdf: PdfExportService,
     private excelService: ExcelExportService,
     public matDialog: MatDialog,
-    private tokenService: TokenService
-  ) {
+    private tokenService: TokenService,
+    private snackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
@@ -115,24 +117,28 @@ export class ListarRubroComponent implements OnInit {
         this.rubros = data.data;
         this.rubrosFilter = data.data;
       });
+      if (result) {
+        this.openSnackBar(result);
+      }
+      this.getData();
     });
   }
 
   showModal(rubro: Rubro): void {
     const dialogConfig = new MatDialogConfig();
-    // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
     dialogConfig.height = '300px';
     dialogConfig.width = '350px';
     dialogConfig.data = {
-      message: 'Desea cambiar estado?',
+      message: '¿Desea cambiar estado?',
       title: 'Cambio estado',
       state: rubro.habilitacion
     };
     const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       if (result.state) {
+        // tslint:disable-next-line:no-shadowed-variable
         this.serviceRubro.cambiarHabilitacion(rubro.id).subscribe(result => {
           this.getData();
         });
@@ -159,7 +165,6 @@ export class ListarRubroComponent implements OnInit {
         this.rubroExcel.descripcion = this.rubrosFilter[index].descripcion;
       }
       this.rubrosExcel.push(this.rubroExcel);
-
     }
     this.excelService.exportToExcel(this.rubrosExcel, 'Reporte Rubros');
   }
@@ -167,6 +172,14 @@ export class ListarRubroComponent implements OnInit {
   exportarPDF(): void {
     this.serviceReport.getReporteRubroPdf().subscribe(resp => {
       this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
+    });
+  }
+
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
     });
   }
 }
