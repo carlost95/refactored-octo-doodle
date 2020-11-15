@@ -1,5 +1,5 @@
-import { Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {TokenService} from '../../../service/token.service';
 
 @Component({
   selector: 'app-sub-menu-ventas',
@@ -7,14 +7,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./sub-menu-ventas.component.css']
 })
 export class SubMenuVentasComponent implements OnInit {
+  isLogged = false;
 
-  constructor(private router: Router) { }
-
-  ngOnInit() {
+  constructor(private tokenService: TokenService) {
   }
-  abmDepartamento(){
-// this.router.navigate(["ventas/lista-departamentos"]);
-// console.log("ir a departamento");
 
+  ngOnInit(): void {
+    if (this.tokenService.getToken()) {
+      this.isLogged = true;
+    } else {
+      this.isLogged = false;
+    }
   }
 }

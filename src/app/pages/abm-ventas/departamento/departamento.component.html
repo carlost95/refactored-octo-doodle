@@ -1,12 +1,9 @@
 <div class="container">
   <div class="card">
     <header class="row mt-4 ml-3 mb-3">
-      <i
-        class="col-md-2 m-0 fas fa-chevron-left fa-3x"
-        style="margin-right: 100%"
-        (click)="volver()"
-      ></i>
-
+      <i class="col-md-2 m-0 fas fa-chevron-left fa-3x"
+         style="margin-right: 100%" (click)="volver()">
+      </i>
       <h1 class="m-0 col-md-10" style="padding-left: 14rem !important">
         Departamentos
       </h1>
@@ -18,54 +15,38 @@
           <label class="col-5 m-0 p-0"><h3>Busqueda:</h3></label>
 
           <div class="col-12 m-0 p-0 aligth">
-            <input
-              class="col-12 position-relative has-icon-right searchDiv"
-              type="text"
-              class="form-control searchText"
-              placeholder="ingrese busqueda"
-            />
-            <!--            [(ngModel)]="busqueda"-->
-            <!--            (keyup)="filtrarCliente()"-->
+            <input type="text " [(ngModel)]="busqueda"
+                   class="form-control" placeholder="ingrese nombre "
+                   (keyup)="filtrarDepartamento($event)"/>
           </div>
         </div>
-
         <br/>
         <div class="row col-12 d-flex justify-content-end">
-          <button
-            mat-raised-button
-            color="primary"
-            title="Nuevo departamento"
-            (click)="nuevo()"
-          >
-            <i class="fas fa-user"></i>
+          <button mat-raised-button color="primary"
+                  title="Nuevo departamento" (click)="nuevo()" *ngIf="isAdmin||isGerente">
+            <i class="fas fa-map-marker-alt fa-lg"></i>
             Nuevo Departamento
           </button>
         </div>
       </section>
-
-      <div
-        class="card-body p-0"
-        style="width: 1100px; height: 450px; overflow: auto;"
-      >
+      <div class="card-body p-0" style="width: 1100px; height: 450px; overflow: auto;">
         <table class="table table-striped">
           <thead class="thead-dark">
           <tr class="text-center">
-            <th scope="col ">Nombre</th>
-            <th scope="col ">Abreviatura</th>
-            <th scope="col ">Estado</th>
-            <th scope="col*2">Opciones</th>
+            <th scope="col ">NOMBRE</th>
+            <th scope="col ">ABREVIATURA</th>
+            <th scope="col " *ngIf="isAdmin||isGerente">HABILITACION</th>
+            <th scope="col*2">OPCIONES</th>
           </tr>
           </thead>
           <tbody *ngIf="departamentos != null">
-          <tr *ngFor="let departamento of departamentos" class="text-center">
+          <tr *ngFor="let departamento of departamentosFilter" class="text-center">
             <td>{{ departamento.nombre }}</td>
             <td>{{ departamento.abreviatura }}</td>
-            <td>
-              <mat-slide-toggle
-                [checked]="departamento.estado"
-                (click)="showModal(departamento)"
-                color="primary"
-              ></mat-slide-toggle>
+            <td *ngIf="isAdmin||isGerente">
+              <mat-slide-toggle [checked]="departamento.estado"
+                                (click)="showModal(departamento)" color="primary">
+              </mat-slide-toggle>
             </td>
             <td>
               <button class="btn btn-default m-0 p-0" title="Consultar"
@@ -74,10 +55,8 @@
               </button>
               &nbsp;
               <button
-                (click)="editar(departamento)"
-                class="btn btn-default m-0 p-0"
-                title="Modificar "
-              >
+                (click)="editar(departamento)" class="btn btn-default m-0 p-0"
+                title="Modificar " *ngIf="isAdmin||isGerente">
                 <i class="fas fa-user-edit"></i>
               </button>
             </td>

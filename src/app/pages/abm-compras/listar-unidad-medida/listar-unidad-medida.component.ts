@@ -8,6 +8,10 @@ import {AgregarUnidadMedidaComponent} from '../agregar-unidad-medida/agregar-uni
 import {UnidadMedida} from '../../../models/UnidadMedida';
 import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal.component';
 import {UnidadMedidaExcel} from '../../../models/UnidadMedidaExcel';
+import {TokenService} from '../../../service/token.service';
+import {Router} from '@angular/router';
+import {SnackConfirmComponent} from '../../../shared/snack-confirm/snack-confirm.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-listar-unidad-medida',
@@ -22,48 +26,63 @@ export class ListarUnidadMedidaComponent implements OnInit {
   toUpdateUnidadMedida: UnidadMedida;
   unidadMedidaExcel: UnidadMedidaExcel;
   unidadMedidasExcel: UnidadMedidaExcel[] = [];
-  private consulting: boolean;
+  consulting = false;
+
+  isLogged = false;
+  roles: string[];
+  isAdmin = false;
+  isGerente = false;
 
   constructor(
     private unidadMedidaService: UnidadMedidaService,
     private serviceReport: ServiceReportService,
     private servicePdf: PdfExportService,
     private excelService: ExcelExportService,
-    public matDialog: MatDialog
-  ) {
+    public matDialog: MatDialog,
+    private tokenService: TokenService,
+    private router: Router,
+    private snackBar: MatSnackBar) {
   }
 
-  // tslint:disable-next-line: typedef
-  ngOnInit() {
+  ngOnInit(): void {
+    if (this.tokenService.getToken()) {
+      this.isLogged = true;
+    } else {
+      this.isLogged = false;
+    }
+    this.roles = this.tokenService.getAuthorities();
+    this.roles.forEach(rol => {
+      if (rol === 'ROLE_ADMIN') {
+        this.isAdmin = true;
+      } else if (rol === 'ROLE_GERENTE') {
+        this.isGerente = true;
+      }
+    });
     this.unidadMedidaService.listarUnidadMedidaTodos().subscribe(data => {
       this.unidadMedidas = data.data;
       this.unidadMedidaFilter = data.data;
     });
   }
 
-  // tslint:disable-next-line: typedef
-  newUnidadMedida() {
+  newUnidadMedida(): void {
     this.toUpdateUnidadMedida = null;
     this.consulting = false;
     this.openDialog();
   }
 
-  // tslint:disable-next-line: typedef
-  modificarUnidadMedida(unidadMedida: UnidadMedida) {
+  modificarUnidadMedida(unidadMedida: UnidadMedida): void {
     this.toUpdateUnidadMedida = unidadMedida;
     this.consulting = false;
     this.openDialog();
   }
 
-  // tslint:disable-next-line:typedef
-  consultarUnidadMedida(unidadMedida: UnidadMedida) {
+  consultarUnidadMedida(unidadMedida: UnidadMedida): void {
     this.toUpdateUnidadMedida = unidadMedida;
     this.consulting = true;
     this.openDialog();
   }
 
-  // tslint:disable-next-line: typedef
-  openDialog() {
+  openDialog(): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
@@ -79,11 +98,14 @@ export class ListarUnidadMedidaComponent implements OnInit {
         this.unidadMedidas = data.data;
         this.unidadMedidaFilter = data.data;
       });
+      if (result) {
+        this.openSnackBar(result);
+      }
+      this.getData();
     });
   }
 
-  // tslint:disable-next-line: typedef
-  showModal(unidadMedida: UnidadMedida) {
+  showModal(unidadMedida: UnidadMedida): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
@@ -106,21 +128,18 @@ export class ListarUnidadMedidaComponent implements OnInit {
     });
   }
 
-  // tslint:disable-next-line: typedef
-  getData() {
+  getData(): void {
     this.unidadMedidaService.listarUnidadMedidaTodos().subscribe(data => {
       this.unidadMedidas = data.data;
       this.unidadMedidaFilter = data.data;
     });
   }
 
-  // tslint:disable-next-line: typedef
-  backPage() {
-    window.history.back();
+  backPage(): void {
+    this.router.navigate(['abm-compras']);
   }
 
-  // tslint:disable-next-line: typedef
-  filtarUnidadMedida(event: any) {
+  filtarUnidadMedida(event: any): void {
     this.busqueda = this.busqueda.toLowerCase();
     this.unidadMedidaFilter = this.unidadMedidas;
     if (this.busqueda !== null) {
@@ -132,15 +151,13 @@ export class ListarUnidadMedidaComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: typedef
-  exportarPDF() {
+  exportarPDF(): void {
     this.serviceReport.getReporteUnidadMedidaPdf().subscribe(resp => {
       this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
     });
   }
 
-  // tslint:disable-next-line: typedef
-  exportarExcel() {
+  exportarExcel(): void {
     // tslint:disable-next-line: prefer-for-of
     for (let index = 0; index < this.unidadMedidaFilter.length; index++) {
       this.unidadMedidaExcel = new UnidadMedidaExcel(0, '', '');
@@ -150,8 +167,15 @@ export class ListarUnidadMedidaComponent implements OnInit {
         this.unidadMedidaExcel.abreviatura = this.unidadMedidaFilter[index].abreviatura;
       }
       this.unidadMedidasExcel.push(this.unidadMedidaExcel);
-
     }
     this.excelService.exportToExcel(this.unidadMedidasExcel, 'Reporte Unidades Medida');
+  }
+
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
+    });
   }
 }

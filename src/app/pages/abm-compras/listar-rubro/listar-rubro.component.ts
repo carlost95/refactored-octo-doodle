@@ -8,6 +8,10 @@ import {ServiceReportService} from '../../../service/service-report.service';
 import {PdfExportService} from '../../../service/pdf-export.service';
 import {ExcelExportService} from '../../../service/excel-export.service';
 import {RubroExcel} from '../../../models/RubroExcel';
+import {TokenService} from '../../../service/token.service';
+import {Router} from '@angular/router';
+import {SnackConfirmComponent} from '../../../shared/snack-confirm/snack-confirm.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 
 @Component({
@@ -25,25 +29,43 @@ export class ListarRubroComponent implements OnInit {
   rubroExcel: RubroExcel;
   rubrosExcel: RubroExcel[] = [];
 
+  isLogged = false;
+  roles: string[];
+  isAdmin = false;
+  isGerente = false;
+
   constructor(
+    private router: Router,
     private serviceRubro: RubrosService,
     private serviceReport: ServiceReportService,
     private servicePdf: PdfExportService,
     private excelService: ExcelExportService,
-    public matDialog: MatDialog
-  ) {
+    public matDialog: MatDialog,
+    private tokenService: TokenService,
+    private snackBar: MatSnackBar) {
   }
 
-  // tslint:disable-next-line: typedef
-  ngOnInit() {
+  ngOnInit(): void {
+    if (this.tokenService.getToken()) {
+      this.isLogged = true;
+    } else {
+      this.isLogged = false;
+    }
+    this.roles = this.tokenService.getAuthorities();
+    this.roles.forEach(rol => {
+      if (rol === 'ROLE_ADMIN') {
+        this.isAdmin = true;
+      } else if (rol === 'ROLE_GERENTE') {
+        this.isGerente = true;
+      }
+    });
     this.serviceRubro.listarRubrosTodos().subscribe(data => {
       this.rubros = data.data;
       this.rubrosFilter = this.rubros;
     });
   }
 
-  // tslint:disable-next-line: typedef
-  filtrarRubro(event: any) {
+  filtrarRubro(event: any): void {
     if (this.busqueda !== null) {
       this.rubrosFilter = this.rubros.filter(item => {
         if (item.nombre.toUpperCase().includes(this.busqueda.toUpperCase())) {
@@ -55,28 +77,24 @@ export class ListarRubroComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: typedef
-  backPage() {
-    window.history.back();
+  backPage(): void {
+    this.router.navigate(['abm-compras']);
   }
 
-  // tslint:disable-next-line: typedef
-  newRubro() {
+  newRubro(): void {
     this.toUpdateRubro = null;
     this.consulting = false;
     this.openDialog();
   }
 
-  // tslint:disable-next-line: typedef
-  modificarRubro(rubro: Rubro) {
+  modificarRubro(rubro: Rubro): void {
     this.toUpdateRubro = rubro;
     this.consulting = false;
     this.openDialog();
 
   }
 
-  // tslint:disable-next-line:typedef
-  consultarRubro(rubro: Rubro) {
+  consultarRubro(rubro: Rubro): void {
     this.toUpdateRubro = rubro;
     this.consulting = true;
     this.openDialog();
@@ -99,25 +117,28 @@ export class ListarRubroComponent implements OnInit {
         this.rubros = data.data;
         this.rubrosFilter = data.data;
       });
+      if (result) {
+        this.openSnackBar(result);
+      }
+      this.getData();
     });
   }
 
-  // tslint:disable-next-line: typedef
-  showModal(rubro: Rubro) {
+  showModal(rubro: Rubro): void {
     const dialogConfig = new MatDialogConfig();
-    // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
     dialogConfig.height = '300px';
     dialogConfig.width = '350px';
     dialogConfig.data = {
-      message: 'Desea cambiar estado?',
+      message: '¿Desea cambiar estado?',
       title: 'Cambio estado',
       state: rubro.habilitacion
     };
     const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       if (result.state) {
+        // tslint:disable-next-line:no-shadowed-variable
         this.serviceRubro.cambiarHabilitacion(rubro.id).subscribe(result => {
           this.getData();
         });
@@ -127,8 +148,7 @@ export class ListarRubroComponent implements OnInit {
     });
   }
 
-  // tslint:disable-next-line: typedef
-  getData() {
+  getData(): void {
     this.serviceRubro.listarRubrosTodos().subscribe(data => {
       this.rubros = data.data;
       this.rubrosFilter = data.data;
@@ -145,15 +165,21 @@ export class ListarRubroComponent implements OnInit {
         this.rubroExcel.descripcion = this.rubrosFilter[index].descripcion;
       }
       this.rubrosExcel.push(this.rubroExcel);
-
     }
     this.excelService.exportToExcel(this.rubrosExcel, 'Reporte Rubros');
   }
 
-  // tslint:disable-next-line: typedef
-  exportarPDF() {
+  exportarPDF(): void {
     this.serviceReport.getReporteRubroPdf().subscribe(resp => {
       this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
+    });
+  }
+
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
     });
   }
 }

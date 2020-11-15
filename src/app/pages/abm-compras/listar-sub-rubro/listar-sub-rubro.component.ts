@@ -1,4 +1,3 @@
-import {SubRubroDTO} from '../../../models/SubRubroDTO';
 import {SubRubro} from '../../../models/SubRubro';
 import {Component, OnInit} from '@angular/core';
 import {MatDialogConfig, MatDialog} from '@angular/material/dialog';
@@ -9,6 +8,10 @@ import {AgregarSubRubroComponent} from '../agregar-sub-rubro/agregar-sub-rubro.c
 import {SubRubroService} from '../../../service/sub-rubro.service';
 import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal.component';
 import {SubRubroExcel} from '../../../models/SubRubroExcel';
+import {Router} from '@angular/router';
+import {TokenService} from '../../../service/token.service';
+import {SnackConfirmComponent} from '../../../shared/snack-confirm/snack-confirm.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-listar-sub-rubro',
@@ -22,45 +25,59 @@ export class ListarSubRubroComponent implements OnInit {
   toUpdateSubRubro: SubRubro;
   subRubroExcel: SubRubroExcel;
   subRubrosExcel: SubRubroExcel[] = [];
-  consulting: boolean;
+  consulting = false;
+
+  isLogged = false;
+  roles: string[];
+  isAdmin = false;
+  isGerente = false;
 
   constructor(
     private subRubroService: SubRubroService,
     private serviceReport: ServiceReportService,
     private servicePdf: PdfExportService,
     private excelService: ExcelExportService,
-    public matDialog: MatDialog
-  ) {
+    public matDialog: MatDialog,
+    private router: Router,
+    private tokenService: TokenService,
+    private snackBar: MatSnackBar) {
   }
 
-  // tslint:disable-next-line: typedef
-  ngOnInit() {
+  ngOnInit(): void {
+    if (this.tokenService.getToken()) {
+      this.isLogged = true;
+    } else {
+      this.isLogged = false;
+    }
+    this.roles = this.tokenService.getAuthorities();
+    this.roles.forEach(rol => {
+      if (rol === 'ROLE_ADMIN') {
+        this.isAdmin = true;
+      } else if (rol === 'ROLE_GERENTE') {
+        this.isGerente = true;
+      }
+    });
     this.subRubroService.listarSubRubrosTodos().subscribe(data => {
       this.subRubros = data.data;
       this.subRubrosFilter = data.data;
-      // tslint:disable-next-line: no-shadowed-variable
-      const rubro = this.subRubros[0].rubroId;
     });
 
 
   }
 
-  // tslint:disable-next-line: typedef
-  newSubRubro() {
+  newSubRubro(): void {
     this.toUpdateSubRubro = null;
     this.consulting = false;
     this.openDialog();
   }
 
-  // tslint:disable-next-line: typedef
-  modificarSubRubro(subRubro: SubRubro) {
+  modificarSubRubro(subRubro: SubRubro): void {
     this.toUpdateSubRubro = subRubro;
     this.consulting = false;
     this.openDialog();
   }
 
-  // tslint:disable-next-line:typedef
-  consultarSubRubro(subRubro: SubRubro) {
+  consultarSubRubro(subRubro: SubRubro): void {
     this.toUpdateSubRubro = subRubro;
     this.consulting = true;
     this.openDialog();
@@ -82,11 +99,14 @@ export class ListarSubRubroComponent implements OnInit {
         this.subRubros = data.data;
         this.subRubrosFilter = data.data;
       });
+      if (result) {
+        this.openSnackBar(result);
+      }
+      this.getData();
     });
   }
 
-  // tslint:disable-next-line: typedef
-  showModal(subRubro: SubRubro) {
+  showModal(subRubro: SubRubro): void {
     const dialogConfig = new MatDialogConfig();
     // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
@@ -110,16 +130,14 @@ export class ListarSubRubroComponent implements OnInit {
     });
   }
 
-  // tslint:disable-next-line: typedef
-  getData() {
+  getData(): void {
     this.subRubroService.listarSubRubrosTodos().subscribe(data => {
       this.subRubros = data.data;
       this.subRubrosFilter = data.data;
     });
   }
 
-  // tslint:disable-next-line: typedef
-  filtrarSubRubro(event: any) {
+  filtrarSubRubro(event: any): void {
     if (this.busqueda !== null) {
       this.subRubrosFilter = this.subRubros.filter(item => {
         if (item.nombre.toUpperCase().includes(this.busqueda.toUpperCase())) {
@@ -131,20 +149,17 @@ export class ListarSubRubroComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: typedef
-  backPage() {
-    window.history.back();
+  backPage(): void {
+    this.router.navigate(['abm-compras']);
   }
 
-  // tslint:disable-next-line: typedef
-  exportarPDF() {
+  exportarPDF(): void {
     this.serviceReport.getReporteSubRubroPdf().subscribe(resp => {
       this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
     });
   }
 
-  // tslint:disable-next-line: typedef
-  exportarExcel() {
+  exportarExcel(): void {
     // tslint:disable-next-line: prefer-for-of
     for (let index = 0; index < this.subRubrosFilter.length; index++) {
       this.subRubroExcel = new SubRubroExcel('', '', '');
@@ -158,6 +173,14 @@ export class ListarSubRubroComponent implements OnInit {
     }
     this.excelService.exportToExcel(this.subRubrosExcel, 'Reporte SubRubros');
 
+  }
+
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
+    });
   }
 
 }

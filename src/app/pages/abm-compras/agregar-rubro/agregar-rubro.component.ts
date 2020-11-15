@@ -1,4 +1,3 @@
-import {AbmComprasService} from '../../../service/abm-compras.service';
 import {Rubro} from '../../../models/Rubro';
 import {Component, OnInit, Inject} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
@@ -28,8 +27,7 @@ export class AgregarRubroComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
-  // tslint:disable-next-line: typedef
-  ngOnInit() {
+  ngOnInit(): void {
     this.rubroService.listarRubrosTodos().subscribe(resp => this.rubros = resp.data);
     const {newRubro} = this.data;
 
@@ -49,13 +47,11 @@ export class AgregarRubroComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: typedef
-  close() {
+  close(): void {
     this.dialogRef.close();
   }
 
-  // tslint:disable-next-line: typedef
-  onSubmit() {
+  onSubmit(): void {
     this.submitted = true;
     this.errorInForm = this.submitted && this.rubroForm.invalid;
 
@@ -64,14 +60,12 @@ export class AgregarRubroComponent implements OnInit {
       console.log('Error en los datos');
     } else {
       this.makeDTO();
-
     }
   }
 
-  // tslint:disable-next-line: typedef
-  makeDTO() {
-    this.rubro.nombre = this.rubroForm.controls.nombre.value;
-    this.rubro.descripcion = this.rubroForm.controls.descripcion.value;
+  makeDTO(): void {
+    this.rubro.nombre = this.rubroForm.controls.nombre.value.trim().toUpperCase();
+    this.rubro.descripcion = this.rubroForm.controls.descripcion.value.trim().toUpperCase();
     if (this.updating) {
       this.rubro.id = this.rubroForm.controls.id.value;
       this.update();
@@ -80,26 +74,30 @@ export class AgregarRubroComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: typedef
-  save() {
+  save(): void {
     this.rubroService.guardarRubro(this.rubro).subscribe(data => {
-      this.rubro = data.data;
-      this.dialogRef.close();
+      this.msgSnack(data);
     });
   }
 
-  // tslint:disable-next-line: typedef
-  private update() {
+  private update(): void {
     this.rubroService.actualizarRubro(this.rubro).subscribe(data => {
-      this.rubro = data.data;
-      this.dialogRef.close();
+      this.msgSnack(data);
     });
   }
 
-  // tslint:disable-next-line: typedef
-  validar({target}) {
+  validar({target}): void {
     const {value: nombre} = target;
     const finded = this.rubros.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
     this.nombreRepe = (finded !== undefined) ? true : false;
+  }
+
+  msgSnack(data): void {
+    const {msg} = data;
+    if (data.code === 200) {
+      this.dialogRef.close(msg);
+    } else {
+      this.dialogRef.close('Error en el proceso');
+    }
   }
 }

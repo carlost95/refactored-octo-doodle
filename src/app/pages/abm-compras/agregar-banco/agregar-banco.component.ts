@@ -12,7 +12,7 @@ import {BancosService} from '../../../service/bancos.service';
 export class AgregarBancoComponent implements OnInit {
   banco: Banco = new Banco();
   bancoForm: FormGroup;
-  errorInForm: boolean = false;
+  errorInForm = false;
   submitted = false;
   updating = false;
   consulting = false;
@@ -26,8 +26,7 @@ export class AgregarBancoComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
-  // tslint:disable-next-line:typedef
-  ngOnInit() {
+  ngOnInit(): void {
     this.service.listarBancosTodos().subscribe(resp => this.bancos = resp.data);
     const {bank} = this.data;
 
@@ -48,13 +47,11 @@ export class AgregarBancoComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line:typedef
-  close() {
+  close(): void {
     this.dialogRef.close();
   }
 
-  // tslint:disable-next-line:typedef
-  onSubmit() {
+  onSubmit(): void {
     this.submitted = true;
     this.errorInForm = this.submitted && this.bancoForm.invalid;
     if (this.errorInForm || this.nombreRepe || this.abreRepe) {
@@ -66,10 +63,9 @@ export class AgregarBancoComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line:typedef
-  makeDTO() {
-    this.banco.nombre = this.bancoForm.controls.nombre.value;
-    this.banco.abreviatura = this.bancoForm.controls.abreviatura.value;
+  makeDTO(): void {
+    this.banco.nombre = this.bancoForm.controls.nombre.value.trim().toUpperCase();
+    this.banco.abreviatura = this.bancoForm.controls.abreviatura.value.trim().toUpperCase();
     if (this.updating) {
       this.banco.id = this.bancoForm.controls.id.value;
       this.update();
@@ -78,34 +74,37 @@ export class AgregarBancoComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line:typedef
-  save() {
+  save(): void {
     this.service.guardarBanco(this.banco).subscribe(data => {
-      this.banco = data.data;
-      this.dialogRef.close();
+      this.msgSnack(data);
     });
   }
 
-  // tslint:disable-next-line:typedef
-  private update() {
+  private update(): void {
     this.service.actualizarBanco(this.banco).subscribe(data => {
-      this.banco = data.data;
-      this.dialogRef.close();
+      this.msgSnack(data);
     });
   }
 
-  // tslint:disable-next-line: typedef
-  validarNombre({target}) {
+  validarNombre({target}): void {
     const {value: nombre} = target;
     const finded = this.bancos.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
     this.nombreRepe = (finded !== undefined) ? true : false;
   }
 
-  // tslint:disable-next-line:typedef
-  validarAbreviatura({target}) {
+  validarAbreviatura({target}): void {
     const {value: nombre} = target;
     const finded2 = this.bancos.find(p => p.abreviatura.toLowerCase() === nombre.toLowerCase());
     this.abreRepe = (finded2 !== undefined) ? true : false;
+  }
+
+  msgSnack(data): void {
+    const {msg} = data;
+    if (data.code === 200) {
+      this.dialogRef.close(msg);
+    } else {
+      this.dialogRef.close('Error en el proceso');
+    }
   }
 }
 

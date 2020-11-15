@@ -13,8 +13,7 @@ export class AppComponent implements OnInit {
   constructor(private tokenService: TokenService) {
   }
 
-  // tslint:disable-next-line:typedef use-lifecycle-interface
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.tokenService.getToken()) {
       console.log(this.tokenService.getToken());
       this.isLogged = true;
@@ -23,8 +22,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line:typedef
-  validateLogin($event) {
+  validateLogin($event): void {
     this.isLogged = $event;
   }
 

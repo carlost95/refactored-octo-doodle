@@ -31,7 +31,7 @@
           </button>
           &nbsp; &nbsp;
           <button mat-raised-button color="primary"
-                  (click)="newBanco()" title="Nuevo Banco">
+                  (click)="newBanco()" title="Nuevo Banco" *ngIf="isAdmin||isGerente">
             <i class="fas fa-university fa-lg"></i>
             Nuevo banco
           </button>
@@ -46,7 +46,8 @@
         <tr class="text-center">
           <th scope="col ">Nombre</th>
           <th scope="col ">Abreviatura</th>
-          <th scope="col ">Habilitacion</th>
+          <th scope="col " *ngIf="isAdmin">Habilitacion</th>
+          <th scope="col " *ngIf="isGerente">Habilitacion</th>
           <th scope="col*2 ">Opciones</th>
         </tr>
         </thead>
@@ -54,19 +55,18 @@
         <tr *ngFor="let banco of bancoFilter" class="text-center">
           <td>{{ banco.nombre }}</td>
           <td>{{ banco.abreviatura }}</td>
-          <td>
+          <td *ngIf="isAdmin || isGerente">
             <mat-slide-toggle [checked]="banco.habilitado"
                               (click)="showModal(banco)" color="primary">
             </mat-slide-toggle>
           </td>
-
           <td>
             <button class="btn btn-default m-0 p-0" title="Consultar"
                     (click)="consultarBanco(banco)">
               <i class="fas fa-info-circle"></i>
             </button>
             <button class="btn btn-default" title="Modificar "
-                    (click)="modificarBanco(banco)">
+                    (click)="modificarBanco(banco)" *ngIf="isAdmin||isGerente">
               <i class="fas fa-pencil-alt"></i>
             </button>
           </td>

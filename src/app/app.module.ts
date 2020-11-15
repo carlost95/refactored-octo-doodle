@@ -14,7 +14,7 @@ import {SnackConfirmComponent} from './shared/snack-confirm/snack-confirm.compon
 import {IndexComponent} from './index/index.component';
 import {LoginComponent} from './auth/login.component';
 import {interceptorProvider} from './interceptors/prod-interceptor.service';
-import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { ResetPasswordComponent } from './pages/seguridad/reset-password/reset-password.component';
 
 
 @NgModule({

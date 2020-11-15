@@ -3,7 +3,7 @@
     <div class="card-body">
       <ul class="navbar-nav mr-auto text-center trans">
         <td>
-          <div class="m-3">
+          <div class="m-3" *ngIf="isLogged">
             <button [routerLink]="['listar-banco']" routerLinkActive="active"
                     class="btn btn-outline-warning" style="width: 250px; height: 150px;">
               <i class="fas fa-university fa-6x"></i>

@@ -1,4 +1,3 @@
-import {AbmComprasService} from '../../../service/abm-compras.service';
 import {Marca} from '../../../models/Marca';
 import {Component, OnInit, Inject} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
@@ -28,10 +27,8 @@ export class AgregarMarcaComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
-  // tslint:disable-next-line: typedef
-  ngOnInit() {
+  ngOnInit(): void {
     this.marcaService.listarMarcaTodos().subscribe(resp => this.marcas = resp.data);
-
     const {mark} = this.data;
     if (mark) {
       this.consulting = this.data.consulting;
@@ -49,13 +46,11 @@ export class AgregarMarcaComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: typedef
-  close() {
+  close(): void {
     this.dialogRef.close();
   }
 
-  // tslint:disable-next-line: typedef
-  onSubmit() {
+  onSubmit(): void {
     this.submitted = true;
     this.errorInForm = this.submitted && this.marcaForm.invalid;
     if (this.errorInForm || this.nombreRepe || this.abreRepe) {
@@ -67,10 +62,9 @@ export class AgregarMarcaComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: typedef
-  makeDTO() {
-    this.marca.nombre = this.marcaForm.controls.nombre.value;
-    this.marca.abreviatura = this.marcaForm.controls.abreviatura.value;
+  makeDTO(): void {
+    this.marca.nombre = this.marcaForm.controls.nombre.value.trim().toUpperCase();
+    this.marca.abreviatura = this.marcaForm.controls.abreviatura.value.trim().toUpperCase();
     if (this.updating) {
       this.marca.id = this.marcaForm.controls.id.value;
       this.update();
@@ -79,33 +73,36 @@ export class AgregarMarcaComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: typedef
-  save() {
+  save(): void {
     this.marcaService.guardarMarca(this.marca).subscribe(data => {
-      this.marca = data.data;
-      this.dialogRef.close();
+      this.msgSnack(data);
     });
   }
 
-  // tslint:disable-next-line: typedef
-  private update() {
+  private update(): void {
     this.marcaService.actualizarMarca(this.marca).subscribe(data => {
-      this.marca = data.data;
-      this.dialogRef.close();
+      this.msgSnack(data);
     });
   }
 
-  // tslint:disable-next-line: typedef
-  validarNombre({target}) {
+  validarNombre({target}): void {
     const {value: nombre} = target;
     const finded = this.marcas.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
     this.nombreRepe = (finded !== undefined) ? true : false;
   }
 
-  // tslint:disable-next-line: typedef
-  validarAbreviatura({target}) {
+  validarAbreviatura({target}): void {
     const {value: nombre} = target;
     const finded = this.marcas.find(p => p.abreviatura.toLowerCase() === nombre.toLowerCase());
     this.abreRepe = (finded !== undefined) ? true : false;
+  }
+
+  msgSnack(data): void {
+    const {msg} = data;
+    if (data.code === 200) {
+      this.dialogRef.close(msg);
+    } else {
+      this.dialogRef.close('Error en el proceso');
+    }
   }
 }

@@ -1,6 +1,6 @@
 import {Banco} from '../../../models/Banco';
 import {Router} from '@angular/router';
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {AgregarBancoComponent} from '../agregar-banco/agregar-banco.component';
 import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal.component';
@@ -9,6 +9,9 @@ import {ServiceReportService} from '../../../service/service-report.service';
 import {PdfExportService} from '../../../service/pdf-export.service';
 import {BancoExcel} from '../../../models/BancoExcel';
 import {ExcelExportService} from '../../../service/excel-export.service';
+import {TokenService} from '../../../service/token.service';
+import {SnackConfirmComponent} from '../../../shared/snack-confirm/snack-confirm.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-listar-banco',
@@ -25,25 +28,43 @@ export class ListarBancoComponent implements OnInit {
   bancoExcel: BancoExcel;
   bancosExcel: BancoExcel[] = [];
 
+  isLogged = false;
+  roles: string[];
+  isAdmin = false;
+  isGerente = false;
+
   constructor(
     private service: BancosService,
     private serviceReport: ServiceReportService,
     private servicePdf: PdfExportService,
     private excelService: ExcelExportService,
     public matDialog: MatDialog,
-  ) {
+    private router: Router,
+    private tokenService: TokenService,
+    private snackBar: MatSnackBar) {
   }
 
-  // tslint:disable-next-line: typedef
-  ngOnInit() {
+  ngOnInit(): void {
+    if (this.tokenService.getToken()) {
+      this.isLogged = true;
+    } else {
+      this.isLogged = false;
+    }
+    this.roles = this.tokenService.getAuthorities();
+    this.roles.forEach(rol => {
+      if (rol === 'ROLE_ADMIN') {
+        this.isAdmin = true;
+      } else if (rol === 'ROLE_GERENTE') {
+        this.isGerente = true;
+      }
+    });
     this.service.listarBancosTodos().subscribe(data => {
       this.bancos = data.data;
       this.bancoFilter = data.data;
     });
   }
 
-  // tslint:disable-next-line: typedef
-  filtrarBanco(event: any) {
+  filtrarBanco(event: any): void {
     this.busqueda = this.busqueda.toLowerCase();
     this.bancoFilter = this.bancos;
     if (this.busqueda !== null) {
@@ -55,22 +76,19 @@ export class ListarBancoComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: typedef
-  newBanco() {
+  newBanco(): void {
     this.toUpdateBank = null;
     this.consultingBank = false;
     this.openDialog();
   }
 
-  // tslint:disable-next-line:typedef
-  modificarBanco(banco: Banco) {
+  modificarBanco(banco: Banco): void {
     this.toUpdateBank = banco;
     this.consultingBank = false;
     this.openDialog();
   }
 
-  // tslint:disable-next-line:typedef
-  consultarBanco(banco: Banco) {
+  consultarBanco(banco: Banco): void {
     this.toUpdateBank = banco;
     this.consultingBank = true;
     this.openDialog();
@@ -78,7 +96,6 @@ export class ListarBancoComponent implements OnInit {
 
   openDialog(): void {
     const dialogConfig = new MatDialogConfig();
-    // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
     dialogConfig.height = '400px';
@@ -93,18 +110,19 @@ export class ListarBancoComponent implements OnInit {
         this.bancos = data.data;
         this.bancoFilter = data.data;
       });
+      if (result) {
+        this.openSnackBar(result);
+      }
+      this.getData();
     });
   }
 
-  // tslint:disable-next-line:typedef
-  backPage() {
-    window.history.back();
+  backPage(): void {
+    this.router.navigate(['abm-compras']);
   }
 
-  // tslint:disable-next-line:typedef
-  showModal(banco: Banco) {
+  showModal(banco: Banco): void {
     const dialogConfig = new MatDialogConfig();
-    // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
     dialogConfig.height = '300px';
@@ -127,16 +145,14 @@ export class ListarBancoComponent implements OnInit {
     });
   }
 
-  // tslint:disable-next-line: typedef
-  getData() {
+  getData(): void {
     this.service.listarBancosTodos().subscribe(data => {
       this.bancos = data.data;
       this.bancoFilter = data.data;
     });
   }
 
-  // tslint:disable-next-line: typedef
-  exportarExcel() {
+  exportarExcel(): void {
     // tslint:disable-next-line: prefer-for-of
     for (let index = 0; index < this.bancoFilter.length; index++) {
       this.bancoExcel = new BancoExcel(0, '', '');
@@ -150,10 +166,17 @@ export class ListarBancoComponent implements OnInit {
     this.excelService.exportToExcel(this.bancosExcel, 'Reporte Banco');
   }
 
-  // tslint:disable-next-line: typedef
-  exportarPDF() {
+  exportarPDF(): void {
     this.serviceReport.getReporteBancoPdf().subscribe(resp => {
       this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
+    });
+  }
+
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
     });
   }
 }
