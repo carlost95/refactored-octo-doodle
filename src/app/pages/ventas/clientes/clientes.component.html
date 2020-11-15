@@ -1,59 +1,44 @@
 <div class="container">
   <div class="card">
     <header class="row mt-4 ml-3 mb-3">
-      <i
-        class="col-md-2 m-0 fas fa-chevron-left fa-3x"
-        style="margin-right: 100%"
-        (click)="backPage()"
-      ></i>
+      <i class="col-md-2 m-0 fas fa-chevron-left fa-3x" style="margin-right: 100%" (click)="backPage()">
+      </i>
       <h1 class="m-0 col-md-10" style="padding-left: 14rem !important">
-        Clientes
+        Lista de clientes
       </h1>
     </header>
 
     <div class="row card-body">
       <section class="container">
         <div class="row col-12 d-flex justify-content-between">
-          <label class="col-5 m-0 p-0"><h3>Busqueda:</h3></label>
-
+          <label class="col-5 m-0 p-0">
+            <h3>Busqueda:</h3>
+          </label>
           <div class="col-12 m-0 p-0 aligth">
-            <input
-              class="col-12 position-relative has-icon-right searchDiv"
-              type="text"
-              [(ngModel)]="busqueda"
-              class="form-control searchText"
-              placeholder="ingrese busqueda"
-              (keyup)="filtrarCliente()"
-            />
+            <input class="col-12 position-relative has-icon-right searchDiv"
+                   type="text" [(ngModel)]="busqueda" class="form-control searchText"
+                   placeholder="ingrese busqueda" (keyup)="filtrarCliente()"/>
           </div>
         </div>
-
         <br/>
         <div class="row col-12 d-flex justify-content-end">
-          <button class="btn btn-outline-danger" (click)="exportarPDF()">
-            <i class="fas fa-file-pdf fa-2x"></i>
+          <button (click)="exportarPDF()" class="btn btn-outline-danger">
+            <i class="fas fa-file-pdf fa-lg"></i>
           </button>
           &nbsp;
-          <button class="btn btn-outline-success" (click)="exportarExcel()">
-            <i class="far fa-file-excel fa-2x"></i>
+          <button (click)="exportarExcel()" class="btn btn-outline-success">
+            <i class="far fa-file-excel fa-lg"></i>
           </button>
           &nbsp;
-          <button
-            mat-raised-button
-            color="primary"
-            (click)="newClient()"
-            title="Nueva Marca"
-          >
+          <button (click)="newClient()" mat-raised-button color="primary"
+                  title="Nueva Marca">
             <i class="fas fa-user"></i>
             Nuevo Cliente
           </button>
         </div>
       </section>
 
-      <div
-        class="card-body p-0"
-        style="width: 1100px; height: 450px; overflow: auto;"
-      >
+      <div class="card-body p-0" style="width: 1100px; height: 450px; overflow: auto;">
         <table class="table table-striped">
           <thead class="thead-dark">
           <tr class="text-center">
@@ -70,36 +55,26 @@
             <td>{{ cliente.apellido | uppercase }}</td>
             <td>{{ cliente.dni }}</td>
             <td>
-              <mat-slide-toggle
-                [checked]="cliente.estado"
-                (click)="showModal(cliente)"
-                color="primary"
-              ></mat-slide-toggle>
+              <mat-slide-toggle [checked]="cliente.estado"
+                                (click)="showModal(cliente)" color="primary">
+
+              </mat-slide-toggle>
             </td>
             <td>
               <button class="btn btn-default m-0 p-0" title="Consultar"
                       (click)="readClient(cliente)">
-                <i class="fas fa-info-circle"></i>
+                <i class="fas fa-exclamation"></i>
               </button>
               &nbsp;
-              <button
-                (click)="editClient(cliente)"
-                class="btn btn-default m-0 p-0"
-                title="Modificar "
-              >
+              <button (click)="editClient(cliente)" class="btn btn-default m-0 p-0"
+                      title="Modificar ">
                 <i class="fas fa-user-edit"></i>
-
               </button>
-
-              <button
-                (click)="direcciones(cliente.id)"
-                class="btn btn-default m-0 p-0"
-                title="Direcciones "
-              >
-                <i class="fas fa-map-signs"></i>
-
+              &nbsp;
+              <button (click)="direcciones(cliente.id)" class="btn btn-default m-0 p-0"
+                      title="Direcciones ">
+                <i class="fas fa-map-marker-alt"></i>
               </button>
-
             </td>
           </tr>
           </tbody>
@@ -107,5 +82,4 @@
       </div>
     </div>
   </div>
-
 </div>

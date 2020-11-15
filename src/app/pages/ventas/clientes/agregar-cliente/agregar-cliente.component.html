@@ -9,12 +9,8 @@
       <p>
         <mat-form-field appearance="legacy">
           <mat-label>Apellido</mat-label>
-          <input
-            matInput
-            formControlName="apellido"
-            required
-            autocomplete="off"
-          />
+          <input matInput formControlName="apellido" required
+                 autocomplete="off"/>
           <mat-error *ngIf="clientForm.controls.apellido.errors">
             Apellido es<strong> requerido</strong>
           </mat-error>
@@ -24,12 +20,8 @@
       <p>
         <mat-form-field appearance="legacy">
           <mat-label>Nombre</mat-label>
-          <input
-            matInput
-            formControlName="nombre"
-            required
-            autocomplete="off"
-          />
+          <input matInput formControlName="nombre" required
+                 autocomplete="off"/>
           <mat-error *ngIf="clientForm.controls.nombre.errors">
             Nombre es<strong> requerido</strong>
           </mat-error>
@@ -39,13 +31,8 @@
       <p>
         <mat-form-field appearance="legacy">
           <mat-label>D.N.I.</mat-label>
-          <input
-            matInput
-            formControlName="dni"
-            required
-            autocomplete="off"
-            (keyup)="validar($event)"
-          />
+          <input matInput formControlName="dni" required
+                 autocomplete="off" (keyup)="validate($event)"/>
           <mat-error *ngIf="clientForm.controls.dni.errors">
             D.N.I. es<strong> requerido</strong>
           </mat-error>
@@ -57,18 +44,15 @@
       <p>
         <mat-form-field appearance="legacy">
           <mat-label>Mail</mat-label>
-          <input
-            matInput
-            formControlName="mail"
-            autocomplete="off"
-          />
+          <input matInput formControlName="mail"
+                 autocomplete="off"/>
         </mat-form-field>
       </p>
 
     </form>
   </section>
   <footer class="modal-footer">
-    <button class="btn btn-outline-danger" (click)="close()" >Cerrar</button>
+    <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>
     <button *ngIf="!consultar" class="btn btn-warning" (click)="onSubmit()">Guardar</button>
   </footer>
 </div>

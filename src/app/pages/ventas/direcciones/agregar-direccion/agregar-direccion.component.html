@@ -1,8 +1,8 @@
-<!--<div class="container" style="color: white">-->
 <div class="container">
   <div class="py-3">
-    <h1 style="text-align: center" *ngIf="!updating">Nueva direccion</h1>
+    <h1 style="text-align: center" *ngIf="!updating && !consultar">Nueva direccion</h1>
     <h1 style="text-align: center" *ngIf="updating">Actualizar direccion</h1>
+    <h1 style="text-align: center" *ngIf="consultar">Direccion de cliente</h1>
   </div>
   <hr>
   <section *ngIf="init">
@@ -34,10 +34,8 @@
 
         <mat-form-field class="col-md-5" appearance="fill">
           <mat-label>Distrito</mat-label>
-          <mat-select
-            name="distrito"
-            formControlName="distrito"
-            autocomplete="off">
+          <mat-select name="distrito" formControlName="distrito"
+                      autocomplete="off">
             <mat-option *ngFor="let distrito of distritos" [value]="distrito.id">
               {{ distrito.nombre }}
             </mat-option>
@@ -62,22 +60,25 @@
     </div>
   </section>
   <hr>
-    <div class="text-right py-3">
-      <button (click)="close()" class="btn btn-outline-danger">
-        Cancelar
-      </button>
-      &nbsp;
-      <button class="btn btn-primary" (click)="prevMap()" *ngIf="!init">
-        Anterior
-      </button>
-      &nbsp;
-      <button class="btn btn-warning" (click)="showMap()" *ngIf="init">
-        Siguiente
-      </button>
-      &nbsp;
-      <button class="btn btn-warning" (click)="onSubmit()" *ngIf="!init && !consultar">
-        Aceptar
-      </button>
+  <div class="text-right py-3">
+    <button (click)="close()" class="btn btn-outline-danger" *ngIf="!consultar">
+      Cancelar
+    </button>
+    <button (click)="close()" class="btn btn-outline-danger" *ngIf="consultar">
+      Cerrar
+    </button>
+    &nbsp;
+    <button class="btn btn-primary" (click)="prevMap()" *ngIf="!init">
+      Anterior
+    </button>
+    &nbsp;
+    <button class="btn btn-warning" (click)="showMap()" *ngIf="init">
+      Siguiente
+    </button>
+    &nbsp;
+    <button class="btn btn-warning" (click)="onSubmit()" *ngIf="!init && !consultar">
+      Aceptar
+    </button>
   </div>
 </div>
 

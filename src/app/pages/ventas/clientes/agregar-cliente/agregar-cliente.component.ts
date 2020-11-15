@@ -1,23 +1,23 @@
-import {Cliente} from "../../../../models/Cliente";
-import {Component, Inject, Input, OnInit} from "@angular/core";
-import {FormBuilder, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {ClienteService} from "../../../../service/cliente.service";
+import {Cliente} from '../../../../models/Cliente';
+import {Component, Inject, OnInit} from '@angular/core';
+import {FormBuilder, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {ClienteService} from '../../../../service/cliente.service';
 
 @Component({
-  selector: "app-agregar-cliente",
-  templateUrl: "./agregar-cliente.component.html",
-  styleUrls: ["./agregar-cliente.component.css"],
+  selector: 'app-agregar-cliente',
+  templateUrl: './agregar-cliente.component.html',
+  styleUrls: ['./agregar-cliente.component.css'],
 })
 export class AgregarClienteComponent implements OnInit {
   client: Cliente = new Cliente();
-  updating: boolean = false;
-  consultar: boolean = false;
+  updating = false;
+  consultar = false;
   clientForm: any;
   clients: Cliente[] = [];
-  duplicateDni: boolean = false;
-  submitted: boolean = false;
-  errorInForm: boolean = true;
+  duplicateDni = false;
+  submitted = false;
+  errorInForm = true;
 
 
   constructor(private service: ClienteService,
@@ -26,7 +26,7 @@ export class AgregarClienteComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.service.getAll().subscribe(resp => {
       this.clients = resp.data;
       console.log(resp);
@@ -51,21 +51,22 @@ export class AgregarClienteComponent implements OnInit {
         nombre: ['', Validators.required],
         dni: ['', Validators.required],
         mail: ['', null]
-      })
+      });
     }
   }
-  validar({target}) {
+
+  validate({target}): void {
     const {value: dni} = target;
     const finded = this.clients.find(c => dni === c.dni);
     this.duplicateDni = finded ? true : false;
   }
 
-  close() {
+  close(): void {
     this.data.save = false;
     this.dialogRef.close(false);
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.submitted = true;
     this.errorInForm = this.submitted && this.clientForm.invalid;
     if (this.errorInForm || this.duplicateDni) {
@@ -75,9 +76,9 @@ export class AgregarClienteComponent implements OnInit {
     }
   }
 
-  makeDTO() {
-    this.client.apellido = (this.clientForm.controls.apellido.value).trim();
-    this.client.nombre = (this.clientForm.controls.nombre.value).trim();
+  makeDTO(): void {
+    this.client.apellido = (this.clientForm.controls.apellido.value).trim().toUpperCase();
+    this.client.nombre = (this.clientForm.controls.nombre.value).trim().toUpperCase();
     this.client.dni = (this.clientForm.controls.dni.value).trim();
     this.client.mail = (this.clientForm.controls.mail.value).trim();
     if (this.updating) {
@@ -89,18 +90,24 @@ export class AgregarClienteComponent implements OnInit {
     }
   }
 
-
-  save() {
+  save(): void {
     this.service.save(this.client).subscribe(data => {
-      this.client = data.data;
-      this.dialogRef.close(true);
+      this.msgSnack(data);
     });
   }
 
-  update() {
+  update(): void {
     this.service.update(this.client).subscribe(data => {
-      this.client = data.data;
-      this.dialogRef.close(true);
+      this.msgSnack(data);
     });
+  }
+
+  msgSnack(data): void {
+    const {msg} = data;
+    if (data.code === 200) {
+      this.dialogRef.close(msg);
+    } else {
+      this.dialogRef.close('Error en el proceso');
+    }
   }
 }

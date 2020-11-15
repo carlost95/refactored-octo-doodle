@@ -1,14 +1,14 @@
-import {Router} from "@angular/router";
-import {Cliente} from "../../../models/Cliente";
-import {Component, OnInit} from "@angular/core";
+import {Router} from '@angular/router';
+import {Cliente} from '../../../models/Cliente';
+import {Component, OnInit} from '@angular/core';
 import {PdfExportService} from '../../../service/pdf-export.service';
 import {ServiceReportService} from '../../../service/service-report.service';
-import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {AgregarClienteComponent} from "./agregar-cliente/agregar-cliente.component";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {SnackConfirmComponent} from "../../../shared/snack-confirm/snack-confirm.component";
-import {ConfirmModalComponent} from "../../../shared/confirm-modal/confirm-modal.component";
-import {ClienteService} from "../../../service/cliente.service";
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {AgregarClienteComponent} from './agregar-cliente/agregar-cliente.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {SnackConfirmComponent} from '../../../shared/snack-confirm/snack-confirm.component';
+import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal.component';
+import {ClienteService} from '../../../service/cliente.service';
 
 @Component({
   selector: 'app-clientes',
@@ -29,19 +29,22 @@ export class ClientesComponent implements OnInit {
               private servicePdf: PdfExportService,
               private serviceReport: ServiceReportService,
               public matDialog: MatDialog,
-              private _snackBar: MatSnackBar) {}
+              // tslint:disable-next-line:variable-name
+              private _snackBar: MatSnackBar) {
+  }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.getData();
   }
-  getData() {
+
+  getData(): void {
     this.service.getAll().subscribe((data) => {
       this.clientes = data.data;
       this.clientesFilter = data.data;
     });
   }
 
-  filtrarCliente() {
+  filtrarCliente(): void {
     console.log(this.busqueda);
 
     this.busqueda = this.busqueda.toLowerCase();
@@ -58,37 +61,35 @@ export class ClientesComponent implements OnInit {
     }
   }
 
-  backPage() {
-    window.history.back();
+  backPage(): void {
+    this.router.navigate(['ventas']);
   }
 
-  consultaCliente() {
-  }
 
-  exportarExcel() {
+  exportarExcel(): void {
     console.warn('muestra de excel');
 
   }
 
-  exportarPDF() {
+  exportarPDF(): void {
     this.serviceReport.getReporteBancoPdf().subscribe(resp => {
       this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
     });
   }
 
-  newClient() {
+  newClient(): void {
     this.toUpdate = null;
     this.consulting = false;
     this.openDialog();
   }
 
-  editClient(client: Cliente) {
+  editClient(client: Cliente): void {
     this.toUpdate = client;
     this.consulting = false;
     this.openDialog();
   }
 
-  readClient(client: Cliente){
+  readClient(client: Cliente): void {
     this.toUpdate = client;
     this.consulting = true;
     this.openDialog();
@@ -98,7 +99,7 @@ export class ClientesComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
-    dialogConfig.height = '540px'
+    dialogConfig.height = '540px';
     dialogConfig.width = '300px';
     dialogConfig.data = {
       cliente: this.toUpdate,
@@ -106,28 +107,22 @@ export class ClientesComponent implements OnInit {
     };
     const modalDialog = this.matDialog.open(AgregarClienteComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
-      if(result){
+      if (result) {
         this.openSnackBar();
       }
       this.getData();
-    })
-  }
-
-  openSnackBar() {
-    this._snackBar.openFromComponent(SnackConfirmComponent, {
-      panelClass: ['error-snackbar'],
-      duration: 5 * 1000,
     });
   }
-  showModal(cliente: Cliente) {
+
+  showModal(cliente: Cliente): void {
     const dialogConfig = new MatDialogConfig();
     // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
-    dialogConfig.id = "modal-component";
+    dialogConfig.id = 'modal-component';
     dialogConfig.height = '300px';
     dialogConfig.width = '350px';
     dialogConfig.data = {
-      message: 'Desea cambiar estado?',
+      message: '¿Desea cambiar estado?',
       title: 'Cambio estado',
       state: cliente.estado
     };
@@ -136,14 +131,22 @@ export class ClientesComponent implements OnInit {
       if (result.state) {
         this.service.changeStatus(cliente.id).subscribe(result => {
           this.getData();
-        })
+        });
       } else {
         this.getData();
       }
     });
   }
 
-  direcciones(id: number) {
-    this.router.navigate([`/ventas/direcciones/${id}`])
+  direcciones(id: number): void {
+    this.router.navigate([`/ventas/direcciones/${id}`]);
   }
+
+  openSnackBar(): void {
+    this._snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+    });
+  }
+
 }

@@ -1,12 +1,12 @@
 import {AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Direccion} from "../../../../models/Direccion";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {DistritoService} from "../../../../service/distrito.service";
-import {Distrito} from "../../../../models/Distrito";
-import {DireccionesService} from "../../../../service/direcciones.service";
-import {MapMarker} from "@angular/google-maps";
-import {Ubicacion} from "../../../../models/Ubicacion";
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Direccion} from '../../../../models/Direccion';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {DistritoService} from '../../../../service/distrito.service';
+import {Distrito} from '../../../../models/Distrito';
+import {DireccionesService} from '../../../../service/direcciones.service';
+import {MapMarker} from '@angular/google-maps';
+import {Ubicacion} from '../../../../models/Ubicacion';
 import LatLng = google.maps.LatLng;
 
 @Component({
@@ -22,11 +22,10 @@ export class AgregarDireccionComponent implements OnInit {
   consultar: boolean;
   updating: boolean;
   direccionForm: FormGroup;
-  distritos: Distrito[] = []
+  distritos: Distrito[] = [];
   submitted: boolean;
   errorInForm: any;
 
-  mapTypeId = 'hybrid';
   position: LatLng;
   lastPosition: LatLng;
   label = {
@@ -47,11 +46,12 @@ export class AgregarDireccionComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private distritoService: DistritoService,
     private direccionService: DireccionesService,
+    // tslint:disable-next-line:variable-name
     private _elementRef: ElementRef
   ) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.distritoService.listarDistritosHabilitados().subscribe(res => {
       this.distritos = res.data;
       this.initForm(res.data);
@@ -59,7 +59,7 @@ export class AgregarDireccionComponent implements OnInit {
   }
 
 
-  initForm(data: any) {
+  initForm(data: any): void {
     const {direccion, cliente} = this.data;
 
     if (direccion) {
@@ -82,7 +82,7 @@ export class AgregarDireccionComponent implements OnInit {
         descripcion: ['', null],
         numerocalle: ['', Validators.required],
         cliente: [cliente, null]
-      })
+      });
       const ubicacion = new Ubicacion();
       ubicacion.lat = -29.164942382332168;
       ubicacion.lng = -67.49530922355653;
@@ -92,24 +92,24 @@ export class AgregarDireccionComponent implements OnInit {
   }
 
 
-  setPosition(ubicacion: Ubicacion) {
+  setPosition(ubicacion: Ubicacion): void {
     console.log(ubicacion);
     this.position = new LatLng(ubicacion.lat, ubicacion.lng);
     this.lastPosition = new LatLng(ubicacion.lat, ubicacion.lng);
-    console.log(this.lastPosition)
+    console.log(this.lastPosition);
   }
 
-  close() {
+  close(): void {
     this.data.save = false;
     this.dialogRef.close(false);
   }
 
-  onSubmit() {
+  onSubmit(): void {
     console.log(this.direccionForm.controls);
     this.submitted = true;
     this.errorInForm = this.submitted && this.direccionForm.invalid;
-    console.log(this.errorInForm ? 'True' : 'false')
-    console.log(this.lastPosition)
+    console.log(this.errorInForm ? 'True' : 'false');
+    console.log(this.lastPosition);
     if (this.errorInForm) {
       this.direccionForm.controls.calle.markAsTouched();
       this.direccionForm.controls.distrito.markAsTouched();
@@ -119,8 +119,8 @@ export class AgregarDireccionComponent implements OnInit {
     }
   }
 
-  makeDTO() {
-    console.log(this.direccionForm.controls.calle.value)
+  makeDTO(): void {
+    console.log(this.direccionForm.controls.calle.value);
     this.direccion.calle = this.direccionForm.controls.calle.value;
     this.direccion.numerocalle = this.direccionForm.controls.numerocalle.value;
     this.direccion.descripcion = (this.direccionForm.controls.descripcion.value).trim();
@@ -140,22 +140,22 @@ export class AgregarDireccionComponent implements OnInit {
     }
   }
 
-  private update() {
-    console.log(this.direccion)
-    console.log(this.direccion.ubicacion)
+  private update(): void {
+    console.log(this.direccion);
+    console.log(this.direccion.ubicacion);
     this.direccionService.update(this.direccion).subscribe(resp => {
       this.dialogRef.close(true);
     });
   }
 
-  private save() {
-    console.log(this.direccion)
+  private save(): void {
+    console.log(this.direccion);
     this.direccionService.save(this.direccion).subscribe(resp => {
       this.dialogRef.close(true);
     });
   }
 
-  showMap() {
+  showMap(): void {
     this.submitted = true;
     this.errorInForm = this.submitted && this.direccionForm.invalid;
     if (this.errorInForm) {
@@ -170,13 +170,12 @@ export class AgregarDireccionComponent implements OnInit {
     console.log(this.lastPosition.lng());
   }
 
-  prevMap() {
+  prevMap(): void {
     this.init = true;
     this.position = this.lastPosition;
   }
 
-
-  getCurrentPosition() {
+  getCurrentPosition(): void {
     this.lastPosition = this.marker ? this.marker.getPosition() : this.lastPosition;
   }
 
