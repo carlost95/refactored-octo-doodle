@@ -69,8 +69,8 @@ export class AgregarDepartamentoComponent implements OnInit {
 
 
   makeDTO(): void {
-    this.departamento.nombre = (this.departamentoForm.controls.nombre.value).trim();
-    this.departamento.abreviatura = (this.departamentoForm.controls.abreviatura.value).trim();
+    this.departamento.nombre = (this.departamentoForm.controls.nombre.value).trim().toUpperCase();
+    this.departamento.abreviatura = (this.departamentoForm.controls.abreviatura.value).trim().toUpperCase();
     if (this.updating) {
       this.departamento.id = this.departamentoForm.controls.id.value;
       this.departamento.estado = this.departamentoForm.controls.estado.value;

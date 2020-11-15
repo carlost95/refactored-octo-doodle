@@ -64,8 +64,8 @@ export class AgregarRubroComponent implements OnInit {
   }
 
   makeDTO(): void {
-    this.rubro.nombre = this.rubroForm.controls.nombre.value.toUpperCase();
-    this.rubro.descripcion = this.rubroForm.controls.descripcion.value.toUpperCase();
+    this.rubro.nombre = this.rubroForm.controls.nombre.value.trim().toUpperCase();
+    this.rubro.descripcion = this.rubroForm.controls.descripcion.value.trim().toUpperCase();
     if (this.updating) {
       this.rubro.id = this.rubroForm.controls.id.value;
       this.update();

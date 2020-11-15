@@ -86,8 +86,8 @@ export class AgregarDistritoComponent implements OnInit {
 
   private makeDTO(): void {
     const data = this.distritoForm.controls;
-    this.distrito.nombre = data.nombre.value;
-    this.distrito.abreviatura = data.abreviatura.value;
+    this.distrito.nombre = data.nombre.value.trim().toUpperCase();
+    this.distrito.abreviatura = data.abreviatura.value.trim().toUpperCase();
     const departamento = this.departamentos.find(d => d.id === data.departamento.value);
     this.distrito.departamento = departamento;
     if (this.updating) {

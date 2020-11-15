@@ -64,8 +64,8 @@ export class AgregarBancoComponent implements OnInit {
   }
 
   makeDTO(): void {
-    this.banco.nombre = this.bancoForm.controls.nombre.value.toUpperCase();
-    this.banco.abreviatura = this.bancoForm.controls.abreviatura.value.toUpperCase();
+    this.banco.nombre = this.bancoForm.controls.nombre.value.trim().toUpperCase();
+    this.banco.abreviatura = this.bancoForm.controls.abreviatura.value.trim().toUpperCase();
     if (this.updating) {
       this.banco.id = this.bancoForm.controls.id.value;
       this.update();
