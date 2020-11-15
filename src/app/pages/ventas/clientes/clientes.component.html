@@ -7,7 +7,6 @@
         Lista de clientes
       </h1>
     </header>
-
     <div class="row card-body">
       <section class="container">
         <div class="row col-12 d-flex justify-content-between">
@@ -37,7 +36,6 @@
           </button>
         </div>
       </section>
-
       <div class="card-body p-0" style="width: 1100px; height: 450px; overflow: auto;">
         <table class="table table-striped">
           <thead class="thead-dark">
@@ -45,7 +43,7 @@
             <th scope="col ">Nombre</th>
             <th scope="col ">Apellido</th>
             <th scope="col ">D.N.I.</th>
-            <th scope="col ">Habilitacion</th>
+            <th scope="col " *ngIf="isAdmin||isGerente">Habilitacion</th>
             <th scope="col*2 ">Opciones</th>
           </tr>
           </thead>
@@ -54,10 +52,9 @@
             <td>{{ cliente.nombre | uppercase }}</td>
             <td>{{ cliente.apellido | uppercase }}</td>
             <td>{{ cliente.dni }}</td>
-            <td>
+            <td *ngIf="isAdmin||isGerente">
               <mat-slide-toggle [checked]="cliente.estado"
                                 (click)="showModal(cliente)" color="primary">
-
               </mat-slide-toggle>
             </td>
             <td>

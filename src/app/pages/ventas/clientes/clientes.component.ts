@@ -9,6 +9,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {SnackConfirmComponent} from '../../../shared/snack-confirm/snack-confirm.component';
 import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal.component';
 import {ClienteService} from '../../../service/cliente.service';
+import {TokenService} from '../../../service/token.service';
 
 @Component({
   selector: 'app-clientes',
@@ -24,16 +25,35 @@ export class ClientesComponent implements OnInit {
   toUpdate: Cliente;
   consulting: boolean;
 
+  isLogged = false;
+  roles: string[];
+  isAdmin = false;
+  isGerente = false;
+
   constructor(private service: ClienteService,
               private router: Router,
               private servicePdf: PdfExportService,
               private serviceReport: ServiceReportService,
               public matDialog: MatDialog,
+              private tokenService: TokenService,
               // tslint:disable-next-line:variable-name
               private _snackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
+    if (this.tokenService.getToken()) {
+      this.isLogged = true;
+    } else {
+      this.isLogged = false;
+    }
+    this.roles = this.tokenService.getAuthorities();
+    this.roles.forEach(rol => {
+      if (rol === 'ROLE_ADMIN') {
+        this.isAdmin = true;
+      } else if (rol === 'ROLE_GERENTE') {
+        this.isGerente = true;
+      }
+    });
     this.getData();
   }
 
