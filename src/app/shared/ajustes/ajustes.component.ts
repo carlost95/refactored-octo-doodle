@@ -52,17 +52,15 @@ export class AjustesComponent implements OnInit {
   submitted = false;
 
 
-  constructor(
-    private comprasService: PedidosService,
-    private articuloService: ArticulosService,
-    private proveedorService: ProveedoresService,
-    private movimientosService: MovimientosService,
-    private route: Router,
-    private active: ActivatedRoute,
-    private ajusteService: AjustesService,
-    private formBuilder: FormBuilder,
-    public matDialog: MatDialog,
-  ) {
+  constructor(private comprasService: PedidosService,
+              private articuloService: ArticulosService,
+              private proveedorService: ProveedoresService,
+              private movimientosService: MovimientosService,
+              private route: Router,
+              private active: ActivatedRoute,
+              private ajusteService: AjustesService,
+              private formBuilder: FormBuilder,
+              public matDialog: MatDialog) {
   }
 
   // tslint:disable-next-line: typedef
@@ -113,8 +111,7 @@ export class AjustesComponent implements OnInit {
   }
 
 
-  // tslint:disable-next-line: typedef
-  onSubmit() {
+  onSubmit(): void {
     this.submitted = true;
     this.errorInForm = this.submitted && this.ajusteForm.invalid;
 
@@ -130,18 +127,14 @@ export class AjustesComponent implements OnInit {
 
   }
 
-  // tslint:disable-next-line:typedef
-  makeDTO() {
+  makeDTO(): void {
     this.ajuste = new Ajuste();
-
-    this.ajuste.nombre = (this.ajusteForm.controls.nombre.value).trim();
+    this.ajuste.nombre = (this.ajusteForm.controls.nombre.value).trim().toUpperCase();
     this.ajuste.fecha = (this.ajusteForm.controls.fecha.value).trim();
     this.ajuste.descripcion = (this.ajusteForm.controls.descripcion.value).trim();
     this.ajuste.proveedorId = this.ajusteForm.controls.proveedorId.value;
 
     this.ajusteService.guardarAjuste(this.ajuste).then((data) => {
-      console.log(data);
-
       this.ajuste = data.data;
 
       this.articulosStockMovimientoFilter.forEach((artStockMov, index) => {
@@ -162,8 +155,7 @@ export class AjustesComponent implements OnInit {
 
   }
 
-  // tslint:disable-next-line:typedef
-  showModal() {
+  showModal(): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
@@ -180,8 +172,7 @@ export class AjustesComponent implements OnInit {
     });
   }
 
-  // tslint:disable-next-line: typedef
-  listaProveedor() {
+  listaProveedor(): void {
     this.proveedorService.listarProveedoresHabilitados().subscribe((data) => {
       this.proveedores = data.data;
       this.proveedores.sort(
@@ -238,13 +229,11 @@ export class AjustesComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line:typedef
-  guardarCarga() {
+  guardarCarga(): void {
     console.log('ENTRE');
   }
 
-  // tslint:disable-next-line: typedef
-  volverAtras() {
+  volverAtras(): void {
     window.history.back();
   }
 
@@ -315,8 +304,7 @@ export class AjustesComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line:typedef
-  validarNombre({target}) {
+  validarNombre({target}): void {
     const {value: nombre} = target;
     const finded = this.ajustes.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
     this.nombreRepe = (finded !== undefined) ? true : false;

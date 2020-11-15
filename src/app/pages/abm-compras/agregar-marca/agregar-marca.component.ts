@@ -63,8 +63,8 @@ export class AgregarMarcaComponent implements OnInit {
   }
 
   makeDTO(): void {
-    this.marca.nombre = this.marcaForm.controls.nombre.value;
-    this.marca.abreviatura = this.marcaForm.controls.abreviatura.value;
+    this.marca.nombre = this.marcaForm.controls.nombre.value.toUpperCase();
+    this.marca.abreviatura = this.marcaForm.controls.abreviatura.value.toUpperCase();
     if (this.updating) {
       this.marca.id = this.marcaForm.controls.id.value;
       this.update();

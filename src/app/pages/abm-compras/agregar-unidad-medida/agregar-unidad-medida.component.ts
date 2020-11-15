@@ -63,8 +63,8 @@ export class AgregarUnidadMedidaComponent implements OnInit {
   }
 
   makeDTO(): void {
-    this.unidadMedida.nombre = this.unidadMedidaForm.controls.nombre.value;
-    this.unidadMedida.abreviatura = this.unidadMedidaForm.controls.abreviatura.value;
+    this.unidadMedida.nombre = this.unidadMedidaForm.controls.nombre.value.toUpperCase();
+    this.unidadMedida.abreviatura = this.unidadMedidaForm.controls.abreviatura.value.toUpperCase();
     if (this.updating) {
       this.unidadMedida.id = this.unidadMedidaForm.controls.id.value;
       this.update();

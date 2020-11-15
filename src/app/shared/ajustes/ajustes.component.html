@@ -68,11 +68,10 @@
         <td>{{ artStoMov.articulo.nombre }}</td>
         <td>{{ artStoMov.stock }}</td>
         <td>
-          <input
-            type="number" min="0" maxlength="8" (change)="guardarCarga()"
-            [(ngModel)]="artStoMov.movimiento.movimiento"
-            class="form-control text-center" placeholder="cantidad"
-            [disabled]="consultar"/>
+          <input type="number" min="0" maxlength="8" (change)="guardarCarga()"
+                 [(ngModel)]="artStoMov.movimiento.movimiento"
+                 class="form-control text-center" placeholder="cantidad"
+                 [disabled]="consultar"/>
         </td>
       </tr>
       </tbody>

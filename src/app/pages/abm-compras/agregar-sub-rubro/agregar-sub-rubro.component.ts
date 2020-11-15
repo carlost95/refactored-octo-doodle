@@ -77,8 +77,8 @@ export class AgregarSubRubroComponent implements OnInit {
   }
 
   makeDTO(): void {
-    this.subRubroDTO.nombre = this.subRubroForm.controls.nombre.value;
-    this.subRubroDTO.descripcion = this.subRubroForm.controls.descripcion.value;
+    this.subRubroDTO.nombre = this.subRubroForm.controls.nombre.value.toUpperCase();
+    this.subRubroDTO.descripcion = this.subRubroForm.controls.descripcion.value.toUpperCase();
     // this.subRubroDTO.rubroId = this.subRubroForm.controls.rubroId.i.value;
     if (this.rubroSelected !== null) {
       this.rubros.forEach(rub => {
@@ -95,7 +95,7 @@ export class AgregarSubRubroComponent implements OnInit {
     }
   }
 
-  update() {
+  update(): void {
     this.subRubroService.actualizarSubRubro(this.subRubroDTO).subscribe(data => {
       this.msgSnack(data);
     });
