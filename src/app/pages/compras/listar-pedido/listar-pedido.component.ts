@@ -4,6 +4,9 @@ import {PedidosService} from '../../../service/pedidos.service';
 import {Pedido} from '../../../models/Pedido';
 import {Component, OnInit} from '@angular/core';
 import * as _ from 'lodash';
+import {SnackConfirmComponent} from '../../../shared/snack-confirm/snack-confirm.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {TokenService} from '../../../service/token.service';
 
 @Component({
   selector: 'app-listar-pedido',
@@ -19,13 +22,31 @@ export class ListarPedidoComponent implements OnInit {
   proveedores: Proveedor[] = [];
   razonSocial: string;
 
-  //
-  //
-  constructor(private pedidoService: PedidosService, private router: Router) {
+  isLogged = false;
+  roles: string[];
+  isAdmin = false;
+  isGerente = false;
+
+  constructor(private pedidoService: PedidosService,
+              private router: Router,
+              private snackBar: MatSnackBar,
+              private tokenService: TokenService) {
   }
 
-  // tslint:disable-next-line:typedef
-  ngOnInit() {
+  ngOnInit(): void {
+    if (this.tokenService.getToken()) {
+      this.isLogged = true;
+    } else {
+      this.isLogged = false;
+    }
+    this.roles = this.tokenService.getAuthorities();
+    this.roles.forEach(rol => {
+      if (rol === 'ROLE_ADMIN') {
+        this.isAdmin = true;
+      } else if (rol === 'ROLE_GERENTE') {
+        this.isGerente = true;
+      }
+    });
     this.fetchEvent().then(() => {
       console.log(this.pedidos);
     });
@@ -43,16 +64,7 @@ export class ListarPedidoComponent implements OnInit {
     });
   }
 
-  jsonStringDate(jdate): string {
-    if (jdate != null) {
-      const resp = new Date(jdate);
-      return resp.toISOString().substring(0, 10);
-    }
-    return '';
-  }
-
-  // tslint:disable-next-line: typedef
-  filtarPedido(event: any) {
+  filtarPedido(event: any): void {
     if (this.busqueda !== null) {
       this.pedidosFilter = this.pedidos.filter(item => {
           const inName = item.nombre.toLowerCase().indexOf(this.busqueda) !== -1;
@@ -63,8 +75,7 @@ export class ListarPedidoComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: typedef
-  updateFilterDateDesde() {
+  updateFilterDateDesde(): void {
     let val = null;
     if (this.searchDesde != null && this.searchDesde !== '') {
       val = new Date(this.searchDesde);
@@ -78,12 +89,10 @@ export class ListarPedidoComponent implements OnInit {
     this.orderRows();
   }
 
-  // tslint:disable-next-line: typedef
-  updateFilterDateHasta() {
+  updateFilterDateHasta(): void {
     let val = null;
     if (this.searchHasta != null && this.searchHasta !== '') {
       val = new Date(this.searchHasta);
-      // filter our data
       this.pedidosFilter = this.pedidosFilter.filter(element => {
         return new Date(element.fecha).valueOf() <= val.valueOf();
       });
@@ -94,14 +103,19 @@ export class ListarPedidoComponent implements OnInit {
     this.orderRows();
   }
 
-  // tslint:disable-next-line: typedef
-  orderRows() {
+  orderRows(): void {
     this.pedidosFilter = _.orderBy(this.pedidosFilter, ['fecha'], ['desc']);
   }
 
-  // tslint:disable-next-line: typedef
-  backPage() {
-    window.history.back();
+  backPage(): void {
+    this.router.navigate(['compras']);
   }
 
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
+    });
+  }
 }

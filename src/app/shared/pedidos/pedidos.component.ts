@@ -6,13 +6,11 @@ import {MovimientoArticuloDTO} from 'src/app/models/MovimientoArticuloDTO';
 import {PedidosService} from 'src/app/service/pedidos.service';
 import {Proveedor} from 'src/app/models/Proveedor';
 import {ProveedoresService} from '../../service/proveedores.service';
-import {proveedor} from '../../../environments/global-route';
 import {ArticulosService} from '../../service/articulos.service';
 import {MovimientosService} from '../../service/movimientos.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AjustesService} from '../../service/ajustes.service';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {Ajuste} from '../../models/Ajuste';
 import {ConfirmModalComponent} from '../confirm-modal/confirm-modal.component';
 
 @Component({
@@ -26,7 +24,6 @@ export class PedidosComponent implements OnInit {
   pedido: Pedido = new Pedido();
   pedidoDTO: Pedido = new Pedido();
   pedidos: Pedido[] = [];
-
   articulos: Articulo[] = [];
 
   movimientoArticuloDTO: MovimientoArticuloDTO = new MovimientoArticuloDTO();
@@ -35,12 +32,10 @@ export class PedidosComponent implements OnInit {
   articulosFilter: Articulo[] = null;
   stockArticulo: number[] = [];
   proveedores: Proveedor[] = [];
-  // tslint:disable-next-line: ban-types
-  razonSocial: String = '';
+  razonSocial = '';
   movimientoFilter: MovimientoArticuloDTO[] = [];
   movimientosPrevios: StockArticulo[] = [];
   stockArticuloPorPedido: StockArticulo[] = [];
-
   articulosStockMovimiento: any[] = [];
   articulosStockMovimientoFilter: any[] = [];
 
@@ -50,17 +45,15 @@ export class PedidosComponent implements OnInit {
   errorInForm = false;
   submitted = false;
 
-  constructor(
-    private pedidoService: PedidosService,
-    private articuloService: ArticulosService,
-    private proveedorService: ProveedoresService,
-    private movimientosService: MovimientosService,
-    private route: Router,
-    private active: ActivatedRoute,
-    private ajusteService: AjustesService,
-    private formBuilder: FormBuilder,
-    public matDialog: MatDialog,
-  ) {
+  constructor(private pedidoService: PedidosService,
+              private articuloService: ArticulosService,
+              private proveedorService: ProveedoresService,
+              private movimientosService: MovimientosService,
+              private route: Router,
+              private active: ActivatedRoute,
+              private ajusteService: AjustesService,
+              private formBuilder: FormBuilder,
+              public matDialog: MatDialog) {
   }
 
   // tslint:disable-next-line: typedef
@@ -103,12 +96,10 @@ export class PedidosComponent implements OnInit {
     this.getMovimientos().then(() => {
       this.getStock();
       this.listaProveedor();
-
     });
   }
 
-  // tslint:disable-next-line:typedef
-  onSubmit() {
+  onSubmit(): void {
     this.submitted = true;
     this.errorInForm = this.submitted && this.pedidoForm.invalid;
 
@@ -145,25 +136,24 @@ export class PedidosComponent implements OnInit {
       console.log(data);
       this.pedido = data.data;
 
-    this.articulosStockMovimientoFilter.forEach((artStockMov, index) => {
-      if (artStockMov.movimiento.movimiento !== null) {
-        this.movimientoArticuloDTO.id = null;
-        this.movimientoArticuloDTO.fecha = this.pedido.fecha;
-        this.movimientoArticuloDTO.articuloId = artStockMov.articulo.id;
-        this.movimientoArticuloDTO.movimiento = artStockMov.movimiento.movimiento;
-        this.movimientoArticuloDTO.pedidoId = this.pedido.id;
+      this.articulosStockMovimientoFilter.forEach((artStockMov, index) => {
+        if (artStockMov.movimiento.movimiento !== null) {
+          this.movimientoArticuloDTO.id = null;
+          this.movimientoArticuloDTO.fecha = this.pedido.fecha;
+          this.movimientoArticuloDTO.articuloId = artStockMov.articulo.id;
+          this.movimientoArticuloDTO.movimiento = artStockMov.movimiento.movimiento;
+          this.movimientoArticuloDTO.pedidoId = this.pedido.id;
 
-        this.movimientosService.guardarMovimientoPedido(this.movimientoArticuloDTO)
-          .subscribe((resp) => {
-          });
-      }
+          this.movimientosService.guardarMovimientoPedido(this.movimientoArticuloDTO)
+            .subscribe((resp) => {
+            });
+        }
       });
     });
     this.showModal();
   }
 
-  // tslint:disable-next-line:typedef
-  showModal() {
+  showModal(): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
@@ -180,8 +170,7 @@ export class PedidosComponent implements OnInit {
     });
   }
 
-  // tslint:disable-next-line: typedef
-  listaProveedor() {
+  listaProveedor(): void {
     this.proveedorService.listarProveedoresHabilitados().subscribe((data) => {
       this.proveedores = data.data;
       this.proveedores.sort(
@@ -235,8 +224,7 @@ export class PedidosComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: typedef
-  volverAtras() {
+  volverAtras(): void {
     window.history.back();
   }
 
@@ -254,19 +242,7 @@ export class PedidosComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: typedef
-  async actualizarStockFiltro(articulosFilter: Articulo[]) {
-    this.stockArticulo = [];
-    const data = await this.movimientosService
-      .listarStockArticuloPedido()
-      .toPromise();
-    articulosFilter.forEach((a, index) => {
-      this.stockArticulo.push(data.data[a.id]);
-    });
-  }
-
-  // tslint:disable-next-line:typedef
-  guardarCarga() {
+  guardarCarga(): void {
     console.log('Entre');
   }
 
@@ -312,8 +288,7 @@ export class PedidosComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line:typedef
-  validarNombre({target}) {
+  validarNombre({target}): void {
     const {value: nombre} = target;
     const finded = this.pedidos.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
     this.nombreRepe = (finded !== undefined) ? true : false;

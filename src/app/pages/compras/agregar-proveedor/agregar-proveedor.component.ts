@@ -26,8 +26,7 @@ export class AgregarProveedorComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
-  // tslint:disable-next-line: typedef
-  ngOnInit() {
+  ngOnInit(): void {
     this.proveedorService.listarProveedoresTodos().subscribe(resp =>
       this.proveedores = resp.data);
     const {provider} = this.data;
@@ -56,13 +55,11 @@ export class AgregarProveedorComponent implements OnInit {
   }
 
 
-// tslint:disable-next-line: typedef
-  close() {
+  close(): void {
     this.dialogRef.close();
   }
 
-// tslint:disable-next-line: typedef
-  onSubmit() {
+  onSubmit(): void {
     this.submitted = true;
     this.errorInForm = this.submitted && this.proveedorForm.invalid;
 
@@ -77,9 +74,8 @@ export class AgregarProveedorComponent implements OnInit {
     }
   }
 
-// tslint:disable-next-line: typedef
-  makeDTO() {
-    this.proveedor.razonSocial = this.proveedorForm.controls.razonSocial.value;
+  makeDTO(): void {
+    this.proveedor.razonSocial = (this.proveedorForm.controls.razonSocial.value).trim().toUpperCase();
     this.proveedor.domicilio = this.proveedorForm.controls.domicilio.value;
     this.proveedor.mail = this.proveedorForm.controls.mail.value;
     this.proveedor.telefono = this.proveedorForm.controls.telefono.value;
@@ -92,28 +88,32 @@ export class AgregarProveedorComponent implements OnInit {
     }
   }
 
-// tslint:disable-next-line: typedef
-  save() {
+  private save(): void {
     this.proveedorService.guardarProveedor(this.proveedor).subscribe(data => {
-      this.proveedor = data.data;
-      this.dialogRef.close();
+      this.msgSnack(data);
     });
   }
 
-// tslint:disable-next-line: typedef
-  private update() {
+  private update(): void {
     this.proveedorService.actualizarProveedor(this.proveedor).subscribe(data => {
-      this.proveedor = data.data;
-      this.dialogRef.close();
+      this.msgSnack(data);
     });
   }
 
-  // tslint:disable-next-line:typedef
-  validar({target}) {
+  validar({target}): void {
     const {value: nombre} = target;
     const finded = this.proveedores.find(p => p.razonSocial.toLowerCase() === nombre.toLowerCase().trim());
     console.log(finded);
     this.nombreRepe = (finded !== undefined) ? true : false;
 
+  }
+
+  msgSnack(data): void {
+    const {msg} = data;
+    if (data.code === 200) {
+      this.dialogRef.close(msg);
+    } else {
+      this.dialogRef.close('Error en el proceso');
+    }
   }
 }
