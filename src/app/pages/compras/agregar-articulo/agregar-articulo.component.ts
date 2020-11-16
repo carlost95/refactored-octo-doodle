@@ -139,8 +139,7 @@ export class AgregarArticuloComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line:typedef
-  onSubmit() {
+  onSubmit(): void {
     this.submitted = true;
     this.errorInForm = this.submitted && this.articuloForm.invalid;
 
@@ -160,11 +159,10 @@ export class AgregarArticuloComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line:typedef
-  makeDTO() {
-    this.articuloDTO.codigoArt = (this.articuloForm.controls.codigo.value).trim();
-    this.articuloDTO.nombre = (this.articuloForm.controls.nombre.value).trim();
-    this.articuloDTO.abreviatura = (this.articuloForm.controls.abreviatura.value).trim();
+  makeDTO(): void {
+    this.articuloDTO.codigoArt = (this.articuloForm.controls.codigo.value).trim().toUpperCase();
+    this.articuloDTO.nombre = (this.articuloForm.controls.nombre.value).trim().toUpperCase();
+    this.articuloDTO.abreviatura = (this.articuloForm.controls.abreviatura.value).trim().toUpperCase();
     this.articuloDTO.stockMin = (this.articuloForm.controls.stockMin.value);
     this.articuloDTO.stockMax = (this.articuloForm.controls.stockMax.value);
     this.articuloDTO.costo = (this.articuloForm.controls.costo.value);
@@ -184,58 +182,48 @@ export class AgregarArticuloComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line:typedef
-  update() {
+  update(): void {
     this.articulosService.actualizarArticulo(this.articuloDTO).subscribe(data => {
-      this.articuloDTO = data.data;
-      this.dialogRef.close();
+      this.msgSnack(data);
     });
   }
 
-  // tslint:disable-next-line: typedef
-  save() {
+  save(): void {
     console.warn(this.articuloDTO);
     this.articulosService.guardarArticulo(this.articuloDTO).subscribe(data => {
-      this.articuloDTO = data.data;
-      this.dialogRef.close();
+      this.msgSnack(data);
     });
   }
 
-  // tslint:disable-next-line:typedef
-  closeForm() {
+  closeForm(): void {
     this.dialogRef.close();
   }
 
-  // tslint:disable-next-line:typedef
-  newUnidadMedida() {
+  newUnidadMedida(): void {
     this.consulting = false;
     this.unidadToUpdate = null;
     this.openDialogUnidadMedida();
   }
 
-  // tslint:disable-next-line:typedef
-  newRubro() {
+  newRubro(): void {
     this.consulting = false;
     this.rubroToUpdate = null;
     this.openDialogRubro();
   }
 
-  // tslint:disable-next-line:typedef
-  newSubRubro() {
+  newSubRubro(): void {
     this.consulting = false;
     this.subRubroToUpdate = null;
     this.openDialogSubRubro();
   }
 
-  // tslint:disable-next-line:typedef
-  newMarca() {
+  newMarca(): void {
     this.consulting = false;
     this.marcaToUpdate = null;
     this.openDialogMarca();
   }
 
-  // tslint:disable-next-line:typedef
-  newProveedor() {
+  newProveedor(): void {
     this.consulting = false;
     this.proveedorToUpdate = null;
     this.openDialogProveedor();
@@ -260,7 +248,6 @@ export class AgregarArticuloComponent implements OnInit {
   }
 
 
-  // tslint:disable-next-line:typedef
   openDialogRubro(): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -298,7 +285,6 @@ export class AgregarArticuloComponent implements OnInit {
     });
   }
 
-// tslint:disable-next-line:typedef
   openDialogMarca(): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -335,24 +321,29 @@ export class AgregarArticuloComponent implements OnInit {
     });
   }
 
-  // tslint:disable-next-line:typedef
-  validarcodigo({target}) {
+  validarcodigo({target}): void {
     const {value: nombre} = target;
     const finded = this.articulos.find(p => p.codigoArt.toLowerCase() === nombre.toLowerCase());
     this.codigoRepe = (finded !== undefined) ? true : false;
   }
 
-  // tslint:disable-next-line:typedef
-  validarNombre({target}) {
+  validarNombre({target}): void {
     const {value: nombre} = target;
     const finded = this.articulos.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
     this.nombreRepe = (finded !== undefined) ? true : false;
   }
 
-  // tslint:disable-next-line:typedef
-  validarAbreviatura({target}) {
+  validarAbreviatura({target}): void {
     const {value: nombre} = target;
     const finded = this.articulos.find(p => p.abreviatura.toLowerCase() === nombre.toLowerCase());
     this.abreviaturaRepe = (finded !== undefined) ? true : false;
+  }
+  msgSnack(data): void {
+    const {msg} = data;
+    if (data.code === 200) {
+      this.dialogRef.close(msg);
+    } else {
+      this.dialogRef.close('Error en el proceso');
+    }
   }
 }
