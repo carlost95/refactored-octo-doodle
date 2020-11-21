@@ -117,7 +117,7 @@ export class ListarProveedorComponent implements OnInit {
   }
 
   backPage(): void {
-    this.router.navigate(['ventas']);
+    this.router.navigate(['compras']);
   }
 
   openDialogProveedor(): void {
