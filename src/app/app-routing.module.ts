@@ -39,7 +39,6 @@ const routes: Routes = [
   },
   {
     path: 'reset-password', component: ResetPasswordComponent,
-    canActivate: [guard], data: {expectedRol: ['admin', 'user', 'gerente']}
   },
   {path: 'login', component: LoginComponent},
   {path: '**', pathMatch: 'full', redirectTo: ''},

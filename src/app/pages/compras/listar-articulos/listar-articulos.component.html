@@ -36,7 +36,7 @@
           </button>
           &nbsp;
           <button mat-raised-button color="primary" title="Articulo"
-                  (click)="newArticulo()" *ngIf="isAdmin">
+                  (click)="newArticulo()" *ngIf="isAdmin ||isGerente">
             <i class="fas fa-shopping-cart" title="nuevo articulo"></i>
             Nuevo Articulo
           </button>
@@ -51,7 +51,7 @@
             <th scope="col">Precio</th>
             <th scope="col">Unid med</th>
             <th scope="col">Rubro</th>
-            <th scope="col">Habilitacion</th>
+            <th scope="col" *ngIf="isAdmin||isGerente">Habilitacion</th>
             <th scope="col*2">Opciones</th>
           </tr>
           </thead>
@@ -68,7 +68,7 @@
             <td *ngIf="articulo.rubroId != null">
               {{ articulo.rubroId.nombre }}
             </td>
-            <td>
+            <td *ngIf="isAdmin||isGerente">
               <mat-slide-toggle
                 [checked]="articulo.habilitacion"
                 (click)="showModal(articulo)"
@@ -78,11 +78,11 @@
             <td>
               <button class="btn btn-default m-0 p-0" title="Consultar"
                       (click)="consultarArticulo(articulo)">
-                <i class="fas fa-info-circle"></i>
+                <i class="fas fa-exclamation"></i>
               </button>
               &nbsp;
               <button class="btn btn-default m-0 p-0" title="Modificar "
-                      (click)="modificarArticulo(articulo)" *ngIf="isAdmin">
+                      (click)="modificarArticulo(articulo)" *ngIf="isAdmin||isGerente">
                 <i class="fas fa-pencil-alt"></i>
               </button>
 

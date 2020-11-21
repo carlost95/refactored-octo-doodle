@@ -13,6 +13,8 @@ import {ArticulosService} from '../../../service/articulos.service';
 import {PageEvent} from '@angular/material/paginator';
 import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal.component';
 import {TokenService} from '../../../service/token.service';
+import {SnackConfirmComponent} from '../../../shared/snack-confirm/snack-confirm.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-listar-articulos',
@@ -22,21 +24,6 @@ import {TokenService} from '../../../service/token.service';
 
 
 export class ListarArticulosComponent implements OnInit {
-  roles: string[];
-  isAdmin = false;
-
-  constructor(
-    private serviceCompra: PedidosService,
-    private articuloService: ArticulosService,
-    private router: Router,
-    private excelService: ExcelExportService,
-    private serviceReport: ServiceReportService,
-    private servicePdf: PdfExportService,
-    public matDialog: MatDialog,
-    private tokenService: TokenService
-  ) {
-  }
-
   articulos: Articulo[] = [];
   articulosFilter: Articulo[] = [];
 
@@ -58,20 +45,41 @@ export class ListarArticulosComponent implements OnInit {
 
   articuloAll: Articulo [] = [];
 
+  isLogged = false;
+  roles: string[];
+  isAdmin = false;
+  isGerente = false;
 
-  // tslint:disable-next-line: typedef
-  ngOnInit() {
+  constructor(private serviceCompra: PedidosService,
+              private articuloService: ArticulosService,
+              private router: Router,
+              private excelService: ExcelExportService,
+              private serviceReport: ServiceReportService,
+              private servicePdf: PdfExportService,
+              public matDialog: MatDialog,
+              private tokenService: TokenService,
+              private snackBar: MatSnackBar) {
+  }
+
+  ngOnInit(): void {
+    if (this.tokenService.getToken()) {
+      this.isLogged = true;
+    } else {
+      this.isLogged = false;
+    }
+    this.roles = this.tokenService.getAuthorities();
+    this.roles.forEach(rol => {
+      if (rol === 'ROLE_ADMIN') {
+        this.isAdmin = true;
+      } else if (rol === 'ROLE_GERENTE') {
+        this.isGerente = true;
+      }
+    });
     this.fetchEvent().then(() => {
     });
     localStorage.clear();
     localStorage.setItem('listar', 'true');
 
-    this.roles = this.tokenService.getAuthorities();
-    this.roles.forEach(rol => {
-      if (rol === 'ROLE_ADMIN') {
-        this.isAdmin = true;
-      }
-    });
   }
 
   // tslint:disable-next-line: typedef
@@ -83,28 +91,21 @@ export class ListarArticulosComponent implements OnInit {
     // tslint:disable-next-line:one-variable-per-declaration
     this.articulosFilter = this.articulos;
     this.articuloAll = data.data;
-    console.log('-----------ARTICULOS-------------');
-    console.warn(this.articulos);
-
-
   }
 
-  // tslint:disable-next-line:typedef
-  handlePage(e: PageEvent) {
+  handlePage(e: PageEvent): void {
     this.page_size = e.pageSize;
     this.page_number = e.pageIndex + 1;
   }
 
-  // tslint:disable-next-line:typedef
-  consultarArticulo(articulo: Articulo) {
+  consultarArticulo(articulo: Articulo): void {
     console.log(articulo);
     this.toUpdateArticulo = articulo;
     this.consultingArticulo = true;
     this.openDialog();
   }
 
-  // tslint:disable-next-line: typedef
-  modificarArticulo(articulo: Articulo) {
+  modificarArticulo(articulo: Articulo): void {
     this.toUpdateArticulo = articulo;
     this.consultingArticulo = false;
     this.openDialog();
@@ -112,14 +113,12 @@ export class ListarArticulosComponent implements OnInit {
   }
 
 
-  // tslint:disable-next-line: typedef
-  filtrarArticulo() {
+  filtrarArticulo(): void {
     this.busqueda = this.busqueda.toLowerCase();
     this.articulosFilter = this.articuloAll;
 
     if (this.busqueda !== null) {
       this.page_number = 1;
-
       this.articulosFilter = this.articuloAll.filter((item) => {
         const inName = item.nombre.toLowerCase().indexOf(this.busqueda) !== -1;
         const inLastName =
@@ -132,20 +131,17 @@ export class ListarArticulosComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: typedef
-  backPage() {
-    window.history.back();
+  backPage(): void {
+    this.router.navigate(['compras']);
   }
 
-  // tslint:disable-next-line:typedef
-  newArticulo() {
+  newArticulo(): void {
     this.toUpdateArticulo = null;
     this.consultingArticulo = false;
     this.openDialog();
   }
 
-  // tslint:disable-next-line:typedef
-  openDialog() {
+  openDialog(): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
@@ -159,11 +155,14 @@ export class ListarArticulosComponent implements OnInit {
         this.articulos = data.data;
         this.articulosFilter = data.data;
       });
+      if (result) {
+        this.openSnackBar(result);
+      }
+      this.getData();
     });
   }
 
-  // tslint:disable-next-line:typedef
-  exportarPDF() {
+  exportarPDF(): void {
     this.serviceReport.getReporteArticuloPdf().subscribe(resp => {
       this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
     });
@@ -185,8 +184,7 @@ export class ListarArticulosComponent implements OnInit {
     this.excelService.exportToExcel(this.articulosExcel, 'Reporte Articulos');
   }
 
-  // tslint:disable-next-line:typedef
-  showModal(articulo: Articulo) {
+  showModal(articulo: Articulo): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
@@ -210,14 +208,20 @@ export class ListarArticulosComponent implements OnInit {
     });
   }
 
-  // tslint:disable-next-line: typedef
-  getData() {
+  getData(): void {
     this.articuloService.listarArticuloTodos().subscribe(data => {
       this.articulos = data.data;
       this.articulosFilter = data.data;
     });
   }
 
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
+    });
+  }
 }
 
 

@@ -8,8 +8,10 @@ import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal
 import {ProveedoresService} from '../../../service/proveedores.service';
 import {Proveedor} from '../../../models/Proveedor';
 import {AgregarProveedorComponent} from '../agregar-proveedor/agregar-proveedor.component';
-import {proveedor} from '../../../../environments/global-route';
 import {ProveedorExcel} from '../../../models/ProveedorExcel';
+import {SnackConfirmComponent} from '../../../shared/snack-confirm/snack-confirm.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {TokenService} from '../../../service/token.service';
 
 @Component({
   selector: 'app-listar-proveedor',
@@ -26,25 +28,44 @@ export class ListarProveedorComponent implements OnInit {
   proveedoresExcel: ProveedorExcel[] = [];
   proveedorExcel: ProveedorExcel;
 
+  isLogged = false;
+  roles: string[];
+  isAdmin = false;
+  isGerente = false;
+
   constructor(
     private router: Router,
     private proveedorService: ProveedoresService,
     public matDialog: MatDialog,
     private excelService: ExcelExportService,
     private serviceReport: ServiceReportService,
-    private servicePdf: PdfExportService) {
+    private servicePdf: PdfExportService,
+    private tokenService: TokenService,
+    private snackBar: MatSnackBar) {
   }
 
-  // tslint:disable-next-line: typedef
-  ngOnInit() {
+
+  ngOnInit(): void {
+    if (this.tokenService.getToken()) {
+      this.isLogged = true;
+    } else {
+      this.isLogged = false;
+    }
+    this.roles = this.tokenService.getAuthorities();
+    this.roles.forEach(rol => {
+      if (rol === 'ROLE_ADMIN') {
+        this.isAdmin = true;
+      } else if (rol === 'ROLE_GERENTE') {
+        this.isGerente = true;
+      }
+    });
     this.proveedorService.listarProveedoresTodos().subscribe(data => {
       this.proveedores = data.data;
       this.proveedoresFilter = data.data;
     });
   }
 
-  // tslint:disable-next-line: typedef
-  filtrarProveedor(event: any) {
+  filtrarProveedor(event: any): void {
     this.busqueda = this.busqueda.toLowerCase();
     this.proveedoresFilter = this.proveedores;
     if (this.busqueda !== null) {
@@ -55,8 +76,7 @@ export class ListarProveedorComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line: typedef
-  exportarExcel() {
+  exportarExcel(): void {
     // tslint:disable-next-line: prefer-for-of
     for (let index = 0; index < this.proveedoresFilter.length; index++) {
       this.proveedorExcel = new ProveedorExcel('', '', '', '', '');
@@ -72,37 +92,32 @@ export class ListarProveedorComponent implements OnInit {
     this.excelService.exportToExcel(this.proveedoresExcel, 'Reporte Proveedores');
   }
 
-  // tslint:disable-next-line: typedef
-  exportarPDF() {
+  exportarPDF(): void {
     this.serviceReport.getReporteProveedorPdf().subscribe(resp => {
       this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
     });
   }
 
-  // tslint:disable-next-line: typedef
-  newProveedor() {
+  newProveedor(): void {
     this.toUpdateProveedor = null;
     this.consulting = false;
     this.openDialogProveedor();
   }
 
-  // tslint:disable-next-line:typedef no-shadowed-variable
-  modificarProveedor(proveedor: Proveedor) {
+  modificarProveedor(proveedor: Proveedor): void {
     this.toUpdateProveedor = proveedor;
     this.consulting = false;
     this.openDialogProveedor();
   }
 
-  // tslint:disable-next-line:typedef no-shadowed-variable
-  consultarProveedor(proveedor: Proveedor) {
+  consultarProveedor(proveedor: Proveedor): void {
     this.toUpdateProveedor = proveedor;
     this.consulting = true;
     this.openDialogProveedor();
   }
 
-  // tslint:disable-next-line: typedef
-  backPage() {
-    window.history.back();
+  backPage(): void {
+    this.router.navigate(['compras']);
   }
 
   openDialogProveedor(): void {
@@ -122,11 +137,14 @@ export class ListarProveedorComponent implements OnInit {
         this.proveedores = data.data;
         this.proveedoresFilter = data.data;
       });
+      if (result) {
+        this.openSnackBar(result);
+      }
+      this.getData();
     });
   }
 
-  // tslint:disable-next-line:typedef no-shadowed-variable
-  showModal(proveedor: Proveedor) {
+  showModal(proveedor: Proveedor): void {
     const dialogConfig = new MatDialogConfig();
     // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
@@ -151,13 +169,19 @@ export class ListarProveedorComponent implements OnInit {
     });
   }
 
-  // tslint:disable-next-line: typedef
-  getData() {
+  getData(): void {
     this.proveedorService.listarProveedoresTodos().subscribe(data => {
       this.proveedores = data.data;
       this.proveedoresFilter = data.data;
     });
   }
 
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
+    });
+  }
 
 }
