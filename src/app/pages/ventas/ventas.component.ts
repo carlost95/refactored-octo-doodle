@@ -10,14 +10,17 @@ export class VentasComponent {
   constructor(private router: Router) {
   }
 
-  // tslint:disable-next-line:typedef
-  validaMenu() {
+  validaMenu(): boolean {
     if (
       this.router.url.includes('/clientes') ||
-      this.router.url.includes('/agregar-cliente') ||
-      this.router.url.includes('/modificar-cliente') ||
       this.router.url.includes('/direcciones') ||
-      this.router.url.includes('/agregar-direccion')
+      this.router.url.includes('/listar-venta') ||
+      this.router.url.includes('/listar-remitos') ||
+      this.router.url.includes('/modificar-cliente') ||
+      this.router.url.includes('/agregar-direccion') ||
+      this.router.url.includes('/agregar-remito') ||
+      this.router.url.includes('/agregar-cliente') ||
+      this.router.url.includes('/agregar-venta')
     ) {
       return false;
     } else {
