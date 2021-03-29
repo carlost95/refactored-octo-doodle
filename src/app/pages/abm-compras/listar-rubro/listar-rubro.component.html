@@ -45,10 +45,10 @@
       <table class="table table-responsive-sm">
         <thead class="thead-dark">
         <tr class="text-center">
-          <th scope="col ">Nombre</th>
-          <th scope="col ">Descripcion</th>
-          <th scope="col " *ngIf="isAdmin||isGerente">Habilitacion</th>
-          <th scope="col*2 ">Opciones</th>
+          <th scope="col ">NOMBRE</th>
+          <th scope="col ">DESCRIPCIÓN</th>
+          <th scope="col " *ngIf="isAdmin||isGerente">HABILITACIÓN</th>
+          <th scope="col*2 ">OPCIONES</th>
         </tr>
         </thead>
         <tbody *ngIf="rubros != null">
@@ -66,7 +66,7 @@
           <td>
             <button class="btn btn-default m-0 p-0" title="Consultar"
                     (click)="consultarRubro(rubro)">
-              <i class="fas fa-info-circle"></i>
+              <i class="fas fa-info"></i>
             </button>
             <button class="btn btn-default" title="Modificar "
                     (click)="modificarRubro(rubro)" *ngIf="isAdmin||isGerente">

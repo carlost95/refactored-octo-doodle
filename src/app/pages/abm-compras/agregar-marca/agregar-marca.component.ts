@@ -33,7 +33,7 @@ export class AgregarMarcaComponent implements OnInit {
     if (mark) {
       this.consulting = this.data.consulting;
       this.marcaForm = this.formBuilder.group({
-        id: [this.data.id, null],
+        id: [{value: mark.id, disabled: this.consulting}, null],
         nombre: [{value: mark.nombre, disabled: this.consulting}, Validators.required],
         abreviatura: [{value: mark.abreviatura, disabled: this.consulting}, Validators.required]
       });
@@ -79,7 +79,7 @@ export class AgregarMarcaComponent implements OnInit {
     });
   }
 
-  private update(): void {
+  update(): void {
     this.marcaService.actualizarMarca(this.marca).subscribe(data => {
       this.msgSnack(data);
     });

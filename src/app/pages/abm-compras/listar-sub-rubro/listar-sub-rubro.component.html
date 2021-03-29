@@ -44,12 +44,12 @@
       class="card-body p-0"
       style="width: 1090px; height: 460px; overflow: auto"
     >
-      <table class="table table-responsive-sm">
+      <table class="table table-responsive-sm table-striped">
         <thead class="thead-dark">
         <tr class="text-center">
           <th scope="col ">NOMBRE</th>
           <th scope="col ">DESCRIPCION</th>
-          <th scope="col " *ngIf="isAdmin||isGerente">HABILITACION</th>
+          <th scope="col " *ngIf="isAdmin||isGerente">HABILITACIÓN</th>
           <th scope="col ">RUBRO</th>
           <th scope="col*2 ">OPCIONES</th>
         </tr>
@@ -70,7 +70,7 @@
           <td>
             <button class="btn btn-default m-0 p-0" title="Consultar"
                     (click)="consultarSubRubro(subRubro)">
-              <i class="fas fa-info-circle"></i>
+              <i class="fas fa-info"></i>
             </button>
             <button class="btn btn-default" title="Modificar "
                     (click)="modificarSubRubro(subRubro)" *ngIf="isAdmin|| isGerente">

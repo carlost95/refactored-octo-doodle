@@ -44,11 +44,11 @@
       <table class="table table-responsive-sm">
         <thead class="thead-dark">
         <tr class="text-center">
-          <th scope="col ">Nombre</th>
-          <th scope="col ">Abreviatura</th>
-          <th scope="col " *ngIf="isAdmin">Habilitacion</th>
-          <th scope="col " *ngIf="isGerente">Habilitacion</th>
-          <th scope="col*2 ">Opciones</th>
+          <th scope="col ">NOMBRE</th>
+          <th scope="col ">ABREVIATURA</th>
+          <th scope="col " *ngIf="isAdmin">HABILITACIÓN</th>
+          <th scope="col " *ngIf="isGerente">HABILITACIÓN</th>
+          <th scope="col*2 ">OPCIONES</th>
         </tr>
         </thead>
         <tbody *ngIf="bancos != null">
@@ -63,7 +63,7 @@
           <td>
             <button class="btn btn-default m-0 p-0" title="Consultar"
                     (click)="consultarBanco(banco)">
-              <i class="fas fa-info-circle"></i>
+              <i class="fas fa-info"></i>
             </button>
             <button class="btn btn-default" title="Modificar "
                     (click)="modificarBanco(banco)" *ngIf="isAdmin||isGerente">

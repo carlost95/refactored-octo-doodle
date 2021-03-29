@@ -20,11 +20,13 @@ export class VentasComponent {
       this.router.url.includes('/agregar-direccion') ||
       this.router.url.includes('/agregar-remito') ||
       this.router.url.includes('/agregar-cliente') ||
-      this.router.url.includes('/agregar-venta')
+      this.router.url.includes('/nueva-venta')
     ) {
       return false;
     } else {
       return true;
+      console.log('entre');
+
     }
   }
 }

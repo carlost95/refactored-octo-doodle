@@ -35,28 +35,27 @@
         </div>
       </div>
     </div>
-    <div
-      class="card-body p-0"
-      style="width: 1090px; height: 470px; overflow: auto"
-    >
+    <div class="card-body p-0" style="width: 1090px; height: 470px; overflow: auto">
       <table class="table table-striped">
         <thead class="thead-dark">
         <tr class="text-center">
-          <th scope="col ">nombre</th>
-          <th scope="col ">usuario</th>
-          <th scope="col ">correo electronico</th>
-          <th scope="col*2 ">Opciones</th>
+          <th scope="col ">NOMBRE USUARIO</th>
+          <th scope="col ">ROL USUARIO</th>
+          <th scope="col ">CORREO ELECTRONICO</th>
+          <th scope="col*2 ">OPCIONES</th>
         </tr>
         </thead>
         <tbody *ngIf="users != null">
         <tr *ngFor="let user of usersFilter" class="text-center">
-          <td>{{ user.nombre }}</td>
           <td>{{ user.nombreUsuario }}</td>
+          <!--          <td>{{ user.roles.map(({rolNombre}) => rolNombre).join(" ") }}</td>-->
+          <td *ngIf="user.roles.length===1">{{ user.roles[0].rolNombre }}</td>
+          <td *ngIf="user.roles.length===2">{{ user.roles[0].rolNombre }}; {{ user.roles[1].rolNombre }}</td>
           <td>{{ user.email }}</td>
           <td>
             <button class="btn btn-default m-0 p-0" title="Consultar"
                     (click)="consultUser(user)">
-              <i class="fas fa-info-circle"></i>
+              <i class="fas fa-exclamation"></i>
             </button>
             &nbsp;
             <button class="btn btn-default m-0 p-0" title="Modificar "

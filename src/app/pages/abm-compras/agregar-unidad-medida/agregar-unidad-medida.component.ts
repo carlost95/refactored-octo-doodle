@@ -39,7 +39,7 @@ export class AgregarUnidadMedidaComponent implements OnInit {
       this.unidadMedidaForm = this.formBuilder.group({
         id: [{value: unidMed.id, disabled: this.consulting}, null],
         nombre: [{value: unidMed.nombre, disabled: this.consulting}, Validators.required],
-        abreviatura: [{value: unidMed.descripcion, disabled: this.consulting}, Validators.required]
+        abreviatura: [{value: unidMed.abreviatura, disabled: this.consulting}, Validators.required]
       });
       this.updating = !this.consulting;
     } else {
