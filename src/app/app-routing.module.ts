@@ -1,9 +1,12 @@
-import {LoginComponent} from './auth/login.component';
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
+
+
 import {IndexComponent} from './index/index.component';
 import {ProdGuardService as guard} from './guars/prod-guard.service';
 import {ResetPasswordComponent} from './pages/seguridad/reset-password/reset-password.component';
+import {LoginComponent} from './auth/login.component';
+
 
 const routes: Routes = [
   {path: '', component: IndexComponent},

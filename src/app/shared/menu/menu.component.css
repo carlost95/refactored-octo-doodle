@@ -11,7 +11,7 @@
 }
 
 .fondo {
-    background-image: url('../../assets/images/bg-03.jpg');
+    background-image: url('../../../assets/images/bg-03.jpg');
     /* background-image: url('../assets/gif/art.gif'); */
     /* background-size: cover; */
     background-size: 100% 100%;

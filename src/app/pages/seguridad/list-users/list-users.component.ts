@@ -28,36 +28,31 @@ export class ListUsersComponent implements OnInit {
   // tslint:disable-next-line:typedef
   async ngOnInit() {
     await this.authService.listUsers().toPromise().then((data) => {
-      console.warn('-------USERS------');
       console.log(data.data);
       this.users = data.data;
       this.usersFilter = this.users;
     });
   }
 
-  // tslint:disable-next-line:typedef
-  consultUser(user: NewUsuario) {
+  consultUser(user: NewUsuario): void {
     this.toUpdateUser = user;
     this.consultingUser = true;
     this.openDialog();
   }
 
-  // tslint:disable-next-line:typedef
-  modifyUser(user: NewUsuario) {
+  modifyUser(user: NewUsuario): void {
     this.toUpdateUser = user;
     this.consultingUser = false;
     this.openDialog();
   }
 
-  // tslint:disable-next-line:typedef
-  newUser() {
+  newUser(): void {
     this.toUpdateUser = null;
     this.consultingUser = false;
     this.openDialog();
   }
 
-  // tslint:disable-next-line:typedef
-  filtrarUser() {
+  filtrarUser(): void {
     this.busqueda = this.busqueda.toLowerCase();
     this.usersFilter = this.users;
 
@@ -66,23 +61,20 @@ export class ListUsersComponent implements OnInit {
       this.usersFilter = this.users.filter((item) => {
         const inName = item.nombre.toLowerCase().indexOf(this.busqueda) !== -1;
         const inLastName = item.nombreUsuario.toLowerCase().indexOf(this.busqueda) !== -1;
-        const inDocument =
+        const inEmail =
           item.email.toLowerCase().indexOf(this.busqueda) !== -1;
-        return inName || inLastName || inDocument;
+        return inName || inLastName || inEmail;
 
       });
     }
 
   }
 
-  // tslint:disable-next-line:typedef
-  backPage() {
-    // this.router.navigate('/seguridad');
-    window.history.back();
+  backPage(): void {
+    this.router.navigate(['/seguridad']);
   }
 
-  // tslint:disable-next-line:typedef
-  openDialog() {
+  openDialog(): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';

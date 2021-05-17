@@ -67,3 +67,8 @@ export const departamento = {
   status: '/status',
   active: '/active'
 };
+export const ventas = {
+  path: '/ventas',
+  status: '/status',
+  active: '/active'
+};

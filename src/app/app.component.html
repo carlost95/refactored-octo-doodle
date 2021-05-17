@@ -1,10 +1,16 @@
 <div class="fondo">
-  <ng-container *ngIf="!isLogged">
-    <app-login (pressLogin)="validateLogin($event)"></app-login>
-  </ng-container>
+  <div>
+    <ng-container *ngIf="!isLogged">
+      <app-login (pressLogin)="validateLogin($event)"></app-login>
+    </ng-container>
 
-  <ng-container *ngIf="isLogged">
-    <app-menu></app-menu>
-    <router-outlet></router-outlet>
-  </ng-container>
+    <ng-container *ngIf="isLogged">
+      <app-menu></app-menu>
+    </ng-container>
+  </div>
+  <div>
+    <ng-container *ngIf="isLogged">
+      <router-outlet></router-outlet>
+     </ng-container>
+  </div>
 </div>

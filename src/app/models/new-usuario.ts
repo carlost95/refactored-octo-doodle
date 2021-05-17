@@ -4,7 +4,7 @@ export class NewUsuario {
   nombreUsuario: string;
   email: string;
   password: string;
-  roles: string[] = [];
+  roles: any[] = [];
 
   // constructor(nombre: string, nombreUsuario: string, email: string, password: string) {
   //   this.nombre = nombre;
