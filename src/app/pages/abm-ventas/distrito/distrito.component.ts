@@ -1,22 +1,21 @@
-import {Component, OnInit} from '@angular/core';
-import {Departamento} from '../../../models/Departamento';
-import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal.component';
-import {SnackConfirmComponent} from '../../../shared/snack-confirm/snack-confirm.component';
-import {Distrito} from '../../../models/Distrito';
-import {DistritoService} from '../../../service/distrito.service';
-import {AgregarDistritoComponent} from './agregar-distrito/agregar-distrito.component';
-import {Router} from '@angular/router';
-import {TokenService} from '../../../service/token.service';
+import { Component, OnInit } from '@angular/core';
+import { Departamento } from '../../../models/Departamento';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmModalComponent } from '../../../shared/confirm-modal/confirm-modal.component';
+import { SnackConfirmComponent } from '../../../shared/snack-confirm/snack-confirm.component';
+import { Distrito } from '../../../models/Distrito';
+import { DistritoService } from '../../../service/distrito.service';
+import { AgregarDistritoComponent } from './agregar-distrito/agregar-distrito.component';
+import { Router } from '@angular/router';
+import { TokenService } from '../../../service/token.service';
 
 @Component({
   selector: 'app-distrito',
   templateUrl: './distrito.component.html',
-  styleUrls: ['./distrito.component.scss']
+  styleUrls: ['./distrito.component.scss'],
 })
 export class DistritoComponent implements OnInit {
-
   distritos: Distrito[];
   private update: Distrito;
   consulting = false;
@@ -34,8 +33,7 @@ export class DistritoComponent implements OnInit {
     private snackBar: MatSnackBar,
     private router: Router,
     private tokenService: TokenService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     if (this.tokenService.getToken()) {
@@ -44,7 +42,7 @@ export class DistritoComponent implements OnInit {
       this.isLogged = false;
     }
     this.roles = this.tokenService.getAuthorities();
-    this.roles.forEach(rol => {
+    this.roles.forEach((rol) => {
       if (rol === 'ROLE_ADMIN') {
         this.isAdmin = true;
       } else if (rol === 'ROLE_GERENTE') {
@@ -55,7 +53,7 @@ export class DistritoComponent implements OnInit {
   }
 
   getData(): void {
-    this.distritoService.getDistritos().subscribe(resp => {
+    this.distritoService.getDistritos().subscribe((resp) => {
       this.distritos = resp.data;
       this.distritosFilter = resp.data;
     });
@@ -71,15 +69,20 @@ export class DistritoComponent implements OnInit {
     dialogConfig.data = {
       message: '¿Desea cambiar estado?',
       title: 'Cambio estado',
-      state: true
+      state: true,
     };
-    const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
-    modalDialog.afterClosed().subscribe(result => {
+    const modalDialog = this.matDialog.open(
+      ConfirmModalComponent,
+      dialogConfig
+    );
+    modalDialog.afterClosed().subscribe((result) => {
       if (result.state) {
         // tslint:disable-next-line:no-shadowed-variable
-        this.distritoService.changeStatus(departamento.id).subscribe(result => {
-          this.getData();
-        });
+        this.distritoService
+          .changeStatus(departamento.idDepartamento)
+          .subscribe((result) => {
+            this.getData();
+          });
       } else {
         this.getData();
       }
@@ -90,7 +93,6 @@ export class DistritoComponent implements OnInit {
     this.consulting = false;
     this.update = undefined;
     this.openDialog();
-
   }
 
   consultar(distrito: Distrito): void {
@@ -109,7 +111,6 @@ export class DistritoComponent implements OnInit {
     this.router.navigate(['abm-ventas']);
   }
 
-
   openDialog(): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -119,10 +120,13 @@ export class DistritoComponent implements OnInit {
     dialogConfig.data = {
       distritos: this.distritos,
       distrito: this.update,
-      consultar: this.consulting
+      consultar: this.consulting,
     };
-    const modalDialog = this.matDialog.open(AgregarDistritoComponent, dialogConfig);
-    modalDialog.afterClosed().subscribe(result => {
+    const modalDialog = this.matDialog.open(
+      AgregarDistritoComponent,
+      dialogConfig
+    );
+    modalDialog.afterClosed().subscribe((result) => {
       if (result) {
         this.openSnackBar(result);
       }
@@ -134,18 +138,18 @@ export class DistritoComponent implements OnInit {
     this.snackBar.openFromComponent(SnackConfirmComponent, {
       panelClass: ['error-snackbar'],
       duration: 5 * 1000,
-      data: msg
+      data: msg,
     });
   }
-
 
   filterDistrito(event: any): void {
     this.busqueda = this.busqueda.toLowerCase();
     this.distritosFilter = this.distritos;
     if (this.busqueda !== null) {
-      this.distritosFilter = this.distritos.filter(item => {
+      this.distritosFilter = this.distritos.filter((item) => {
         const nombre = item.nombre.toLowerCase().indexOf(this.busqueda) !== -1;
-        const abreviatura = item.abreviatura.toLowerCase().indexOf(this.busqueda) !== -1;
+        const abreviatura =
+          item.abreviatura.toLowerCase().indexOf(this.busqueda) !== -1;
         return nombre || abreviatura;
       });
     }

@@ -1,21 +1,20 @@
-import {Component, OnInit} from '@angular/core';
-import {DepartamentosService} from '../../../service/departamentos.service';
-import {Departamento} from '../../../models/Departamento';
-import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {AgregarDepartamentoComponent} from './agregar-departamento/agregar-departamento.component';
-import {SnackConfirmComponent} from '../../../shared/snack-confirm/snack-confirm.component';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal.component';
-import {TokenService} from '../../../service/token.service';
-import {Router} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { DepartamentosService } from '../../../service/departamentos.service';
+import { Departamento } from '../../../models/Departamento';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { AgregarDepartamentoComponent } from './agregar-departamento/agregar-departamento.component';
+import { SnackConfirmComponent } from '../../../shared/snack-confirm/snack-confirm.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmModalComponent } from '../../../shared/confirm-modal/confirm-modal.component';
+import { TokenService } from '../../../service/token.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-departamento',
   templateUrl: './departamento.component.html',
-  styleUrls: ['./departamento.component.scss']
+  styleUrls: ['./departamento.component.scss'],
 })
 export class DepartamentoComponent implements OnInit {
-
   departamentos: Departamento[];
   departamentosFilter: Departamento[];
   private update: Departamento;
@@ -33,8 +32,7 @@ export class DepartamentoComponent implements OnInit {
     private snackBar: MatSnackBar,
     private router: Router,
     private tokenService: TokenService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     if (this.tokenService.getToken()) {
@@ -43,7 +41,7 @@ export class DepartamentoComponent implements OnInit {
       this.isLogged = false;
     }
     this.roles = this.tokenService.getAuthorities();
-    this.roles.forEach(rol => {
+    this.roles.forEach((rol) => {
       if (rol === 'ROLE_ADMIN') {
         this.isAdmin = true;
       } else if (rol === 'ROLE_GERENTE') {
@@ -54,11 +52,13 @@ export class DepartamentoComponent implements OnInit {
   }
 
   getData(): void {
-    this.departamentoService.getAll().subscribe(resp => {
-      this.departamentos = resp.data;
-      this.departamentosFilter = this.departamentos;
-      console.log(resp.data);
-    });
+    this.departamentoService
+      .getAllDepartments()
+      .subscribe((data: Departamento[]) => {
+        this.departamentos = data;
+        this.departamentosFilter = this.departamentos;
+        console.log(data);
+      });
   }
 
   showModal(departamento: Departamento): void {
@@ -70,15 +70,20 @@ export class DepartamentoComponent implements OnInit {
     dialogConfig.data = {
       message: '¿Desea cambiar estado?',
       title: 'Cambio estado',
-      state: departamento.estado
+      state: departamento.habilitado,
     };
-    const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
-    modalDialog.afterClosed().subscribe(result => {
+    const modalDialog = this.matDialog.open(
+      ConfirmModalComponent,
+      dialogConfig
+    );
+    modalDialog.afterClosed().subscribe((result) => {
       if (result.state) {
         // tslint:disable-next-line:no-shadowed-variable
-        this.departamentoService.changeStatus(departamento.id).subscribe(result => {
-          this.getData();
-        });
+        this.departamentoService
+          .changeStatus(departamento.idDepartamento)
+          .subscribe((result) => {
+            this.getData();
+          });
       } else {
         this.getData();
       }
@@ -89,9 +94,10 @@ export class DepartamentoComponent implements OnInit {
     this.busqueda = this.busqueda.toLowerCase();
     this.departamentosFilter = this.departamentos;
     if (this.busqueda !== null) {
-      this.departamentosFilter = this.departamentos.filter(item => {
+      this.departamentosFilter = this.departamentos.filter((item) => {
         const nombre = item.nombre.toLowerCase().indexOf(this.busqueda) !== -1;
-        const abreviatura = item.abreviatura.toLowerCase().indexOf(this.busqueda) !== -1;
+        const abreviatura =
+          item.abreviatura.toLowerCase().indexOf(this.busqueda) !== -1;
         return nombre || abreviatura;
       });
     }
@@ -101,7 +107,6 @@ export class DepartamentoComponent implements OnInit {
     this.consulting = false;
     this.update = undefined;
     this.openDialog();
-
   }
 
   consultar(departamento: Departamento): void {
@@ -129,10 +134,13 @@ export class DepartamentoComponent implements OnInit {
     dialogConfig.data = {
       departamentos: this.departamentos,
       departamento: this.update,
-      consulting: this.consulting
+      consulting: this.consulting,
     };
-    const modalDialog = this.matDialog.open(AgregarDepartamentoComponent, dialogConfig);
-    modalDialog.afterClosed().subscribe(result => {
+    const modalDialog = this.matDialog.open(
+      AgregarDepartamentoComponent,
+      dialogConfig
+    );
+    modalDialog.afterClosed().subscribe((result) => {
       if (result) {
         this.openSnackBar(result);
       }

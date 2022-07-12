@@ -88,7 +88,8 @@ export class AgregarDepartamentoComponent implements OnInit {
     if (this.updating) {
       this.departamento.idDepartamento =
         this.departamentoForm.controls.id.value;
-      this.departamento.estado = this.departamentoForm.controls.estado.value;
+      this.departamento.habilitado =
+        this.departamentoForm.controls.estado.value;
       this.update();
     } else {
       this.save();

@@ -16,7 +16,7 @@ export class DepartamentosService {
   }
 
   getAllDepartments() {
-    return this.http.get<Departamento>(this.url);
+    return this.http.get<Departamento[]>(this.url);
   }
 
   getActive() {

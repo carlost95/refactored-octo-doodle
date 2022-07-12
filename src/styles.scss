@@ -12,15 +12,11 @@ $corralon-primary: mat-palette($mat-amber, 600);
 $corralon-accent: mat-palette($mat-grey, 600);
 $corralon-warn: mat-palette($mat-red);
 
-$corralon: mat-light-theme(
-  (
-    color: (
-      primary: $corralon-primary,
-      accent: $corralon-accent,
-      warn: $corralon-warn,
-    ),
-  )
-);
+$corralon: mat-light-theme((color: (primary: $corralon-primary,
+        accent: $corralon-accent,
+        warn: $corralon-warn,
+      ),
+    ));
 @include angular-material-theme($corralon);
 
 .btn-outline-warning {
@@ -33,47 +29,47 @@ body {
   width: 100vw;
 }
 
-body {
+* {
+  box-sizing: border-box;
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  padding: 0;
 }
 
-.container {
-  padding-top: 1%;
+.container__screep {
+  padding-top: 1rem;
   background-color: rgb(245, 245, 245);
-  padding-right: 1%;
-  padding-left: 1%;
-  padding-bottom: 1%;
-  margin-top: 1%;
-  margin-bottom: 1%;
-  margin-left: auto;
-}
-
-thead tr:nth-child(1) th {
-  position: sticky;
-  top: 0;
-  z-index: 12;
-  border: 2px solid rgba(0, 0, 0, 0.534);
-}
-
-.table {
-  /* border: 1px solid black; */
-  border-top: 1%;
-  border-left: 1%;
-  border-collapse: collapse;
-  margin: 0;
-  margin-left: 0.03%;
-  margin-bottom: 1%;
-  padding: 5%;
   width: 100%;
-  height: 50%;
-  overflow: auto;
+  min-height: 100%;
+  overflow: hidden;
+
 }
 
-td {
-  padding-top: 1%;
-  padding-bottom: 1%;
-}
+
+// thead tr:nth-child(1) th {
+//   position: sticky;
+//   top: 0;
+//   z-index: 12;
+//   border: 2px solid rgba(0, 0, 0, 0.534);
+// }
+
+// .table {
+//   /* border: 1px solid black; */
+//   border-top: 1%;
+//   border-left: 1%;
+//   border-collapse: collapse;
+//   margin: 0;
+//   margin-left: 0.03%;
+//   margin-bottom: 1%;
+//   padding: 5%;
+//   width: 100%;
+//   height: 50%;
+//   overflow: auto;
+// }
+
+// td {
+//   padding-top: 1%;
+//   padding-bottom: 1%;
+// }
 
 
 mat-dialog-container#modal-component {
@@ -83,3 +79,11 @@ mat-dialog-container#modal-component {
   background-color: whitesmoke;
 }
 
+.fondo {
+  // background-image: url(./assets/images/bg-05.jpg);
+background-color: rgba(225,225,225,1);
+  background-size: cover;
+  background-repeat: repeat;
+  min-width: 100%;
+  min-height: 100%;
+}
