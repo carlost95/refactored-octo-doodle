@@ -12,6 +12,7 @@ import {PaginacionPipe} from './paginacion.pipe';
 import {MatPaginatorIntl} from '@angular/material/paginator';
 import {CustomMatPaginatorIntl} from '../pages/compras/paginacion-es';
 import {MenuComponent} from './menu/menu.component';
+import { FooterComponent } from './footer/footer.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import {MenuComponent} from './menu/menu.component';
     AjustesComponent,
     ConfirmDialogComponent,
     PaginacionPipe,
-    MenuComponent],
+    MenuComponent,
+    FooterComponent],
   imports: [
     FormsModule,
     CommonModule,

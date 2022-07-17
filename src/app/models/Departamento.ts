@@ -1,6 +1,6 @@
 export class Departamento {
-    id: number;
-    nombre: string;
-    abreviatura: string;
-    estado: boolean;
+  idDepartamento: number;
+  nombre: string;
+  abreviatura: string;
+  habilitado: boolean;
 }
