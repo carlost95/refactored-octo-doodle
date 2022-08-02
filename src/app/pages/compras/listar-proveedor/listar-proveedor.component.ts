@@ -1,17 +1,17 @@
 import {Router} from '@angular/router';
 import {Component, OnInit} from '@angular/core';
-import {ServiceReportService} from '../../../service/service-report.service';
-import {PdfExportService} from 'src/app/service/pdf-export.service';
-import {ExcelExportService} from 'src/app/service/excel-export.service';
+import {ServiceReportService} from '@app/service/service-report.service';
+import {PdfExportService} from '@app/service/pdf-export.service';
+import {ExcelExportService} from '@app/service/excel-export.service';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal.component';
-import {ProveedoresService} from '../../../service/proveedores.service';
-import {Proveedor} from '../../../models/Proveedor';
+import {ConfirmModalComponent} from '@shared/confirm-modal/confirm-modal.component';
+import {ProveedoresService} from '@service/proveedores.service';
+import {Proveedor} from '@models/Proveedor';
 import {AgregarProveedorComponent} from '../agregar-proveedor/agregar-proveedor.component';
-import {ProveedorExcel} from '../../../models/ProveedorExcel';
-import {SnackConfirmComponent} from '../../../shared/snack-confirm/snack-confirm.component';
+import {ProveedorExcel} from '@models/ProveedorExcel';
+import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {TokenService} from '../../../service/token.service';
+import {TokenService} from '@service/token.service';
 
 @Component({
   selector: 'app-listar-proveedor',
@@ -59,9 +59,9 @@ export class ListarProveedorComponent implements OnInit {
         this.isGerente = true;
       }
     });
-    this.proveedorService.listarProveedoresTodos().subscribe(data => {
-      this.proveedores = data.data;
-      this.proveedoresFilter = data.data;
+    this.proveedorService.listarProveedoresTodos().subscribe(proveedores => {
+      this.proveedores = proveedores;
+      this.proveedoresFilter = proveedores;
     });
   }
 
@@ -69,11 +69,9 @@ export class ListarProveedorComponent implements OnInit {
     this.busqueda = this.busqueda.toLowerCase();
     this.proveedoresFilter = this.proveedores;
     if (this.busqueda !== null) {
-      this.proveedoresFilter = this.proveedores.filter(item => {
-        const inName = item.razonSocial.toLowerCase().indexOf(this.busqueda) !== -1;
-        return inName;
-      });
+      this.proveedoresFilter = this.proveedores.filter(item => (item.razonSocial.toLowerCase()).includes(this.busqueda));
     }
+    console.log(this.proveedoresFilter)
   }
 
   exportarExcel(): void {
@@ -133,9 +131,9 @@ export class ListarProveedorComponent implements OnInit {
     };
     const modalDialog = this.matDialog.open(AgregarProveedorComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
-      this.proveedorService.listarProveedoresTodos().subscribe(data => {
-        this.proveedores = data.data;
-        this.proveedoresFilter = data.data;
+      this.proveedorService.listarProveedoresTodos().subscribe(proveedores => {
+        this.proveedores = proveedores;
+        this.proveedoresFilter = proveedores;
       });
       if (result) {
         this.openSnackBar(result);
@@ -160,7 +158,8 @@ export class ListarProveedorComponent implements OnInit {
     modalDialog.afterClosed().subscribe(result => {
       if (result.state) {
         // tslint:disable-next-line:no-shadowed-variable
-        this.proveedorService.cambiarHabilitacion(proveedor.id).subscribe(result => {
+        this.proveedorService.cambiarHabilitacion(proveedor.id)
+          .subscribe(result => {
           this.getData();
         });
       } else {
@@ -170,9 +169,9 @@ export class ListarProveedorComponent implements OnInit {
   }
 
   getData(): void {
-    this.proveedorService.listarProveedoresTodos().subscribe(data => {
-      this.proveedores = data.data;
-      this.proveedoresFilter = data.data;
+    this.proveedorService.listarProveedoresTodos().subscribe( proveedores => {
+      this.proveedores = proveedores;
+      this.proveedoresFilter = proveedores;
     });
   }
 

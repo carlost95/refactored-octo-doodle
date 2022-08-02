@@ -1,8 +1,8 @@
 import {Component, OnInit, Inject} from '@angular/core';
-import {ProveedoresService} from '../../../service/proveedores.service';
+import {ProveedoresService} from '@service/proveedores.service';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {Proveedor} from '../../../models/Proveedor';
+import {Proveedor} from '@models/Proveedor';
 
 @Component({
   selector: 'app-agregar-proveedor',
@@ -27,8 +27,8 @@ export class AgregarProveedorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.proveedorService.listarProveedoresTodos().subscribe(resp =>
-      this.proveedores = resp.data);
+    this.proveedorService.listarProveedoresTodos().subscribe(proveedores =>
+      this.proveedores = proveedores);
     const {provider} = this.data;
 
     if (provider) {
@@ -40,7 +40,9 @@ export class AgregarProveedorComponent implements OnInit {
         domicilio: [{value: provider.domicilio, disabled: this.consulting}, Validators.required],
         mail: [{value: provider.mail, disabled: this.consulting}, Validators.required],
         celular: [{value: provider.celular, disabled: this.consulting}, null],
-        telefono: [{value: provider.telefono, disabled: this.consulting}, null]
+        telefono: [{value: provider.telefono, disabled: this.consulting}, null],
+        bancos: [{value: provider.bancos, disabled: this.consulting}, null]
+
       });
       this.updating = !this.consulting;
     } else {
@@ -49,7 +51,8 @@ export class AgregarProveedorComponent implements OnInit {
         domicilio: ['', Validators.required],
         mail: ['', Validators.required],
         celular: ['', null],
-        telefono: ['', null]
+        telefono: ['', null],
+        bancos: ['', null]
       });
     }
   }
@@ -60,6 +63,7 @@ export class AgregarProveedorComponent implements OnInit {
   }
 
   onSubmit(): void {
+    console.log(this.proveedorForm)
     this.submitted = true;
     this.errorInForm = this.submitted && this.proveedorForm.invalid;
 
@@ -75,6 +79,7 @@ export class AgregarProveedorComponent implements OnInit {
   }
 
   makeDTO(): void {
+    console.log(this.proveedorForm.value)
     this.proveedor.razonSocial = (this.proveedorForm.controls.razonSocial.value).trim().toUpperCase();
     this.proveedor.domicilio = this.proveedorForm.controls.domicilio.value;
     this.proveedor.mail = this.proveedorForm.controls.mail.value;
@@ -115,5 +120,9 @@ export class AgregarProveedorComponent implements OnInit {
     } else {
       this.dialogRef.close('Error en el proceso');
     }
+  }
+
+  establecerBanco(idBanco: number): void {
+    this.proveedorForm.patchValue({bancos: idBanco});
   }
 }

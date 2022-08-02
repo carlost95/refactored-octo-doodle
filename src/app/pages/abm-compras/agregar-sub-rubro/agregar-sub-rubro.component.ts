@@ -1,8 +1,8 @@
-import {SubRubroDTO} from '../../../models/SubRubroDTO';
-import {Rubro} from '../../../models/Rubro';
+import {SubRubroDTO} from '@models/SubRubroDTO';
+import {Rubro} from '@models/Rubro';
 import {Component, Inject, OnInit} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {SubRubroService} from 'src/app/service/sub-rubro.service';
+import {SubRubroService} from '@app/service/sub-rubro.service';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {RubrosService} from '../../../service/rubros.service';
 

@@ -1,10 +1,10 @@
 import {ActivatedRoute, Router} from '@angular/router';
 import {Component, OnInit, Input} from '@angular/core';
-import {Pedido} from 'src/app/models/Pedido';
-import {Articulo} from 'src/app/models/Articulo';
-import {MovimientoArticuloDTO} from 'src/app/models/MovimientoArticuloDTO';
-import {PedidosService} from 'src/app/service/pedidos.service';
-import {Proveedor} from 'src/app/models/Proveedor';
+import {Pedido} from '@app/models/Pedido';
+import {Articulo} from '@app/models/Articulo';
+import {MovimientoArticuloDTO} from '@app/models/MovimientoArticuloDTO';
+import {PedidosService} from '@app/service/pedidos.service';
+import {Proveedor} from '@app/models/Proveedor';
 import {ProveedoresService} from '../../service/proveedores.service';
 import {ArticulosService} from '../../service/articulos.service';
 import {MovimientosService} from '../../service/movimientos.service';

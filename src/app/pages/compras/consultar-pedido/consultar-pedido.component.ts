@@ -1,7 +1,4 @@
-import { PedidosService } from 'src/app/service/pedidos.service';
-import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { Pedido } from 'src/app/models/Pedido';
 
 @Component({
   selector: 'app-consultar-pedido',

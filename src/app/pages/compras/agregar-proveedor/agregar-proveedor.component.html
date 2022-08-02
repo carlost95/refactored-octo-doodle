@@ -54,6 +54,10 @@
           <input matInput formControlName="celular" autocomplete="off"/>
         </mat-form-field>
       </p>
+      <p>
+          <banco-dropdown (bancoChange)="establecerBanco($event)" >
+          </banco-dropdown>
+      </p>
     </form>
   </section>
   <footer class="modal-footer" *ngIf="!consulting">

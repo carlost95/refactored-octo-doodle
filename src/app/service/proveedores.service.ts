@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Response } from '../models/Response';
 import { environment } from '../../environments/environment.prod';
 import { HttpClient } from '@angular/common/http';
-import { Proveedor } from '../models/Proveedor';
+import { Proveedor } from '@models/Proveedor';
 import { proveedor } from '../../environments/global-route';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class ProveedoresService {
   }
   // tslint:disable-next-line: typedef
   listarProveedoresTodos() {
-    return this.http.get<Response>(this.url);
+    return this.http.get<Proveedor[]>(this.url);
   }
   // tslint:disable-next-line: typedef
   listarProveedoresHabilitados() {

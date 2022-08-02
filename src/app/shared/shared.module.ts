@@ -13,6 +13,7 @@ import {MatPaginatorIntl} from '@angular/material/paginator';
 import {CustomMatPaginatorIntl} from '../pages/compras/paginacion-es';
 import {MenuComponent} from './menu/menu.component';
 import { FooterComponent } from './footer/footer.component';
+import { DropdownComponent } from './banco/dropdown/dropdown.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { FooterComponent } from './footer/footer.component';
     ConfirmDialogComponent,
     PaginacionPipe,
     MenuComponent,
-    FooterComponent],
+    FooterComponent,
+    DropdownComponent],
   imports: [
     FormsModule,
     CommonModule,
@@ -30,7 +32,7 @@ import { FooterComponent } from './footer/footer.component';
     ReactiveFormsModule,
     RouterModule
   ],
-  exports: [PedidosComponent, AjustesComponent, MenuComponent],
+    exports: [PedidosComponent, AjustesComponent, MenuComponent, DropdownComponent],
   providers: [
     {
       provide: MatPaginatorIntl,

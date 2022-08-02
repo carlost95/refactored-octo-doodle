@@ -1,0 +1,8 @@
+<mat-form-field class="col-md-8" appearance="fill">
+  <mat-label>Banco</mat-label>
+  <mat-select  (selectionChange)="onChange($event)">
+    <mat-option *ngFor="let banco of bancos" [value]="banco.idBanco">
+      {{ banco.nombre }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

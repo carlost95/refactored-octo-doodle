@@ -16,5 +16,16 @@
     {
       "path": "./e2e/tsconfig.json"
     }
-]
+],
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@app/*": ["app/*"],
+      "@auth/*": ["app/auth/*"],
+      "@shared/*": ["app/shared/*"],
+      "@models/*": ["app/models/*"],
+      "@service/*": ["app/service/*"]
+    }
+  },
+
 }
