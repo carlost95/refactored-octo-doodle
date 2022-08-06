@@ -4,6 +4,7 @@ import {BancoRest} from '@models/banco-rest';
 
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'banco-dropdown',
   templateUrl: './dropdown.component.html',
   styleUrls: ['./dropdown.component.scss']

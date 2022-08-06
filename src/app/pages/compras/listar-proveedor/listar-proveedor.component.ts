@@ -119,18 +119,19 @@ export class ListarProveedorComponent implements OnInit {
   }
 
   openDialogProveedor(): void {
-    const dialogConfig = new MatDialogConfig();
+    const dialog = this.matDialog.open(AgregarProveedorComponent, {
+      id: 'modal-component',
+      disableClose: true,
+      height: 'auto',
+      width: '20rem',
+      data: {
+        provider: this.toUpdateProveedor,
+        consulting: this.consulting
+      },
+      panelClass: 'no-padding'
+    });
     // The user can't close the dialog by clicking outside its body
-    dialogConfig.disableClose = true;
-    dialogConfig.id = 'modal-component';
-    dialogConfig.height = '600px';
-    dialogConfig.width = '400px';
-    dialogConfig.data = {
-      provider: this.toUpdateProveedor,
-      consulting: this.consulting
-    };
-    const modalDialog = this.matDialog.open(AgregarProveedorComponent, dialogConfig);
-    modalDialog.afterClosed().subscribe(result => {
+    dialog.afterClosed().subscribe(result => {
       this.proveedorService.listarProveedoresTodos().subscribe(proveedores => {
         this.proveedores = proveedores;
         this.proveedoresFilter = proveedores;
