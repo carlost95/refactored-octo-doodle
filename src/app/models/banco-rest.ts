@@ -3,5 +3,4 @@ export class BancoRest {
   nombre: string;
   abreviatura: string;
   habilitado: boolean;
-
 }

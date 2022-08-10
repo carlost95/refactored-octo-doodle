@@ -17,6 +17,7 @@ import {ListarRemitosComponent} from './listar-remitos/listar-remitos.component'
 import {AgregarVentaComponent} from './agregar-venta/agregar-venta.component';
 import {AgregarRemitoComponent} from './agregar-remito/agregar-remito.component';
 import { NuevaVentaComponent } from './nueva-venta/nueva-venta.component';
+import {SharedModule} from "../../shared/shared.module";
 
 @NgModule({
   declarations: [
@@ -33,8 +34,8 @@ import { NuevaVentaComponent } from './nueva-venta/nueva-venta.component';
     AgregarRemitoComponent,
     NuevaVentaComponent,
   ],
-  imports: [CommonModule, VentasRoutingModule, FormsModule, MaterialModule, ReactiveFormsModule, GoogleMapsModule]
-  // entryComponents: [ConfirmDialogComponent],
+    imports: [CommonModule, VentasRoutingModule, FormsModule, MaterialModule, ReactiveFormsModule, GoogleMapsModule, SharedModule]
+    // entryComponents: [ConfirmDialogComponent],
 })
 export class VentasModule {
 }

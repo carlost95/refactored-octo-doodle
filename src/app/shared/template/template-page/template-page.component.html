@@ -1,0 +1,12 @@
+<div class="template__container card">
+  <template-header [backRoute]="backRoute" [title]="title"></template-header>
+  <template-search (filtro)="filtrarTermino($event)"></template-search>
+  <div class="row col-12 d-flex justify-content-end">
+    <template-button
+      [title]="'nuevo'"
+      [icon]="'mapa'"
+    >
+
+    </template-button>
+  </div>
+</div>
