@@ -1,5 +1,5 @@
 import {Router} from '@angular/router';
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {ServiceReportService} from '@app/service/service-report.service';
 import {PdfExportService} from '@app/service/pdf-export.service';
 import {ExcelExportService} from '@app/service/excel-export.service';
@@ -12,6 +12,10 @@ import {ProveedorExcel} from '@models/ProveedorExcel';
 import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {TokenService} from '@service/token.service';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {ProveedorRest} from '@models/proveedor-rest';
 
 @Component({
   selector: 'app-listar-proveedor',
@@ -19,14 +23,20 @@ import {TokenService} from '@service/token.service';
   styleUrls: ['./listar-proveedor.component.css']
 })
 export class ListarProveedorComponent implements OnInit {
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  dataSource: MatTableDataSource<ProveedorRest>;
+  displayedColumns: string[] = ['razonSocial', 'celular', 'telefono', 'habilitado', 'acciones'];
+
+  proveedores: ProveedorRest [];
+  mostrarModificacion: boolean;
+
   proveedor: Proveedor = null;
-  proveedores: Proveedor[] = null;
   proveedoresFilter: Proveedor[] = null;
   busqueda: string = null;
   toUpdateProveedor: any = null;
   consulting: boolean;
-  proveedoresExcel: ProveedorExcel[] = [];
-  proveedorExcel: ProveedorExcel;
 
   isLogged = false;
   roles: string[];
@@ -34,66 +44,36 @@ export class ListarProveedorComponent implements OnInit {
   isGerente = false;
 
   constructor(
-    private router: Router,
     private proveedorService: ProveedoresService,
     public matDialog: MatDialog,
-    private excelService: ExcelExportService,
-    private serviceReport: ServiceReportService,
-    private servicePdf: PdfExportService,
     private tokenService: TokenService,
     private snackBar: MatSnackBar) {
   }
 
-
   ngOnInit(): void {
-    if (this.tokenService.getToken()) {
-      this.isLogged = true;
-    } else {
-      this.isLogged = false;
-    }
     this.roles = this.tokenService.getAuthorities();
-    this.roles.forEach(rol => {
-      if (rol === 'ROLE_ADMIN') {
-        this.isAdmin = true;
-      } else if (rol === 'ROLE_GERENTE') {
-        this.isGerente = true;
-      }
-    });
-    this.proveedorService.listarProveedoresTodos().subscribe(proveedores => {
+    this.mostrarModificacion = this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_GERENTE');
+    this.proveedorService.listarProveedores().subscribe((proveedores: ProveedorRest[]) => {
       this.proveedores = proveedores;
-      this.proveedoresFilter = proveedores;
+      this.establecerDatasource(this.proveedores);
+
     });
   }
 
-  filtrarProveedor(event: any): void {
-    this.busqueda = this.busqueda.toLowerCase();
-    this.proveedoresFilter = this.proveedores;
-    if (this.busqueda !== null) {
-      this.proveedoresFilter = this.proveedores.filter(item => (item.razonSocial.toLowerCase()).includes(this.busqueda));
+
+  filtrarProveedor(value: string): void {
+    const termino = value?.toLowerCase()?.trim();
+    let proveedores = this.proveedores;
+    if (termino){
+      proveedores = this.proveedores.filter(proveedor => proveedor.razonSocial.toLowerCase().includes(termino));
     }
-    console.log(this.proveedoresFilter)
+    this.establecerDatasource(proveedores);
   }
 
-  exportarExcel(): void {
-    // tslint:disable-next-line: prefer-for-of
-    for (let index = 0; index < this.proveedoresFilter.length; index++) {
-      this.proveedorExcel = new ProveedorExcel('', '', '', '', '');
-      if (this.proveedoresFilter[index] != null) {
-        this.proveedorExcel.razonSocial = this.proveedoresFilter[index].razonSocial;
-        this.proveedorExcel.domicilio = this.proveedoresFilter[index].domicilio;
-        this.proveedorExcel.mail = this.proveedoresFilter[index].mail;
-        this.proveedorExcel.telefono = this.proveedoresFilter[index].telefono;
-        this.proveedorExcel.celular = this.proveedoresFilter[index].celular;
-      }
-      this.proveedoresExcel.push(this.proveedorExcel);
-    }
-    this.excelService.exportToExcel(this.proveedoresExcel, 'Reporte Proveedores');
-  }
-
-  exportarPDF(): void {
-    this.serviceReport.getReporteProveedorPdf().subscribe(resp => {
-      this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
-    });
+  establecerDatasource(proveedores: ProveedorRest[]): void {
+    this.dataSource = new MatTableDataSource(proveedores);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   newProveedor(): void {
@@ -114,10 +94,6 @@ export class ListarProveedorComponent implements OnInit {
     this.openDialogProveedor();
   }
 
-  backPage(): void {
-    this.router.navigate(['compras']);
-  }
-
   openDialogProveedor(): void {
     const dialog = this.matDialog.open(AgregarProveedorComponent, {
       id: 'modal-component',
@@ -132,14 +108,14 @@ export class ListarProveedorComponent implements OnInit {
     });
     // The user can't close the dialog by clicking outside its body
     dialog.afterClosed().subscribe(result => {
-      this.proveedorService.listarProveedoresTodos().subscribe(proveedores => {
+      this.proveedorService.listarProveedores().subscribe(proveedores => {
         this.proveedores = proveedores;
-        this.proveedoresFilter = proveedores;
+        this.dataSource = new MatTableDataSource(this.proveedores);
       });
       if (result) {
         this.openSnackBar(result);
       }
-      this.getData();
+      // this.getData();
     });
   }
 
@@ -161,20 +137,20 @@ export class ListarProveedorComponent implements OnInit {
         // tslint:disable-next-line:no-shadowed-variable
         this.proveedorService.cambiarHabilitacion(proveedor.id)
           .subscribe(result => {
-          this.getData();
+          // this.getData();
         });
       } else {
-        this.getData();
+        // this.getData();
       }
     });
   }
 
-  getData(): void {
-    this.proveedorService.listarProveedoresTodos().subscribe( proveedores => {
-      this.proveedores = proveedores;
-      this.proveedoresFilter = proveedores;
-    });
-  }
+  // getData(): void {
+  //   this.proveedorService.listarProveedoresTodos().subscribe( proveedores => {
+  //     this.proveedores = proveedores;
+  //     this.proveedoresFilter = proveedores;
+  //   });
+  // }
 
   openSnackBar(msg: string): void {
     this.snackBar.openFromComponent(SnackConfirmComponent, {

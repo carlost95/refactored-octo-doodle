@@ -4,6 +4,8 @@ import { environment } from '../../environments/environment.prod';
 import { HttpClient } from '@angular/common/http';
 import { Proveedor } from '@models/Proveedor';
 import { proveedor } from '../../environments/global-route';
+import {Observable} from "rxjs";
+import {ProveedorRest} from "@models/proveedor-rest";
 
 @Injectable({
   providedIn: 'root'
@@ -42,5 +44,9 @@ export class ProveedoresService {
   // tslint:disable-next-line: typedef
   listarProveedorId(id: number) {
     return this.http.get<Response>(this.url + '/' + id);
+  }
+
+  listarProveedores(): Observable<ProveedorRest[]> {
+    return this.http.get<ProveedorRest[]>(this.url);
   }
 }
