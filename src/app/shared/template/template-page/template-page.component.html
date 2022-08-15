@@ -1,12 +1,8 @@
-<div class="template__container card p-2">
-  <template-header [backRoute]="backRoute" [title]="title"></template-header>
-  <template-search (filtro)="filtrarTermino($event)"></template-search>
-  <div class="d-flex justify-content-end p-3">
-    <template-button
-      [title]="titleButton"
-      [icon]="iconButton"
-      (onClick)="onClickButton($event)">
-    </template-button>
-  </div>
+<div class="template__container card p-2 ">
+  <template-header [backRoute]="backRoute" [title]="title" class="marginHeader"></template-header>
+  <template-button class="d-md-flex justify-content-end d-sm-flex justify-content-start marginButton"
+    [title]=" titleButton" [icon]="iconButton" (onClick)="onClickButton($event)">
+  </template-button>
+  <template-search (filtro)="filtrarTermino($event)" class="marginSearch"></template-search>
   <ng-content></ng-content>
 </div>

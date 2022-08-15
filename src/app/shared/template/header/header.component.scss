@@ -1,0 +1,44 @@
+@media screen and (max-width: 576px) {
+  .fa-chevron-left{
+display: none;
+  }
+  .fontSize {
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: space-around;
+  }
+ 
+
+}
+@media screen and (min-width: 577px) and (max-width: 767px) {
+  .fa-3x {
+    font-size: 1.2em;
+  }
+  .fas {
+    font-weight: 300;
+  }
+  .fontSize {
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: space-around;
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .fa-3x {
+    font-size: 2em;
+  }
+  .fas {
+    font-weight: 350;
+  }
+  .fontSize {
+    font-size: 2.5rem;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .fas {
+    font-weight: 400;
+  }
+  .fontSize {
+    font-size: 4rem;
+  }
+}
