@@ -1,11 +1,35 @@
-.svg-color {
-  fill: white;
+li,
+a {
+  list-style: none;
 }
-
-.lugar {
-  position: absolute;
-  width: 100%;
-  left: 0;
-  text-align: center;
-  margin: 0 auto;
+a {
+  cursor: pointer;
+}
+.icon {
+  color: white;
+}
+.dropdown-menu {
+  background-color: #343a40;
+  border-spacing: 0.25rem;
+  border-color: rgba(255, 255, 255, 0.548);
+}
+.dropdown-item {
+  color: rgba(255, 255, 255, 0.6);
+}
+.dropdown-item:hover {
+  color: white;
+  background-color: #24282c;
+  border-radius: 0.5rem;
+}
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: #343a40;
+}
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.65);
+}
+.navbar-dark .navbar-nav .nav-link:hover {
+  color: white;
+  background-color: #24282c;
+  border-radius: 0.5rem;
 }

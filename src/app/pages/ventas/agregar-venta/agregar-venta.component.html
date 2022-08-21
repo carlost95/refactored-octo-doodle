@@ -25,11 +25,7 @@
             <!--            </div>-->
             <mat-form-field [ngClass]="consultar? 'col-md-12': 'col-md-10'" appearance="legacy">
               <mat-label> Cliente</mat-label>
-              <mat-select
-                [(ngModel)]="idClient"
-                name="cliente"
-                formControlName="nombreCliente"
-                autocomplete="off">
+              <mat-select [(ngModel)]="idClient" name="cliente" formControlName="nombreCliente" autocomplete="off">
                 <mat-option *ngFor="let cli of clients" [value]="cli.id">
                   {{cli.nombre}},{{cli.apellido}}
                 </mat-option>
@@ -60,8 +56,8 @@
             <!--            <mat-form-field class="col-md-6" appearance="legacy">-->
             <mat-label> Codigo articulo</mat-label>
             <!--              <input matInput type="text" autocomplete="off">-->
-            <input type="text" class="form-control searchText"
-                   placeholder="ingrese busqueda" (keyup)="filtrarArticulo($event)"/>
+            <input type="text" class="form-control searchText" placeholder="ingrese busqueda"
+              (keyup)="filtrarArticulo($event)" />
             <!--            </mat-form-field>-->
             <mat-form-field class="col-md-6" appearance="legacy" autocomplete="off">
               <label>
@@ -89,24 +85,24 @@
           </div>
           <table class="table table-striped table-bordered">
             <thead class="table-dark">
-            <tr>
-              <th scope="col">NRO</th>
-              <th scope="col">CODIGO</th>
-              <th scope="col">ARTICULO</th>
-              <th scope="col">CANTIDAD</th>
-              <th scope="col">TOTAL</th>
-            </tr>
+              <tr>
+                <th scope="col">NRO</th>
+                <th scope="col">CODIGO</th>
+                <th scope="col">ARTICULO</th>
+                <th scope="col">CANTIDAD</th>
+                <th scope="col">TOTAL</th>
+              </tr>
             </thead>
             <tbody *ngIf="ventas != null">
-            <tr *ngFor="let venta of ventasFilter" class="text-center">
-              <td>{{ venta.nro }}</td>
-              <td>{{ venta.fecha | uppercase }}</td>
-              <td>{{ venta.nombreCliente | uppercase }}</td>
-              <td>{{ venta.monto}}</td>
-              <td>
-                {{total + venta.monto}}
-              </td>
-            </tr>
+              <tr *ngFor="let venta of ventasFilter" class="text-center">
+                <td>{{ venta.nro }}</td>
+                <td>{{ venta.fecha | uppercase }}</td>
+                <td>{{ venta.nombreCliente | uppercase }}</td>
+                <td>{{ venta.monto}}</td>
+                <td>
+                  {{total + venta.monto}}
+                </td>
+              </tr>
             </tbody>
           </table>
           <!--            <mat-form-field class="col-md-4" appearance="legacy">-->
