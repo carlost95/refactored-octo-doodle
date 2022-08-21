@@ -1,14 +1,9 @@
-import {Router} from '@angular/router';
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {ServiceReportService} from '@app/service/service-report.service';
-import {PdfExportService} from '@app/service/pdf-export.service';
-import {ExcelExportService} from '@app/service/excel-export.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {ConfirmModalComponent} from '@shared/confirm-modal/confirm-modal.component';
 import {ProveedoresService} from '@service/proveedores.service';
 import {Proveedor} from '@models/Proveedor';
 import {AgregarProveedorComponent} from '../agregar-proveedor/agregar-proveedor.component';
-import {ProveedorExcel} from '@models/ProveedorExcel';
 import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {TokenService} from '@service/token.service';
@@ -16,6 +11,9 @@ import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {ProveedorRest} from '@models/proveedor-rest';
+import {BuscadorService} from '@shared/helpers/buscador.service';
+import {Titulo} from '@app/pages/compras/proveedores/model/titulo.enum';
+import {TipoModal} from '@app/pages/compras/proveedores/model/tipo-modal.enum';
 
 @Component({
   selector: 'app-listar-proveedor',
@@ -33,21 +31,16 @@ export class ListarProveedorComponent implements OnInit {
   mostrarModificacion: boolean;
 
   proveedor: Proveedor = null;
-  proveedoresFilter: Proveedor[] = null;
-  busqueda: string = null;
-  toUpdateProveedor: any = null;
   consulting: boolean;
-
-  isLogged = false;
   roles: string[];
-  isAdmin = false;
-  isGerente = false;
 
   constructor(
+    private readonly buscadorService: BuscadorService,
     private proveedorService: ProveedoresService,
     public matDialog: MatDialog,
     private tokenService: TokenService,
-    private snackBar: MatSnackBar) {
+    private snackBar: MatSnackBar,
+  ) {
   }
 
   ngOnInit(): void {
@@ -56,17 +49,12 @@ export class ListarProveedorComponent implements OnInit {
     this.proveedorService.listarProveedores().subscribe((proveedores: ProveedorRest[]) => {
       this.proveedores = proveedores;
       this.establecerDatasource(this.proveedores);
-
     });
   }
 
-
   filtrarProveedor(value: string): void {
-    const termino = value?.toLowerCase()?.trim();
-    let proveedores = this.proveedores;
-    if (termino){
-      proveedores = this.proveedores.filter(proveedor => proveedor.razonSocial.toLowerCase().includes(termino));
-    }
+    const TERMINO = 'razonSocial';
+    const proveedores = this.buscadorService.buscarTermino(this.proveedores, TERMINO, value);
     this.establecerDatasource(proveedores);
   }
 
@@ -77,45 +65,50 @@ export class ListarProveedorComponent implements OnInit {
   }
 
   newProveedor(): void {
-    this.toUpdateProveedor = null;
-    this.consulting = false;
-    this.openDialogProveedor();
+    const data = {
+      titulo: Titulo.creacion,
+      tipoModal: TipoModal.creacion
+    };
+    this.openDialogProveedor(data);
   }
 
   modificarProveedor(proveedor: Proveedor): void {
-    this.toUpdateProveedor = proveedor;
-    this.consulting = false;
-    this.openDialogProveedor();
+    const data = {
+      titulo: Titulo.actualizacion,
+      tipoModal: TipoModal.actualizacion,
+      proveedor
+    };
+    this.openDialogProveedor(data);
   }
 
   consultarProveedor(proveedor: Proveedor): void {
-    this.toUpdateProveedor = proveedor;
-    this.consulting = true;
-    this.openDialogProveedor();
+    const data = {
+      titulo: Titulo.consulta,
+      tipoModal: TipoModal.consulta,
+      proveedor
+    };
+    console.log(proveedor);
+    this.openDialogProveedor(data);
   }
 
-  openDialogProveedor(): void {
+  openDialogProveedor(data: any): void {
     const dialog = this.matDialog.open(AgregarProveedorComponent, {
       id: 'modal-component',
       disableClose: true,
       height: 'auto',
       width: '20rem',
-      data: {
-        provider: this.toUpdateProveedor,
-        consulting: this.consulting
-      },
+      data,
       panelClass: 'no-padding'
     });
     // The user can't close the dialog by clicking outside its body
     dialog.afterClosed().subscribe(result => {
       this.proveedorService.listarProveedores().subscribe(proveedores => {
         this.proveedores = proveedores;
-        this.dataSource = new MatTableDataSource(this.proveedores);
+        this.establecerDatasource(this.proveedores);
       });
       if (result) {
         this.openSnackBar(result);
       }
-      // this.getData();
     });
   }
 
@@ -137,20 +130,13 @@ export class ListarProveedorComponent implements OnInit {
         // tslint:disable-next-line:no-shadowed-variable
         this.proveedorService.cambiarHabilitacion(proveedor.id)
           .subscribe(result => {
-          // this.getData();
-        });
+            // this.getData();
+          });
       } else {
         // this.getData();
       }
     });
   }
-
-  // getData(): void {
-  //   this.proveedorService.listarProveedoresTodos().subscribe( proveedores => {
-  //     this.proveedores = proveedores;
-  //     this.proveedoresFilter = proveedores;
-  //   });
-  // }
 
   openSnackBar(msg: string): void {
     this.snackBar.openFromComponent(SnackConfirmComponent, {

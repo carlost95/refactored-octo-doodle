@@ -1,8 +1,9 @@
-import {Component, OnInit, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {ProveedoresService} from '@service/proveedores.service';
-import {FormGroup, FormBuilder, Validators} from '@angular/forms';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Proveedor} from '@models/Proveedor';
+import {TipoModal} from '@app/pages/compras/proveedores/model/tipo-modal.enum';
 
 @Component({
   selector: 'app-agregar-proveedor',
@@ -10,8 +11,8 @@ import {Proveedor} from '@models/Proveedor';
   styleUrls: ['./agregar-proveedor.component.css']
 })
 export class AgregarProveedorComponent implements OnInit {
-  proveedor: Proveedor = new Proveedor();
   proveedorForm: FormGroup;
+  proveedor: Proveedor = new Proveedor();
   proveedores: Proveedor[] = [];
   errorInForm = false;
   submitted = false;
@@ -19,51 +20,60 @@ export class AgregarProveedorComponent implements OnInit {
   nombreRepe = false;
   consulting: boolean;
 
+  titulo: string;
+  tipoModal: TipoModal;
+
   constructor(
     private proveedorService: ProveedoresService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AgregarProveedorComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
+
   }
 
   ngOnInit(): void {
-    this.proveedorService.listarProveedoresTodos().subscribe(proveedores =>
-      this.proveedores = proveedores);
-    const {provider} = this.data;
+    this.titulo = this.data.titulo.value;
+    this.tipoModal = this.data.tipoModal;
 
-    if (provider) {
-      this.consulting = this.data.consulting;
-
-      this.proveedorForm = this.formBuilder.group({
-        id: [{value: provider.id, disabled: this.consulting}, null],
-        razonSocial: [{value: provider.razonSocial, disabled: this.consulting}, Validators.required],
-        domicilio: [{value: provider.domicilio, disabled: this.consulting}, Validators.required],
-        mail: [{value: provider.mail, disabled: this.consulting}, Validators.required],
-        celular: [{value: provider.celular, disabled: this.consulting}, null],
-        telefono: [{value: provider.telefono, disabled: this.consulting}, null],
-        bancos: [{value: provider.bancos, disabled: this.consulting}, null]
-
-      });
-      this.updating = !this.consulting;
+    if (this.tipoModal === TipoModal.consulta || this.tipoModal === TipoModal.actualizacion){
+      this.establecerModalDatos(this.data, this.tipoModal);
     } else {
-      this.proveedorForm = this.formBuilder.group({
-        razonSocial: ['', Validators.required],
-        domicilio: ['', Validators.required],
-        mail: ['', Validators.required],
-        celular: ['', null],
-        telefono: ['', null],
-        bancos: ['', null]
-      });
+      this.establecerModalVacio();
     }
   }
 
+  establecerModalDatos(data: any, tipoModal: TipoModal): void {
+    const {proveedor} = data;
+    const disabled = tipoModal === TipoModal.consulta ? true : false;
+    this.proveedorForm = this.formBuilder.group({
+      id: [{value: proveedor.id, disabled}, null],
+      razonSocial: [{value: proveedor.razonSocial, disabled}, Validators.required],
+      domicilio: [{value: proveedor.domicilio, disabled}, Validators.required],
+      mail: [{value: proveedor.mail, disabled}, Validators.required],
+      celular: [{value: proveedor.celular, disabled}, null],
+      telefono: [{value: proveedor.telefono, disabled}, null],
+      bancos: [{value: proveedor.bancos, disabled}, Validators.required]
+    });
+    return;
+  }
+
+  establecerModalVacio(): void{
+    this.proveedorForm = this.formBuilder.group({
+      razonSocial: ['', Validators.required],
+      domicilio: ['', Validators.required],
+      mail: ['', Validators.required],
+      celular: ['', null],
+      telefono: ['', null],
+      bancos: ['', Validators.required]
+    });
+  }
 
   close(): void {
     this.dialogRef.close();
   }
 
   onSubmit(): void {
-    console.log(this.proveedorForm)
+    console.log(this.proveedorForm);
     this.submitted = true;
     this.errorInForm = this.submitted && this.proveedorForm.invalid;
 
@@ -71,6 +81,7 @@ export class AgregarProveedorComponent implements OnInit {
       this.proveedorForm.controls.razonSocial.markAllAsTouched();
       this.proveedorForm.controls.domicilio.markAllAsTouched();
       this.proveedorForm.controls.mail.markAllAsTouched();
+      this.proveedorForm.controls.bancos.markAllAsTouched();
       console.log('Error en los datos');
 
     } else {
@@ -79,7 +90,7 @@ export class AgregarProveedorComponent implements OnInit {
   }
 
   makeDTO(): void {
-    console.log(this.proveedorForm.value)
+    console.log(this.proveedorForm.value);
     this.proveedor.razonSocial = (this.proveedorForm.controls.razonSocial.value).trim().toUpperCase();
     this.proveedor.domicilio = this.proveedorForm.controls.domicilio.value;
     this.proveedor.mail = this.proveedorForm.controls.mail.value;
@@ -108,9 +119,8 @@ export class AgregarProveedorComponent implements OnInit {
   validar({target}): void {
     const {value: nombre} = target;
     const finded = this.proveedores.find(p => p.razonSocial.toLowerCase() === nombre.toLowerCase().trim());
-    console.log(finded);
     this.nombreRepe = (finded !== undefined) ? true : false;
-
+    console.log(nombre)
   }
 
   msgSnack(data): void {

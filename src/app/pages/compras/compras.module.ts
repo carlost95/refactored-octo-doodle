@@ -6,9 +6,9 @@ import {SharedModule} from '../../shared/shared.module';
 
 import {ComprasRoutingModule} from './compras-routing.module';
 import {SubMenuComponent} from './sub-menu/sub-menu.component';
-import {ListarProveedorComponent} from './listar-proveedor/listar-proveedor.component';
+import {ListarProveedorComponent} from './proveedores/listar-proveedor/listar-proveedor.component';
 import {ListarArticulosComponent} from './listar-articulos/listar-articulos.component';
-import {AgregarProveedorComponent} from './agregar-proveedor/agregar-proveedor.component';
+import {AgregarProveedorComponent} from './proveedores/agregar-proveedor/agregar-proveedor.component';
 import {AgregarArticuloComponent} from './agregar-articulo/agregar-articulo.component';
 import {ListarPedidoComponent} from './listar-pedido/listar-pedido.component';
 import {AgregarPedidoComponent} from './agregar-pedido/agregar-pedido.component';
