@@ -6,8 +6,8 @@ import {AgregarUnidadMedidaComponent} from './agregar-unidad-medida/agregar-unid
 import {ListarUnidadMedidaComponent} from './listar-unidad-medida/listar-unidad-medida.component';
 import {AgregarMarcaComponent} from './agregar-marca/agregar-marca.component';
 import {ListarMarcaComponent} from './listar-marca/listar-marca.component';
-import {ListarBancoComponent} from './listar-banco/listar-banco.component';
-import {AgregarBancoComponent} from './agregar-banco/agregar-banco.component';
+import {ListarBancoComponent} from './bancos/listar-banco/listar-banco.component';
+import {AgregarBancoComponent} from './bancos/agregar-banco/agregar-banco.component';
 import {AbmComprasComponent} from './abm-compras.component';
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';

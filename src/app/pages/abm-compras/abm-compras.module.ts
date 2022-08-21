@@ -8,8 +8,8 @@ import {MaterialModule} from '../../material/material.module';
 
 import {AbmComprasComponent} from './abm-compras.component';
 import {SubMenuComprasComponent} from './sub-menu-compras/sub-menu-compras.component';
-import {AgregarBancoComponent} from './agregar-banco/agregar-banco.component';
-import {ListarBancoComponent} from './listar-banco/listar-banco.component';
+import {AgregarBancoComponent} from './bancos/agregar-banco/agregar-banco.component';
+import {ListarBancoComponent} from './bancos/listar-banco/listar-banco.component';
 import {ListarMarcaComponent} from './listar-marca/listar-marca.component';
 import {AgregarMarcaComponent} from './agregar-marca/agregar-marca.component';
 import {ModificarFormaPagoComponent} from './modificar-forma-pago/modificar-forma-pago.component';

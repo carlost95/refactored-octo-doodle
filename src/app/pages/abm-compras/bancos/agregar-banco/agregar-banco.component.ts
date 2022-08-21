@@ -1,8 +1,8 @@
-import {Banco} from '../../../models/Banco';
+import {Banco} from '@models/Banco';
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {BancosService} from '../../../service/bancos.service';
+import {BancosService} from '@service/bancos.service';
 
 @Component({
   selector: 'app-agregar-banco',

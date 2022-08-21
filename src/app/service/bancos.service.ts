@@ -5,7 +5,7 @@ import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment.prod';
 import {banco} from '../../environments/global-route';
 import {Observable} from 'rxjs';
-import {BancoRest} from "@models/banco-rest";
+import {BancoRest} from '@models/banco-rest';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,10 @@ export class BancosService {
   constructor(private http: HttpClient) {
     this.url = environment.url + banco.path;
 
+  }
+
+  obtenerBancos(): Observable<BancoRest[]>{
+    return this.http.get<BancoRest[]>(this.url);
   }
 
   listarBancosTodos() {
