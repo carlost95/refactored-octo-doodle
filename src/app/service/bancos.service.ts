@@ -23,6 +23,20 @@ export class BancosService {
     return this.http.get<BancoRest[]>(this.url);
   }
 
+  // tslint:disable-next-line:no-shadowed-variable
+  guardar(banco: BancoRest): Observable<BancoRest>{
+    return this.http.post<BancoRest>(this.url , banco);
+  }
+
+  // tslint:disable-next-line:no-shadowed-variable
+  actualizar(banco: BancoRest): Observable<BancoRest>{
+    return this.http.put<BancoRest>(this.url , banco);
+  }
+
+  actualizarEstado(id: number): Observable<BancoRest>{
+    return this.http.put<BancoRest>(this.url + '/' + id , id);
+  }
+
   listarBancosTodos() {
     return this.http.get<Response>(this.url);
   }

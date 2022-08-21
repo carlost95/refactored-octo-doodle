@@ -1,8 +1,11 @@
-import {Banco} from '@models/Banco';
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {BancosService} from '@service/bancos.service';
+import {TipoModal} from '@shared/models/tipo-modal.enum';
+import {BancoRest} from '@models/banco-rest';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.component';
 
 @Component({
   selector: 'app-agregar-banco',
@@ -10,41 +13,49 @@ import {BancosService} from '@service/bancos.service';
   styleUrls: ['./agregar-banco.component.scss']
 })
 export class AgregarBancoComponent implements OnInit {
-  banco: Banco = new Banco();
   bancoForm: FormGroup;
   errorInForm = false;
   submitted = false;
-  updating = false;
-  consulting = false;
-  nombreRepe = false;
-  abreRepe = false;
-  bancos: Banco[] = [];
+  titulo: string;
+  tipoModal: TipoModal;
+  bancos: BancoRest[] = [];
+  banco: BancoRest = new BancoRest();
 
   constructor(private service: BancosService,
               private formBuilder: FormBuilder,
               public dialogRef: MatDialogRef<AgregarBancoComponent>,
+              private snackBar: MatSnackBar,
               @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
   ngOnInit(): void {
-    this.service.listarBancosTodos().subscribe(resp => this.bancos = resp.data);
-    const {bank} = this.data;
+    this.titulo = this.data.titulo;
+    this.tipoModal = this.data.tipo;
+    this.service.obtenerBancos().subscribe(bancos => this.bancos = bancos);
 
-    if (bank) {
-      this.consulting = this.data.consulting;
-
-      this.bancoForm = this.formBuilder.group({
-        id: [{value: bank.id, disabled: this.consulting}, null],
-        nombre: [{value: bank.nombre, disabled: this.consulting}, Validators.required],
-        abreviatura: [{value: bank.abreviatura, disabled: this.consulting}, Validators.required]
-      });
-      this.updating = !this.consulting;
+    if (this.tipoModal === TipoModal.consulta || this.tipoModal === TipoModal.actualizacion) {
+      this.establecerModalDatos(this.data, this.tipoModal);
     } else {
-      this.bancoForm = this.formBuilder.group({
-        nombre: ['', Validators.required],
-        abreviatura: ['', Validators.required]
-      });
+      this.establecerModalVacio();
     }
+  }
+
+  establecerModalDatos(data, tipoModal): void {
+    const {banco} = data;
+    const disabled = tipoModal === TipoModal.consulta ? true : false;
+    this.bancoForm = this.formBuilder.group({
+      id: [{value: banco.idBanco, disabled}, null],
+      nombre: [{value: banco.nombre, disabled}, Validators.required],
+      abreviatura: [{value: banco.abreviatura, disabled}, Validators.required],
+      habilitado: [{value: banco.habilitado, disabled}, null]
+    });
+  }
+
+  establecerModalVacio(): void {
+    this.bancoForm = this.formBuilder.group({
+      nombre: ['', Validators.required],
+      abreviatura: ['', Validators.required]
+    });
   }
 
   close(): void {
@@ -54,20 +65,21 @@ export class AgregarBancoComponent implements OnInit {
   onSubmit(): void {
     this.submitted = true;
     this.errorInForm = this.submitted && this.bancoForm.invalid;
-    if (this.errorInForm || this.nombreRepe || this.abreRepe) {
+    if (this.errorInForm) {
       this.bancoForm.controls.nombre.markAsTouched();
       this.bancoForm.controls.abreviatura.markAsTouched();
-      console.log('Error en los datos');
     } else {
       this.makeDTO();
     }
   }
 
   makeDTO(): void {
+    console.log(this.bancoForm);
     this.banco.nombre = this.bancoForm.controls.nombre.value.trim().toUpperCase();
     this.banco.abreviatura = this.bancoForm.controls.abreviatura.value.trim().toUpperCase();
-    if (this.updating) {
-      this.banco.id = this.bancoForm.controls.id.value;
+    if (this.tipoModal === TipoModal.actualizacion) {
+      this.banco.idBanco = this.bancoForm.controls.id.value;
+      this.banco.habilitado = this.bancoForm.controls.habilitado.value;
       this.update();
     } else {
       this.save();
@@ -75,36 +87,34 @@ export class AgregarBancoComponent implements OnInit {
   }
 
   save(): void {
-    this.service.guardarBanco(this.banco).subscribe(data => {
-      this.msgSnack(data);
+    this.service.guardar(this.banco).subscribe(data => {
+      this.msgSnack('Guardado con éxito');
+    }, ({error}) => {
+      this.openSnackBar(error);
     });
+
   }
 
-  private update(): void {
-    this.service.actualizarBanco(this.banco).subscribe(data => {
-      this.msgSnack(data);
+
+  update(): void {
+    this.service.actualizar(this.banco).subscribe(data => {
+      this.msgSnack('Actualizado con éxito');
+    }, ({error}) => {
+      this.openSnackBar(error);
     });
-  }
-
-  validarNombre({target}): void {
-    const {value: nombre} = target;
-    const finded = this.bancos.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
-    this.nombreRepe = (finded !== undefined) ? true : false;
-  }
-
-  validarAbreviatura({target}): void {
-    const {value: nombre} = target;
-    const finded2 = this.bancos.find(p => p.abreviatura.toLowerCase() === nombre.toLowerCase());
-    this.abreRepe = (finded2 !== undefined) ? true : false;
   }
 
   msgSnack(data): void {
     const {msg} = data;
-    if (data.code === 200) {
-      this.dialogRef.close(msg);
-    } else {
-      this.dialogRef.close('Error en el proceso');
-    }
+    this.dialogRef.close(msg);
+  }
+
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
+    });
   }
 }
 

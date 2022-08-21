@@ -13,7 +13,7 @@ import {MatSort} from '@angular/material/sort';
 import {ProveedorRest} from '@models/proveedor-rest';
 import {BuscadorService} from '@shared/helpers/buscador.service';
 import {Titulo} from '@app/pages/compras/proveedores/model/titulo.enum';
-import {TipoModal} from '@app/pages/compras/proveedores/model/tipo-modal.enum';
+import {TipoModal} from '@shared/models/tipo-modal.enum';
 
 @Component({
   selector: 'app-listar-proveedor',

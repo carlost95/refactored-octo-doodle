@@ -13,6 +13,9 @@ import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {BancoRest} from '../../../../models/banco-rest';
 import {BuscadorService} from '../../../../shared/helpers/buscador.service';
+import {TituloBanco} from '../models/titulo-banco.enum';
+import {TipoModal} from '../../../../shared/models/tipo-modal.enum';
+import {concatMap, switchMap} from "rxjs/operators";
 
 @Component({
   selector: 'app-listar-banco',
@@ -62,42 +65,50 @@ export class ListarBancoComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
   newBanco(): void {
-    // this.toUpdateBank = null;
-    // this.consultingBank = false;
-    this.openDialog();
+    const data = {
+      titulo: TituloBanco.creacion,
+      tipo: TipoModal.creacion
+    };
+    this.openDialog(data);
   }
 
   modificarBanco(banco: Banco): void {
-    // this.toUpdateBank = banco;
-    // this.consultingBank = false;
-    this.openDialog();
+    const data = {
+      titulo: TituloBanco.actualizacion,
+      tipo: TipoModal.actualizacion,
+      banco,
+    };
+    this.openDialog(data);
   }
 
   consultarBanco(banco: Banco): void {
-    // this.toUpdateBank = banco;
-    // this.consultingBank = true;
-    this.openDialog();
+    const data = {
+      titulo: TituloBanco.consulta,
+      tipo: TipoModal.consulta,
+      banco,
+    }
+    this.openDialog(data);
   }
 
-  openDialog(): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.id = 'modal-component';
-    dialogConfig.height = '400px';
-    dialogConfig.width = '300px';
-    // dialogConfig.data = {
-    //   bank: this.toUpdateBank,
-    //   consulting: this.consultingBank
-    // };
-    const modalDialog = this.matDialog.open(AgregarBancoComponent, dialogConfig);
-    modalDialog.afterClosed().subscribe(result => {
-      this.service.listarBancosTodos().subscribe(data => {
-        this.bancos = data.data;
+  openDialog(data: any): void {
+    console.log(data)
+    const dialog = this.matDialog.open(AgregarBancoComponent, {
+      disableClose: true,
+      id: 'modal-component',
+      height: 'auto',
+      width: '20rem',
+      panelClass: 'no-padding',
+      data,
+    });
+    // const modalDialog = this.matDialog.open(AgregarBancoComponent, dialogConfig);
+    dialog.afterClosed().subscribe(result => {
+      this.service.obtenerBancos().subscribe(bancos => {
+        this.bancos = bancos;
+        this.establecerDatasource(bancos);
       });
       if (result) {
         this.openSnackBar(result);
       }
-      this.getData();
     });
   }
 
@@ -105,12 +116,12 @@ export class ListarBancoComponent implements OnInit {
     this.router.navigate(['abm-compras']);
   }
 
-  showModal(banco: Banco): void {
+  showModal(banco: BancoRest): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
-    dialogConfig.height = '300px';
-    dialogConfig.width = '350px';
+    dialogConfig.height = 'auto';
+    dialogConfig.width = '20rem';
     dialogConfig.data = {
       message: '¿Desea cambiar estado?',
       title: 'Cambio estado',
@@ -119,22 +130,19 @@ export class ListarBancoComponent implements OnInit {
     const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       if (result.state) {
-        // tslint:disable-next-line:no-shadowed-variable
-        this.service.cambiarHabilitacion(banco.id).subscribe(result => {
-          this.getData();
+
+        // tslint:disable-next-line:no-shadowed-variableangular
+        this.service.actualizarEstado(banco.idBanco).pipe(
+          concatMap( data => this.service.obtenerBancos())
+        ).subscribe(bancos => {
+          this.bancos = bancos;
+          this.establecerDatasource(bancos);
         });
-      } else {
-        this.getData();
       }
     });
   }
 
-  getData(): void {
-    this.service.listarBancosTodos().subscribe(data => {
-      this.bancos = data.data;
-      // this.bancoFilter = data.data;
-    });
-  }
+
 
   openSnackBar(msg: string): void {
     this.snackBar.openFromComponent(SnackConfirmComponent, {

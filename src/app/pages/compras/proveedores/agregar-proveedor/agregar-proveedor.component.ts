@@ -3,7 +3,7 @@ import {ProveedoresService} from '@service/proveedores.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Proveedor} from '@models/Proveedor';
-import {TipoModal} from '@app/pages/compras/proveedores/model/tipo-modal.enum';
+import {TipoModal} from '@shared/models/tipo-modal.enum';
 
 @Component({
   selector: 'app-agregar-proveedor',

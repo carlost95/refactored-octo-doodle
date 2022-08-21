@@ -21,7 +21,6 @@ export class ConfirmModalComponent implements OnInit {
   }
 
   updateStatus() {
-    console.log(this.data)
     this.dialogRef.close({ state: true });
   }
 }
