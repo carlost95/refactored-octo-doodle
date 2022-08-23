@@ -1,27 +1,28 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="collapse navbar-collapse m-2" id="navbarSupportedContent">
     <div class="card-body m-2">
       <ul class="navbar-nav mr-auto text-center trans">
-        <td>
-          <button [routerLink]="['clientes']" routerLinkActive="active"
-                  class="btn btn-outline-warning" style="width: 250px; height: 150px;">
-            <i class="fas fa-users fa-5x"></i>
-            <h4>CLIENTES</h4>
-          </button>
-          &nbsp; &nbsp;
-          <button [routerLink]="['listar-venta']" routerLinkActive="active"
-                  class="btn btn-outline-warning" style="width: 250px; height: 150px;">
-            <i class="fas fa-file-invoice-dollar fa-5x"></i>
-            <h4>VENTAS</h4>
-          </button>
-          &nbsp; &nbsp;
-          <button [routerLink]="['listar-remitos']" routerLinkActive="active"
-                  class="btn btn-outline-warning" style="width: 250px; height: 150px;">
-            <i class="fas fa-file-export fa-5x"></i>
-            <h4>REMITOS </h4>
-          </button>
-        </td>
+        <button [routerLink]="['clientes']" routerLinkActive="active" class="btn btn-outline-warning"
+          style="width: 250px; height: 150px;">
+          <i class="fas fa-users fa-5x"></i>
+          <h4>CLIENTES</h4>
+        </button>
+        &nbsp; &nbsp;
+        <button [routerLink]="['listar-venta']" routerLinkActive="active" class="btn btn-outline-warning"
+          style="width: 250px; height: 150px;">
+          <i class="fas fa-file-invoice-dollar fa-5x"></i>
+          <h4>VENTAS</h4>
+        </button>
+        &nbsp; &nbsp;
+        <button [routerLink]="['listar-remitos']" routerLinkActive="active" class="btn btn-outline-warning"
+          style="width: 250px; height: 150px;">
+          <i class="fas fa-file-export fa-5x"></i>
+          <h4>REMITOS </h4>
+        </button>
       </ul>
     </div>
   </div>
-</nav>
+</nav> -->
+<template-menu [items]="ITEMS">
+
+</template-menu>
