@@ -1,18 +1,17 @@
-import {Component, OnInit} from '@angular/core';
-import {TokenService} from '../../service/token.service';
+import { Component, OnInit } from '@angular/core';
+import { TokenService } from '../../service/token.service';
 
 @Component({
   selector: 'app-menu',
-  templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.css'],
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.css'],
 })
-export class MenuComponent implements OnInit {
+export class NavbarComponent implements OnInit {
   isLogged = false;
   roles: string[];
   isAdmin: boolean;
 
-  constructor(private tokenService: TokenService) {
-  }
+  constructor(private tokenService: TokenService) {}
 
   ngOnInit(): void {
     if (this.tokenService.getToken()) {
@@ -21,7 +20,7 @@ export class MenuComponent implements OnInit {
       this.isLogged = false;
     }
     this.roles = this.tokenService.getAuthorities();
-    this.roles.forEach(rol => {
+    this.roles.forEach((rol) => {
       if (rol === 'ROLE_ADMIN') {
         this.isAdmin = true;
       }
