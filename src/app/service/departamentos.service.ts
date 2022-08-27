@@ -4,6 +4,8 @@ import { environment } from '../../environments/environment.prod';
 import { departamento } from '../../environments/global-route';
 import { Response } from '../models/Response';
 import { Departamento } from '../models/Departamento';
+import {DepartamentoRest} from "@models/departamento-rest";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +15,24 @@ export class DepartamentosService {
 
   constructor(private http: HttpClient) {
     this.url = environment.url + departamento.path;
+  }
+
+  obtenerDepartamentos(): Observable<DepartamentoRest[]> {
+    return this.http.get<DepartamentoRest[]>(this.url);
+  }
+
+  // tslint:disable-next-line:typedef no-shadowed-variable
+  guardar(departamento: DepartamentoRest) {
+    return this.http.post<DepartamentoRest>(this.url, departamento);
+  }
+
+  // tslint:disable-next-line:typedef no-shadowed-variable
+  actualizar(departamento: DepartamentoRest) {
+    return this.http.put<DepartamentoRest>(this.url, departamento);
+  }
+
+  cambiarEstado(id: number) {
+    return this.http.put<DepartamentoRest>(this.url + `/${id}`, null);
   }
 
   getAllDepartments() {

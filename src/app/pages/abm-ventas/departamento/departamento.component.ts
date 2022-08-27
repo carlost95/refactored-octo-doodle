@@ -1,13 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { DepartamentosService } from '../../../service/departamentos.service';
-import { Departamento } from '../../../models/Departamento';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { AgregarDepartamentoComponent } from './agregar-departamento/agregar-departamento.component';
-import { SnackConfirmComponent } from '../../../shared/snack-confirm/snack-confirm.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ConfirmModalComponent } from '../../../shared/confirm-modal/confirm-modal.component';
-import { TokenService } from '../../../service/token.service';
-import { Router } from '@angular/router';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {DepartamentosService} from '../../../service/departamentos.service';
+import {Departamento} from '../../../models/Departamento';
+import {MatDialog} from '@angular/material/dialog';
+import {AgregarDepartamentoComponent} from './agregar-departamento/agregar-departamento.component';
+import {SnackConfirmComponent} from '../../../shared/snack-confirm/snack-confirm.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal.component';
+import {TokenService} from '../../../service/token.service';
+import {Router} from '@angular/router';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
+import {DepartamentoRest} from '../../../models/departamento-rest';
+import {BuscadorService} from '../../../shared/helpers/buscador.service';
+import {TituloDepartamento} from './models/titulo-departamento.enum';
+import {TipoModal} from '../../../shared/models/tipo-modal.enum';
 
 @Component({
   selector: 'app-departamento',
@@ -15,136 +22,114 @@ import { Router } from '@angular/router';
   styleUrls: ['./departamento.component.scss'],
 })
 export class DepartamentoComponent implements OnInit {
-  departamentos: Departamento[];
-  departamentosFilter: Departamento[];
-  private update: Departamento;
-  consulting = false;
-  busqueda: string = null;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  dataSource: MatTableDataSource<DepartamentoRest>;
+  displayedColumns: string[] = ['nombre', 'abreviatura', 'habilitado', 'acciones'];
 
-  isLogged = false;
+  departamentos: DepartamentoRest[];
+  departamento: DepartamentoRest;
+  mostrarHabilitacion: boolean;
   roles: string[];
-  isAdmin = false;
-  isGerente = false;
 
   constructor(
-    private departamentoService: DepartamentosService,
+    private readonly departamentoService: DepartamentosService,
+    private readonly buscadorService: BuscadorService,
+    private readonly tokenService: TokenService,
     public matDialog: MatDialog,
     private snackBar: MatSnackBar,
-    private router: Router,
-    private tokenService: TokenService
   ) {}
 
   ngOnInit(): void {
-    if (this.tokenService.getToken()) {
-      this.isLogged = true;
-    } else {
-      this.isLogged = false;
-    }
     this.roles = this.tokenService.getAuthorities();
-    this.roles.forEach((rol) => {
-      if (rol === 'ROLE_ADMIN') {
-        this.isAdmin = true;
-      } else if (rol === 'ROLE_GERENTE') {
-        this.isGerente = true;
-      }
-    });
-    this.getData();
-  }
-
-  getData(): void {
-    this.departamentoService
-      .getAllDepartments()
-      .subscribe((data: Departamento[]) => {
-        this.departamentos = data;
-        this.departamentosFilter = this.departamentos;
-        console.log(data);
-      });
-  }
-
-  showModal(departamento: Departamento): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.id = 'modal-component';
-    dialogConfig.height = '300px';
-    dialogConfig.width = '350px';
-    dialogConfig.data = {
-      message: '¿Desea cambiar estado?',
-      title: 'Cambio estado',
-      state: departamento.habilitado,
-    };
-    const modalDialog = this.matDialog.open(
-      ConfirmModalComponent,
-      dialogConfig
-    );
-    modalDialog.afterClosed().subscribe((result) => {
-      if (result.state) {
-        // tslint:disable-next-line:no-shadowed-variable
-        this.departamentoService
-          .changeStatus(departamento.idDepartamento)
-          .subscribe((result) => {
-            this.getData();
-          });
-      } else {
-        this.getData();
-      }
+    this.mostrarHabilitacion = this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_ADMIN_BANCO');
+    this.departamentoService.obtenerDepartamentos().subscribe(departamentos => {
+      this.departamentos = departamentos;
+      this.establecerDatasource(departamentos);
     });
   }
 
-  filtrarDepartamento(event: any): void {
-    this.busqueda = this.busqueda.toLowerCase();
-    this.departamentosFilter = this.departamentos;
-    if (this.busqueda !== null) {
-      this.departamentosFilter = this.departamentos.filter((item) => {
-        const nombre = item.nombre.toLowerCase().indexOf(this.busqueda) !== -1;
-        const abreviatura =
-          item.abreviatura.toLowerCase().indexOf(this.busqueda) !== -1;
-        return nombre || abreviatura;
-      });
-    }
+  establecerDatasource(departamentos: DepartamentoRest[]): void {
+    this.dataSource = new MatTableDataSource(departamentos);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   nuevo(): void {
-    this.consulting = false;
-    this.update = undefined;
-    this.openDialog();
-  }
-
-  consultar(departamento: Departamento): void {
-    this.consulting = true;
-    this.update = departamento;
-    this.openDialog();
-  }
-
-  editar(departamento: Departamento): void {
-    this.consulting = false;
-    this.update = departamento;
-    this.openDialog();
-  }
-
-  volver(): void {
-    this.router.navigate(['abm-ventas']);
-  }
-
-  openDialog(): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.id = 'modal-component';
-    dialogConfig.height = '400px';
-    dialogConfig.width = '300px';
-    dialogConfig.data = {
-      departamentos: this.departamentos,
-      departamento: this.update,
-      consulting: this.consulting,
+    const data = {
+      titulo: TituloDepartamento.creacion,
+      tipo: TipoModal.creacion
     };
-    const modalDialog = this.matDialog.open(
-      AgregarDepartamentoComponent,
-      dialogConfig
-    );
-    modalDialog.afterClosed().subscribe((result) => {
+    this.abrirModalDepartamento(data);
+  }
+
+  consultar(departamento: DepartamentoRest): void {
+    const data = {
+      titulo: TituloDepartamento.consulta,
+      tipo: TipoModal.consulta,
+      departamento
+    };
+    this.abrirModalDepartamento(data);
+  }
+
+  editar(departamento: DepartamentoRest): void {
+    const data = {
+      titulo: TituloDepartamento.actualizacion,
+      tipo: TipoModal.actualizacion,
+      departamento
+    };
+    this.abrirModalDepartamento(data);
+  }
+
+  abrirModalDepartamento(data: any): void {
+    const dialogConfig = this.matDialog.open(AgregarDepartamentoComponent, {
+      disableClose: true,
+      id: 'modal-component',
+      height: 'auto',
+      width: '20rem',
+      panelClass: 'no-padding',
+      data,
+    });
+    dialogConfig.afterClosed().subscribe((result) => {
+      this.departamentoService.obtenerDepartamentos().subscribe(departamentos => {
+        this.departamentos = departamentos;
+        this.establecerDatasource(departamentos);
+      });
       if (result) {
         this.openSnackBar(result);
       }
-      this.getData();
+    });
+  }
+
+  abrirModalHabilitacion(departamento: Departamento): void {
+    const dialog = this.matDialog.open(ConfirmModalComponent, {
+      disableClose: true,
+      id: 'modal-component',
+      height: 'auto',
+      width: '20rem',
+      data: {
+        message: '¿Desea cambiar estado?',
+        title: 'Cambio estado',
+        state: departamento.habilitado,
+      }
+    });
+    dialog.afterClosed().subscribe((result) => {
+      if (result.state) {
+        // tslint:disable-next-line:no-shadowed-variable
+        this.departamentoService
+          .cambiarEstado(departamento.idDepartamento)
+          .subscribe(() => {
+            this.departamentoService.obtenerDepartamentos().subscribe(departamentos => {
+              this.departamentos = departamentos;
+              this.establecerDatasource(departamentos);
+            });
+          });
+      } else {
+        this.departamentoService.obtenerDepartamentos().subscribe(departamentos => {
+          this.departamentos = departamentos;
+          this.establecerDatasource(departamentos);
+        });
+      }
     });
   }
 
@@ -154,5 +139,11 @@ export class DepartamentoComponent implements OnInit {
       duration: 5 * 1000,
       data: msg,
     });
+  }
+
+  filtrarDepartamentos(value: string): void {
+    const TERMINO = 'nombre';
+    const bancos = this.buscadorService.buscarTermino(this.departamentos, TERMINO, value);
+    this.establecerDatasource(bancos);
   }
 }

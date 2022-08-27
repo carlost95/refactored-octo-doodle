@@ -105,8 +105,7 @@ export class AgregarBancoComponent implements OnInit {
   }
 
   msgSnack(data): void {
-    const {msg} = data;
-    this.dialogRef.close(msg);
+    this.dialogRef.close(data);
   }
 
   openSnackBar(msg: string): void {

@@ -1,52 +1,50 @@
-<div class="modal-content-wrapper">
-  <header class="modal-header modal-header-size1">
-    <h1 class="modal-title">{{titulo}}</h1>
-  </header>
-  <section class="d-flex justify-content-center w-100">
-    <form [formGroup]="proveedorForm" class="p-4 w-100" onsubmit="">
-      <mat-form-field appearance="legacy" class="w-100">
-        <mat-label>Razon Social</mat-label>
-        <input matInput formControlName="razonSocial" required autocomplete="off" class="w-100"/>
-        <mat-error *ngIf="proveedorForm.controls.razonSocial.errors">
-          Razon Social es<strong> requerido</strong>
-        </mat-error>
-        <mat-error *ngIf="nombreRepe">
-          Razon Social es<strong> requerido</strong>
-        </mat-error>
-      </mat-form-field>
+<header class="modal-header  modal-header-size1">
+  <h1 class="modal-title">{{titulo}}</h1>
+</header>
+<section class="d-flex justify-content-center w-100">
+  <form [formGroup]="proveedorForm" class="p-4 w-100" onsubmit="">
+    <mat-form-field appearance="legacy" class="w-100">
+      <mat-label>Razon Social</mat-label>
+      <input matInput formControlName="razonSocial" required autocomplete="off" class="w-100"/>
+      <mat-error *ngIf="proveedorForm.controls.razonSocial.errors">
+        Razon Social es<strong> requerido</strong>
+      </mat-error>
+      <mat-error *ngIf="nombreRepe">
+        Razon Social es<strong> requerido</strong>
+      </mat-error>
+    </mat-form-field>
 
-      <mat-form-field appearance="legacy" class="w-100">
-        <mat-label>Domicilio</mat-label>
-        <input matInput formControlName="domicilio"
-               required autocomplete="off"/>
-        <mat-error *ngIf="proveedorForm.controls.domicilio.errors">
-          Domcilio es<strong> requerido</strong>
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="legacy" class="w-100">
-        <mat-label>Mail</mat-label>
-        <input matInput formControlName="mail" type="email"
-               required autocomplete="off"/>
-        <mat-error *ngIf="proveedorForm.controls.mail.errors">
-          Mail es<strong> requerido</strong>
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="legacy" class="w-100">
-        <mat-label>Telefono</mat-label>
-        <input matInput formControlName="telefono" autocomplete="off"/>
-      </mat-form-field>
-      <mat-form-field appearance="legacy" class="w-100">
-        <mat-label>Celular</mat-label>
-        <input matInput formControlName="celular" autocomplete="off"/>
-      </mat-form-field>
-      <banco-dropdown formControlName="bancos"  class="w-100" (bancoChange)="establecerBanco($event)">
-      </banco-dropdown>
-    </form>
-  </section>
+    <mat-form-field appearance="legacy" class="w-100">
+      <mat-label>Domicilio</mat-label>
+      <input matInput formControlName="domicilio"
+             required autocomplete="off"/>
+      <mat-error *ngIf="proveedorForm.controls.domicilio.errors">
+        Domcilio es<strong> requerido</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="legacy" class="w-100">
+      <mat-label>Mail</mat-label>
+      <input matInput formControlName="mail" type="email"
+             required autocomplete="off"/>
+      <mat-error *ngIf="proveedorForm.controls.mail.errors">
+        Mail es<strong> requerido</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="legacy" class="w-100">
+      <mat-label>Telefono</mat-label>
+      <input matInput formControlName="telefono" autocomplete="off"/>
+    </mat-form-field>
+    <mat-form-field appearance="legacy" class="w-100">
+      <mat-label>Celular</mat-label>
+      <input matInput formControlName="celular" autocomplete="off"/>
+    </mat-form-field>
+    <banco-dropdown formControlName="bancos" class="w-100" (bancoChange)="establecerBanco($event)">
+    </banco-dropdown>
+  </form>
+</section>
 
-  <footer class="modal-footer">
-    <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>
-    <button *ngIf="tipoModal !== 0" class="btn btn-warning" (click)="onSubmit()">Guardar</button>
-  </footer>
-</div>
+<footer class="modal-footer">
+  <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>
+  <button *ngIf="tipoModal !== 0" class="btn btn-warning" (click)="onSubmit()">Guardar</button>
+</footer>
 

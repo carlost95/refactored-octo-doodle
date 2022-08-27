@@ -24,7 +24,7 @@ export class AgregarProveedorComponent implements OnInit {
   tipoModal: TipoModal;
 
   constructor(
-    private proveedorService: ProveedoresService,
+    private readonly proveedorService: ProveedoresService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AgregarProveedorComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {

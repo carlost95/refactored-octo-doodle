@@ -91,7 +91,6 @@ export class ListarBancoComponent implements OnInit {
   }
 
   openDialog(data: any): void {
-    console.log(data)
     const dialog = this.matDialog.open(AgregarBancoComponent, {
       disableClose: true,
       id: 'modal-component',

@@ -1,8 +1,12 @@
-import { Departamento } from '../../../../models/Departamento';
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FormBuilder, Validators } from '@angular/forms';
-import { DepartamentosService } from '../../../../service/departamentos.service';
+import {Departamento} from '../../../../models/Departamento';
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {DepartamentosService} from '../../../../service/departamentos.service';
+import {TipoModal} from '@shared/models/tipo-modal.enum';
+import {DepartamentoRest} from '@models/departamento-rest';
+import {SnackConfirmComponent} from "@shared/snack-confirm/snack-confirm.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-agregar-departamento',
@@ -10,10 +14,14 @@ import { DepartamentosService } from '../../../../service/departamentos.service'
   styleUrls: ['./agregar-departamento.component.css'],
 })
 export class AgregarDepartamentoComponent implements OnInit {
-  departamento: Departamento = new Departamento();
+  titulo: string;
+  tipoModal: TipoModal;
+  departamentos: DepartamentoRest[];
+
+  departamento: DepartamentoRest = new DepartamentoRest();
   response: Response;
   consultar = false;
-  departamentoForm: any;
+  departamentoForm: FormGroup;
   updating = false;
   submitted: boolean;
   errorInForm: any;
@@ -23,38 +31,39 @@ export class AgregarDepartamentoComponent implements OnInit {
     private service: DepartamentosService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AgregarDepartamentoComponent>,
+    private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
-    const { departamento } = this.data;
-    if (departamento) {
-      this.consultar = this.data.consulting;
-      this.departamentoForm = this.formBuilder.group({
-        id: [
-          { value: departamento.id, disabled: this.consultar },
-          Validators.required,
-        ],
-        nombre: [
-          { value: departamento.nombre, disabled: this.consultar },
-          Validators.required,
-        ],
-        abreviatura: [
-          { value: departamento.abreviatura, disabled: this.consultar },
-          Validators.required,
-        ],
-        estado: [
-          { value: departamento.estado, disabled: this.consultar },
-          null,
-        ],
-      });
-      this.updating = !this.consultar;
+    this.titulo = this.data.titulo;
+    this.tipoModal = this.data.tipo;
+    this.service.obtenerDepartamentos().subscribe(departamentos => this.departamentos = departamentos);
+
+    if (this.tipoModal === TipoModal.consulta || this.tipoModal === TipoModal.actualizacion) {
+      this.establecerModalDatos(this.data, this.tipoModal);
     } else {
-      this.departamentoForm = this.formBuilder.group({
-        nombre: ['', Validators.required],
-        abreviatura: ['', Validators.required],
-      });
+      this.establecerModalVacio();
     }
+  }
+
+  private establecerModalDatos(data, tipoModal): void {
+    const {departamento} = data;
+    const disabled = tipoModal === TipoModal.consulta ? true : false;
+    this.departamentoForm = this.formBuilder.group({
+      id: [{value: departamento.idDepartamento, disabled}, null],
+      nombre: [{value: departamento.nombre, disabled}, Validators.required],
+      abreviatura: [{value: departamento.abreviatura, disabled}, Validators.required],
+      estado: [{value: departamento.habilitado, disabled}, null],
+    });
+  }
+
+  private establecerModalVacio(): void {
+    this.departamentoForm = this.formBuilder.group({
+      nombre: ['', Validators.required],
+      abreviatura: ['', Validators.required],
+    });
   }
 
   close(): void {
@@ -72,24 +81,13 @@ export class AgregarDepartamentoComponent implements OnInit {
     }
   }
 
-  validate({ target }): void {
-    const { departamentos } = this.data;
-    const { value: nombre } = target;
-    const finded = departamentos.find((d) => nombre === d.nombre);
-    this.duplicateName = finded ? true : false;
-  }
 
   makeDTO(): void {
-    this.departamento.nombre = this.departamentoForm.controls.nombre.value
-      .trim()
-      .toUpperCase();
-    this.departamento.abreviatura =
-      this.departamentoForm.controls.abreviatura.value.trim().toUpperCase();
-    if (this.updating) {
-      this.departamento.idDepartamento =
-        this.departamentoForm.controls.id.value;
-      this.departamento.habilitado =
-        this.departamentoForm.controls.estado.value;
+    this.departamento.nombre = this.departamentoForm.controls.nombre.value.trim().toUpperCase();
+    this.departamento.abreviatura = this.departamentoForm.controls.abreviatura.value.trim().toUpperCase();
+    if (this.tipoModal === TipoModal.actualizacion) {
+      this.departamento.idDepartamento = this.departamentoForm.controls.id.value;
+      this.departamento.habilitado = this.departamentoForm.controls.estado.value;
       this.update();
     } else {
       this.save();
@@ -97,23 +95,30 @@ export class AgregarDepartamentoComponent implements OnInit {
   }
 
   save(): void {
-    this.service.save(this.departamento).subscribe((data) => {
-      this.msgSnack(data);
+    this.service.guardar(this.departamento).subscribe((data) => {
+      this.msgSnack('Guardado con éxito');
+    }, error => {
+      this.openSnackBar(error);
     });
   }
 
   update(): void {
-    this.service.update(this.departamento).subscribe((data) => {
-      this.msgSnack(data);
+    this.service.actualizar(this.departamento).subscribe((data) => {
+      this.msgSnack('Actualizado con éxito');
+    }, error => {
+      this.openSnackBar(error);
     });
   }
 
-  msgSnack(data): void {
-    const { msg } = data;
-    if (data.code === 200) {
-      this.dialogRef.close(msg);
-    } else {
-      this.dialogRef.close('Error en el proceso');
-    }
+  msgSnack(msg: string): void {
+    this.dialogRef.close(msg);
+  }
+
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
+    });
   }
 }

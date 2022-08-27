@@ -11,6 +11,7 @@ import {SubMenuVentasComponent} from './sub-menu-ventas/sub-menu-ventas.componen
 import {AgregarDepartamentoComponent} from './departamento/agregar-departamento/agregar-departamento.component';
 import {DepartamentoComponent} from './departamento/departamento.component';
 import {DistritoComponent} from './distrito/distrito.component';
+import {SharedModule} from "../../shared/shared.module";
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import {DistritoComponent} from './distrito/distrito.component';
     DepartamentoComponent,
     DistritoComponent
   ],
-  imports: [CommonModule, AbmVentasRoutingModule, FormsModule, MaterialModule, ReactiveFormsModule],
+    imports: [CommonModule, AbmVentasRoutingModule, FormsModule, MaterialModule, ReactiveFormsModule, SharedModule],
   providers: [interceptorProvider,
   ],
 })
