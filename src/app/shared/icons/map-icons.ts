@@ -4,4 +4,8 @@ export default {
   cliente: 'fas fa-users',
   venta: 'fas fa-file-invoice-dollar',
   remito: 'fas fa-file-export',
+  usuario: 'fas fa-users',
+  proveedor: 'fas fa-user-tie',
+  articulo: 'fas fa-box-open',
+  pedido: 'fas fa-truck',
 };
