@@ -1,0 +1,17 @@
+.animacion {
+  transition: 0.95s;
+}
+.animacion:hover {
+  transform: scaleY(1.05);
+  background-color: rgba(255, 222, 7, 01);
+}
+
+.card {
+  border: solid 0.15rem rgba(255, 222, 7, 1);
+  opacity: 0.9;
+}
+.card:hover {
+  opacity: 1;
+  border: 0.1rem solid rgba(0, 0, 7, 0.986);
+  box-shadow: 0 0 0.5rem 0.2rem rgba(0, 0, 0, 1);
+}
