@@ -20,6 +20,7 @@ import { PaginacionPipe } from './paginacion.pipe';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomMatPaginatorIntl } from './paginacion-es';
 import { interceptorProvider } from '../../interceptors/prod-interceptor.service';
+import { ListarCuentasComponent } from './cuentas/listar-cuentas/listar-cuentas.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { interceptorProvider } from '../../interceptors/prod-interceptor.service
     AgregarArticuloComponent,
     ConsultarPedidoComponent,
     PaginacionPipe,
+    ListarCuentasComponent,
   ],
   imports: [
     CommonModule,

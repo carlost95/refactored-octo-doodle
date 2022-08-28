@@ -1,20 +1,20 @@
-import {Router} from '@angular/router';
-import {Cliente} from '../../../models/Cliente';
-import {Component, OnInit} from '@angular/core';
-import {PdfExportService} from '../../../service/pdf-export.service';
-import {ServiceReportService} from '../../../service/service-report.service';
-import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {AgregarClienteComponent} from './agregar-cliente/agregar-cliente.component';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {SnackConfirmComponent} from '../../../shared/snack-confirm/snack-confirm.component';
-import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal.component';
-import {ClienteService} from '../../../service/cliente.service';
-import {TokenService} from '../../../service/token.service';
+import { Router } from '@angular/router';
+import { Cliente } from '../../../models/Cliente';
+import { Component, OnInit } from '@angular/core';
+import { PdfExportService } from '../../../service/pdf-export.service';
+import { ServiceReportService } from '../../../service/service-report.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { AgregarClienteComponent } from './agregar-cliente/agregar-cliente.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackConfirmComponent } from '../../../shared/snack-confirm/snack-confirm.component';
+import { ConfirmModalComponent } from '../../../shared/confirm-modal/confirm-modal.component';
+import { ClienteService } from '../../../service/cliente.service';
+import { TokenService } from '../../../service/token.service';
 
 @Component({
   selector: 'app-clientes',
   templateUrl: './clientes.component.html',
-  styleUrls: ['./clientes.component.scss']
+  styleUrls: ['./clientes.component.scss'],
 })
 export class ClientesComponent implements OnInit {
   clientes: Cliente[] = null;
@@ -30,15 +30,16 @@ export class ClientesComponent implements OnInit {
   isAdmin = false;
   isGerente = false;
 
-  constructor(private service: ClienteService,
-              private router: Router,
-              private servicePdf: PdfExportService,
-              private serviceReport: ServiceReportService,
-              public matDialog: MatDialog,
-              private tokenService: TokenService,
-              // tslint:disable-next-line:variable-name
-              private _snackBar: MatSnackBar) {
-  }
+  constructor(
+    private service: ClienteService,
+    private router: Router,
+    private servicePdf: PdfExportService,
+    private serviceReport: ServiceReportService,
+    public matDialog: MatDialog,
+    private tokenService: TokenService,
+    // tslint:disable-next-line:variable-name
+    private _snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     if (this.tokenService.getToken()) {
@@ -47,7 +48,7 @@ export class ClientesComponent implements OnInit {
       this.isLogged = false;
     }
     this.roles = this.tokenService.getAuthorities();
-    this.roles.forEach(rol => {
+    this.roles.forEach((rol) => {
       if (rol === 'ROLE_ADMIN') {
         this.isAdmin = true;
       } else if (rol === 'ROLE_GERENTE') {
@@ -85,15 +86,16 @@ export class ClientesComponent implements OnInit {
     this.router.navigate(['ventas']);
   }
 
-
   exportarExcel(): void {
     console.warn('muestra de excel');
-
   }
 
   exportarPDF(): void {
-    this.serviceReport.getReporteBancoPdf().subscribe(resp => {
-      this.servicePdf.createAndDownloadBlobFile(this.servicePdf.base64ToArrayBuffer(resp.data.file), resp.data.name);
+    this.serviceReport.getReporteBancoPdf().subscribe((resp) => {
+      this.servicePdf.createAndDownloadBlobFile(
+        this.servicePdf.base64ToArrayBuffer(resp.data.file),
+        resp.data.name
+      );
     });
   }
 
@@ -123,10 +125,13 @@ export class ClientesComponent implements OnInit {
     dialogConfig.width = '300px';
     dialogConfig.data = {
       cliente: this.toUpdate,
-      consulting: this.consulting
+      consulting: this.consulting,
     };
-    const modalDialog = this.matDialog.open(AgregarClienteComponent, dialogConfig);
-    modalDialog.afterClosed().subscribe(result => {
+    const modalDialog = this.matDialog.open(
+      AgregarClienteComponent,
+      dialogConfig
+    );
+    modalDialog.afterClosed().subscribe((result) => {
       if (result) {
         this.openSnackBar();
       }
@@ -144,12 +149,15 @@ export class ClientesComponent implements OnInit {
     dialogConfig.data = {
       message: '¿Desea cambiar estado?',
       title: 'Cambio estado',
-      state: cliente.estado
+      state: cliente.estado,
     };
-    const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
-    modalDialog.afterClosed().subscribe(result => {
+    const modalDialog = this.matDialog.open(
+      ConfirmModalComponent,
+      dialogConfig
+    );
+    modalDialog.afterClosed().subscribe((result) => {
       if (result.state) {
-        this.service.changeStatus(cliente.id).subscribe(result => {
+        this.service.changeStatus(cliente.id).subscribe((result) => {
           this.getData();
         });
       } else {
@@ -168,5 +176,4 @@ export class ClientesComponent implements OnInit {
       duration: 5 * 1000,
     });
   }
-
 }

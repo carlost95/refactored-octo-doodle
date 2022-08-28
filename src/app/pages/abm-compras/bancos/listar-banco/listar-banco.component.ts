@@ -1,32 +1,37 @@
-import {Banco} from '../../../../models/Banco';
-import {Router} from '@angular/router';
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {AgregarBancoComponent} from '../agregar-banco/agregar-banco.component';
-import {ConfirmModalComponent} from '../../../../shared/confirm-modal/confirm-modal.component';
-import {BancosService} from '../../../../service/bancos.service';
-import {TokenService} from '../../../../service/token.service';
-import {SnackConfirmComponent} from '../../../../shared/snack-confirm/snack-confirm.component';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {BancoRest} from '../../../../models/banco-rest';
-import {BuscadorService} from '../../../../shared/helpers/buscador.service';
-import {TituloBanco} from '../models/titulo-banco.enum';
-import {TipoModal} from '../../../../shared/models/tipo-modal.enum';
-import {concatMap, switchMap} from "rxjs/operators";
+import { Banco } from '../../../../models/Banco';
+import { Router } from '@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { AgregarBancoComponent } from '../agregar-banco/agregar-banco.component';
+import { ConfirmModalComponent } from '../../../../shared/confirm-modal/confirm-modal.component';
+import { BancosService } from '../../../../service/bancos.service';
+import { TokenService } from '../../../../service/token.service';
+import { SnackConfirmComponent } from '../../../../shared/snack-confirm/snack-confirm.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { BancoRest } from '../../../../models/banco-rest';
+import { BuscadorService } from '../../../../shared/helpers/buscador.service';
+import { TituloBanco } from '../models/titulo-banco.enum';
+import { TipoModal } from '../../../../shared/models/tipo-modal.enum';
+import { concatMap, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-listar-banco',
   templateUrl: './listar-banco.component.html',
-  styleUrls: ['./listar-banco.component.css']
+  styleUrls: ['./listar-banco.component.css'],
 })
 export class ListarBancoComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   dataSource: MatTableDataSource<BancoRest>;
-  displayedColumns: string[] = ['nombre', 'abreviatura', 'habilitado', 'acciones'];
+  displayedColumns: string[] = [
+    'nombre',
+    'abreviatura',
+    'habilitado',
+    'acciones',
+  ];
 
   bancos: BancoRest[];
 
@@ -41,13 +46,15 @@ export class ListarBancoComponent implements OnInit {
     public matDialog: MatDialog,
     private router: Router,
     private tokenService: TokenService,
-    private snackBar: MatSnackBar) {
-  }
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.roles = this.tokenService.getAuthorities();
-    this.mostrarHabilitacion = this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_ADMIN_BANCO');
-    this.service.obtenerBancos().subscribe(data => {
+    this.mostrarHabilitacion =
+      this.roles.includes('ROLE_ADMIN') ||
+      this.roles.includes('ROLE_ADMIN_BANCO');
+    this.service.obtenerBancos().subscribe((data) => {
       this.bancos = data;
       this.establecerDatasource(data);
     });
@@ -55,7 +62,11 @@ export class ListarBancoComponent implements OnInit {
 
   filtrarBancos(value: string): void {
     const TERMINO = 'nombre';
-    const bancos = this.buscadorService.buscarTermino(this.bancos, TERMINO, value);
+    const bancos = this.buscadorService.buscarTermino(
+      this.bancos,
+      TERMINO,
+      value
+    );
     this.establecerDatasource(bancos);
   }
 
@@ -67,7 +78,7 @@ export class ListarBancoComponent implements OnInit {
   newBanco(): void {
     const data = {
       titulo: TituloBanco.creacion,
-      tipo: TipoModal.creacion
+      tipo: TipoModal.creacion,
     };
     this.openDialog(data);
   }
@@ -86,7 +97,7 @@ export class ListarBancoComponent implements OnInit {
       titulo: TituloBanco.consulta,
       tipo: TipoModal.consulta,
       banco,
-    }
+    };
     this.openDialog(data);
   }
 
@@ -100,8 +111,8 @@ export class ListarBancoComponent implements OnInit {
       data,
     });
     // const modalDialog = this.matDialog.open(AgregarBancoComponent, dialogConfig);
-    dialog.afterClosed().subscribe(result => {
-      this.service.obtenerBancos().subscribe(bancos => {
+    dialog.afterClosed().subscribe((result) => {
+      this.service.obtenerBancos().subscribe((bancos) => {
         this.bancos = bancos;
         this.establecerDatasource(bancos);
       });
@@ -124,24 +135,25 @@ export class ListarBancoComponent implements OnInit {
     dialogConfig.data = {
       message: '¿Desea cambiar estado?',
       title: 'Cambio estado',
-      state: banco.habilitado
+      state: banco.habilitado,
     };
-    const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
-    modalDialog.afterClosed().subscribe(result => {
+    const modalDialog = this.matDialog.open(
+      ConfirmModalComponent,
+      dialogConfig
+    );
+    modalDialog.afterClosed().subscribe((result) => {
       if (result.state) {
-
         // tslint:disable-next-line:no-shadowed-variableangular
-        this.service.actualizarEstado(banco.idBanco).pipe(
-          concatMap( data => this.service.obtenerBancos())
-        ).subscribe(bancos => {
-          this.bancos = bancos;
-          this.establecerDatasource(bancos);
-        });
+        this.service
+          .actualizarEstado(banco.idBanco)
+          .pipe(concatMap((data) => this.service.obtenerBancos()))
+          .subscribe((bancos) => {
+            this.bancos = bancos;
+            this.establecerDatasource(bancos);
+          });
       }
     });
   }
-
-
 
   openSnackBar(msg: string): void {
     this.snackBar.openFromComponent(SnackConfirmComponent, {
