@@ -1,25 +1,46 @@
-import {Router} from '@angular/router';
-import {Component, OnInit} from '@angular/core';
-import {TokenService} from '../../../service/token.service';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-sub-menu-compras',
   templateUrl: './sub-menu-compras.component.html',
-  styleUrls: ['./sub-menu-compras.component.css']
+  styleUrls: ['./sub-menu-compras.component.css'],
 })
 export class SubMenuComprasComponent implements OnInit {
   isLogged = false;
+  ITEMS = [
+    {
+      ruta: 'listar-banco',
+      label: 'bancos',
+      icon: 'banco',
+    },
+    {
+      ruta: 'listar-marca',
+      label: 'marcas',
+      icon: 'marca',
+    },
+    {
+      ruta: 'listar-unidad-medida',
+      label: 'unid. medida',
+      icon: 'unidadMedida',
+    },
+    {
+      ruta: 'listar-rubro',
+      label: 'rubros',
+      icon: 'rubro',
+    },
+    {
+      ruta: 'listar-sub-rubro',
+      label: 'sub-rubros',
+      icon: 'subRubro',
+    },
+    {
+      ruta: 'listar-ajuste',
+      label: 'ajustes',
+      icon: 'ajuste',
+    },
+  ];
 
-  constructor(private tokenService: TokenService) {
-  }
+  constructor() {}
 
-  ngOnInit(): void {
-    if (this.tokenService.getToken()) {
-      this.isLogged = true;
-    } else {
-      this.isLogged = false;
-    }
-  }
-
-
+  ngOnInit(): void {}
 }

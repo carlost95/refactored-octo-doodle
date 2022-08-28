@@ -1,9 +1,5 @@
-<template-page
-  [title]="'Departamentos'"
-  [backRoute]="'abm-ventas'"
-  [titleButton]="'Nuevo Departamento'"
-  (filtro)="filtrarDepartamentos($event)"
-  (onClickButton)="nuevo()">
+<template-page [title]="'Departamentos'" [backRoute]="'abm-ventas'" [titleButton]="'Nuevo Departamento'"
+  (filtro)="filtrarDepartamentos($event)" (onClickButton)="nuevo()">
   <div>
     <table class="w-100" mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="nombre">
