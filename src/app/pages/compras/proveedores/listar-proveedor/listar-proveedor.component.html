@@ -1,9 +1,5 @@
-<template-page
-  [title]="'Proveedores'"
-  [backRoute]="'compras'"
-  [titleButton]="'Nuevo Proveedor'"
-  (filtro)="filtrarProveedor($event)"
-  (onClickButton)="newProveedor()">
+<template-page [title]="'Proveedores'" [backRoute]="'compras'" [titleButton]="'Nuevo Proveedor'"
+  (filtro)="filtrarProveedor($event)" (onClickButton)="newProveedor()">
   <div>
     <table class="w-100" mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="razonSocial">
@@ -28,12 +24,15 @@
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef> Opciones</th>
         <td mat-cell *matCellDef="let row">
-          <button class="btn btn-default mr-2" title="Consultar" (click)="consultarProveedor(row)">
+          <button class="btn btn-default select" title="Consultar" (click)="consultarProveedor(row)">
             <i class="fas fa-exclamation"></i>
           </button>
-          <button class="btn btn-default m-0 p-0" title="Modificar " (click)="modificarProveedor(row)"
-                  *ngIf="mostrarModificacion">
+          <button class="btn btn-default select" title="Modificar " (click)="modificarProveedor(row)"
+            *ngIf="mostrarModificacion">
             <i class="fas fa-pencil-alt"></i>
+          </button>
+          <button class="btn btn-default select" title="Cuentas bancarias" (click)="cuentaProveedor()">
+            <i class=" fas fa-money-check-alt"></i>
           </button>
         </td>
       </ng-container>

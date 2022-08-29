@@ -1,16 +1,15 @@
-import {Router} from '@angular/router';
-import {Component, OnInit} from '@angular/core';
+import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-abm-compras',
   templateUrl: './abm-compras.component.html',
-  styleUrls: ['./abm-compras.component.css']
+  styleUrls: ['./abm-compras.component.css'],
 })
 export class AbmComprasComponent implements OnInit {
   menuDeplegado = true;
 
-  constructor(private router: Router) {
-  }
+  constructor(private router: Router) {}
 
   validaMenu(): boolean {
     if (
@@ -42,6 +41,5 @@ export class AbmComprasComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 }

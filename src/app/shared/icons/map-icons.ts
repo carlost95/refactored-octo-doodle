@@ -1,3 +1,4 @@
+import { banco } from '../../../environments/global-route';
 export default {
   mapa: 'fas fa-map-marker-alt fa-lg',
   ajuste: 'fas fa-wrench',
@@ -8,4 +9,11 @@ export default {
   proveedor: 'fas fa-user-tie',
   articulo: 'fas fa-box-open',
   pedido: 'fas fa-truck',
+  distrito: 'fas fa-map-marked',
+  departamento: 'fas fa-map-marked-alt',
+  banco: 'fas fa-university',
+  marca: 'fas fa-tags',
+  unidadMedida: 'fas fa-ruler',
+  rubro: 'fas fa-archive',
+  subRubro: 'fas fa-folder-open',
 };

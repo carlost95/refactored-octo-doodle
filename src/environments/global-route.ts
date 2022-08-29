@@ -1,74 +1,79 @@
 export const banco = {
   path: '/bancos',
-  status: '/status'
+  status: '/status',
 };
 export const report = {
-  path: '/reportes'
+  path: '/reportes',
 };
 export const proveedor = {
   path: '/proveedores',
-  status: '/status'
+  status: '/status',
 };
 export const marca = {
   path: '/marcas',
-  status: '/status'
+  status: '/status',
 };
 export const rubro = {
   path: '/rubros',
-  status: '/status'
+  status: '/status',
 };
 export const unidadMedida = {
   path: '/unidad-medida',
-  status: '/status'
+  status: '/status',
 };
 export const subRubro = {
   path: '/sub-rubros',
-  status: '/status'
+  status: '/status',
 };
 
 export const cliente = {
   path: '/clientes',
-  status: '/status'
+  status: '/status',
 };
 
 export const ajuste = {
   path: '/ajustes',
-  status: '/status'
+  status: '/status',
 };
 export const articulos = {
   path: '/articulos',
-  status: '/status'
+  status: '/status',
 };
 export const movimientos = {
   path: '/movimientos',
-  status: '/status'
+  status: '/status',
 };
 export const pedidos = {
   path: '/pedidos',
-  status: '/status'
+  status: '/status',
 };
 
 export const direccion = {
   path: '/direcciones',
-  status: '/status'
+  status: '/status',
 };
 
 export const distrito = {
   path: '/distritos',
-  status: '/status'
+  status: '/status',
 };
 
 export const auth = {
-  path: '/auth'
+  path: '/auth',
 };
 
 export const departamento = {
   path: '/departamentos',
   status: '/status',
-  active: '/active'
+  active: '/active',
 };
 export const ventas = {
   path: '/ventas',
   status: '/status',
-  active: '/active'
+  active: '/active',
+};
+export const cuenta = {
+  path: '/cuenta',
+  status: '/status',
+  active: '/active',
 };

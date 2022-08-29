@@ -1,9 +1,5 @@
-<template-page
-  [title]="'Bancos'"
-  [backRoute]="'abm-compras'"
-  [titleButton]="'Nuevo Banco'"
-  (filtro)="filtrarBancos($event)"
-  (onClickButton)="newBanco()">
+<template-page [title]="'Bancos'" [backRoute]="'abm-compras'" [titleButton]="'Nuevo Banco'"
+  (filtro)="filtrarBancos($event)" (onClickButton)="newBanco()">
   <div>
     <table class="w-100" mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="nombre">
