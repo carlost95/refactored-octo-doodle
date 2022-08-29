@@ -21,6 +21,10 @@ export class DepartamentosService {
     return this.http.get<DepartamentoRest[]>(this.url);
   }
 
+  obtenerDepartamentosHabilitados(): Observable<DepartamentoRest[]> {
+    return this.http.get<DepartamentoRest[]>(`${this.url}/habilitado`);
+  }
+
   // tslint:disable-next-line:typedef no-shadowed-variable
   guardar(departamento: DepartamentoRest) {
     return this.http.post<DepartamentoRest>(this.url, departamento);

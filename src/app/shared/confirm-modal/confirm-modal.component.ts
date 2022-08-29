@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-confirm-modal',
@@ -16,11 +16,12 @@ export class ConfirmModalComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  close() {
+  close(): void {
     this.dialogRef.close({ state: false });
   }
 
-  updateStatus() {
+  // tslint:disable-next-line:typedef
+  updateStatus(): void {
     this.dialogRef.close({ state: true });
   }
 }

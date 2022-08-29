@@ -1,10 +1,11 @@
-import { Departamento } from '../../../../models/Departamento';
-import { Distrito } from '../../../../models/Distrito';
-import { Component, Inject, OnInit } from '@angular/core';
-import { DistritoService } from '../../../../service/distrito.service';
-import { DepartamentosService } from '../../../../service/departamentos.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {Component, Inject, OnInit} from '@angular/core';
+import {DistritoService} from '../../../../service/distrito.service';
+import {DepartamentosService} from '../../../../service/departamentos.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {TipoModal} from '@shared/models/tipo-modal.enum';
+import {DistritoRest} from '@models/distrito-rest';
+import {DepartamentoRest} from '@models/departamento-rest';
 
 @Component({
   selector: 'app-agregar-distrito',
@@ -12,69 +13,62 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./agregar-distrito.component.css'],
 })
 export class AgregarDistritoComponent implements OnInit {
+  titulo: string;
+  tipoModal: TipoModal;
+  distritos: DistritoRest[];
+
   distritoForm: FormGroup;
-  distrito: Distrito = new Distrito();
-  distritos: Distrito[] = [];
-  departamentos: Departamento[] = [];
-  consultar: boolean = false;
-  updating: boolean = false;
-  show = false;
-  duplicateName = false;
+  departamentos: DepartamentoRest[] = [];
   submitted = false;
-  errorInForm: boolean = false;
+  errorInForm = false;
+  show = false;
 
   constructor(
-    private distritoService: DistritoService,
-    private departamentoService: DepartamentosService,
+    private readonly distritoService: DistritoService,
+    private readonly departamentoService: DepartamentosService,
     public dialogRef: MatDialogRef<AgregarDistritoComponent>,
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
   ngOnInit(): void {
-    this.departamentoService.getActive().subscribe((resp) => {
-      this.departamentos = resp.data;
-      this.initForm();
+    this.titulo = this.data.titulo;
+    this.tipoModal = this.data.tipo;
+
+    this.departamentoService
+      .obtenerDepartamentosHabilitados()
+      .subscribe(departamentos => {
+        this.departamentos = departamentos;
+        if ( this.tipoModal === TipoModal.consulta || this.tipoModal === TipoModal.actualizacion) {
+          this.establecerModalDatos(this.data, this.tipoModal);
+        } else {
+          this.establecerModalVacio();
+        }
+        this.show = true;
+
+      });
+  }
+
+  private establecerModalDatos(data, tipoModal): void {
+    const {distrito} = data;
+    const disabled = tipoModal === TipoModal.consulta ? true : false;
+    this.distritoForm = this.formBuilder.group({
+      id: [{value: distrito.idDistrito}, null],
+      nombre: [{ value: distrito.nombre, disabled}, Validators.required],
+      abreviatura: [{ value: distrito.abreviatura, disabled}, Validators.required],
+      departamento: [{ value: distrito.idDepartamento, disabled}, Validators.required],
+      estado: [{ value: distrito.habilitado, disabled}, null],
     });
   }
 
-  initForm(): void {
-    const { distrito } = this.data;
-    this.distritos = this.data.distritos;
-    if (distrito) {
-      this.consultar = this.data.consultar;
-      this.distritoForm = this.formBuilder.group({
-        id: [distrito.id, null],
-        nombre: [
-          { value: distrito.nombre, disabled: this.consultar },
-          Validators.required,
-        ],
-        abreviatura: [
-          { value: distrito.abreviatura, disabled: this.consultar },
-          Validators.required,
-        ],
-        departamento: [
-          { value: distrito.departamento, disabled: this.consultar },
-          Validators.required,
-        ],
-        estado: [{ value: distrito.estado, disabled: this.consultar }, null],
-      });
-      this.updating = !this.consultar;
-    } else {
-      this.distritoForm = this.formBuilder.group({
-        nombre: ['', Validators.required],
-        abreviatura: ['', null],
-        departamento: ['', Validators.required],
-      });
-    }
-    this.show = true;
+  private establecerModalVacio(): void {
+    this.distritoForm = this.formBuilder.group({
+      nombre: ['', Validators.required],
+      abreviatura: ['', null],
+      departamento: ['', Validators.required],
+    });
   }
 
-  validate({ target }): void {
-    const { value: nombre } = target;
-    const exist = this.distritos.find((d) => d.nombre === nombre);
-    this.duplicateName = exist ? true : false;
-  }
 
   close(): void {
     this.dialogRef.close();
@@ -82,8 +76,7 @@ export class AgregarDistritoComponent implements OnInit {
 
   onSubmit(): void {
     this.submitted = true;
-    this.errorInForm = this.submitted && this.duplicateName;
-    if (this.errorInForm || this.duplicateName) {
+    if (this.errorInForm) {
       this.distritoForm.controls.nombre.markAsTouched();
       this.distritoForm.controls.departamento.markAsTouched();
     } else {
@@ -92,31 +85,29 @@ export class AgregarDistritoComponent implements OnInit {
   }
 
   private makeDTO(): void {
-    const data = this.distritoForm.controls;
-    this.distrito.nombre = data.nombre.value.trim().toUpperCase();
-    this.distrito.abreviatura = data.abreviatura.value.trim().toUpperCase();
-    const departamento = this.departamentos.find(
-      (d) => d.idDepartamento === data.departamento.value
-    );
-    this.distrito.departamento = departamento;
-    if (this.updating) {
-      this.distrito.id = data.id.value;
-      this.distrito.estado = data.estado.value;
-      this.update();
+    const distrito = new DistritoRest();
+    const {id, nombre, abreviatura, departamento, estado } = this.distritoForm.controls;
+    distrito.nombre = nombre.value.trim().toUpperCase();
+    distrito.abreviatura = abreviatura.value.trim().toUpperCase();
+    distrito.idDepartamento = departamento.value;
+    if (this.tipoModal === TipoModal.actualizacion) {
+      distrito.idDistrito = id.value.value;
+      distrito.habilitado = estado.value;
+      this.update(distrito);
     } else {
-      this.save();
+      this.save(distrito);
     }
   }
 
-  private update(): void {
-    this.distritoService.update(this.distrito).subscribe((data) => {
-      this.dialogRef.close(data.msg);
+  private update(distrito: DistritoRest): void {
+    this.distritoService.actualizar(distrito).subscribe((data) => {
+      this.dialogRef.close('Actualizado con éxito');
     });
   }
 
-  private save(): void {
-    this.distritoService.save(this.distrito).subscribe((data) => {
-      this.dialogRef.close(data.msg);
+  private save(distrito: DistritoRest): void {
+    this.distritoService.guardar(distrito).subscribe(() => {
+      this.dialogRef.close('Guardado con éxito');
     });
   }
 }

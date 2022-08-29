@@ -1,12 +1,11 @@
-import {Departamento} from '../../../../models/Departamento';
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DepartamentosService} from '../../../../service/departamentos.service';
 import {TipoModal} from '@shared/models/tipo-modal.enum';
 import {DepartamentoRest} from '@models/departamento-rest';
-import {SnackConfirmComponent} from "@shared/snack-confirm/snack-confirm.component";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-agregar-departamento',
@@ -17,11 +16,10 @@ export class AgregarDepartamentoComponent implements OnInit {
   titulo: string;
   tipoModal: TipoModal;
   departamentos: DepartamentoRest[];
-
   departamento: DepartamentoRest = new DepartamentoRest();
   response: Response;
   consultar = false;
-  departamentoForm: FormGroup;
+    departamentoForm: FormGroup;
   updating = false;
   submitted: boolean;
   errorInForm: any;

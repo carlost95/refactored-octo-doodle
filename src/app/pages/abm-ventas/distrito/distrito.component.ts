@@ -1,14 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { Departamento } from '../../../models/Departamento';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmModalComponent } from '../../../shared/confirm-modal/confirm-modal.component';
 import { SnackConfirmComponent } from '../../../shared/snack-confirm/snack-confirm.component';
-import { Distrito } from '../../../models/Distrito';
 import { DistritoService } from '../../../service/distrito.service';
 import { AgregarDistritoComponent } from './agregar-distrito/agregar-distrito.component';
-import { Router } from '@angular/router';
 import { TokenService } from '../../../service/token.service';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
+import {DistritoRest} from '../../../models/distrito-rest';
+import {TipoModal} from '../../../shared/models/tipo-modal.enum';
+import {TituloDistrito} from './models/titulo-distrito.enum';
+import {BuscadorService} from '../../../shared/helpers/buscador.service';
 
 @Component({
   selector: 'app-distrito',
@@ -16,123 +21,122 @@ import { TokenService } from '../../../service/token.service';
   styleUrls: ['./distrito.component.scss'],
 })
 export class DistritoComponent implements OnInit {
-  distritos: Distrito[];
-  private update: Distrito;
-  consulting = false;
-  distritosFilter: Distrito[];
-  busqueda: string;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  dataSource: MatTableDataSource<DistritoRest>;
+  displayedColumns: string[] = ['nombre', 'abreviatura', 'habilitado', 'acciones'];
 
-  isLogged = false;
+  distritos: DistritoRest[];
+  distrito: DistritoRest;
+  mostrarHabilitacion: boolean;
   roles: string[];
-  isAdmin = false;
-  isGerente = false;
 
   constructor(
-    private distritoService: DistritoService,
+    private readonly buscadorService: BuscadorService,
+    private readonly distritoService: DistritoService,
     public matDialog: MatDialog,
     private snackBar: MatSnackBar,
-    private router: Router,
     private tokenService: TokenService
   ) {}
 
   ngOnInit(): void {
-    if (this.tokenService.getToken()) {
-      this.isLogged = true;
-    } else {
-      this.isLogged = false;
-    }
     this.roles = this.tokenService.getAuthorities();
-    this.roles.forEach((rol) => {
-      if (rol === 'ROLE_ADMIN') {
-        this.isAdmin = true;
-      } else if (rol === 'ROLE_GERENTE') {
-        this.isGerente = true;
+    this.mostrarHabilitacion = this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_ADMIN_BANCO');
+    this.distritoService.obtenerDistritos().subscribe(distritos => {
+      this.distritos = distritos;
+      this.establecerDatasource(distritos);
+    });
+  }
+
+  establecerDatasource(distritos: DistritoRest[]): void {
+    this.dataSource = new MatTableDataSource(distritos);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  nuevo(): void {
+    const data = {
+      titulo: TituloDistrito.creacion,
+      tipo: TipoModal.creacion
+    };
+    this.abrirModalDistrito(data);
+  }
+
+  consultar(distrito: DistritoRest): void {
+    const data = {
+      titulo: TituloDistrito.consulta,
+      tipo: TipoModal.consulta,
+      distrito
+    };
+    this.abrirModalDistrito(data);
+  }
+
+  editar(distrito: DistritoRest): void {
+    const data = {
+      titulo: TituloDistrito.actualizacion,
+      tipo: TipoModal.actualizacion,
+      distrito
+    };
+    this.abrirModalDistrito(data);
+  }
+
+  abrirModalDistrito( data: any ): void {
+    const dialog = this.matDialog.open(AgregarDistritoComponent, {
+      disableClose: true,
+      id: 'modal-component',
+      height: 'auto',
+      width: '20rem',
+      panelClass: 'no-padding',
+      data,
+    });
+
+    dialog.afterClosed().subscribe((result) => {
+      if (result) {
+        this.distritoService.obtenerDistritos().subscribe(distritos => {
+          this.distritos = distritos;
+          this.establecerDatasource(distritos);
+        });
+        this.openSnackBar(result);
       }
     });
-    this.getData();
   }
 
-  getData(): void {
-    this.distritoService.getDistritos().subscribe((resp) => {
-      this.distritos = resp.data;
-      this.distritosFilter = resp.data;
-    });
-  }
 
-  showModal(departamento: Departamento): void {
-    const dialogConfig = new MatDialogConfig();
-    // The user can't close the dialog by clicking outside its body
-    dialogConfig.disableClose = true;
-    dialogConfig.id = 'modal-component';
-    dialogConfig.height = '350px';
-    dialogConfig.width = '400px';
-    dialogConfig.data = {
+  abrirModalHabilitacion(distrito: DistritoRest): void {
+    const data = {
       message: '¿Desea cambiar estado?',
       title: 'Cambio estado',
       state: true,
     };
-    const modalDialog = this.matDialog.open(
-      ConfirmModalComponent,
-      dialogConfig
-    );
-    modalDialog.afterClosed().subscribe((result) => {
+    const dialog = this.matDialog.open(ConfirmModalComponent, {
+      disableClose: true,
+      id: 'modal-component',
+      height: 'auto',
+      width: '20rem',
+      data
+    });
+
+    dialog.afterClosed().subscribe((result) => {
       if (result.state) {
         // tslint:disable-next-line:no-shadowed-variable
         this.distritoService
-          .changeStatus(departamento.idDepartamento)
-          .subscribe((result) => {
-            this.getData();
+          .cambiarEstado(distrito.idDistrito)
+          .subscribe(() => {
+            this.distritoService.obtenerDistritos().subscribe(distritos => {
+              this.distritos = distritos;
+              this.establecerDatasource(distritos);
+            });
           });
       } else {
-        this.getData();
+        this.distritoService.obtenerDistritos().subscribe(distritos => {
+          this.distritos = distritos;
+          this.establecerDatasource(distritos);
+        });
       }
     });
   }
 
-  nuevo(): void {
-    this.consulting = false;
-    this.update = undefined;
-    this.openDialog();
-  }
 
-  consultar(distrito: Distrito): void {
-    this.consulting = true;
-    this.update = distrito;
-    this.openDialog();
-  }
-
-  editar(distrito: Distrito): void {
-    this.consulting = false;
-    this.update = distrito;
-    this.openDialog();
-  }
-
-  volver(): void {
-    this.router.navigate(['abm-ventas']);
-  }
-
-  openDialog(): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.id = 'modal-component';
-    dialogConfig.height = '400px';
-    dialogConfig.width = '350px';
-    dialogConfig.data = {
-      distritos: this.distritos,
-      distrito: this.update,
-      consultar: this.consulting,
-    };
-    const modalDialog = this.matDialog.open(
-      AgregarDistritoComponent,
-      dialogConfig
-    );
-    modalDialog.afterClosed().subscribe((result) => {
-      if (result) {
-        this.openSnackBar(result);
-      }
-      this.getData();
-    });
-  }
 
   openSnackBar(msg: string): void {
     this.snackBar.openFromComponent(SnackConfirmComponent, {
@@ -142,16 +146,10 @@ export class DistritoComponent implements OnInit {
     });
   }
 
-  filterDistrito(event: any): void {
-    this.busqueda = this.busqueda.toLowerCase();
-    this.distritosFilter = this.distritos;
-    if (this.busqueda !== null) {
-      this.distritosFilter = this.distritos.filter((item) => {
-        const nombre = item.nombre.toLowerCase().indexOf(this.busqueda) !== -1;
-        const abreviatura =
-          item.abreviatura.toLowerCase().indexOf(this.busqueda) !== -1;
-        return nombre || abreviatura;
-      });
-    }
+
+  filtrarDistritos(value: string): void {
+    const TERMINO = 'nombre';
+    const bancos = this.buscadorService.buscarTermino(this.distritos, TERMINO, value);
+    this.establecerDatasource(bancos);
   }
 }
