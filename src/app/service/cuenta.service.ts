@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment.prod';
-import { cuenta } from '../../environments/global-route';
-import { Response } from '../models/Response';
+import { cuentaBancario } from '../../environments/global-route';
 import { Cuenta } from '../models/Cuenta';
 import { Observable } from 'rxjs';
 
@@ -12,18 +11,21 @@ import { Observable } from 'rxjs';
 export class CuentaService {
   url: string;
   constructor(private http: HttpClient) {
-    this.url = environment.url + cuenta.path;
+    this.url = environment.url + cuentaBancario.path;
   }
-  getAllAccount(): Observable<Response> {
-    return this.http.get<Response>(this.url);
+  getAccountBankById(id: number): Observable<Cuenta> {
+    return this.http.get<Cuenta>(this.url + '/' + id);
   }
-  saveAccount(): Observable<Response> {
-    return this.http.post<Response>(this.url, cuenta);
+  getAccountBankByIdProveedor(id: number): Observable<Cuenta[]> {
+    return this.http.get<Cuenta[]>(this.url + '/proveedor/' + id);
   }
-  updateAccount(): Observable<Response> {
-    return this.http.put<Response>(this.url, cuenta);
+  saveAccountbBank(cuenta: Cuenta): Observable<Cuenta> {
+    return this.http.post<Cuenta>(this.url, cuenta);
   }
-  changeStatusAccount(): Observable<Response> {
-    return this.http.put<Response>(this.url + cuenta.status + `/${id}`, null);
+  updateAccountBank(cuenta: Cuenta): Observable<Cuenta> {
+    return this.http.put<Cuenta>(this.url, cuenta);
+  }
+  changeStatusAccountBank(id: number): Observable<Cuenta> {
+    return this.http.put<Cuenta>(this.url + '/' + id, id);
   }
 }

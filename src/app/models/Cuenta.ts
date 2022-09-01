@@ -1,8 +1,9 @@
 export class Cuenta {
-  id?: number;
-  titularCuenta?: string;
-  numeroCuenta?: string;
-  cbu?: string;
-  idBanco?: number;
-  idProveedor?: number;
+  id: number;
+  titular: string;
+  numero: string;
+  cbu: string;
+  alias: string;
+  idBanco: number;
+  idProveedor: number;
 }

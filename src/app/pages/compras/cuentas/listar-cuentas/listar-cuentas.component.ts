@@ -6,12 +6,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TokenService } from '../../../../service/token.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Cuenta } from '../../../../models/Cuenta';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { BancosService } from '../../../../service/bancos.service';
-import { BancoRest } from '../../../../models/banco-rest';
+import { CuentaService } from '../../../../service/cuenta.service';
+import { Cuenta } from '../../../../models/Cuenta';
 
 @Component({
   selector: 'app-listar-cuentas',
@@ -22,23 +22,15 @@ export class ListarCuentasComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   dataSource: MatTableDataSource<Cuenta>;
-  // //  Columnas de la tabla cuenta
-  //   displayedColumns: string[] = [
-  //     'titular',
-  //     'cbu',
-  //     'banco',
-  //     'habilitado',
-  //     'acciones',
-  //   ];
   displayedColumns: string[] = [
-    'nombre',
-    'abreviatura',
+    'numero',
+    'cbu',
+    'alias',
     'habilitado',
     'acciones',
   ];
 
-  cuantas: Cuenta[];
-  bancos: BancoRest[];
+  cuentas: Cuenta[];
 
   mostrarHabilitacion: boolean;
   cuenta: Cuenta;
@@ -50,7 +42,7 @@ export class ListarCuentasComponent implements OnInit {
     private router: Router,
     private tokenService: TokenService,
     private snackBar: MatSnackBar,
-    private readonly service: BancosService
+    private readonly service: CuentaService
   ) {}
 
   ngOnInit(): void {
@@ -58,9 +50,11 @@ export class ListarCuentasComponent implements OnInit {
     this.mostrarHabilitacion =
       this.roles.includes('ROLE_ADMIN') ||
       this.roles.includes('ROLE_ADMIN_BANCO');
-    // SE DEBE ELIMINAR EL LLAMADO AL SERVICIO DE BANCO Y COLOCAR CUENTAS
-    this.service.obtenerBancos().subscribe((data) => {
-      this.bancos = data;
+
+    this.service.getAccountBankByIdProveedor(1).subscribe((data) => {
+      console.log('Cuentas' + data[0]);
+
+      this.cuentas = data;
       this.establecerDatasource(data);
     });
   }
@@ -75,7 +69,7 @@ export class ListarCuentasComponent implements OnInit {
     const TERMINO = 'nombre';
     const bancos = this.buscadorService.buscarTermino(
       //se debe eliminar la linea de abajo y colocar cuentas
-      this.bancos,
+      this.cuentas,
       TERMINO,
       value
     );

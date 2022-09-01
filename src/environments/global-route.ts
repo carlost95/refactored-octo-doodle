@@ -72,8 +72,8 @@ export const ventas = {
   status: '/status',
   active: '/active',
 };
-export const cuenta = {
-  path: '/cuenta',
+export const cuentaBancario = {
+  path: '/cuentasBancarias',
   status: '/status',
   active: '/active',
 };
