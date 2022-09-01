@@ -3,7 +3,7 @@ import { TituloAccount } from '../../../../shared/models/titulo-account.enum';
 import { TipoModal } from '@shared/models/tipo-modal.enum';
 import { BuscadorService } from '../../../../shared/helpers/buscador.service';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { TokenService } from '../../../../service/token.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
@@ -23,6 +23,7 @@ export class ListarCuentasComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   dataSource: MatTableDataSource<Cuenta>;
   displayedColumns: string[] = [
+    'titular',
     'numero',
     'cbu',
     'alias',
@@ -36,10 +37,13 @@ export class ListarCuentasComponent implements OnInit {
   cuenta: Cuenta;
   roles: string[];
 
+  idProveedor: number;
+
   constructor(
     private readonly buscadorService: BuscadorService,
     public matDialog: MatDialog,
     private router: Router,
+    private route: ActivatedRoute,
     private tokenService: TokenService,
     private snackBar: MatSnackBar,
     private readonly service: CuentaService
@@ -51,12 +55,18 @@ export class ListarCuentasComponent implements OnInit {
       this.roles.includes('ROLE_ADMIN') ||
       this.roles.includes('ROLE_ADMIN_BANCO');
 
-    this.service.getAccountBankByIdProveedor(1).subscribe((data) => {
-      console.log('Cuentas' + data[0]);
-
-      this.cuentas = data;
-      this.establecerDatasource(data);
+    this.route.params.subscribe((p) => {
+      this.idProveedor = p['idProveedor'];
+      this.loadingAccount();
     });
+  }
+  loadingAccount() {
+    this.service
+      .getAccountBankByIdProveedor(this.idProveedor)
+      .subscribe((data) => {
+        this.cuentas = data;
+        this.establecerDatasource(data);
+      });
   }
 
   newAccount(): void {
@@ -68,7 +78,6 @@ export class ListarCuentasComponent implements OnInit {
   filtrarAccount(value: string): void {
     const TERMINO = 'nombre';
     const bancos = this.buscadorService.buscarTermino(
-      //se debe eliminar la linea de abajo y colocar cuentas
       this.cuentas,
       TERMINO,
       value

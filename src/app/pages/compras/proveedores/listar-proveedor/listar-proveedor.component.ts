@@ -154,8 +154,8 @@ export class ListarProveedorComponent implements OnInit {
       }
     });
   }
-  cuentaProveedor(): void {
-    this.router.navigate([`compras/listar-cuentas`]);
+  cuentaProveedor(idProveedor: number): void {
+    this.router.navigate([`compras/listar-cuentas/${idProveedor}`]);
   }
   openSnackBar(msg: string): void {
     this.snackBar.openFromComponent(SnackConfirmComponent, {

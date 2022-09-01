@@ -60,7 +60,7 @@ const routes: Routes = [
         data: { expectedRol: ['admin', 'user'] },
       },
       {
-        path: 'listar-cuentas',
+        path: 'listar-cuentas/:idProveedor',
         component: ListarCuentasComponent,
         canActivate: [guard],
         data: { expectedRol: ['admin', 'user'] },
