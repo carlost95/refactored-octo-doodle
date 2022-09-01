@@ -4,6 +4,8 @@ import { environment } from '../../environments/environment.prod';
 import { unidadMedida } from '../../environments/global-route';
 import { Response } from '../models/Response';
 import { UnidadMedida } from '../models/UnidadMedida';
+import {Observable} from 'rxjs';
+import {UnidadMedidaRest} from '@models/unidad-medida-rest';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +15,24 @@ export class UnidadMedidaService {
   constructor(private http: HttpClient) {
     this.url = environment.url + unidadMedida.path;
   }
+
+  obtenerUnidadesMedida(): Observable<UnidadMedidaRest[]> {
+    return this.http.get<UnidadMedidaRest[]>(this.url);
+  }
+
+  cambiarEstado(id: number): Observable<UnidadMedidaRest> {
+    return this.http.put<UnidadMedidaRest>(this.url + '/' + id, id);
+  }
+
+  guardar(unidadDeMedida: UnidadMedidaRest): Observable<UnidadMedidaRest> {
+    return this.http.post<UnidadMedidaRest>(this.url, unidadDeMedida);
+  }
+
+  actualizar(unidadDeMedida: UnidadMedidaRest): Observable<UnidadMedidaRest> {
+    console.log(this.url);
+    return this.http.put<UnidadMedidaRest>(this.url, unidadDeMedida);
+  }
+
   // tslint:disable-next-line: typedef
   listarUnidadMedidaTodos() {
     return this.http.get<Response>(this.url);
@@ -38,4 +58,7 @@ export class UnidadMedidaService {
   cambiarHabilitacion(id: number) {
     return this.http.put<Response>(this.url + '/' + id, id);
   }
+
+
+
 }

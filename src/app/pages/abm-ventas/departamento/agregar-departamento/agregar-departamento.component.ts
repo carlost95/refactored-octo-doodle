@@ -15,15 +15,10 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 export class AgregarDepartamentoComponent implements OnInit {
   titulo: string;
   tipoModal: TipoModal;
-  departamentos: DepartamentoRest[];
   departamento: DepartamentoRest = new DepartamentoRest();
-  response: Response;
-  consultar = false;
-    departamentoForm: FormGroup;
-  updating = false;
+  departamentoForm: FormGroup;
   submitted: boolean;
   errorInForm: any;
-  duplicateName = false;
 
   constructor(
     private service: DepartamentosService,
@@ -37,7 +32,6 @@ export class AgregarDepartamentoComponent implements OnInit {
   ngOnInit(): void {
     this.titulo = this.data.titulo;
     this.tipoModal = this.data.tipo;
-    this.service.obtenerDepartamentos().subscribe(departamentos => this.departamentos = departamentos);
 
     if (this.tipoModal === TipoModal.consulta || this.tipoModal === TipoModal.actualizacion) {
       this.establecerModalDatos(this.data, this.tipoModal);
@@ -71,7 +65,7 @@ export class AgregarDepartamentoComponent implements OnInit {
   onSubmit(): void {
     this.submitted = true;
     this.errorInForm = this.submitted && this.departamentoForm.invalid;
-    if (this.errorInForm || this.duplicateName) {
+    if (this.errorInForm) {
       this.departamentoForm.controls.nombre.markAsTouched();
       this.departamentoForm.controls.abreviatura.markAsTouched();
     } else {

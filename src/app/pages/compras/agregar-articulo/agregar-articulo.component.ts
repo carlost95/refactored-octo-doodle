@@ -7,7 +7,7 @@ import {UnidadMedida} from '../../../models/UnidadMedida';
 import {ArticuloDTO} from '../../../models/ArticuloDTO';
 import {Component, OnInit, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
-import {AgregarMarcaComponent} from '../../abm-compras/agregar-marca/agregar-marca.component';
+import {AgregarMarcaComponent} from '../../abm-compras/marca/agregar-marca/agregar-marca.component';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MarcasService} from '../../../service/marcas.service';
 import {SubRubroService} from '../../../service/sub-rubro.service';
@@ -17,7 +17,7 @@ import {AgregarRubroComponent} from '../../abm-compras/agregar-rubro/agregar-rub
 import {AgregarProveedorComponent} from '../proveedores/agregar-proveedor/agregar-proveedor.component';
 import {ProveedoresService} from '../../../service/proveedores.service';
 import {AgregarSubRubroComponent} from '../../abm-compras/agregar-sub-rubro/agregar-sub-rubro.component';
-import {AgregarUnidadMedidaComponent} from '../../abm-compras/agregar-unidad-medida/agregar-unidad-medida.component';
+import {AgregarUnidadMedidaComponent} from '../../abm-compras/unidad-medida/agregar-unidad-medida/agregar-unidad-medida.component';
 import {Articulo} from '../../../models/Articulo';
 import {ArticulosService} from '../../../service/articulos.service';
 
