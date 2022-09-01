@@ -7,7 +7,7 @@ import {UnidadMedida} from '../../../models/UnidadMedida';
 import {ArticuloDTO} from '../../../models/ArticuloDTO';
 import {Component, OnInit, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
-import {AgregarMarcaComponent} from '../../abm-compras/agregar-marca/agregar-marca.component';
+import {AgregarMarcaComponent} from '../../abm-compras/marca/agregar-marca/agregar-marca.component';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MarcasService} from '../../../service/marcas.service';
 import {SubRubroService} from '../../../service/sub-rubro.service';
