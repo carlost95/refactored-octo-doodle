@@ -1,7 +1,7 @@
 import { AgregarSubRubroComponent } from './agregar-sub-rubro/agregar-sub-rubro.component';
 import { ListarSubRubroComponent } from './listar-sub-rubro/listar-sub-rubro.component';
-import { AgregarRubroComponent } from './agregar-rubro/agregar-rubro.component';
-import { ListarRubroComponent } from './listar-rubro/listar-rubro.component';
+import { AgregarRubroComponent } from './rubros/agregar-rubro/agregar-rubro.component';
+import { ListarRubroComponent } from './rubros/listar-rubro/listar-rubro.component';
 import { AgregarUnidadMedidaComponent } from './unidad-medida/agregar-unidad-medida/agregar-unidad-medida.component';
 import { ListarUnidadMedidaComponent } from './unidad-medida/listar-unidad-medida/listar-unidad-medida.component';
 import { AgregarMarcaComponent } from './marca/agregar-marca/agregar-marca.component';

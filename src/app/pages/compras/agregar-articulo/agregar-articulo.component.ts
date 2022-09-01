@@ -13,7 +13,7 @@ import {MarcasService} from '../../../service/marcas.service';
 import {SubRubroService} from '../../../service/sub-rubro.service';
 import {RubrosService} from '../../../service/rubros.service';
 import {UnidadMedidaService} from '../../../service/unidad-medida.service';
-import {AgregarRubroComponent} from '../../abm-compras/agregar-rubro/agregar-rubro.component';
+import {AgregarRubroComponent} from '../../abm-compras/rubros/agregar-rubro/agregar-rubro.component';
 import {AgregarProveedorComponent} from '../proveedores/agregar-proveedor/agregar-proveedor.component';
 import {ProveedoresService} from '../../../service/proveedores.service';
 import {AgregarSubRubroComponent} from '../../abm-compras/agregar-sub-rubro/agregar-sub-rubro.component';
