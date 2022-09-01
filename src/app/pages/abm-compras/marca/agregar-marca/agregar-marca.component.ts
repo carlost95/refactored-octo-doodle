@@ -21,11 +21,6 @@ export class AgregarMarcaComponent implements OnInit {
   marcaForm: FormGroup;
   errorInForm = false;
   submitted = false;
-  updating = false;
-  consulting: false;
-  nombreRepe = false;
-  abreRepe = false;
-  marcas: Marca[] = [];
 
   constructor(
     private readonly marcaService: MarcasService,

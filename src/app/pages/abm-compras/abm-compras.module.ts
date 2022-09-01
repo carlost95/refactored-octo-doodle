@@ -12,8 +12,8 @@ import { ListarBancoComponent } from './bancos/listar-banco/listar-banco.compone
 import { ListarMarcaComponent } from './marca/listar-marca/listar-marca.component';
 import { AgregarMarcaComponent } from './marca/agregar-marca/agregar-marca.component';
 import { ModificarFormaPagoComponent } from './modificar-forma-pago/modificar-forma-pago.component';
-import { ListarUnidadMedidaComponent } from './listar-unidad-medida/listar-unidad-medida.component';
-import { AgregarUnidadMedidaComponent } from './agregar-unidad-medida/agregar-unidad-medida.component';
+import { ListarUnidadMedidaComponent } from './unidad-medida/listar-unidad-medida/listar-unidad-medida.component';
+import { AgregarUnidadMedidaComponent } from './unidad-medida/agregar-unidad-medida/agregar-unidad-medida.component';
 import { ListarRubroComponent } from './listar-rubro/listar-rubro.component';
 import { AgregarRubroComponent } from './agregar-rubro/agregar-rubro.component';
 import { ListarSubRubroComponent } from './listar-sub-rubro/listar-sub-rubro.component';
