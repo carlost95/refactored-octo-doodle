@@ -1,8 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {RubrosService} from '@service/rubros.service';
 import {MatDialog} from '@angular/material/dialog';
+import {AgregarSubRubroComponent} from '../agregar-sub-rubro/agregar-sub-rubro.component';
+import {SubRubroService} from '@service/sub-rubro.service';
 import {ConfirmModalComponent} from '@shared/confirm-modal/confirm-modal.component';
-import {AgregarRubroComponent} from '../agregar-rubro/agregar-rubro.component';
 import {TokenService} from '@service/token.service';
 import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -10,29 +10,30 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {RubroRest} from '../../../../models/rubro-rest';
+import {SubRubroRest} from '../../../../models/subrubro-rest';
 import {BuscadorService} from '../../../../shared/helpers/buscador.service';
 import {TipoModal} from '../../../../shared/models/tipo-modal.enum';
-import {TituloRubro} from '../models/titulo-rubro.enum';
-
+import {TituloSubRubro} from '../models/titulo-rubro.enum';
 
 @Component({
-  selector: 'app-listar-rubro',
-  templateUrl: './listar-rubro.component.html',
-  styleUrls: ['./listar-rubro.component.css']
+  selector: 'app-listar-sub-rubro',
+  templateUrl: './listar-sub-rubro.component.html',
+  styleUrls: ['./listar-sub-rubro.component.css']
 })
-export class ListarRubroComponent implements OnInit {
+export class ListarSubRubroComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  dataSource: MatTableDataSource<RubroRest>;
-  displayedColumns: string[] = ['nombre', 'abreviatura', 'habilitado', 'acciones'];
+  dataSource: MatTableDataSource<SubRubroRest>;
+  displayedColumns: string[] = ['nombre', 'abreviatura', 'habilitado', 'rubro', 'acciones'];
 
-  rubros: RubroRest[];
-  rubro: RubroRest;
+  subrubros: SubRubroRest[];
+  subrubro: SubRubroRest;
   mostrarHabilitacion: boolean;
   roles: string[];
 
+
   constructor(
-    private readonly rubroService: RubrosService,
+    private readonly subrubroService: SubRubroService,
     private readonly buscadorService: BuscadorService,
     public matDialog: MatDialog,
     private tokenService: TokenService,
@@ -42,46 +43,47 @@ export class ListarRubroComponent implements OnInit {
   ngOnInit(): void {
     this.roles = this.tokenService.getAuthorities();
     this.mostrarHabilitacion = this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_ADMIN_BANCO');
-    this.rubroService.obtenerRubros().subscribe(rubros => {
-      this.rubros = rubros;
-      this.establecerDatasource(rubros);
+    this.subrubroService.obtenerSubRubros().subscribe(subrubros => {
+      this.subrubros = subrubros;
+      this.establecerDatasource(subrubros);
     });
+    this.subrubroService.obtenerRubros().subscribe(data => console.log(data));
   }
 
-  establecerDatasource(rubros: RubroRest[]): void {
-    this.dataSource = new MatTableDataSource(rubros);
+  establecerDatasource(subrubros: SubRubroRest[]): void {
+    this.dataSource = new MatTableDataSource(subrubros);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
   nuevo(): void {
     const data = {
-      titulo: TituloRubro.creacion,
+      titulo: TituloSubRubro.creacion,
       tipo: TipoModal.creacion
     };
-    this.abrirModalRubro(data);
+    this.abrirModalSubRubro(data);
   }
 
-  consultar(rubro: RubroRest): void {
+  consultar(subrubro: SubRubroRest): void {
     const data = {
-      titulo: TituloRubro.consulta,
+      titulo: TituloSubRubro.consulta,
       tipo: TipoModal.consulta,
-      rubro
+      subrubro
     };
-    this.abrirModalRubro(data);
+    this.abrirModalSubRubro(data);
   }
 
-  editar(rubro: RubroRest): void {
+  editar(subrubro: SubRubroRest): void {
     const data = {
-      titulo: TituloRubro.actualizacion,
+      titulo: TituloSubRubro.actualizacion,
       tipo: TipoModal.actualizacion,
-      rubro
+      subrubro
     };
-    this.abrirModalRubro(data);
+    this.abrirModalSubRubro(data);
   }
 
-  abrirModalRubro(data: any): void {
-    const dialog = this.matDialog.open(AgregarRubroComponent, {
+  abrirModalSubRubro(data: any): void {
+    const dialog = this.matDialog.open(AgregarSubRubroComponent, {
       disableClose: true,
       id: 'modal-component',
       height: 'auto',
@@ -91,9 +93,9 @@ export class ListarRubroComponent implements OnInit {
     });
 
     dialog.afterClosed().subscribe(result => {
-      this.rubroService.obtenerRubros().subscribe(rubros => {
-        this.rubros = rubros;
-        this.establecerDatasource(rubros);
+      this.subrubroService.obtenerSubRubros().subscribe(subrubros => {
+        this.subrubros = subrubros;
+        this.establecerDatasource(subrubros);
       });
       if (result) {
         this.openSnackBar(result);
@@ -101,7 +103,7 @@ export class ListarRubroComponent implements OnInit {
     });
   }
 
-  abrirModalHabilitacion(rubro: RubroRest): void {
+  abrirModalHabilitacion(subrubro: SubRubroRest): void {
     const dialog = this.matDialog.open(ConfirmModalComponent, {
       disableClose: true,
       id: 'modal-component',
@@ -110,22 +112,22 @@ export class ListarRubroComponent implements OnInit {
       data: {
         message: '¿Desea cambiar estado?',
         title: 'Cambio estado',
-        state: rubro.habilitado,
+        state: subrubro.habilitado,
       }
     });
     dialog.afterClosed().subscribe(result => {
       if (result.state) {
         // tslint:disable-next-line:no-shadowed-variable
-        this.rubroService.cambiarEstado(rubro.idRubro).subscribe(result => {
-          this.rubroService.obtenerRubros().subscribe(rubros => {
-            this.rubros = rubros;
-            this.establecerDatasource(rubros);
+        this.subrubroService.cambiarEstado(subrubro.idSubRubro).subscribe(result => {
+          this.subrubroService.obtenerSubRubros().subscribe(subrubros => {
+            this.subrubros = subrubros;
+            this.establecerDatasource(subrubros);
           });
         });
       } else {
-        this.rubroService.obtenerRubros().subscribe(rubros => {
-          this.rubros = rubros;
-          this.establecerDatasource(rubros);
+        this.subrubroService.obtenerSubRubros().subscribe(subrubros => {
+          this.subrubros = subrubros;
+          this.establecerDatasource(subrubros);
         });
       }
     });
@@ -139,9 +141,10 @@ export class ListarRubroComponent implements OnInit {
     });
   }
 
-  filtrarRubros(value: string): void {
+  filtrarSubRubros(value: string): void {
     const TERMINO = 'nombre';
-    const rubros = this.buscadorService.buscarTermino(this.rubros, TERMINO, value);
-    this.establecerDatasource(rubros);
+    const subrubros = this.buscadorService.buscarTermino(this.subrubros, TERMINO, value);
+    this.establecerDatasource(subrubros);
   }
+
 }

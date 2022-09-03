@@ -13,7 +13,6 @@ import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.compone
   styleUrls: ['./agregar-rubro.component.css']
 })
 export class AgregarRubroComponent implements OnInit {
-
   titulo: string;
   tipoModal: TipoModal;
   rubro: RubroRest = new RubroRest();

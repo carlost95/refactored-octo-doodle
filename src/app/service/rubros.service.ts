@@ -21,6 +21,10 @@ export class RubrosService {
     return this.http.get<RubroRest[]>(this.url);
   }
 
+  obtenerHabilitados(): Observable<RubroRest[]> {
+    return this.http.get<RubroRest[]>(this.url + '/habilitados');
+  }
+
   cambiarEstado(id: number): Observable<RubroRest> {
     return this.http.put<RubroRest>(this.url + '/' + id, id);
   }

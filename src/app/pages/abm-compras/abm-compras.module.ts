@@ -16,8 +16,8 @@ import { ListarUnidadMedidaComponent } from './unidad-medida/listar-unidad-medid
 import { AgregarUnidadMedidaComponent } from './unidad-medida/agregar-unidad-medida/agregar-unidad-medida.component';
 import { ListarRubroComponent } from './rubros/listar-rubro/listar-rubro.component';
 import { AgregarRubroComponent } from './rubros/agregar-rubro/agregar-rubro.component';
-import { ListarSubRubroComponent } from './listar-sub-rubro/listar-sub-rubro.component';
-import { AgregarSubRubroComponent } from './agregar-sub-rubro/agregar-sub-rubro.component';
+import { ListarSubRubroComponent } from './sub-rubro/listar-sub-rubro/listar-sub-rubro.component';
+import { AgregarSubRubroComponent } from './sub-rubro/agregar-sub-rubro/agregar-sub-rubro.component';
 import { AgregarAjusteComponent } from './agregar-ajuste/agregar-ajuste.component';
 import { ConsultarAjusteComponent } from './consultar-ajuste/consultar-ajuste.component';
 import { ListarAjusteComponent } from './listar-ajuste/listar-ajuste.component';

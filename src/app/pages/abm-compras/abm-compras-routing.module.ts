@@ -1,5 +1,5 @@
-import { AgregarSubRubroComponent } from './agregar-sub-rubro/agregar-sub-rubro.component';
-import { ListarSubRubroComponent } from './listar-sub-rubro/listar-sub-rubro.component';
+import { AgregarSubRubroComponent } from './sub-rubro/agregar-sub-rubro/agregar-sub-rubro.component';
+import { ListarSubRubroComponent } from './sub-rubro/listar-sub-rubro/listar-sub-rubro.component';
 import { AgregarRubroComponent } from './rubros/agregar-rubro/agregar-rubro.component';
 import { ListarRubroComponent } from './rubros/listar-rubro/listar-rubro.component';
 import { AgregarUnidadMedidaComponent } from './unidad-medida/agregar-unidad-medida/agregar-unidad-medida.component';

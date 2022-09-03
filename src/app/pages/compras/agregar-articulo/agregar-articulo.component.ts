@@ -16,7 +16,7 @@ import {UnidadMedidaService} from '../../../service/unidad-medida.service';
 import {AgregarRubroComponent} from '../../abm-compras/rubros/agregar-rubro/agregar-rubro.component';
 import {AgregarProveedorComponent} from '../proveedores/agregar-proveedor/agregar-proveedor.component';
 import {ProveedoresService} from '../../../service/proveedores.service';
-import {AgregarSubRubroComponent} from '../../abm-compras/agregar-sub-rubro/agregar-sub-rubro.component';
+import {AgregarSubRubroComponent} from '../../abm-compras/sub-rubro/agregar-sub-rubro/agregar-sub-rubro.component';
 import {AgregarUnidadMedidaComponent} from '../../abm-compras/unidad-medida/agregar-unidad-medida/agregar-unidad-medida.component';
 import {Articulo} from '../../../models/Articulo';
 import {ArticulosService} from '../../../service/articulos.service';
