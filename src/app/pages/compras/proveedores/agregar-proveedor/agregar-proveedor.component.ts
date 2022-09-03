@@ -154,8 +154,4 @@ export class AgregarProveedorComponent implements OnInit {
       data: msg,
     });
   }
-
-  establecerBanco(idBanco: number): void {
-    this.proveedorForm.patchValue({ bancos: idBanco });
-  }
 }

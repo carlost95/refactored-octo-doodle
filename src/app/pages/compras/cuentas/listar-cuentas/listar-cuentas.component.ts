@@ -90,6 +90,7 @@ export class ListarCuentasComponent implements OnInit {
     const data = {
       titulo: Titulo.creacion,
       tipoModal: TipoModal.creacion,
+      idProveedor: this.idProveedor,
     };
     this.openDialogAccount(data);
   }

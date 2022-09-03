@@ -35,6 +35,8 @@
                 Alias es<strong> requerido</strong>
             </mat-error>
         </mat-form-field>
+        <banco-dropdown formControlName="idBanco" class="w-100" (bancoChange)="establecerBanco($event)">
+        </banco-dropdown>
 
 
     </form>

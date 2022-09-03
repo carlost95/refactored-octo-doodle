@@ -4,7 +4,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Cuenta } from '../../../../models/Cuenta';
 import { TipoModal } from '../../../../shared/models/tipo-modal.enum';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { cuentaBancario } from '../../../../../environments/global-route';
+import { SnackConfirmComponent } from '../../../../shared/snack-confirm/snack-confirm.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-agregar-cuenta',
@@ -14,6 +15,7 @@ import { cuentaBancario } from '../../../../../environments/global-route';
 export class AgregarCuentaComponent implements OnInit {
   accountForm: FormGroup;
   cuenta: Cuenta = new Cuenta();
+  idProveedor: number;
   errorInForm = false;
   submitted = false;
   updating = false;
@@ -25,6 +27,7 @@ export class AgregarCuentaComponent implements OnInit {
   constructor(
     private readonly cuentaService: CuentaService,
     private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<AgregarCuentaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
@@ -45,6 +48,8 @@ export class AgregarCuentaComponent implements OnInit {
 
   establecerModalDatos(data: any, tipoModal: TipoModal): void {
     const { cuenta } = data;
+    const { idProveedor } = data;
+    this.idProveedor = idProveedor;
 
     const disabled = tipoModal === TipoModal.consulta ? true : false;
     this.accountForm = this.formBuilder.group({
@@ -53,8 +58,8 @@ export class AgregarCuentaComponent implements OnInit {
       numero: [{ value: cuenta.numero, disabled }, Validators.required],
       cbu: [{ value: cuenta.cbu, disabled }, Validators.required],
       alias: [{ value: cuenta.alias, disabled }, Validators.required],
-      // habilitado: [{ value: cuenta.habilitado, disabled }, null],
-      // idBanco: [{ value: cuenta.idBanco, disabled }, Validators.required],
+      habilitado: [{ value: cuenta.habilitado, disabled }, null],
+      idBanco: [{ value: cuenta.idBanco, disabled }, Validators.required],
     });
     return;
   }
@@ -62,11 +67,12 @@ export class AgregarCuentaComponent implements OnInit {
   establecerModalVacio(): void {
     this.accountForm = this.formBuilder.group({
       id: ['', Validators.required],
-      Titular: ['', Validators.required],
+      titular: ['', Validators.required],
       numero: ['', Validators.required],
       cbu: ['', Validators.required],
       alias: ['', Validators.required],
-      // idBanco: ['', Validators.required],
+      habilitado: ['', Validators.required],
+      idBanco: ['', Validators.required],
     });
   }
   close(): void {
@@ -82,8 +88,7 @@ export class AgregarCuentaComponent implements OnInit {
       this.accountForm.controls['numero'].markAsTouched();
       this.accountForm.controls['cbu'].markAsTouched();
       this.accountForm.controls['alias'].markAsTouched();
-      // this.accountForm.controls['habilitado'].markAsTouched();
-      // this.accountForm.controls['idBanco'].markAsTouched();
+      this.accountForm.controls['idBanco'].markAsTouched();
     } else {
       this.makeDTO();
     }
@@ -95,13 +100,14 @@ export class AgregarCuentaComponent implements OnInit {
     this.cuenta.numero = this.accountForm.controls.numero.value;
     this.cuenta.cbu = this.accountForm.controls.cbu.value;
     this.cuenta.alias = this.accountForm.controls.alias.value;
-    // this.cuenta.idBanco = this.accountForm.controls.idBanco.value;
+    this.cuenta.idBanco = this.accountForm.controls.idBanco.value;
 
     console.log('carga de cuenta bancaria');
     console.log(this.cuenta);
 
-    if (this.updating) {
+    if (this.tipoModal === TipoModal.actualizacion) {
       this.cuenta.id = this.accountForm.controls.id.value;
+      this.cuenta.idProveedor = this.idProveedor;
       this.update();
     } else {
       this.save();
@@ -119,11 +125,22 @@ export class AgregarCuentaComponent implements OnInit {
 
     console.log(this.cuenta);
 
-    this.cuentaService.updateAccountBank(this.cuenta).subscribe((data) => {
-      this.msgSnack(data);
+    this.cuentaService.updateAccountBank(this.cuenta).subscribe(
+      (data) => {
+        this.msgSnack(data.titular + ' Actualizado con Exito');
+      },
+      ({ error }) => {
+        this.openSnackBar(error);
+      }
+    );
+  }
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
     });
   }
-
   msgSnack(data): void {
     const { msg } = data;
     if (data.code === 200) {
@@ -132,7 +149,7 @@ export class AgregarCuentaComponent implements OnInit {
       this.dialogRef.close('Error en el proceso');
     }
   }
-  //   establecerBanco(idBanco: number): void {
-  //     this.accountForm.patchValue({ bancos: idBanco });
-  //   }
+  establecerBanco(idBanco: number): void {
+    this.accountForm.patchValue({ bancos: idBanco });
+  }
 }
