@@ -4,49 +4,34 @@ import { environment } from '../../environments/environment.prod';
 import { HttpClient } from '@angular/common/http';
 import { Proveedor } from '@models/Proveedor';
 import { proveedor } from '../../environments/global-route';
-import {Observable} from "rxjs";
-import {ProveedorRest} from "@models/proveedor-rest";
+import { Observable } from 'rxjs';
+import { ProveedorRest } from '@models/proveedor-rest';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProveedoresService {
-
   private url: string;
 
   constructor(private http: HttpClient) {
     this.url = environment.url + proveedor.path;
   }
-  // tslint:disable-next-line: typedef
-  listarProveedoresTodos() {
+  getAllProveedores(): Observable<Proveedor[]> {
     return this.http.get<Proveedor[]>(this.url);
   }
-  // tslint:disable-next-line: typedef
-  listarProveedoresHabilitados() {
-    return this.http.get<Response>(this.url + '/habilitados');
+  getEnabledSupplier(): Observable<Proveedor[]> {
+    return this.http.get<Proveedor[]>(this.url + '/habilitados');
   }
-  // tslint:disable-next-line: typedef
-  guardarProveedor(proveedor: Proveedor) {
-    return this.http.post<Response>(this.url + '/', proveedor);
+  getSupplierById(id: number): Observable<Proveedor> {
+    return this.http.get<Proveedor>(this.url + '/' + id);
   }
-  // tslint:disable-next-line: typedef
-  cambiarHabilitacion(id: number) {
-    return this.http.put<Response>(this.url + '/' + id, id);
+  saveProveedor(proveedor: Proveedor): Observable<Proveedor> {
+    return this.http.post<Proveedor>(this.url, proveedor);
   }
-  // tslint:disable-next-line: typedef
-  deshabilitarProveedor(id: number) {
-    return this.http.delete(this.url + '/' + id);
+  updatedProveedor(proveedor: Proveedor): Observable<Proveedor> {
+    return this.http.put<Proveedor>(this.url, proveedor);
   }
-  // tslint:disable-next-line: typedef
-  actualizarProveedor(proveedor: Proveedor) {
-    return this.http.put<Response>(this.url + '/', proveedor);
-  }
-  // tslint:disable-next-line: typedef
-  listarProveedorId(id: number) {
-    return this.http.get<Response>(this.url + '/' + id);
-  }
-
-  listarProveedores(): Observable<ProveedorRest[]> {
-    return this.http.get<ProveedorRest[]>(this.url);
+  changeStatusProveedor(id: number): Observable<Proveedor> {
+    return this.http.put<Proveedor>(this.url + '/' + id, id);
   }
 }

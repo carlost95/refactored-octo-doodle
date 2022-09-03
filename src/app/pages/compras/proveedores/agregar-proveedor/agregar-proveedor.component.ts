@@ -1,14 +1,16 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {ProveedoresService} from '@service/proveedores.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {Proveedor} from '@models/Proveedor';
-import {TipoModal} from '@shared/models/tipo-modal.enum';
+import { Component, Inject, OnInit } from '@angular/core';
+import { ProveedoresService } from '@service/proveedores.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Proveedor } from '@models/Proveedor';
+import { TipoModal } from '@shared/models/tipo-modal.enum';
+import { SnackConfirmComponent } from '../../../../shared/snack-confirm/snack-confirm.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-agregar-proveedor',
   templateUrl: './agregar-proveedor.component.html',
-  styleUrls: ['./agregar-proveedor.component.css']
+  styleUrls: ['./agregar-proveedor.component.css'],
 })
 export class AgregarProveedorComponent implements OnInit {
   proveedorForm: FormGroup;
@@ -16,9 +18,8 @@ export class AgregarProveedorComponent implements OnInit {
   proveedores: Proveedor[] = [];
   errorInForm = false;
   submitted = false;
-  updating = false;
-  nombreRepe = false;
   consulting: boolean;
+  updating = false;
 
   titulo: string;
   tipoModal: TipoModal;
@@ -26,16 +27,22 @@ export class AgregarProveedorComponent implements OnInit {
   constructor(
     private readonly proveedorService: ProveedoresService,
     private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<AgregarProveedorComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) {
-
-  }
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
 
   ngOnInit(): void {
-    this.titulo = this.data.titulo.value;
+    this.titulo = this.data.titulo;
     this.tipoModal = this.data.tipoModal;
+    this.proveedorService
+      .getAllProveedores()
+      .subscribe((proveedores) => (this.proveedores = proveedores));
 
-    if (this.tipoModal === TipoModal.consulta || this.tipoModal === TipoModal.actualizacion){
+    if (
+      this.tipoModal === TipoModal.consulta ||
+      this.tipoModal === TipoModal.actualizacion
+    ) {
       this.establecerModalDatos(this.data, this.tipoModal);
     } else {
       this.establecerModalVacio();
@@ -43,28 +50,35 @@ export class AgregarProveedorComponent implements OnInit {
   }
 
   establecerModalDatos(data: any, tipoModal: TipoModal): void {
-    const {proveedor} = data;
+    const { proveedor } = data;
     const disabled = tipoModal === TipoModal.consulta ? true : false;
     this.proveedorForm = this.formBuilder.group({
-      id: [{value: proveedor.id, disabled}, null],
-      razonSocial: [{value: proveedor.razonSocial, disabled}, Validators.required],
-      domicilio: [{value: proveedor.domicilio, disabled}, Validators.required],
-      mail: [{value: proveedor.mail, disabled}, Validators.required],
-      celular: [{value: proveedor.celular, disabled}, null],
-      telefono: [{value: proveedor.telefono, disabled}, null],
-      bancos: [{value: proveedor.bancos, disabled}, Validators.required]
+      idProveedor: [{ value: proveedor.idProveedor, disabled }, null],
+      razonSocial: [
+        { value: proveedor.razonSocial, disabled },
+        Validators.required,
+      ],
+      domicilio: [
+        { value: proveedor.domicilio, disabled },
+        Validators.required,
+      ],
+      email: [{ value: proveedor.email, disabled }, Validators.required],
+      telefono: [{ value: proveedor.telefono, disabled }, null],
+      habilitado: [
+        { value: proveedor.habilitado, disabled },
+        Validators.required,
+      ],
+      // bancos: [{ value: proveedor.bancos, disabled }, Validators.required],
     });
     return;
   }
 
-  establecerModalVacio(): void{
+  establecerModalVacio(): void {
     this.proveedorForm = this.formBuilder.group({
       razonSocial: ['', Validators.required],
       domicilio: ['', Validators.required],
-      mail: ['', Validators.required],
-      celular: ['', null],
+      email: ['', Validators.required],
       telefono: ['', null],
-      bancos: ['', Validators.required]
     });
   }
 
@@ -77,27 +91,32 @@ export class AgregarProveedorComponent implements OnInit {
     this.submitted = true;
     this.errorInForm = this.submitted && this.proveedorForm.invalid;
 
-    if (this.errorInForm || this.nombreRepe) {
+    if (this.errorInForm) {
       this.proveedorForm.controls.razonSocial.markAllAsTouched();
       this.proveedorForm.controls.domicilio.markAllAsTouched();
-      this.proveedorForm.controls.mail.markAllAsTouched();
-      this.proveedorForm.controls.bancos.markAllAsTouched();
-      console.log('Error en los datos');
-
+      this.proveedorForm.controls.email.markAllAsTouched();
     } else {
       this.makeDTO();
     }
   }
 
   makeDTO(): void {
-    console.log(this.proveedorForm.value);
-    this.proveedor.razonSocial = (this.proveedorForm.controls.razonSocial.value).trim().toUpperCase();
-    this.proveedor.domicilio = this.proveedorForm.controls.domicilio.value;
-    this.proveedor.mail = this.proveedorForm.controls.mail.value;
+    console.log('DATOS A ENVIAR');
+    console.log(this.proveedor);
+
+    this.proveedor.razonSocial = this.proveedorForm.controls.razonSocial.value
+      .trim()
+      .toUpperCase();
+    this.proveedor.domicilio = this.proveedorForm.controls.domicilio.value
+      .trim()
+      .toUpperCase();
+    this.proveedor.email = this.proveedorForm.controls.email.value;
     this.proveedor.telefono = this.proveedorForm.controls.telefono.value;
-    this.proveedor.celular = this.proveedorForm.controls.celular.value;
-    if (this.updating) {
-      this.proveedor.id = this.proveedorForm.controls.id.value;
+
+    if (this.tipoModal === TipoModal.actualizacion) {
+      this.proveedor.idProveedor =
+        this.proveedorForm.controls.idProveedor.value;
+      this.proveedor.habilitado = this.proveedorForm.controls.habilitado.value;
       this.update();
     } else {
       this.save();
@@ -105,34 +124,38 @@ export class AgregarProveedorComponent implements OnInit {
   }
 
   private save(): void {
-    this.proveedorService.guardarProveedor(this.proveedor).subscribe(data => {
-      this.msgSnack(data);
-    });
+    this.proveedorService.saveProveedor(this.proveedor).subscribe(
+      (data) => {
+        this.msgSnack(data.razonSocial + ' Guardado con Exito');
+      },
+      ({ error }) => {
+        this.msgSnack(error);
+      }
+    );
   }
 
   private update(): void {
-    this.proveedorService.actualizarProveedor(this.proveedor).subscribe(data => {
-      this.msgSnack(data);
+    this.proveedorService.updatedProveedor(this.proveedor).subscribe(
+      (data) => {
+        this.msgSnack(data.razonSocial + ' Actualizado con Exito');
+      },
+      ({ error }) => {
+        this.openSnackBar(error);
+      }
+    );
+  }
+  msgSnack(data): void {
+    this.dialogRef.close(data);
+  }
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
     });
   }
 
-  validar({target}): void {
-    const {value: nombre} = target;
-    const finded = this.proveedores.find(p => p.razonSocial.toLowerCase() === nombre.toLowerCase().trim());
-    this.nombreRepe = (finded !== undefined) ? true : false;
-    console.log(nombre)
-  }
-
-  msgSnack(data): void {
-    const {msg} = data;
-    if (data.code === 200) {
-      this.dialogRef.close(msg);
-    } else {
-      this.dialogRef.close('Error en el proceso');
-    }
-  }
-
   establecerBanco(idBanco: number): void {
-    this.proveedorForm.patchValue({bancos: idBanco});
+    this.proveedorForm.patchValue({ bancos: idBanco });
   }
 }

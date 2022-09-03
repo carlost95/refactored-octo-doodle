@@ -1,9 +1,8 @@
 export class Proveedor {
-  id: number;
+  idProveedor: number;
   razonSocial: string;
   domicilio: string;
-  mail: string;
-  celular: string;
+  email: string;
   telefono: string;
   habilitado: number;
 }

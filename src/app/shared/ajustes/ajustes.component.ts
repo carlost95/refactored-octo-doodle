@@ -1,32 +1,30 @@
-import {Component, OnInit, Input} from '@angular/core';
-import {MovimientoArticuloDTO} from '../../models/MovimientoArticuloDTO';
-import {Ajuste} from '../../models/Ajuste';
-import {PedidosService} from '../../service/pedidos.service';
-import {ProveedoresService} from '../../service/proveedores.service';
-import {Router, ActivatedRoute} from '@angular/router';
-import {AjustesService} from '../../service/ajustes.service';
-import {Articulo} from '../../models/Articulo';
-import {Proveedor} from '../../models/Proveedor';
-import {ArticulosService} from '../../service/articulos.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MovimientosService} from '../../service/movimientos.service';
-import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {ConfirmModalComponent} from '../confirm-modal/confirm-modal.component';
-
+import { Component, OnInit, Input } from '@angular/core';
+import { MovimientoArticuloDTO } from '../../models/MovimientoArticuloDTO';
+import { Ajuste } from '../../models/Ajuste';
+import { PedidosService } from '../../service/pedidos.service';
+import { ProveedoresService } from '../../service/proveedores.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AjustesService } from '../../service/ajustes.service';
+import { Articulo } from '../../models/Articulo';
+import { Proveedor } from '../../models/Proveedor';
+import { ArticulosService } from '../../service/articulos.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MovimientosService } from '../../service/movimientos.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
 
 const input = Input();
 
 @Component({
   selector: 'app-ajustes',
   templateUrl: './ajustes.component.html',
-  styleUrls: ['./ajustes.component.css']
+  styleUrls: ['./ajustes.component.css'],
 })
 export class AjustesComponent implements OnInit {
-
   @Input() consultar: boolean;
 
   ajuste: Ajuste = new Ajuste();
-  ajustes: Ajuste [] = [];
+  ajustes: Ajuste[] = [];
   busqueda = '';
 
   articulos: Articulo[] = [];
@@ -51,17 +49,17 @@ export class AjustesComponent implements OnInit {
   errorInForm = false;
   submitted = false;
 
-
-  constructor(private comprasService: PedidosService,
-              private articuloService: ArticulosService,
-              private proveedorService: ProveedoresService,
-              private movimientosService: MovimientosService,
-              private route: Router,
-              private active: ActivatedRoute,
-              private ajusteService: AjustesService,
-              private formBuilder: FormBuilder,
-              public matDialog: MatDialog) {
-  }
+  constructor(
+    private comprasService: PedidosService,
+    private articuloService: ArticulosService,
+    private proveedorService: ProveedoresService,
+    private movimientosService: MovimientosService,
+    private route: Router,
+    private active: ActivatedRoute,
+    private ajusteService: AjustesService,
+    private formBuilder: FormBuilder,
+    public matDialog: MatDialog
+  ) {}
 
   // tslint:disable-next-line: typedef
   async ngOnInit() {
@@ -77,7 +75,8 @@ export class AjustesComponent implements OnInit {
       console.warn('CONSULTA DE AJUSTE');
 
       const idAjuste = Number(this.active.snapshot.paramMap.get('id'));
-      await this.ajusteService.listarAjusteId(idAjuste)
+      await this.ajusteService
+        .listarAjusteId(idAjuste)
         .toPromise()
         .then((data) => (this.ajuste = data.data));
 
@@ -85,15 +84,28 @@ export class AjustesComponent implements OnInit {
 
       this.ajusteForm = this.formBuilder.group({
         id: [this.ajuste.id, null],
-        nombre: [{value: this.ajuste.nombre, disabled: this.consultar}, Validators.required],
-        fecha: [{value: this.ajuste.fecha, disabled: this.consultar}, Validators.required],
-        descripcion: [{value: this.ajuste.descripcion, disabled: this.consultar}, null],
-        proveedorId: [{value: this.ajuste.proveedorId, disabled: this.consultar}, Validators.required],
+        nombre: [
+          { value: this.ajuste.nombre, disabled: this.consultar },
+          Validators.required,
+        ],
+        fecha: [
+          { value: this.ajuste.fecha, disabled: this.consultar },
+          Validators.required,
+        ],
+        descripcion: [
+          { value: this.ajuste.descripcion, disabled: this.consultar },
+          null,
+        ],
+        proveedorId: [
+          { value: this.ajuste.proveedorId, disabled: this.consultar },
+          Validators.required,
+        ],
       });
     }
 
-    this.ajusteService.listarAjusteTodos().subscribe(resp =>
-      this.ajustes = resp.data);
+    this.ajusteService
+      .listarAjusteTodos()
+      .subscribe((resp) => (this.ajustes = resp.data));
 
     await this.getArticulos().then(() => {
       this.articulos.forEach((a, index) => {
@@ -106,10 +118,8 @@ export class AjustesComponent implements OnInit {
     this.getMovimientos().then(() => {
       this.getStock();
       this.listaProveedor();
-
     });
   }
-
 
   onSubmit(): void {
     this.submitted = true;
@@ -124,14 +134,15 @@ export class AjustesComponent implements OnInit {
       console.log('CARGA DE MOVIMIENTOS');
       this.makeDTO();
     }
-
   }
 
   makeDTO(): void {
     this.ajuste = new Ajuste();
-    this.ajuste.nombre = (this.ajusteForm.controls.nombre.value).trim().toUpperCase();
-    this.ajuste.fecha = (this.ajusteForm.controls.fecha.value).trim();
-    this.ajuste.descripcion = (this.ajusteForm.controls.descripcion.value).trim();
+    this.ajuste.nombre = this.ajusteForm.controls.nombre.value
+      .trim()
+      .toUpperCase();
+    this.ajuste.fecha = this.ajusteForm.controls.fecha.value.trim();
+    this.ajuste.descripcion = this.ajusteForm.controls.descripcion.value.trim();
     this.ajuste.proveedorId = this.ajusteForm.controls.proveedorId.value;
 
     this.ajusteService.guardarAjuste(this.ajuste).then((data) => {
@@ -142,17 +153,17 @@ export class AjustesComponent implements OnInit {
           this.movimientoArticuloDTO.id = null;
           this.movimientoArticuloDTO.fecha = this.ajuste.fecha;
           this.movimientoArticuloDTO.articuloId = artStockMov.articulo.id;
-          this.movimientoArticuloDTO.movimiento = artStockMov.movimiento.movimiento;
+          this.movimientoArticuloDTO.movimiento =
+            artStockMov.movimiento.movimiento;
           this.movimientoArticuloDTO.ajusteId = this.ajuste.id;
 
-          this.movimientosService.guardarMovimientoAjuste(this.movimientoArticuloDTO)
-            .subscribe((resp) => {
-            });
+          this.movimientosService
+            .guardarMovimientoAjuste(this.movimientoArticuloDTO)
+            .subscribe((resp) => {});
         }
       });
     });
     this.showModal();
-
   }
 
   showModal(): void {
@@ -164,17 +175,20 @@ export class AjustesComponent implements OnInit {
     dialogConfig.data = {
       message: 'Se guardo un nuevo ajuste',
       title: 'Carga de Ajuste',
-      status: 'alert'
+      status: 'alert',
     };
-    const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
-    modalDialog.afterClosed().subscribe(result => {
+    const modalDialog = this.matDialog.open(
+      ConfirmModalComponent,
+      dialogConfig
+    );
+    modalDialog.afterClosed().subscribe((result) => {
       window.history.back();
     });
   }
 
   listaProveedor(): void {
-    this.proveedorService.listarProveedoresHabilitados().subscribe((data) => {
-      this.proveedores = data.data;
+    this.proveedorService.getEnabledSupplier().subscribe((data) => {
+      this.proveedores = data;
       this.proveedores.sort(
         (a, b) => a.razonSocial.length - b.razonSocial.length
       );
@@ -183,7 +197,8 @@ export class AjustesComponent implements OnInit {
 
   // tslint:disable-next-line: typedef
   async getArticulos() {
-    const data = await this.articuloService.listarArticuloHabilitados()
+    const data = await this.articuloService
+      .listarArticuloHabilitados()
       .toPromise();
     this.articulos = data.data;
     this.articulosFilter = this.articulos;
@@ -209,7 +224,8 @@ export class AjustesComponent implements OnInit {
       this.articulos.forEach((a, index_1) => {
         this.stockArticulo.push(data.data.id);
       });
-      this.movimientosPrevios.forEach((mov) => this.stockArticulo.push(mov.stock)
+      this.movimientosPrevios.forEach((mov) =>
+        this.stockArticulo.push(mov.stock)
       );
     } else {
       // tslint:disable-next-line: variable-name
@@ -245,8 +261,9 @@ export class AjustesComponent implements OnInit {
     } else {
       await this.articulosStockMovimiento.forEach((artStockMov) => {
         artStockMov.articulo.proveedorId.id === this.proveedorID
-          // tslint:disable-next-line:no-unused-expression
-          ? this.articulosStockMovimientoFilter.push(artStockMov) : false;
+          ? // tslint:disable-next-line:no-unused-expression
+            this.articulosStockMovimientoFilter.push(artStockMov)
+          : false;
       });
     }
   }
@@ -270,8 +287,9 @@ export class AjustesComponent implements OnInit {
         .toPromise();
       const keys = Object.keys(data.data);
       const value = Object.values(data.data);
-      keys.forEach((k, index) => this.stockArticuloPorAjuste.push(
-        new StockArticulo(Number(k), Number(value[index]))
+      keys.forEach((k, index) =>
+        this.stockArticuloPorAjuste.push(
+          new StockArticulo(Number(k), Number(value[index]))
         )
       );
       this.movimientoFilter = [];
@@ -284,13 +302,16 @@ export class AjustesComponent implements OnInit {
       });
       const indexMovpre = [];
       this.movimientoFilter.forEach((p) => indexMovpre.push(p.articuloId));
-      this.movimientosPrevios = this.movimientosPrevios.filter((m) => indexMovpre.includes(m.idArticulo)
+      this.movimientosPrevios = this.movimientosPrevios.filter((m) =>
+        indexMovpre.includes(m.idArticulo)
       );
       this.stockArticulo.splice(0, this.stockArticulo.length);
       // tslint:disable-next-line:variable-name
-      this.movimientosPrevios.forEach((m_1) => this.stockArticulo.push(m_1.stock)
+      this.movimientosPrevios.forEach((m_1) =>
+        this.stockArticulo.push(m_1.stock)
       );
-      this.articulosFilter = this.articulosFilter.filter((a) => keys.includes(String(a.id))
+      this.articulosFilter = this.articulosFilter.filter((a) =>
+        keys.includes(String(a.id))
       );
       // tslint:disable-next-line:variable-name
       this.articulosFilter.forEach((a_1, index_2) => {
@@ -304,10 +325,12 @@ export class AjustesComponent implements OnInit {
     }
   }
 
-  validarNombre({target}): void {
-    const {value: nombre} = target;
-    const finded = this.ajustes.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
-    this.nombreRepe = (finded !== undefined) ? true : false;
+  validarNombre({ target }): void {
+    const { value: nombre } = target;
+    const finded = this.ajustes.find(
+      (p) => p.nombre.toLowerCase() === nombre.toLowerCase()
+    );
+    this.nombreRepe = finded !== undefined ? true : false;
   }
 }
 
@@ -319,5 +342,4 @@ export class StockArticulo {
     this.idArticulo = idArticulo;
     this.stock = stock;
   }
-
 }

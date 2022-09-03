@@ -1,17 +1,20 @@
+import { AgregarCuentaComponent } from './../agregar-cuenta/agregar-cuenta.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TituloAccount } from '../../../../shared/models/titulo-account.enum';
 import { TipoModal } from '@shared/models/tipo-modal.enum';
 import { BuscadorService } from '../../../../shared/helpers/buscador.service';
-import { MatDialog } from '@angular/material/dialog';
-import { Router, ActivatedRoute } from '@angular/router';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 import { TokenService } from '../../../../service/token.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { BancosService } from '../../../../service/bancos.service';
 import { CuentaService } from '../../../../service/cuenta.service';
 import { Cuenta } from '../../../../models/Cuenta';
+import { ConfirmModalComponent } from '../../../../shared/confirm-modal/confirm-modal.component';
+import { Titulo } from '../../proveedores/model/titulo.enum';
+import { SnackConfirmComponent } from '../../../../shared/snack-confirm/snack-confirm.component';
 
 @Component({
   selector: 'app-listar-cuentas',
@@ -32,7 +35,6 @@ export class ListarCuentasComponent implements OnInit {
   ];
 
   cuentas: Cuenta[];
-
   mostrarHabilitacion: boolean;
   cuenta: Cuenta;
   roles: string[];
@@ -42,11 +44,10 @@ export class ListarCuentasComponent implements OnInit {
   constructor(
     private readonly buscadorService: BuscadorService,
     public matDialog: MatDialog,
-    private router: Router,
     private route: ActivatedRoute,
     private tokenService: TokenService,
     private snackBar: MatSnackBar,
-    private readonly service: CuentaService
+    private cuentaService: CuentaService
   ) {}
 
   ngOnInit(): void {
@@ -61,33 +62,108 @@ export class ListarCuentasComponent implements OnInit {
     });
   }
   loadingAccount() {
-    this.service
+    this.cuentaService
       .getAccountBankByIdProveedor(this.idProveedor)
       .subscribe((data) => {
         this.cuentas = data;
-        this.establecerDatasource(data);
+        this.establecerDatasource(this.cuentas);
       });
   }
 
-  newAccount(): void {
-    const data = {
-      titulo: TituloAccount.creacion,
-      tipo: TipoModal.creacion,
-    };
-  }
   filtrarAccount(value: string): void {
-    const TERMINO = 'nombre';
-    const bancos = this.buscadorService.buscarTermino(
+    const TERMINO = 'titular';
+    const cuentas = this.buscadorService.buscarTermino(
       this.cuentas,
       TERMINO,
       value
     );
-    this.establecerDatasource(bancos);
+    this.establecerDatasource(cuentas);
   }
 
   establecerDatasource(data): void {
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  newAccountBank(): void {
+    const data = {
+      titulo: Titulo.creacion,
+      tipoModal: TipoModal.creacion,
+    };
+    this.openDialogAccount(data);
+  }
+
+  modificarAccountBank(cuenta: Cuenta): void {
+    const data = {
+      titulo: Titulo.actualizacion,
+      tipoModal: TipoModal.actualizacion,
+      cuenta,
+    };
+    this.openDialogAccount(data);
+  }
+
+  consultAccountBank(cuenta: Cuenta): void {
+    const data = {
+      titulo: Titulo.consulta,
+      tipoModal: TipoModal.consulta,
+      cuenta,
+    };
+    this.openDialogAccount(data);
+  }
+  openDialogAccount(data: any): void {
+    const dialog = this.matDialog.open(AgregarCuentaComponent, {
+      id: 'modal-component',
+      disableClose: true,
+      height: 'auto',
+      width: '20rem',
+      data,
+      panelClass: 'no-padding',
+    });
+    // The user can't close the dialog by clicking outside its body
+    dialog.afterClosed().subscribe((result) => {
+      this.cuentaService
+        .getAccountBankByIdProveedor(this.idProveedor)
+        .subscribe((data) => {
+          this.cuentas = data;
+          this.establecerDatasource(data);
+        });
+      if (result) {
+        this.openSnackBar(result);
+      }
+    });
+  }
+  showModal(cuenta: Cuenta): void {
+    const dialogConfig = new MatDialogConfig();
+    // The user can't close the dialog by clicking outside its body
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'modal-component';
+    dialogConfig.height = '15rem';
+    dialogConfig.width = '20rem';
+    dialogConfig.data = {
+      message: '¿Desea cambiar estado?',
+      title: 'Cambio estado',
+      state: cuenta.habilitado,
+    };
+    const modalDialog = this.matDialog.open(
+      ConfirmModalComponent,
+      dialogConfig
+    );
+    modalDialog.afterClosed().subscribe((result) => {
+      if (result.state) {
+        this.cuentaService
+          .changeStatusAccountBank(cuenta.id)
+          .subscribe((result) => {});
+      } else {
+        console.error('Error en ecuperacion de cuenta ' + result);
+      }
+    });
+  }
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
+    });
   }
 }

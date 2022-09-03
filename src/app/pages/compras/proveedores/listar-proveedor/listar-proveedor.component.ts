@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ConfirmModalComponent } from '@shared/confirm-modal/confirm-modal.component';
 import { ProveedoresService } from '@service/proveedores.service';
-import { Proveedor } from '@models/Proveedor';
 import { AgregarProveedorComponent } from '../agregar-proveedor/agregar-proveedor.component';
 import { SnackConfirmComponent } from '@shared/snack-confirm/snack-confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -10,11 +9,12 @@ import { TokenService } from '@service/token.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { ProveedorRest } from '@models/proveedor-rest';
 import { BuscadorService } from '@shared/helpers/buscador.service';
 import { Titulo } from '@app/pages/compras/proveedores/model/titulo.enum';
 import { TipoModal } from '@shared/models/tipo-modal.enum';
 import { Router } from '@angular/router';
+import { Proveedor } from '../../../../models/Proveedor';
+import { concatMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-listar-proveedor',
@@ -24,25 +24,25 @@ import { Router } from '@angular/router';
 export class ListarProveedorComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  dataSource: MatTableDataSource<ProveedorRest>;
+  dataSource: MatTableDataSource<Proveedor>;
   displayedColumns: string[] = [
     'razonSocial',
-    'celular',
     'telefono',
+    'email',
     'habilitado',
     'acciones',
   ];
 
-  proveedores: ProveedorRest[];
+  proveedores: Proveedor[];
   mostrarModificacion: boolean;
 
-  proveedor: Proveedor = null;
+  proveedor: Proveedor = new Proveedor();
   consulting: boolean;
   roles: string[];
 
   constructor(
     private readonly buscadorService: BuscadorService,
-    private proveedorService: ProveedoresService,
+    private readonly proveedorService: ProveedoresService,
     public matDialog: MatDialog,
     private tokenService: TokenService,
     private snackBar: MatSnackBar,
@@ -53,12 +53,10 @@ export class ListarProveedorComponent implements OnInit {
     this.roles = this.tokenService.getAuthorities();
     this.mostrarModificacion =
       this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_GERENTE');
-    this.proveedorService
-      .listarProveedores()
-      .subscribe((proveedores: ProveedorRest[]) => {
-        this.proveedores = proveedores;
-        this.establecerDatasource(this.proveedores);
-      });
+    this.proveedorService.getAllProveedores().subscribe((data) => {
+      this.proveedores = data;
+      this.establecerDatasource(this.proveedores);
+    });
   }
 
   filtrarProveedor(value: string): void {
@@ -71,7 +69,7 @@ export class ListarProveedorComponent implements OnInit {
     this.establecerDatasource(proveedores);
   }
 
-  establecerDatasource(proveedores: ProveedorRest[]): void {
+  establecerDatasource(proveedores: Proveedor[]): void {
     this.dataSource = new MatTableDataSource(proveedores);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -100,7 +98,6 @@ export class ListarProveedorComponent implements OnInit {
       tipoModal: TipoModal.consulta,
       proveedor,
     };
-    console.log(proveedor);
     this.openDialogProveedor(data);
   }
 
@@ -115,7 +112,7 @@ export class ListarProveedorComponent implements OnInit {
     });
     // The user can't close the dialog by clicking outside its body
     dialog.afterClosed().subscribe((result) => {
-      this.proveedorService.listarProveedores().subscribe((proveedores) => {
+      this.proveedorService.getAllProveedores().subscribe((proveedores) => {
         this.proveedores = proveedores;
         this.establecerDatasource(this.proveedores);
       });
@@ -130,8 +127,8 @@ export class ListarProveedorComponent implements OnInit {
     // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
-    dialogConfig.height = '300px';
-    dialogConfig.width = '350px';
+    dialogConfig.height = '15rem';
+    dialogConfig.width = '20rem';
     dialogConfig.data = {
       message: '¿Desea cambiar estado?',
       title: 'Cambio estado',
@@ -143,11 +140,12 @@ export class ListarProveedorComponent implements OnInit {
     );
     modalDialog.afterClosed().subscribe((result) => {
       if (result.state) {
-        // tslint:disable-next-line:no-shadowed-variable
         this.proveedorService
-          .cambiarHabilitacion(proveedor.id)
-          .subscribe((result) => {
-            // this.getData();
+          .changeStatusProveedor(proveedor.idProveedor)
+          .pipe(concatMap((data) => this.proveedorService.getAllProveedores()))
+          .subscribe((proveedores) => {
+            this.proveedores = proveedores;
+            this.establecerDatasource(proveedores);
           });
       } else {
         // this.getData();

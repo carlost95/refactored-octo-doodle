@@ -4,6 +4,7 @@ export class Cuenta {
   numero: string;
   cbu: string;
   alias: string;
+  habilitado: string;
   idBanco: number;
   idProveedor: number;
 }

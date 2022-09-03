@@ -1,1 +1,46 @@
-<p>agregar-cuenta works!</p>
+<header class="modal-header  modal-header-size1">
+    <h1 class="modal-title">{{titulo}}</h1>
+</header>
+
+<section class="d-flex justify-content-center w-100">
+    <form [formGroup]="accountForm" class="w-100 p-4" onsubmit="">
+        <mat-form-field appearance=" legacy" class="w-100">
+            <mat-label>Titular de la Cuenta</mat-label>
+            <input matInput formControlName="titular" required autocomplete="off" class="w-100" />
+            <mat-error *ngIf="accountForm.controls.titular.errors">
+                Tutular de cuenta es<strong> requerido</strong>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="legacy" class="w-100">
+            <mat-label>Numero Cuenta</mat-label>
+            <input matInput formControlName="numero" required autocomplete="off" />
+            <mat-error *ngIf="accountForm.controls.numero.errors">
+                Numero de cuenta es<strong> requerido</strong>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="legacy" class="w-100">
+            <mat-label>CBU</mat-label>
+            <input matInput formControlName="cbu" required autocomplete="off" />
+            <mat-error *ngIf="accountForm.controls.cbu.errors">
+                CBU es<strong> requerido</strong>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="legacy" class="w-100">
+            <mat-label>Alias</mat-label>
+            <input matInput formControlName="alias" required autocomplete="off" />
+            <mat-error *ngIf="accountForm.controls.alias.errors">
+                Alias es<strong> requerido</strong>
+            </mat-error>
+        </mat-form-field>
+
+
+    </form>
+</section>
+
+<footer class="modal-footer">
+    <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>
+    <button *ngIf="tipoModal !== 0" class="btn btn-warning" (click)="onSubmit()">Guardar</button>
+</footer>
