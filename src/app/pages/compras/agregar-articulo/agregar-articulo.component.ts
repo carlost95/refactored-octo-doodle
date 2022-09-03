@@ -26,6 +26,7 @@ import { AgregarUnidadMedidaComponent } from '../../abm-compras/unidad-medida/ag
 import { Articulo } from '../../../models/Articulo';
 import { ArticulosService } from '../../../service/articulos.service';
 
+
 @Component({
   selector: 'app-agregar-articulo',
   templateUrl: './agregar-articulo.component.html',
