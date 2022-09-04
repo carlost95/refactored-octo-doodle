@@ -1,10 +1,10 @@
-import { SubRubro } from '../../../models/SubRubro';
-import { Proveedor } from '../../../models/Proveedor';
-import { Marca } from '../../../models/Marca';
-import { Rubro } from '../../../models/Rubro';
-import { PedidosService } from '../../../service/pedidos.service';
-import { UnidadMedida } from '../../../models/UnidadMedida';
-import { ArticuloDTO } from '../../../models/ArticuloDTO';
+import { SubRubro } from '@models/SubRubro';
+import { Proveedor } from '@models/Proveedor';
+import { Marca } from '@models/Marca';
+import { Rubro } from '@models/Rubro';
+import { PedidosService } from '@service/pedidos.service';
+import { UnidadMedida } from '@models/UnidadMedida';
+import { ArticuloDTO } from '@models/ArticuloDTO';
 import { Component, OnInit, Inject } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
@@ -12,19 +12,19 @@ import {
   MatDialogConfig,
   MatDialogRef,
 } from '@angular/material/dialog';
-import { AgregarMarcaComponent } from '../../abm-compras/marca/agregar-marca/agregar-marca.component';
+import { AgregarMarcaComponent } from '../../../abm-compras/marca/agregar-marca/agregar-marca.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MarcasService } from '../../../service/marcas.service';
-import { SubRubroService } from '../../../service/sub-rubro.service';
-import { RubrosService } from '../../../service/rubros.service';
-import { UnidadMedidaService } from '../../../service/unidad-medida.service';
-import { AgregarRubroComponent } from '../../abm-compras/rubros/agregar-rubro/agregar-rubro.component';
-import { AgregarProveedorComponent } from '../proveedores/agregar-proveedor/agregar-proveedor.component';
-import { ProveedoresService } from '../../../service/proveedores.service';
-import { AgregarSubRubroComponent } from '../../abm-compras/sub-rubro/agregar-sub-rubro/agregar-sub-rubro.component';
-import { AgregarUnidadMedidaComponent } from '../../abm-compras/unidad-medida/agregar-unidad-medida/agregar-unidad-medida.component';
-import { Articulo } from '../../../models/Articulo';
-import { ArticulosService } from '../../../service/articulos.service';
+import { MarcasService } from '@service/marcas.service';
+import { SubRubroService } from '@service/sub-rubro.service';
+import { RubrosService } from '@service/rubros.service';
+import { UnidadMedidaService } from '@service/unidad-medida.service';
+import { AgregarRubroComponent } from '../../../abm-compras/rubros/agregar-rubro/agregar-rubro.component';
+import { AgregarProveedorComponent } from '../../proveedores/agregar-proveedor/agregar-proveedor.component';
+import { ProveedoresService } from '@service/proveedores.service';
+import { AgregarSubRubroComponent } from '../../../abm-compras/sub-rubro/agregar-sub-rubro/agregar-sub-rubro.component';
+import { AgregarUnidadMedidaComponent } from '../../../abm-compras/unidad-medida/agregar-unidad-medida/agregar-unidad-medida.component';
+import { Articulo } from '@models/Articulo';
+import { ArticulosService } from '@service/articulos.service';
 
 
 @Component({
@@ -373,8 +373,8 @@ export class AgregarArticuloComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modalProveedor-component';
-    dialogConfig.height = '600px';
-    dialogConfig.width = '400px';
+    dialogConfig.height = 'auto';
+    dialogConfig.width = '20rem';
     dialogConfig.data = {
       proveedor: this.proveedorToUpdate,
       consulting: this.consulting,

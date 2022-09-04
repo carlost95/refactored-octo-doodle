@@ -4,7 +4,7 @@
 
 <section class="d-flex justify-content-center w-100">
     <form [formGroup]="accountForm" class="w-100 p-4" onsubmit="">
-        <mat-form-field appearance=" legacy" class="w-100">
+        <mat-form-field appearance="legacy" class="w-100">
             <mat-label>Titular de la Cuenta</mat-label>
             <input matInput formControlName="titular" required autocomplete="off" class="w-100" />
             <mat-error *ngIf="accountForm.controls.titular.errors">

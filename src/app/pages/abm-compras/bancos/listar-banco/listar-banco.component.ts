@@ -1,5 +1,4 @@
 import { Banco } from '../../../../models/Banco';
-import { Router } from '@angular/router';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AgregarBancoComponent } from '../agregar-banco/agregar-banco.component';
@@ -15,7 +14,7 @@ import { BancoRest } from '../../../../models/banco-rest';
 import { BuscadorService } from '../../../../shared/helpers/buscador.service';
 import { TituloBanco } from '../models/titulo-banco.enum';
 import { TipoModal } from '../../../../shared/models/tipo-modal.enum';
-import { concatMap, switchMap } from 'rxjs/operators';
+import { concatMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-listar-banco',
@@ -44,7 +43,6 @@ export class ListarBancoComponent implements OnInit {
     private readonly buscadorService: BuscadorService,
     private readonly service: BancosService,
     public matDialog: MatDialog,
-    private router: Router,
     private tokenService: TokenService,
     private snackBar: MatSnackBar
   ) {}
@@ -120,10 +118,6 @@ export class ListarBancoComponent implements OnInit {
         this.openSnackBar(result);
       }
     });
-  }
-
-  backPage(): void {
-    this.router.navigate(['abm-compras']);
   }
 
   showModal(banco: BancoRest): void {
