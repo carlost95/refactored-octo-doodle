@@ -18,8 +18,6 @@ export class AgregarProveedorComponent implements OnInit {
   proveedores: Proveedor[] = [];
   errorInForm = false;
   submitted = false;
-  consulting: boolean;
-  updating = false;
 
   titulo: string;
   tipoModal: TipoModal;
@@ -35,9 +33,6 @@ export class AgregarProveedorComponent implements OnInit {
   ngOnInit(): void {
     this.titulo = this.data.titulo;
     this.tipoModal = this.data.tipoModal;
-    this.proveedorService
-      .getAllProveedores()
-      .subscribe((proveedores) => (this.proveedores = proveedores));
 
     if (
       this.tipoModal === TipoModal.consulta ||
@@ -101,9 +96,6 @@ export class AgregarProveedorComponent implements OnInit {
   }
 
   makeDTO(): void {
-    console.log('DATOS A ENVIAR');
-    console.log(this.proveedor);
-
     this.proveedor.razonSocial = this.proveedorForm.controls.razonSocial.value
       .trim()
       .toUpperCase();

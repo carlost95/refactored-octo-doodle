@@ -6,6 +6,7 @@ import { TipoModal } from '../../../../shared/models/tipo-modal.enum';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SnackConfirmComponent } from '../../../../shared/snack-confirm/snack-confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TituloAccount } from '../../../../shared/models/titulo-account.enum';
 
 @Component({
   selector: 'app-agregar-cuenta',
@@ -15,14 +16,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class AgregarCuentaComponent implements OnInit {
   accountForm: FormGroup;
   cuenta: Cuenta = new Cuenta();
-  idProveedor: number;
   errorInForm = false;
   submitted = false;
-  updating = false;
-  consulting: boolean;
 
   titulo: string;
   tipoModal: TipoModal;
+  idProveedor: number;
 
   constructor(
     private readonly cuentaService: CuentaService,
@@ -33,8 +32,12 @@ export class AgregarCuentaComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.titulo = this.data.titulo.value;
+    this.titulo = this.data.titulo;
     this.tipoModal = this.data.tipoModal;
+    this.idProveedor = this.data.idProveedor;
+
+    console.log('titulo de modal', this.titulo);
+    console.log('id proveedor', this.idProveedor);
 
     if (
       this.tipoModal === TipoModal.consulta ||
@@ -48,9 +51,6 @@ export class AgregarCuentaComponent implements OnInit {
 
   establecerModalDatos(data: any, tipoModal: TipoModal): void {
     const { cuenta } = data;
-    const { idProveedor } = data;
-    this.idProveedor = idProveedor;
-
     const disabled = tipoModal === TipoModal.consulta ? true : false;
     this.accountForm = this.formBuilder.group({
       id: [{ value: cuenta.id, disabled }, null],
@@ -66,12 +66,10 @@ export class AgregarCuentaComponent implements OnInit {
 
   establecerModalVacio(): void {
     this.accountForm = this.formBuilder.group({
-      id: ['', Validators.required],
       titular: ['', Validators.required],
       numero: ['', Validators.required],
       cbu: ['', Validators.required],
       alias: ['', Validators.required],
-      habilitado: ['', Validators.required],
       idBanco: ['', Validators.required],
     });
   }
@@ -101,30 +99,30 @@ export class AgregarCuentaComponent implements OnInit {
     this.cuenta.cbu = this.accountForm.controls.cbu.value;
     this.cuenta.alias = this.accountForm.controls.alias.value;
     this.cuenta.idBanco = this.accountForm.controls.idBanco.value;
-
-    console.log('carga de cuenta bancaria');
-    console.log(this.cuenta);
-
     if (this.tipoModal === TipoModal.actualizacion) {
       this.cuenta.id = this.accountForm.controls.id.value;
-      this.cuenta.idProveedor = this.idProveedor;
+      this.cuenta.habilitado = this.accountForm.controls.habilitado.value;
       this.update();
     } else {
+      this.cuenta.idProveedor = this.idProveedor;
       this.save();
     }
   }
 
   private save(): void {
-    this.cuentaService.saveAccountbBank(this.cuenta).subscribe((data) => {
-      this.msgSnack(data);
-    });
+    console.log('carga de cuenta bancaria');
+    console.log(this.cuenta);
+    this.cuentaService.saveAccountbBank(this.cuenta).subscribe(
+      (data) => {
+        this.msgSnack(data.titular + ' agregado correctamente');
+      },
+      ({ error }) => {
+        this.msgSnack(error);
+      }
+    );
   }
 
   private update(): void {
-    console.log('update Cuenta');
-
-    console.log(this.cuenta);
-
     this.cuentaService.updateAccountBank(this.cuenta).subscribe(
       (data) => {
         this.msgSnack(data.titular + ' Actualizado con Exito');
@@ -142,14 +140,9 @@ export class AgregarCuentaComponent implements OnInit {
     });
   }
   msgSnack(data): void {
-    const { msg } = data;
-    if (data.code === 200) {
-      this.dialogRef.close(msg);
-    } else {
-      this.dialogRef.close('Error en el proceso');
-    }
+    this.dialogRef.close(data);
   }
   establecerBanco(idBanco: number): void {
-    this.accountForm.patchValue({ bancos: idBanco });
+    this.accountForm.patchValue({ idBanco: idBanco });
   }
 }

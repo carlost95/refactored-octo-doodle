@@ -1,6 +1,6 @@
 import { AgregarCuentaComponent } from './../agregar-cuenta/agregar-cuenta.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { TituloAccount } from '../../../../shared/models/titulo-account.enum';
+import { TituloAccount } from '@shared/models/titulo-account.enum';
 import { TipoModal } from '@shared/models/tipo-modal.enum';
 import { BuscadorService } from '../../../../shared/helpers/buscador.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -13,8 +13,9 @@ import { MatSort } from '@angular/material/sort';
 import { CuentaService } from '../../../../service/cuenta.service';
 import { Cuenta } from '../../../../models/Cuenta';
 import { ConfirmModalComponent } from '../../../../shared/confirm-modal/confirm-modal.component';
-import { Titulo } from '../../proveedores/model/titulo.enum';
 import { SnackConfirmComponent } from '../../../../shared/snack-confirm/snack-confirm.component';
+import { concatMap } from 'rxjs/operators';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-listar-cuentas',
@@ -57,17 +58,21 @@ export class ListarCuentasComponent implements OnInit {
       this.roles.includes('ROLE_ADMIN_BANCO');
 
     this.route.params.subscribe((p) => {
-      this.idProveedor = p['idProveedor'];
+      this.idProveedor = Number(p['idProveedor']);
       this.loadingAccount();
     });
   }
+
   loadingAccount() {
-    this.cuentaService
-      .getAccountBankByIdProveedor(this.idProveedor)
-      .subscribe((data) => {
+    this.cuentaService.getAccountBankByIdProveedor(this.idProveedor).subscribe(
+      (data) => {
         this.cuentas = data;
         this.establecerDatasource(this.cuentas);
-      });
+      },
+      (error: HttpErrorResponse) => {
+        this.openSnackBar(error.error);
+      }
+    );
   }
 
   filtrarAccount(value: string): void {
@@ -88,7 +93,7 @@ export class ListarCuentasComponent implements OnInit {
 
   newAccountBank(): void {
     const data = {
-      titulo: Titulo.creacion,
+      titulo: TituloAccount.creacion,
       tipoModal: TipoModal.creacion,
       idProveedor: this.idProveedor,
     };
@@ -97,18 +102,20 @@ export class ListarCuentasComponent implements OnInit {
 
   modificarAccountBank(cuenta: Cuenta): void {
     const data = {
-      titulo: Titulo.actualizacion,
+      titulo: TituloAccount.actualizacion,
       tipoModal: TipoModal.actualizacion,
       cuenta,
+      idProveedor: this.idProveedor,
     };
     this.openDialogAccount(data);
   }
 
   consultAccountBank(cuenta: Cuenta): void {
     const data = {
-      titulo: Titulo.consulta,
+      titulo: TituloAccount.consulta,
       tipoModal: TipoModal.consulta,
       cuenta,
+      idProveedor: this.idProveedor,
     };
     this.openDialogAccount(data);
   }
@@ -121,13 +128,12 @@ export class ListarCuentasComponent implements OnInit {
       data,
       panelClass: 'no-padding',
     });
-    // The user can't close the dialog by clicking outside its body
     dialog.afterClosed().subscribe((result) => {
       this.cuentaService
         .getAccountBankByIdProveedor(this.idProveedor)
-        .subscribe((data) => {
-          this.cuentas = data;
-          this.establecerDatasource(data);
+        .subscribe((cuentasBancarias) => {
+          this.cuentas = cuentasBancarias;
+          this.establecerDatasource(this.cuentas);
         });
       if (result) {
         this.openSnackBar(result);
@@ -136,7 +142,6 @@ export class ListarCuentasComponent implements OnInit {
   }
   showModal(cuenta: Cuenta): void {
     const dialogConfig = new MatDialogConfig();
-    // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
     dialogConfig.height = '15rem';
@@ -154,9 +159,17 @@ export class ListarCuentasComponent implements OnInit {
       if (result.state) {
         this.cuentaService
           .changeStatusAccountBank(cuenta.id)
-          .subscribe((result) => {});
+          .pipe(
+            concatMap((data) =>
+              this.cuentaService.getAccountBankByIdProveedor(this.idProveedor)
+            )
+          )
+          .subscribe((cuentasBancarias) => {
+            this.cuentas = cuentasBancarias;
+            this.establecerDatasource(this.cuentas);
+          });
       } else {
-        console.error('Error en ecuperacion de cuenta ' + result);
+        this.openSnackBar('Error en recuperacion de cuenta ' + result);
       }
     });
   }
