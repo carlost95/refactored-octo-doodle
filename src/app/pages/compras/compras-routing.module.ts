@@ -4,8 +4,8 @@ import { ListarProveedorComponent } from './proveedores/listar-proveedor/listar-
 import { ConsultarPedidoComponent } from './consultar-pedido/consultar-pedido.component';
 import { AgregarPedidoComponent } from './agregar-pedido/agregar-pedido.component';
 import { ListarPedidoComponent } from './listar-pedido/listar-pedido.component';
-import { AgregarArticuloComponent } from './agregar-articulo/agregar-articulo.component';
-import { ListarArticulosComponent } from './listar-articulos/listar-articulos.component';
+import { AgregarArticuloComponent } from './articulos/agregar-articulo/agregar-articulo.component';
+import { ListarArticulosComponent } from './articulos/listar-articulos/listar-articulos.component';
 import { ComprasComponent } from './compras.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';

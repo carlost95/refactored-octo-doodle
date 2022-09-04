@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {AgregarArticuloComponent} from '../../compras/agregar-articulo/agregar-articulo.component';
+import {AgregarArticuloComponent} from '../../compras/articulos/agregar-articulo/agregar-articulo.component';
 import {NewUsuario} from '../../../models/new-usuario';
 import {RegisterComponent} from '../register/register.component';
 import {AuthService} from '../../../service/auth.service';
