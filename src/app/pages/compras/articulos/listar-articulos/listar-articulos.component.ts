@@ -1,8 +1,5 @@
-import {Router} from '@angular/router';
-import {PedidosService} from '@service/pedidos.service';
 import {Articulo} from '@models/Articulo';
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {ExcelExportService} from '@service/excel-export.service';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {AgregarArticuloComponent} from '../agregar-articulo/agregar-articulo.component';
 import {ArticulosService} from '@service/articulos.service';
@@ -15,7 +12,7 @@ import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {ArticuloRest} from '../../../../models/articulo-rest';
 import {TipoModal} from '../../../../shared/models/tipo-modal.enum';
-import {TituloArticulo} from '../models/titulo-departamento.enum';
+import {TituloArticulo} from '../models/titulo-articulo.enum';
 
 @Component({
   selector: 'app-listar-articulos',
@@ -98,6 +95,8 @@ export class ListarArticulosComponent implements OnInit {
     const dialogConfig = this.matDialog.open(AgregarArticuloComponent, {
       disableClose: true,
       id: 'modal-component',
+      height: 'auto',
+      width: 'auto',
       panelClass: 'no-padding',
       data,
     });

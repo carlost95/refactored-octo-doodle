@@ -23,8 +23,9 @@ import { AgregarProveedorComponent } from '../../proveedores/agregar-proveedor/a
 import { ProveedoresService } from '@service/proveedores.service';
 import { AgregarSubRubroComponent } from '../../../abm-compras/sub-rubro/agregar-sub-rubro/agregar-sub-rubro.component';
 import { AgregarUnidadMedidaComponent } from '../../../abm-compras/unidad-medida/agregar-unidad-medida/agregar-unidad-medida.component';
-import { Articulo } from '@models/Articulo';
 import { ArticulosService } from '@service/articulos.service';
+import {TipoModal} from '../../../../shared/models/tipo-modal.enum';
+import {ArticuloRest} from '@models/articulo-rest';
 
 
 @Component({
@@ -33,40 +34,16 @@ import { ArticulosService } from '@service/articulos.service';
   styleUrls: ['./agregar-articulo.component.css'],
 })
 export class AgregarArticuloComponent implements OnInit {
-  articulos: Articulo[] = [];
-  unidadMedidas: UnidadMedida[] = null;
-  rubros: Rubro[] = null;
-  subRubros: SubRubro[] = null;
-  marcas: Marca[] = null;
-  proveedores: Proveedor[] = null;
-
-  unidadMedidaSelect: number;
-  rubroSelect: number;
-  subRubroSelect: number;
-  marcaSelect: number;
-  proveedorSelect: number;
-
-  unidadToUpdate: UnidadMedida = new UnidadMedida();
-  rubroToUpdate: Rubro = new Rubro();
-  subRubroToUpdate: SubRubro = new SubRubro();
-  marcaToUpdate: Marca = new Marca();
-  proveedorToUpdate: Proveedor = new Proveedor();
-
-  errorInForm = false;
-  submitted = false;
-  updating = false;
-  consulting = false;
-  codigoRepe = false;
-  nombreRepe = false;
-  abreviaturaRepe = false;
+  titulo: string;
+  tipoModal: TipoModal;
+  articulo: ArticuloRest;
   articuloForm: FormGroup;
-
-  articulo: Articulo = new Articulo();
-  articuloDTO: ArticuloDTO = new ArticuloDTO();
+  submitted: boolean;
+  errorInForm: any;
 
   constructor(
+    private readonly articuloService: ArticulosService,
     private serviceCompra: PedidosService,
-    private articulosService: ArticulosService,
     private subRubroService: SubRubroService,
     private marcaService: MarcasService,
     private rubroService: RubrosService,
@@ -78,105 +55,52 @@ export class AgregarArticuloComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
-  // tslint:disable-next-line:typedef
-  ngOnInit() {
-    this.unidadMedidaService
-      .listarUnidadMedidaHabilitados()
-      .subscribe((resp) => (this.unidadMedidas = resp.data));
-    this.rubroService
-      .listarRubrosHabilitados()
-      .subscribe((resp) => (this.rubros = resp.data));
-    this.subRubroService
-      .listarSubRubrosHabilitados()
-      .subscribe((resp) => (this.subRubros = resp.data));
-    this.marcaService
-      .listarMarcaHabilitados()
-      .subscribe((resp) => (this.marcas = resp.data));
-    this.proveedorService
-      .getEnabledSupplier()
-      .subscribe((resp) => (this.proveedores = resp));
-    this.articulosService
-      .listarArticuloTodos()
-      .subscribe((resp) => (this.articulos = resp.data));
+  ngOnInit(): void {
+    this.titulo = this.data.titulo;
+    this.tipoModal = this.data.tipo;
 
-    const { article } = this.data;
-
-    console.warn('----------------------------');
-    console.log(article);
-
-    if (article) {
-      this.unidadMedidaSelect = article.unidadMedidaId.id;
-      this.rubroSelect = article.rubroId.id;
-      this.subRubroSelect = article.subRubroId.id;
-      this.marcaSelect = article.marcaId.id;
-      this.proveedorSelect = article.proveedorId.id;
-      this.consulting = this.data.consulting;
-
-      this.articuloForm = this.formBuilder.group({
-        id: [article.id, null],
-        codigo: [
-          { value: article.codigoArt, disabled: this.consulting },
-          Validators.required,
-        ],
-        nombre: [
-          { value: article.nombre, disabled: this.consulting },
-          Validators.required,
-        ],
-        abreviatura: [
-          { value: article.abreviatura, disabled: this.consulting },
-          Validators.required,
-        ],
-        stockMin: [
-          { value: article.stockMin, disabled: this.consulting },
-          null,
-        ],
-        stockMax: [
-          { value: article.stockMax, disabled: this.consulting },
-          null,
-        ],
-        unidadMedidaId: [
-          { value: article.unidadMedidaId, disabled: this.consulting },
-          Validators.required,
-        ],
-        rubroId: [
-          { value: article.rubroId, disabled: this.consulting },
-          Validators.required,
-        ],
-        subRubroId: [
-          { value: article.subRubroId, disabled: this.consulting },
-          null,
-        ],
-        marcaId: [{ value: article.marcaId, disabled: this.consulting }, null],
-        proveedorId: [
-          { value: article.proveedorId, disabled: this.consulting },
-          Validators.required,
-        ],
-        costo: [
-          { value: article.costo, disabled: this.consulting },
-          Validators.required,
-        ],
-        precio: [
-          { value: article.precio, disabled: this.consulting },
-          Validators.required,
-        ],
-      });
-      this.updating = !this.consulting;
+    if (this.tipoModal === TipoModal.consulta || this.tipoModal === TipoModal.actualizacion) {
+      this.establecerModalDatos(this.data, this.tipoModal);
     } else {
-      this.articuloForm = this.formBuilder.group({
-        codigo: ['', Validators.required],
-        nombre: ['', Validators.required],
-        abreviatura: ['', Validators.required],
-        stockMin: ['', null],
-        stockMax: ['', null],
-        unidadMedidaId: ['', Validators.required],
-        rubroId: ['', Validators.required],
-        subRubroId: ['', null],
-        marcaId: ['', null],
-        proveedorId: ['', Validators.required],
-        costo: ['', Validators.required],
-        precio: ['', Validators.required],
-      });
+      this.establecerModalVacio();
     }
+  }
+
+  private establecerModalDatos(data: any, tipoModal: any): void {
+    const { articulo }: {articulo: ArticuloRest} = this.data;
+    const disabled = tipoModal === TipoModal.consulta ? true : false;
+    this.articuloForm = this.formBuilder.group({
+      id: [{value: articulo.id}, null],
+      codigo: [{ value: articulo.codigoArt, disabled }, Validators.required],
+      nombre: [{ value: articulo.nombre, disabled }, Validators.required],
+      abreviatura: [{ value: articulo.abreviatura, disabled }, Validators.required],
+      stockMin: [{ value: articulo.stockMin, disabled }, null],
+      stockMax: [{ value: articulo.stockMax, disabled }, null],
+      unidadMedidaId: [{ value: articulo.idUnidadMedida, disabled }, Validators.required],
+      rubroId: [{ value: articulo.idRubro, disabled }, Validators.required],
+      subRubroId: [{ value: articulo.idSubRubro, disabled }, null],
+      marcaId: [{ value: articulo.idMarca, disabled }, null],
+      proveedorId: [{ value: articulo.idProveedor, disabled }, Validators.required],
+      costo: [{ value: articulo.costo, disabled }, Validators.required],
+      precio: [{ value: articulo.precio, disabled }, Validators.required],
+    });
+  }
+
+  private establecerModalVacio(): void{
+    this.articuloForm = this.formBuilder.group({
+      codigo: ['', Validators.required],
+      nombre: ['', Validators.required],
+      abreviatura: ['', Validators.required],
+      stockMin: ['', null],
+      stockMax: ['', null],
+      unidadMedidaId: ['', Validators.required],
+      rubroId: ['', Validators.required],
+      subRubroId: ['', null],
+      marcaId: ['', null],
+      proveedorId: ['', Validators.required],
+      costo: ['', Validators.required],
+      precio: ['', Validators.required],
+    });
   }
 
   onSubmit(): void {
@@ -184,10 +108,7 @@ export class AgregarArticuloComponent implements OnInit {
     this.errorInForm = this.submitted && this.articuloForm.invalid;
 
     if (
-      this.errorInForm ||
-      this.codigoRepe ||
-      this.nombreRepe ||
-      this.abreviaturaRepe
+      this.errorInForm
     ) {
       this.articuloForm.controls.codigo.markAsTouched();
       this.articuloForm.controls.nombre.markAsTouched();
@@ -204,215 +125,215 @@ export class AgregarArticuloComponent implements OnInit {
   }
 
   makeDTO(): void {
-    this.articuloDTO.codigoArt = this.articuloForm.controls.codigo.value
-      .trim()
-      .toUpperCase();
-    this.articuloDTO.nombre = this.articuloForm.controls.nombre.value
-      .trim()
-      .toUpperCase();
-    this.articuloDTO.abreviatura = this.articuloForm.controls.abreviatura.value
-      .trim()
-      .toUpperCase();
-    this.articuloDTO.stockMin = this.articuloForm.controls.stockMin.value;
-    this.articuloDTO.stockMax = this.articuloForm.controls.stockMax.value;
-    this.articuloDTO.costo = this.articuloForm.controls.costo.value;
-    this.articuloDTO.precio = this.articuloForm.controls.precio.value;
-
-    this.articuloDTO.unidadMedidaId = this.unidadMedidaSelect;
-    this.articuloDTO.rubroId = this.rubroSelect;
-    this.articuloDTO.subRubroId = this.subRubroSelect;
-    this.articuloDTO.marcaId = this.marcaSelect;
-    this.articuloDTO.proveedorId = this.proveedorSelect;
-
-    if (this.updating) {
-      this.articuloDTO.id = this.articuloForm.controls.id.value;
-      this.update();
-    } else {
-      this.save();
-    }
+    // this.articuloDTO.codigoArt = this.articuloForm.controls.codigo.value
+    //   .trim()
+    //   .toUpperCase();
+    // this.articuloDTO.nombre = this.articuloForm.controls.nombre.value
+    //   .trim()
+    //   .toUpperCase();
+    // this.articuloDTO.abreviatura = this.articuloForm.controls.abreviatura.value
+    //   .trim()
+    //   .toUpperCase();
+    // this.articuloDTO.stockMin = this.articuloForm.controls.stockMin.value;
+    // this.articuloDTO.stockMax = this.articuloForm.controls.stockMax.value;
+    // this.articuloDTO.costo = this.articuloForm.controls.costo.value;
+    // this.articuloDTO.precio = this.articuloForm.controls.precio.value;
+    //
+    // this.articuloDTO.unidadMedidaId = this.unidadMedidaSelect;
+    // this.articuloDTO.rubroId = this.rubroSelect;
+    // this.articuloDTO.subRubroId = this.subRubroSelect;
+    // this.articuloDTO.marcaId = this.marcaSelect;
+    // this.articuloDTO.proveedorId = this.proveedorSelect;
+    //
+    // if (this.updating) {
+    //   this.articuloDTO.id = this.articuloForm.controls.id.value;
+    //   this.update();
+    // } else {
+    //   this.save();
+    // }
   }
 
   update(): void {
-    this.articulosService
-      .actualizarArticulo(this.articuloDTO)
-      .subscribe((data) => {
-        this.msgSnack(data);
-      });
+    // this.articulosService
+    //   .actualizarArticulo(this.articuloDTO)
+    //   .subscribe((data) => {
+    //     this.msgSnack(data);
+    //   });
   }
 
   save(): void {
-    console.warn(this.articuloDTO);
-    this.articulosService
-      .guardarArticulo(this.articuloDTO)
-      .subscribe((data) => {
-        this.msgSnack(data);
-      });
+    // console.warn(this.articuloDTO);
+    // this.articulosService
+    //   .guardarArticulo(this.articuloDTO)
+    //   .subscribe((data) => {
+    //     this.msgSnack(data);
+    //   });
   }
 
   closeForm(): void {
     this.dialogRef.close();
   }
 
-  newUnidadMedida(): void {
-    this.consulting = false;
-    this.unidadToUpdate = null;
-    this.openDialogUnidadMedida();
-  }
-
-  newRubro(): void {
-    this.consulting = false;
-    this.rubroToUpdate = null;
-    this.openDialogRubro();
-  }
-
-  newSubRubro(): void {
-    this.consulting = false;
-    this.subRubroToUpdate = null;
-    this.openDialogSubRubro();
-  }
-
-  newMarca(): void {
-    this.consulting = false;
-    this.marcaToUpdate = null;
-    this.openDialogMarca();
-  }
-
-  newProveedor(): void {
-    this.consulting = false;
-    this.proveedorToUpdate = null;
-    this.openDialogProveedor();
-  }
-
-  openDialogUnidadMedida(): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.id = 'modalUnidadmedida-component';
-    dialogConfig.height = '450px';
-    dialogConfig.width = '300px';
-    dialogConfig.data = {
-      unidMedida: this.unidadToUpdate,
-      consulting: this.consulting,
-    };
-    const modalDialog = this.matDialog.open(
-      AgregarUnidadMedidaComponent,
-      dialogConfig
-    );
-    modalDialog.afterClosed().subscribe((result) => {
-      this.unidadMedidaService
-        .listarUnidadMedidaHabilitados()
-        .subscribe((data) => {
-          this.unidadMedidas = data.data;
-        });
-    });
-  }
-
-  openDialogRubro(): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.id = 'modalRubro-component';
-    dialogConfig.height = '400px';
-    dialogConfig.width = '300px';
-    dialogConfig.data = {
-      rubro: this.rubroToUpdate,
-      consulting: this.consulting,
-    };
-    const modalDialog = this.matDialog.open(
-      AgregarRubroComponent,
-      dialogConfig
-    );
-    modalDialog.afterClosed().subscribe((result) => {
-      this.rubroService.listarRubrosHabilitados().subscribe((data) => {
-        this.rubros = data.data;
-      });
-    });
-  }
-
-  openDialogSubRubro(): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.id = 'modalSubRubro-component';
-    dialogConfig.height = '500px';
-    dialogConfig.width = '350px';
-    dialogConfig.data = {
-      subRubro: this.subRubroToUpdate,
-      consulting: this.consulting,
-    };
-    const modalDialog = this.matDialog.open(
-      AgregarSubRubroComponent,
-      dialogConfig
-    );
-    modalDialog.afterClosed().subscribe((result) => {
-      this.subRubroService.listarSubRubrosHabilitados().subscribe((data) => {
-        this.subRubros = data.data;
-      });
-    });
-  }
-
-  openDialogMarca(): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.id = 'modalMarca-component';
-    dialogConfig.height = '400px';
-    dialogConfig.width = '300px';
-    dialogConfig.data = {
-      marca: this.marcaToUpdate,
-      consulting: this.consulting,
-    };
-    const modalDialog = this.matDialog.open(
-      AgregarMarcaComponent,
-      dialogConfig
-    );
-    modalDialog.afterClosed().subscribe((result) => {
-      this.marcaService.listarMarcaHabilitados().subscribe((data) => {
-        this.subRubros = data.data;
-      });
-    });
-  }
-
-  openDialogProveedor(): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.id = 'modalProveedor-component';
-    dialogConfig.height = 'auto';
-    dialogConfig.width = '20rem';
-    dialogConfig.data = {
-      proveedor: this.proveedorToUpdate,
-      consulting: this.consulting,
-    };
-    const modalDialog = this.matDialog.open(
-      AgregarProveedorComponent,
-      dialogConfig
-    );
-    modalDialog.afterClosed().subscribe((result) => {
-      this.proveedorService.getEnabledSupplier().subscribe((data) => {
-        this.proveedores = data;
-      });
-    });
-  }
-
-  validarcodigo({ target }): void {
-    const { value: nombre } = target;
-    const finded = this.articulos.find(
-      (p) => p.codigoArt.toLowerCase() === nombre.toLowerCase()
-    );
-    this.codigoRepe = finded !== undefined ? true : false;
-  }
-
-  validarNombre({ target }): void {
-    const { value: nombre } = target;
-    const finded = this.articulos.find(
-      (p) => p.nombre.toLowerCase() === nombre.toLowerCase()
-    );
-    this.nombreRepe = finded !== undefined ? true : false;
-  }
-
-  validarAbreviatura({ target }): void {
-    const { value: nombre } = target;
-    const finded = this.articulos.find(
-      (p) => p.abreviatura.toLowerCase() === nombre.toLowerCase()
-    );
-    this.abreviaturaRepe = finded !== undefined ? true : false;
-  }
+  // newUnidadMedida(): void {
+  //   // this.consulting = false;
+  //   // this.unidadToUpdate = null;
+  //   this.openDialogUnidadMedida();
+  // }
+  //
+  // newRubro(): void {
+  //   // this.consulting = false;
+  //   // this.rubroToUpdate = null;
+  //   this.openDialogRubro();
+  // }
+  //
+  // newSubRubro(): void {
+  //   // this.consulting = false;
+  //   // this.subRubroToUpdate = null;
+  //   this.openDialogSubRubro();
+  // }
+  //
+  // newMarca(): void {
+  //   // this.consulting = false;
+  //   // this.marcaToUpdate = null;
+  //   this.openDialogMarca();
+  // }
+  //
+  // newProveedor(): void {
+  //   // this.consulting = false;
+  //   // this.proveedorToUpdate = null;
+  //   this.openDialogProveedor();
+  // }
+  //
+  // openDialogUnidadMedida(): void {
+  //   const dialogConfig = new MatDialogConfig();
+  //   dialogConfig.disableClose = true;
+  //   dialogConfig.id = 'modalUnidadmedida-component';
+  //   dialogConfig.height = '450px';
+  //   dialogConfig.width = '300px';
+  //   // dialogConfig.data = {
+  //   //   unidMedida: this.unidadToUpdate,
+  //   //   consulting,
+  //   // };
+  //   const modalDialog = this.matDialog.open(
+  //     AgregarUnidadMedidaComponent,
+  //     dialogConfig
+  //   );
+  //   modalDialog.afterClosed().subscribe((result) => {
+  //     this.unidadMedidaService
+  //       .listarUnidadMedidaHabilitados()
+  //       .subscribe((data) => {
+  //         // this.unidadMedidas = data.data;
+  //       });
+  //   });
+  // }
+  //
+  // openDialogRubro(): void {
+  //   const dialogConfig = new MatDialogConfig();
+  //   dialogConfig.disableClose = true;
+  //   dialogConfig.id = 'modalRubro-component';
+  //   dialogConfig.height = '400px';
+  //   dialogConfig.width = '300px';
+  //   dialogConfig.data = {
+  //     rubro: this.rubroToUpdate,
+  //     consulting: this.consulting,
+  //   };
+  //   const modalDialog = this.matDialog.open(
+  //     AgregarRubroComponent,
+  //     dialogConfig
+  //   );
+  //   modalDialog.afterClosed().subscribe((result) => {
+  //     this.rubroService.listarRubrosHabilitados().subscribe((data) => {
+  //       this.rubros = data.data;
+  //     });
+  //   });
+  // }
+  //
+  // openDialogSubRubro(): void {
+  //   const dialogConfig = new MatDialogConfig();
+  //   dialogConfig.disableClose = true;
+  //   dialogConfig.id = 'modalSubRubro-component';
+  //   dialogConfig.height = '500px';
+  //   dialogConfig.width = '350px';
+  //   dialogConfig.data = {
+  //     subRubro: this.subRubroToUpdate,
+  //     consulting: this.consulting,
+  //   };
+  //   const modalDialog = this.matDialog.open(
+  //     AgregarSubRubroComponent,
+  //     dialogConfig
+  //   );
+  //   modalDialog.afterClosed().subscribe((result) => {
+  //     this.subRubroService.listarSubRubrosHabilitados().subscribe((data) => {
+  //       this.subRubros = data.data;
+  //     });
+  //   });
+  // }
+  //
+  // openDialogMarca(): void {
+  //   const dialogConfig = new MatDialogConfig();
+  //   dialogConfig.disableClose = true;
+  //   dialogConfig.id = 'modalMarca-component';
+  //   dialogConfig.height = '400px';
+  //   dialogConfig.width = '300px';
+  //   dialogConfig.data = {
+  //     marca: this.marcaToUpdate,
+  //     consulting: this.consulting,
+  //   };
+  //   const modalDialog = this.matDialog.open(
+  //     AgregarMarcaComponent,
+  //     dialogConfig
+  //   );
+  //   modalDialog.afterClosed().subscribe((result) => {
+  //     this.marcaService.listarMarcaHabilitados().subscribe((data) => {
+  //       this.subRubros = data.data;
+  //     });
+  //   });
+  // }
+  //
+  // openDialogProveedor(): void {
+  //   const dialogConfig = new MatDialogConfig();
+  //   dialogConfig.disableClose = true;
+  //   dialogConfig.id = 'modalProveedor-component';
+  //   dialogConfig.height = 'auto';
+  //   dialogConfig.width = '20rem';
+  //   dialogConfig.data = {
+  //     proveedor: this.proveedorToUpdate,
+  //     consulting: this.consulting,
+  //   };
+  //   const modalDialog = this.matDialog.open(
+  //     AgregarProveedorComponent,
+  //     dialogConfig
+  //   );
+  //   modalDialog.afterClosed().subscribe((result) => {
+  //     this.proveedorService.getEnabledSupplier().subscribe((data) => {
+  //       this.proveedores = data;
+  //     });
+  //   });
+  // }
+  //
+  // validarcodigo({ target }): void {
+  //   const { value: nombre } = target;
+  //   const finded = this.articulos.find(
+  //     (p) => p.codigoArt.toLowerCase() === nombre.toLowerCase()
+  //   );
+  //   this.codigoRepe = finded !== undefined ? true : false;
+  // }
+  //
+  // validarNombre({ target }): void {
+  //   const { value: nombre } = target;
+  //   const finded = this.articulos.find(
+  //     (p) => p.nombre.toLowerCase() === nombre.toLowerCase()
+  //   );
+  //   this.nombreRepe = finded !== undefined ? true : false;
+  // }
+  //
+  // validarAbreviatura({ target }): void {
+  //   const { value: nombre } = target;
+  //   const finded = this.articulos.find(
+  //     (p) => p.abreviatura.toLowerCase() === nombre.toLowerCase()
+  //   );
+  //   this.abreviaturaRepe = finded !== undefined ? true : false;
+  // }
   msgSnack(data): void {
     const { msg } = data;
     if (data.code === 200) {
@@ -420,5 +341,14 @@ export class AgregarArticuloComponent implements OnInit {
     } else {
       this.dialogRef.close('Error en el proceso');
     }
+  }
+
+  public errorHandling = (control: string, error: string) => {
+    return this.articuloForm.controls[control].hasError(error);
+  }
+
+
+  establecerUnidad(unidadMedidaId: number): void {
+      this.articuloForm.patchValue({ unidadMedidaId});
   }
 }

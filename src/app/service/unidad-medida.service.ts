@@ -19,7 +19,9 @@ export class UnidadMedidaService {
   obtenerUnidadesMedida(): Observable<UnidadMedidaRest[]> {
     return this.http.get<UnidadMedidaRest[]>(this.url);
   }
-
+  obtenerUnidadesMedidaHabilitadas(): Observable<UnidadMedidaRest[]> {
+    return this.http.get<UnidadMedidaRest[]>(this.url + '/habilitados');
+  }
   cambiarEstado(id: number): Observable<UnidadMedidaRest> {
     return this.http.put<UnidadMedidaRest>(this.url + '/' + id, id);
   }

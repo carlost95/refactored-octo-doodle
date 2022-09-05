@@ -20,6 +20,7 @@ import {SearchComponent} from './template/search/search.component';
 import {ButtonComponent} from './template/button/button.component';
 import {MenuItemComponent} from './template/menu/menu-item/menu-item.component';
 import {SubRubroDropdownComponent} from '@shared/sub-rubro/dropdown/dropdown.component';
+import { UnidadMedidaDropdownComponent } from './unidad-medida/unidad-medida-dropdown/unidad-medida-dropdown.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import {SubRubroDropdownComponent} from '@shared/sub-rubro/dropdown/dropdown.com
     MenuItemComponent,
     MenuComponent,
     DropdownComponent,
-    SubRubroDropdownComponent
+    SubRubroDropdownComponent,
+    UnidadMedidaDropdownComponent
   ],
   imports: [
     FormsModule,
@@ -54,7 +56,8 @@ import {SubRubroDropdownComponent} from '@shared/sub-rubro/dropdown/dropdown.com
     TemplatePageComponent,
     MenuComponent,
     DropdownComponent,
-    SubRubroDropdownComponent
+    SubRubroDropdownComponent,
+    UnidadMedidaDropdownComponent
   ],
   providers: [
     {
