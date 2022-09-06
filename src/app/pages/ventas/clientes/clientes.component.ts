@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { Cliente } from '../../../models/Cliente';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PdfExportService } from '../../../service/pdf-export.service';
 import { ServiceReportService } from '../../../service/service-report.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -10,6 +10,14 @@ import { SnackConfirmComponent } from '../../../shared/snack-confirm/snack-confi
 import { ConfirmModalComponent } from '../../../shared/confirm-modal/confirm-modal.component';
 import { ClienteService } from '../../../service/cliente.service';
 import { TokenService } from '../../../service/token.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { BuscadorService } from '../../../shared/helpers/buscador.service';
+import { cliente } from '../../../../environments/global-route';
+import { TituloCliente } from '../../../shared/models/titulo-cliente.enum';
+import { TipoModal } from '../../../shared/models/tipo-modal.enum';
+import { concatMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-clientes',
@@ -17,139 +25,101 @@ import { TokenService } from '../../../service/token.service';
   styleUrls: ['./clientes.component.scss'],
 })
 export class ClientesComponent implements OnInit {
-  clientes: Cliente[] = null;
-  cliente: Cliente = null;
-  clientesFilter: Cliente[] = null;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  dataSource: MatTableDataSource<Cliente>;
+  displayedColumns: string[] = ['nombre', 'apellido', 'dni', 'email', 'status'];
 
-  busqueda: string = null;
-  toUpdate: Cliente;
-  consulting: boolean;
+  clientes: Cliente[];
+  mostrarModificacion: boolean;
 
-  isLogged = false;
+  cliente: Cliente = new Cliente();
   roles: string[];
-  isAdmin = false;
-  isGerente = false;
 
   constructor(
-    private service: ClienteService,
+    private readonly buscadorService: BuscadorService,
+    private clientService: ClienteService,
     private router: Router,
-    private servicePdf: PdfExportService,
-    private serviceReport: ServiceReportService,
     public matDialog: MatDialog,
     private tokenService: TokenService,
-    // tslint:disable-next-line:variable-name
-    private _snackBar: MatSnackBar
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
-    if (this.tokenService.getToken()) {
-      this.isLogged = true;
-    } else {
-      this.isLogged = false;
-    }
     this.roles = this.tokenService.getAuthorities();
-    this.roles.forEach((rol) => {
-      if (rol === 'ROLE_ADMIN') {
-        this.isAdmin = true;
-      } else if (rol === 'ROLE_GERENTE') {
-        this.isGerente = true;
-      }
-    });
-    this.getData();
-  }
-
-  getData(): void {
-    this.service.getAll().subscribe((data) => {
-      this.clientes = data.data;
-      this.clientesFilter = data.data;
+    this.mostrarModificacion =
+      this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_GERENTE');
+    this.clientService.getAllClient().subscribe((resp) => {
+      this.clientes = resp;
+      this.establecerDatasource(this.clientes);
     });
   }
 
-  filtrarCliente(): void {
-    console.log(this.busqueda);
-
-    this.busqueda = this.busqueda.toLowerCase();
-    this.clientesFilter = this.clientes;
-
-    if (this.busqueda !== null) {
-      this.clientesFilter = this.clientes.filter((item) => {
-        const inName = item.nombre.toLowerCase().indexOf(this.busqueda) !== -1;
-        const inLastName =
-          item.apellido.toLowerCase().indexOf(this.busqueda) !== -1;
-        const inDocument = item.dni.toLowerCase().indexOf(this.busqueda) !== -1;
-        return inName || inLastName || inDocument;
-      });
-    }
+  filtrarClient(value: string): void {
+    const TERMINO = 'nombre';
+    const clientes = this.buscadorService.buscarTermino(
+      this.clientes,
+      TERMINO,
+      value
+    );
+    this.establecerDatasource(clientes);
+  }
+  establecerDatasource(clientes: Cliente[]): void {
+    this.dataSource = new MatTableDataSource(clientes);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   backPage(): void {
     this.router.navigate(['ventas']);
   }
 
-  exportarExcel(): void {
-    console.warn('muestra de excel');
-  }
-
-  exportarPDF(): void {
-    this.serviceReport.getReporteBancoPdf().subscribe((resp) => {
-      this.servicePdf.createAndDownloadBlobFile(
-        this.servicePdf.base64ToArrayBuffer(resp.data.file),
-        resp.data.name
-      );
-    });
-  }
-
   newClient(): void {
-    this.toUpdate = null;
-    this.consulting = false;
-    this.openDialog();
-  }
-
-  editClient(client: Cliente): void {
-    this.toUpdate = client;
-    this.consulting = false;
-    this.openDialog();
-  }
-
-  readClient(client: Cliente): void {
-    this.toUpdate = client;
-    this.consulting = true;
-    this.openDialog();
-  }
-
-  openDialog(): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.id = 'modal-component';
-    dialogConfig.height = '540px';
-    dialogConfig.width = '300px';
-    dialogConfig.data = {
-      cliente: this.toUpdate,
-      consulting: this.consulting,
+    const data = {
+      titulo: TituloCliente.creacion,
+      tipoModal: TipoModal.creacion,
     };
-    const modalDialog = this.matDialog.open(
-      AgregarClienteComponent,
-      dialogConfig
-    );
-    modalDialog.afterClosed().subscribe((result) => {
+    this.openDialog(data);
+  }
+
+  openDialog(data: any): void {
+    const dialog = this.matDialog.open(AgregarClienteComponent, {
+      id: 'modal-component',
+      disableClose: true,
+      height: 'auto',
+      width: '20rem',
+      data,
+      panelClass: 'no-padding',
+    });
+    // The user can't close the dialog by clicking outside its body
+    dialog.afterClosed().subscribe((result) => {
+      this.clientService.getAllClient().subscribe((clientes) => {
+        this.clientes = clientes;
+        this.establecerDatasource(this.clientes);
+      });
       if (result) {
-        this.openSnackBar();
+        this.openSnackBar(result);
       }
-      this.getData();
     });
   }
-
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
+    });
+  }
   showModal(cliente: Cliente): void {
     const dialogConfig = new MatDialogConfig();
     // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
-    dialogConfig.height = '300px';
-    dialogConfig.width = '350px';
+    dialogConfig.height = '15rem';
+    dialogConfig.width = '20rem';
     dialogConfig.data = {
       message: '¿Desea cambiar estado?',
       title: 'Cambio estado',
-      state: cliente.estado,
+      state: cliente.status,
     };
     const modalDialog = this.matDialog.open(
       ConfirmModalComponent,
@@ -157,23 +127,100 @@ export class ClientesComponent implements OnInit {
     );
     modalDialog.afterClosed().subscribe((result) => {
       if (result.state) {
-        this.service.changeStatus(cliente.id).subscribe((result) => {
-          this.getData();
-        });
+        this.clientService
+          .changeStatusClient(cliente.id)
+          .pipe(concatMap((data) => this.clientService.getAllClient()))
+          .subscribe((clientes) => {
+            this.clientes = clientes;
+            this.establecerDatasource(this.clientes);
+          });
       } else {
-        this.getData();
+        // this.getData();
       }
     });
   }
+  // exportarExcel(): void {
+  //   console.warn('muestra de excel');
+  // }
+
+  // exportarPDF(): void {
+  //   this.serviceReport.getReporteBancoPdf().subscribe((resp) => {
+  //     this.servicePdf.createAndDownloadBlobFile(
+  //       this.servicePdf.base64ToArrayBuffer(resp.data.file),
+  //       resp.data.name
+  //     );
+  //   });
+  // }
+
+  // editClient(client: Cliente): void {
+  //   this.toUpdate = client;
+  //   this.consulting = false;
+  //   this.openDialog();
+  // }
+
+  // readClient(client: Cliente): void {
+  //   this.toUpdate = client;
+  //   this.consulting = true;
+  //   this.openDialog();
+  // }
+
+  // openDialog(): void {
+  //   const dialogConfig = new MatDialogConfig();
+  //   dialogConfig.disableClose = true;
+  //   dialogConfig.id = 'modal-component';
+  //   dialogConfig.height = '540px';
+  //   dialogConfig.width = '300px';
+  //   dialogConfig.data = {
+  //     cliente: this.toUpdate,
+  //     consulting: this.consulting,
+  //   };
+  //   const modalDialog = this.matDialog.open(
+  //     AgregarClienteComponent,
+  //     dialogConfig
+  //   );
+  //   modalDialog.afterClosed().subscribe((result) => {
+  //     if (result) {
+  //       this.openSnackBar();
+  //     }
+  //     this.getData();
+  //   });
+  // }
+
+  // showModal(cliente: Cliente): void {
+  //   const dialogConfig = new MatDialogConfig();
+  //   // The user can't close the dialog by clicking outside its body
+  //   dialogConfig.disableClose = true;
+  //   dialogConfig.id = 'modal-component';
+  //   dialogConfig.height = '300px';
+  //   dialogConfig.width = '350px';
+  //   dialogConfig.data = {
+  //     message: '¿Desea cambiar estado?',
+  //     title: 'Cambio estado',
+  //     state: cliente.estado,
+  //   };
+  //   const modalDialog = this.matDialog.open(
+  //     ConfirmModalComponent,
+  //     dialogConfig
+  //   );
+  //   modalDialog.afterClosed().subscribe((result) => {
+  //     if (result.state) {
+  //       this.service.changeStatus(cliente.id).subscribe((result) => {
+  //         this.getData();
+  //       });
+  //     } else {
+  //       this.getData();
+  //     }
+  //   });
+  // }
 
   direcciones(id: number): void {
     this.router.navigate([`/ventas/direcciones/${id}`]);
   }
 
-  openSnackBar(): void {
-    this._snackBar.openFromComponent(SnackConfirmComponent, {
-      panelClass: ['error-snackbar'],
-      duration: 5 * 1000,
-    });
-  }
+  // openSnackBar(): void {
+  //   this._snackBar.openFromComponent(SnackConfirmComponent, {
+  //     panelClass: ['error-snackbar'],
+  //     duration: 5 * 1000,
+  //   });
+  // }
 }

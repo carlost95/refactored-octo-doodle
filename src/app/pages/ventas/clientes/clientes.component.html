@@ -1,4 +1,4 @@
-<div class="container">
+<!-- <div class="container">
   <div class="card">
     <header class="row mt-4 ml-3 mb-3">
       <i class="col-md-2 m-0 fas fa-chevron-left fa-3x" style="margin-right: 100%" (click)="backPage()">
@@ -73,4 +73,109 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
+
+<template-page [title]="'Clientes'" [backRoute]="'ventas'" [titleButton]="'Nuevo Cliente'"
+  (filtro)="filtrarClient($event)" (onClickButton)="newClient()">
+  <div>
+    <table class="w-100" mat-table [dataSource]="dataSource" matSort>
+
+      <ng-container matColumnDef="apellido">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Apellido</th>
+        <td mat-cell *matCellDef="let row"> {{row.apellido | titlecase}} </td>
+      </ng-container>
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre</th>
+        <td mat-cell *matCellDef="let row"> {{row.nombre | titlecase}} </td>
+      </ng-container>
+      <ng-container matColumnDef="dni">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> DNI</th>
+        <td mat-cell *matCellDef="let row"> {{row.dni}} </td>
+      </ng-container>
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef> Email</th>
+        <td mat-cell *matCellDef="let row"> {{row.email}} </td>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Habilitado</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-slide-toggle [checked]="row.status" (click)="showModal(row)" color="primary">
+          </mat-slide-toggle>
+        </td>
+      </ng-container>
+
+      <!-- <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Acciones</th>
+        <td mat-cell *matCellDef="let row">
+          <button class="btn btn-default m-0 p-0" title="Consultar" (click)="readClient(row)">
+            <i class="fas fa-exclamation"></i>
+          </button>
+          &nbsp;
+          <button (click)="editClient(row)" class="btn btn-default m-0 p-0" title="Modificar ">
+            <i class="fas fa-user-edit"></i>
+          </button>
+          &nbsp;
+          <button (click)="direcciones(row.id)" class="btn btn-default m-0 p-0" title="Direcciones ">
+            <i class="fas fa-map-marker-alt"></i>
+          </button>
+        </td> -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="10">
+          <h4>
+            No se encontraron resultados para esta busqueda...
+          </h4>
+        </td>
+      </tr>
+
+    </table>
+    <!-- <table class="w-100" mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="razonSocial">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Razon Social</th>
+        <td mat-cell *matCellDef="let row"> {{row.razonSocial}} </td>
+      </ng-container>
+      <ng-container matColumnDef="telefono">
+        <th mat-header-cell *matHeaderCellDef> Tel. Fijo</th>
+        <td mat-cell *matCellDef="let row"> {{row.telefono}} </td>
+      </ng-container>
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef> Email</th>
+        <td mat-cell *matCellDef="let row"> {{row.email}} </td>
+      </ng-container>
+      <ng-container matColumnDef="habilitado">
+        <th mat-header-cell *matHeaderCellDef> Habilitado</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-slide-toggle [checked]="row.habilitado" (click)="showModal(row)" color="primary">
+          </mat-slide-toggle>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef> Opciones</th>
+        <td mat-cell *matCellDef="let row">
+          <button class="btn btn-default select" title="Consultar" (click)="consultarProveedor(row)">
+            <i class="fas fa-exclamation"></i>
+          </button>
+          <button class="btn btn-default select" title="Modificar " (click)="modificarProveedor(row)"
+            *ngIf="mostrarModificacion">
+            <i class="fas fa-pencil-alt"></i>
+          </button>
+          <button class="btn btn-default select" title="Cuentas bancarias" (click)="cuentaProveedor(row.idProveedor)">
+            <i class=" fas fa-money-check-alt"></i>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="10">
+          <h4>
+            No se encontraron resultados para esta busqueda...
+          </h4>
+        </td>
+      </tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator> -->
+  </div>
+</template-page>
