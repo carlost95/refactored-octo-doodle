@@ -1,218 +1,96 @@
-<!--<div class="container" style="color: white">-->
-<div class="container">
-  <div class="py-3">
-    <h1 style="text-align: center" *ngIf="!updating && !consulting">Agregar nuevo articulo</h1>
-    <h1 style="text-align: center" *ngIf="updating">Actualizar articulo</h1>
-    <h1 style="text-align: center" *ngIf="consulting">Consulta de  articulo</h1>
-  </div>
-  <hr>
-  <section>
-    <form [formGroup]="articuloForm" class="py-2">
-      <div class="form-row justify-content-center">
-        <mat-form-field class="col-md-5 py-3" appearance="legacy">
-          <mat-label>Codigo</mat-label>
-          <input matInput formControlName="codigo" required
-                 autocomplete="off"
-                 (keyup)="validarcodigo($event)"/>
-          <mat-error *ngIf="articuloForm.controls.codigo.errors">
-            Código es <strong>requerido</strong>
-          </mat-error>
-          <label *ngIf="codigoRepe" style="color: #f44336; font-size: 75%"> Códígo repetido</label>
-        </mat-form-field>
-
-        <mat-form-field [ngClass]="consulting ? 'col-md-6' :'col-md-5'" appearance="fill">
-          <mat-label> Unidad de Medida</mat-label>
-          <mat-select
-            [(ngModel)]="unidadMedidaSelect"
-            name="unidad medida"
-            formControlName="unidadMedidaId"
-            autocomplete="off">
-            <mat-option *ngFor="let unMed of unidadMedidas" [value]="unMed.id">
-              {{ unMed.nombre }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="articuloForm.controls.unidadMedidaId.errors">
-            unidad de medida es<strong> requerido</strong>
-          </mat-error>
-        </mat-form-field>
-
-        <div class="col-md-1" *ngIf="!consulting">
-          <button mat-fab color="primary" class="btn btn-default"
-                  (click)="newUnidadMedida()">
-            <mat-icon>
-              <i class="fas fa-ruler"></i>
-            </mat-icon>
-          </button>
-        </div>
-        <mat-form-field class="col-md-5 py-3" appearance="legacy">
-          <mat-label> Nombre</mat-label>
-          <input matInput formControlName="nombre" required
-                 autocomplete="off"
-                 (keyup)="validarNombre($event)"/>
-          <mat-error *ngIf="articuloForm.controls.nombre.errors">
-            Nombre es <strong>requerido</strong>
-          </mat-error>
-          <label *ngIf="nombreRepe" style="color: #f44336; font-size: 75%">Nombre repetido</label>
-        </mat-form-field>
-
-        <mat-form-field [ngClass]="consulting ? 'col-md-6' :'col-md-5'" appearance="fill">
-          <mat-label> Rubro</mat-label>
-          <mat-select
-            [(ngModel)]="rubroSelect"
-            name="rubro"
-            formControlName="rubroId"
-            autocomplete="off">
-            <mat-option *ngFor="let rub of rubros" [value]="rub.id">
-              {{ rub.nombre }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="articuloForm.controls.rubroId.errors">
-            rubro es<strong> requerido</strong>
-          </mat-error>
-        </mat-form-field>
-        <div class="col-md-1" *ngIf="!consulting">
-          <button mat-fab color="primary" class="btn btn-default"
-                  (click)="newRubro()">
-            <mat-icon>
-              <i class="fas fa-archive"></i>
-            </mat-icon>
-          </button>
-        </div>
-
-        <mat-form-field class="col-md-5 py-3" appearance="legacy">
-          <mat-label>Abreviatura</mat-label>
-          <input matInput formControlName="abreviatura" required
-                 autocomplete="off"
-                 (keyup)="validarAbreviatura($event)"/>
-          <mat-error *ngIf="articuloForm.controls.abreviatura.errors">
-            Abrevaitura es <strong>requerido</strong>
-          </mat-error>
-          <label *ngIf="abreviaturaRepe" style="color: #f44336; font-size: 75%">Abreviatura esta repetido</label>
-        </mat-form-field>
-
-        <mat-form-field [ngClass]="consulting ? 'col-md-6' :'col-md-5'" appearance="fill">
-          <mat-label> SubRubro</mat-label>
-          <mat-select
-            [(ngModel)]="subRubroSelect"
-            name="rubro"
-            formControlName="subRubroId"
-            autocomplete="off">
-            <mat-option *ngFor="let subRub of subRubros" [value]="subRub.id">
-              {{ subRub.nombre }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="articuloForm.controls.subRubroId.errors">
-            rubro es<strong> requerido</strong>
-          </mat-error>
-        </mat-form-field>
-        <div class="col-md-1"*ngIf="!consulting">
-          <button mat-fab color="primary" class="btn btn-default"
-                  (click)="newSubRubro()">
-            <mat-icon>
-              <i class="fas fa-folder-open"></i>
-            </mat-icon>
-          </button>
-        </div>
-        <mat-form-field class="col-md-2 py-3" appearance="legacy">
+<header class="modal-header  modal-header-size1">
+  <h1 class="modal-title">{{titulo}}</h1>
+</header>
+<section class="w-100">
+  <form [formGroup]="articuloForm" class="py-2  form-row container d-flex justify-content-center">
+    <div class="col-md-5 py-3">
+      <mat-form-field class="w-100" appearance="legacy">
+        <mat-label>Codigo</mat-label>
+        <input matInput formControlName="codigo" required autocomplete="off"/>
+        <mat-error *ngIf="articuloForm.controls.codigo.errors">
+          Código es <strong>requerido</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="w-100" appearance="legacy">
+        <mat-label> Nombre</mat-label>
+        <input matInput formControlName="nombre" required autocomplete="off"/>
+        <mat-error *ngIf="articuloForm.controls.nombre.errors">
+          Nombre es <strong>requerido</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="w-100" appearance="legacy">
+        <mat-label>Abreviatura</mat-label>
+        <input matInput formControlName="abreviatura" required
+               autocomplete="off"/>
+        <mat-error *ngIf="articuloForm.controls.abreviatura.errors">
+          Abrevaitura es <strong>requerido</strong>
+        </mat-error>
+      </mat-form-field>
+      <div class="form-row d-flex justify-content-between">
+        <mat-form-field class="col-md-5" appearance="legacy">
           <mat-label>Stock min</mat-label>
           <input matInput formControlName="stockMin"
                  autocomplete="off" type="number" min="0" maxlength="8"
                  oninput="this.value=this.value.slice(0,this.maxLength|| 0/0);this.value=(this.value< 0) ? (0/0) : this.value;"/>
         </mat-form-field>
-        <mat-form-field class="col-md-3 py-3" appearance="legacy">
+        <mat-form-field class="col-md-5" appearance="legacy">
           <mat-label>Stock max</mat-label>
           <input matInput formControlName="stockMax"
                  autocomplete="off" type="number" min="0" maxlength="8"
                  oninput="this.value=this.value.slice(0,this.maxLength|| 0/0);this.value=(this.value< 0) ? (0/0) : this.value;"/>
         </mat-form-field>
-        <mat-form-field [ngClass]="consulting ? 'col-md-6' :'col-md-5'" appearance="fill">
-          <mat-label> Marca</mat-label>
-          <mat-select
-            [(ngModel)]="marcaSelect"
-            name="marca"
-            formControlName="marcaId"
-            autocomplete="off">
-            <mat-option *ngFor="let marca of marcas" [value]="marca.id">
-              {{ marca.nombre }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="articuloForm.controls.marcaId.errors">
-            marca es<strong> requerido</strong>
-          </mat-error>
-        </mat-form-field>
-        <div class="col-md-1" *ngIf="!consulting">
-          <button mat-fab color="primary" class="btn btn-default"
-                  (click)="newMarca()">
-            <mat-icon>
-              <i class="fas fa-tag"></i>
-            </mat-icon>
-          </button>
-        </div>
-        <mat-form-field class="col-md-2 py-3" appearance="legacy">
+      </div>
+      <div class="form-row d-flex justify-content-between">
+        <mat-form-field class="col-md-5" appearance="legacy">
           <mat-label>Costo compra</mat-label>
           <input matInput formControlName="costo"
-                 autocomplete="off" type="number" min="0" maxlength="8"
-                 oninput="this.value=this.value.slice(0,this.maxLength|| 0/0);this.value=(this.value< 0) ? (0/0) : this.value;"/>
+                 autocomplete="off" type="number" min="0" maxlength="8">
+          <span matPrefix>$&nbsp;</span>
           <mat-error *ngIf="articuloForm.controls.costo.errors">
             Costo es <strong>requerido</strong>
           </mat-error>
         </mat-form-field>
-        <mat-form-field class="col-md-3 py-3" appearance="legacy">
+        <mat-form-field class="col-md-5" appearance="legacy">
           <mat-label>Precio venta</mat-label>
           <input matInput formControlName="precio"
-                 autocomplete="off" type="number" min="0" maxlength="8"
-                 oninput="this.value=this.value.slice(0,this.maxLength|| 0/0);this.value=(this.value< 0) ? (0/0) : this.value;"/>
+                 autocomplete="off" type="number" min="0" maxlength="8"/>
+          <span matPrefix>$&nbsp;</span>
           <mat-error *ngIf="articuloForm.controls.nombre.errors">
             Precio es <strong>requerido</strong>
           </mat-error>
         </mat-form-field>
-
-        <mat-form-field [ngClass]="consulting ? 'col-md-6' :'col-md-5'" appearance="fill">
-          <mat-label> Proveedor</mat-label>
-          <mat-select
-            [(ngModel)]="proveedorSelect"
-            name="proveedor"
-            formControlName="proveedorId"
-            autocomplete="off">
-            <mat-option *ngFor="let prov of proveedores" [value]="prov.id">
-              {{ prov.razonSocial }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="articuloForm.controls.proveedorId.errors">
-            proveedor es<strong> requerido</strong>
-          </mat-error>
-        </mat-form-field>
-        <div class="col-md-1" *ngIf="!consulting">
-          <button mat-fab color="primary" class="btn btn-default"
-                  (click)="newProveedor()">
-            <mat-icon>
-              <i class="fas fa-user-tie"></i>
-            </mat-icon>
-          </button>
-        </div>
-
-
-
       </div>
-
-    </form>
-  </section>
-  <hr>
-  <div class="text-right py-3" >
-    <button *ngIf="!consulting" (click)="closeForm()" class="btn btn-outline-danger">
-      Cancelar
-    </button>
-    &nbsp;
-    &nbsp;
-    <button *ngIf="!consulting" (click)="onSubmit()" class="btn btn-warning">
-      Aceptar
-    </button>
-    <button *ngIf="consulting" (click)="closeForm()" class="btn btn-outline-danger" >
-      Cerrar
-    </button>
-    &nbsp;
-    &nbsp;
-  </div>
-</div>
-<!--</div>-->
-
+    </div>
+    <div class="col-md-5 py-3">
+      <unidad-medida-dropdown
+        formControlName="unidadMedidaId"
+        class="w-100"
+        (unidadChange)="establecerUnidad($event)">
+      </unidad-medida-dropdown>
+      <rubro-dropdown
+        formControlName="rubroId"
+        class="w-100"
+        (rubroChange)="establecerRubro($event)">
+      </rubro-dropdown>
+      <subrubro-dropdown
+        formControlName="subRubroId"
+        class="w-100"
+        (subrubroChange)="establecerSubRubro($event)">
+      </subrubro-dropdown>
+      <marca-dropdown
+        formControlName="marcaId"
+        class="w-100"
+        (marcaChange)="establecerMarca($event)">
+      </marca-dropdown>
+      <proveedor-dropdown
+        formControlName="proveedorId"
+        class="w-100"
+        (proveedorChange)="establecerProveedor($event)">
+      </proveedor-dropdown>
+    </div>
+</form>
+</section>
+<footer class="modal-footer">
+  <button class="btn btn-outline-danger" (click)="closeForm()">Cerrar</button>
+  <button class="btn btn-warning" *ngIf="tipoModal !== 0" (click)="onSubmit()">Guardar</button>
+</footer>

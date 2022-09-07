@@ -6,6 +6,7 @@ import {HttpClient} from '@angular/common/http';
 import {marca} from '../../environments/global-route';
 import {Observable} from 'rxjs';
 import {MarcaRest} from '@models/marca-rest';
+import {map} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,13 @@ export class MarcasService {
 
   obtenerMarcas(): Observable<MarcaRest[]> {
     return this.http.get<MarcaRest[]>(this.url);
+  }
+
+  obtenerMarcasHabilitadas(): Observable<MarcaRest[]> {
+    return this.http.get<MarcaRest[]>(this.url)
+      .pipe(
+        map(marcas => marcas.filter(marca => marca.habilitado))
+      );
   }
 
   cambiarEstado(id: number): Observable<MarcaRest> {

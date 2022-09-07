@@ -8,7 +8,7 @@ import {BehaviorSubject, combineLatest, forkJoin, Observable, of, Subject} from 
 import {SubRubroRest} from '@models/subrubro-rest';
 import {RubrosService} from '@service/rubros.service';
 import {RubroRest} from '@models/rubro-rest';
-import {concatMap, map, mergeMap, switchMap, tap} from 'rxjs/operators';
+import {concatMap, filter, flatMap, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +39,13 @@ export class SubRubroService {
           ...subrubro,
           rubroNombre: rubros.find(rubro => rubro.idRubro === subrubro.rubroId).nombre
         }))));
+  }
+
+  obtenerHabilitados(): Observable<SubRubroRest[]> {
+    return this.http.get<SubRubroRest[]>(`${this.url}`)
+      .pipe(
+        map( subrubros => subrubros.filter(subrubro => subrubro.habilitado))
+      );
   }
 
   actualizar(subrubro: SubRubroRest): Observable<SubRubroRest> {
@@ -87,4 +94,6 @@ export class SubRubroService {
   cambiarHabilitacion(id: number) {
     return this.http.put<Response>(this.url + '/' + id, id);
   }
+
+
 }

@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Response } from '../models/Response';
 import { environment } from '../../environments/environment.prod';
 import { HttpClient } from '@angular/common/http';
 import { Proveedor } from '@models/Proveedor';
 import { proveedor } from '../../environments/global-route';
 import { Observable } from 'rxjs';
-import { ProveedorRest } from '@models/proveedor-rest';
 
 @Injectable({
   providedIn: 'root',

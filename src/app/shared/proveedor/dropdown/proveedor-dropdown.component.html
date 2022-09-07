@@ -1,0 +1,11 @@
+<mat-form-field class="w-100" appearance="legacy">
+  <mat-label class="w-100">Proveedor</mat-label>
+  <mat-select [formControl]="control"  class="w-100" (selectionChange)="onChange($event)">
+    <mat-option *ngFor="let proveedor of proveedores" [value]="proveedor.idProveedor">
+      {{ proveedor.razonSocial }}
+    </mat-option>
+  </mat-select>
+  <mat-error  *ngIf="control?.errors">
+    Proveedor es<strong> requerido</strong>
+  </mat-error>
+</mat-form-field>

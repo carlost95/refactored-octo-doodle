@@ -5,24 +5,21 @@ import {RubrosService} from '@service/rubros.service';
 
 @Component({
   selector: 'rubro-dropdown',
-  templateUrl: './dropdown.component.html',
-  styleUrls: ['./dropdown.component.scss'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => SubRubroDropdownComponent),
-      multi: true
-    }
-  ]
+  templateUrl: './rubro-dropdown.component.html',
+  styleUrls: ['./rubro-dropdown.component.scss'],
+  providers: [{
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => RubroDropdownComponent),
+    multi: true
+  }]
 })
-export class SubRubroDropdownComponent  implements ControlValueAccessor, OnInit {
+export class RubroDropdownComponent implements ControlValueAccessor, OnInit{
 
   rubros: RubroRest[] = [];
-  @Input() consulta: boolean
+  @Input() consulta: boolean;
   @Input() formControlName: string;
   control: AbstractControl;
   isLoading = true;
-
 
   @Output('rubroChange') rubroId: EventEmitter<number> = new EventEmitter<number>();
 
@@ -43,7 +40,7 @@ export class SubRubroDropdownComponent  implements ControlValueAccessor, OnInit 
   }
 
   ngOnInit(): void {
-    if(this.consulta){
+    if (this.consulta){
       this.rubroService.obtenerRubros()
         .subscribe((rubros: RubroRest[]) => {
           this.rubros = rubros;

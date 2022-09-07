@@ -1,0 +1,11 @@
+<mat-form-field class="w-100" appearance="legacy">
+  <mat-label class="w-100">Marca</mat-label>
+  <mat-select [formControl]="control"  class="w-100" (selectionChange)="onChange($event)">
+    <mat-option *ngFor="let marca of marcas" [value]="marca.idMarca">
+      {{ marca.nombre }}
+    </mat-option>
+  </mat-select>
+  <mat-error  *ngIf="control?.errors">
+    Marca es<strong> requerido</strong>
+  </mat-error>
+</mat-form-field>

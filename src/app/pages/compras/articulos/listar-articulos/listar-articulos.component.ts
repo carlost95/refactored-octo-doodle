@@ -1,8 +1,5 @@
-import {Router} from '@angular/router';
-import {PedidosService} from '@service/pedidos.service';
 import {Articulo} from '@models/Articulo';
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {ExcelExportService} from '@service/excel-export.service';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {AgregarArticuloComponent} from '../agregar-articulo/agregar-articulo.component';
 import {ArticulosService} from '@service/articulos.service';
@@ -15,7 +12,8 @@ import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {ArticuloRest} from '../../../../models/articulo-rest';
 import {TipoModal} from '../../../../shared/models/tipo-modal.enum';
-import {TituloArticulo} from '../models/titulo-departamento.enum';
+import {TituloArticulo} from '../models/titulo-articulo.enum';
+import {BuscadorService} from "../../../../shared/helpers/buscador.service";
 
 @Component({
   selector: 'app-listar-articulos',
@@ -45,6 +43,7 @@ export class ListarArticulosComponent implements OnInit {
 
   constructor(
     private readonly articuloService: ArticulosService,
+    private readonly buscadorService: BuscadorService,
     public matDialog: MatDialog,
     private tokenService: TokenService,
     private snackBar: MatSnackBar) {
@@ -98,6 +97,8 @@ export class ListarArticulosComponent implements OnInit {
     const dialogConfig = this.matDialog.open(AgregarArticuloComponent, {
       disableClose: true,
       id: 'modal-component',
+      height: 'auto',
+      width: '50rem',
       panelClass: 'no-padding',
       data,
     });
@@ -116,8 +117,8 @@ export class ListarArticulosComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
-    dialogConfig.height = '300px';
-    dialogConfig.width = '350px';
+    dialogConfig.height = 'auto';
+    dialogConfig.width = '20rem';
     dialogConfig.data = {
       message: '¿Desea cambiar estado?',
       title: 'Cambio estado',
@@ -125,14 +126,20 @@ export class ListarArticulosComponent implements OnInit {
     };
     const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
-      // if (result.state) {
-      //   // tslint:disable-next-line:no-shadowed-variable
-      //   this.articuloService.cambiarHabilitacion(articulo.id).subscribe(result => {
-      //     this.getData();
-      //   });
-      // } else {
-      //   this.getData();
-      // }
+      if (result.state) {
+        // tslint:disable-next-line:no-shadowed-variable
+        this.articuloService.cambiarEstado(articulo.id).subscribe(result => {
+          this.articuloService.obtenerArticulos().subscribe(articulos => {
+            this.articulos = articulos;
+            this.establecerDatasource(articulos);
+          });
+        });
+      } else {
+        this.articuloService.obtenerArticulos().subscribe(articulos => {
+          this.articulos = articulos;
+          this.establecerDatasource(articulos);
+        });
+      }
     });
   }
 
@@ -144,7 +151,10 @@ export class ListarArticulosComponent implements OnInit {
     });
   }
 
-  filtrar($event: string) {
+  filtrar(value: string): void {
+    const TERMINO = 'nombre';
+    const articulos = this.buscadorService.buscarTermino(this.articulos, TERMINO, value);
+    this.establecerDatasource(articulos);
   }
 }
 
