@@ -1,8 +1,6 @@
 import { Router } from '@angular/router';
-import { Cliente } from '../../../models/Cliente';
+import { Cliente } from '../../../models/cliente';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { PdfExportService } from '../../../service/pdf-export.service';
-import { ServiceReportService } from '../../../service/service-report.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AgregarClienteComponent } from './agregar-cliente/agregar-cliente.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -14,7 +12,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { BuscadorService } from '../../../shared/helpers/buscador.service';
-import { cliente } from '../../../../environments/global-route';
 import { TituloCliente } from '../../../shared/models/titulo-cliente.enum';
 import { TipoModal } from '../../../shared/models/tipo-modal.enum';
 import { concatMap } from 'rxjs/operators';
@@ -100,6 +97,8 @@ export class ClientesComponent implements OnInit {
     this.openDialog(data);
   }
   direcciones(idCliente: number): void {
+    console.log(idCliente);
+
     this.router.navigate([`/ventas/direcciones/${idCliente}`]);
   }
 

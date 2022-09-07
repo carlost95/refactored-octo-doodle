@@ -109,7 +109,7 @@
             <i class="fas fa-pencil-alt"></i>
 
           </button>
-          <button class="btn btn-default select" title="Direcciones" (click)="direcciones(row.idClinte)">
+          <button class="btn btn-default select" title="Direcciones" (click)="direcciones(row.idCliente)">
             <i class="fas fa-map-marker-alt"></i>
           </button>
         </td>
@@ -124,5 +124,6 @@
         </td>
       </tr>
     </table>
+    <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
   </div>
 </template-page>

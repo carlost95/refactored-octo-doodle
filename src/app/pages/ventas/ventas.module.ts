@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../material/material.module';
 import { GoogleMapsModule } from '@angular/google-maps';
 
-import { ListarDireccionComponent } from './listar-direccion/listar-direccion.component';
 import { AgregarClienteComponent } from './clientes/agregar-cliente/agregar-cliente.component';
 import { VentasComponent } from './ventas.component';
 import { SubMenuComponent } from './sub-menu/sub-menu.component';
@@ -24,7 +23,6 @@ import { SharedModule } from '../../shared/shared.module';
     SubMenuComponent,
     VentasComponent,
     AgregarClienteComponent,
-    ListarDireccionComponent,
     ClientesComponent,
     DireccionesComponent,
     AgregarDireccionComponent,

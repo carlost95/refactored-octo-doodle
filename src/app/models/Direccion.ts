@@ -1,13 +1,13 @@
-import {Ubicacion} from "./Ubicacion";
-
 export class Direccion {
-  id: number;
+  idDireccion: number;
   calle: string;
+  numeroCalle: string;
+  entreCalle: string;
+  barrio: string;
   descripcion: string;
-  numerocalle: string;
-  estado: boolean;
-  clienteId: number;
-  distritoId: number;
-  ubicacion: Ubicacion
-  // ubicacion: {lat: number, lng: number};
+  status: boolean;
+  latitud: number;
+  longitud: number;
+  idCliente: number;
+  idDistrito: number;
 }
