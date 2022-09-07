@@ -4,12 +4,13 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment.prod';
 import {articulos, subRubro} from '../../environments/global-route';
-import {ArticuloRest} from "@models/articulo-rest";
-import {forkJoin, Observable, of} from "rxjs";
-import {SubRubroRest} from "@models/subrubro-rest";
-import {map, switchMap} from "rxjs/operators";
-import {UnidadMedidaService} from "@service/unidad-medida.service";
-import {RubrosService} from "@service/rubros.service";
+import {ArticuloRest} from '@models/articulo-rest';
+import {forkJoin, Observable, of} from 'rxjs';
+import {SubRubroRest} from '@models/subrubro-rest';
+import {map, switchMap} from 'rxjs/operators';
+import {UnidadMedidaService} from '@service/unidad-medida.service';
+import {RubrosService} from '@service/rubros.service';
+import {Articulo} from '@models/Articulo';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +40,18 @@ export class ArticulosService {
           unidadMedidaNombre: unidadesMedida.find(unidadMedida => unidadMedida.idUnidadMedida === articulo.idUnidadMedida).nombre,
           rubroNombre: rubros.find(rubro => rubro.idRubro === articulo.idRubro).nombre
         }))));
+  }
+
+  guardar(articulo: ArticuloRest): Observable<ArticuloRest> {
+    return this.http.post<ArticuloRest>(this.url, articulo);
+  }
+
+  actualizar(articulo: ArticuloRest): Observable<ArticuloRest>{
+    return this.http.put<ArticuloRest>(this.url, articulo);
+  }
+
+  cambiarEstado(id: number): Observable<ArticuloRest> {
+    return this.http.put<ArticuloRest>(this.url + '/' + id, id);
   }
 
   // tslint:disable-next-line:typedef
@@ -71,8 +84,4 @@ export class ArticulosService {
     return this.http.delete(this.url + id);
   }
 
-  // tslint:disable-next-line:typedef
-  cambiarHabilitacion(id: number) {
-    return this.http.put<Response>(this.url + '/' + id, id);
-  }
 }

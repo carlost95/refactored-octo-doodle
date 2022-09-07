@@ -1,11 +1,11 @@
 <mat-form-field class="w-100" appearance="legacy">
-  <mat-label class="w-100">Unidad de Medida</mat-label>
+  <mat-label class="w-100">Sub Rubro</mat-label>
   <mat-select [formControl]="control"  class="w-100" (selectionChange)="onChange($event)">
-    <mat-option *ngFor="let unidadDeMedida of unidadesDeMedida" [value]="unidadDeMedida.idUnidadMedida">
-      {{ unidadDeMedida.nombre }}
+    <mat-option *ngFor="let subrubro of subrubros" [value]="subrubro.idSubRubro">
+      {{ subrubro.nombre }}
     </mat-option>
   </mat-select>
   <mat-error  *ngIf="control?.errors">
-    Unidad de medida es <strong>requerido</strong>
+    Sub Rubro es<strong> requerido</strong>
   </mat-error>
 </mat-form-field>
