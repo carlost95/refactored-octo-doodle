@@ -26,7 +26,7 @@ export class ClienteService {
     return this.http.post<Cliente>(this.url, client);
   }
 
-  updateClient(client: Cliente): Observable<Cliente> {
+  updatedClient(client: Cliente): Observable<Cliente> {
     return this.http.put<Cliente>(this.url, client);
   }
 

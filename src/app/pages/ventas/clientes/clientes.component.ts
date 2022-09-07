@@ -28,7 +28,13 @@ export class ClientesComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   dataSource: MatTableDataSource<Cliente>;
-  displayedColumns: string[] = ['nombre', 'apellido', 'dni', 'email', 'status'];
+  displayedColumns: string[] = [
+    'apellido',
+    'dni',
+    'email',
+    'status',
+    'acciones',
+  ];
 
   clientes: Cliente[];
   mostrarModificacion: boolean;
@@ -70,16 +76,31 @@ export class ClientesComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  backPage(): void {
-    this.router.navigate(['ventas']);
-  }
-
   newClient(): void {
     const data = {
       titulo: TituloCliente.creacion,
       tipoModal: TipoModal.creacion,
     };
     this.openDialog(data);
+  }
+  consultClient(cliente: Cliente): void {
+    const data = {
+      titulo: TituloCliente.consulta,
+      tipoModal: TipoModal.consulta,
+      cliente,
+    };
+    this.openDialog(data);
+  }
+  updatedClient(cliente: Cliente): void {
+    const data = {
+      titulo: TituloCliente.actualizacion,
+      tipoModal: TipoModal.actualizacion,
+      cliente,
+    };
+    this.openDialog(data);
+  }
+  direcciones(idCliente: number): void {
+    this.router.navigate([`/ventas/direcciones/${idCliente}`]);
   }
 
   openDialog(data: any): void {
@@ -102,13 +123,6 @@ export class ClientesComponent implements OnInit {
       }
     });
   }
-  openSnackBar(msg: string): void {
-    this.snackBar.openFromComponent(SnackConfirmComponent, {
-      panelClass: ['error-snackbar'],
-      duration: 5 * 1000,
-      data: msg,
-    });
-  }
   showModal(cliente: Cliente): void {
     const dialogConfig = new MatDialogConfig();
     // The user can't close the dialog by clicking outside its body
@@ -128,99 +142,24 @@ export class ClientesComponent implements OnInit {
     modalDialog.afterClosed().subscribe((result) => {
       if (result.state) {
         this.clientService
-          .changeStatusClient(cliente.id)
+          .changeStatusClient(cliente.idCliente)
           .pipe(concatMap((data) => this.clientService.getAllClient()))
           .subscribe((clientes) => {
             this.clientes = clientes;
             this.establecerDatasource(this.clientes);
           });
+        this.openSnackBar('Estado actualizado');
       } else {
-        // this.getData();
+        this.openSnackBar('Error en la actualizacion');
       }
     });
   }
-  // exportarExcel(): void {
-  //   console.warn('muestra de excel');
-  // }
 
-  // exportarPDF(): void {
-  //   this.serviceReport.getReporteBancoPdf().subscribe((resp) => {
-  //     this.servicePdf.createAndDownloadBlobFile(
-  //       this.servicePdf.base64ToArrayBuffer(resp.data.file),
-  //       resp.data.name
-  //     );
-  //   });
-  // }
-
-  // editClient(client: Cliente): void {
-  //   this.toUpdate = client;
-  //   this.consulting = false;
-  //   this.openDialog();
-  // }
-
-  // readClient(client: Cliente): void {
-  //   this.toUpdate = client;
-  //   this.consulting = true;
-  //   this.openDialog();
-  // }
-
-  // openDialog(): void {
-  //   const dialogConfig = new MatDialogConfig();
-  //   dialogConfig.disableClose = true;
-  //   dialogConfig.id = 'modal-component';
-  //   dialogConfig.height = '540px';
-  //   dialogConfig.width = '300px';
-  //   dialogConfig.data = {
-  //     cliente: this.toUpdate,
-  //     consulting: this.consulting,
-  //   };
-  //   const modalDialog = this.matDialog.open(
-  //     AgregarClienteComponent,
-  //     dialogConfig
-  //   );
-  //   modalDialog.afterClosed().subscribe((result) => {
-  //     if (result) {
-  //       this.openSnackBar();
-  //     }
-  //     this.getData();
-  //   });
-  // }
-
-  // showModal(cliente: Cliente): void {
-  //   const dialogConfig = new MatDialogConfig();
-  //   // The user can't close the dialog by clicking outside its body
-  //   dialogConfig.disableClose = true;
-  //   dialogConfig.id = 'modal-component';
-  //   dialogConfig.height = '300px';
-  //   dialogConfig.width = '350px';
-  //   dialogConfig.data = {
-  //     message: '¿Desea cambiar estado?',
-  //     title: 'Cambio estado',
-  //     state: cliente.estado,
-  //   };
-  //   const modalDialog = this.matDialog.open(
-  //     ConfirmModalComponent,
-  //     dialogConfig
-  //   );
-  //   modalDialog.afterClosed().subscribe((result) => {
-  //     if (result.state) {
-  //       this.service.changeStatus(cliente.id).subscribe((result) => {
-  //         this.getData();
-  //       });
-  //     } else {
-  //       this.getData();
-  //     }
-  //   });
-  // }
-
-  direcciones(id: number): void {
-    this.router.navigate([`/ventas/direcciones/${id}`]);
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
+    });
   }
-
-  // openSnackBar(): void {
-  //   this._snackBar.openFromComponent(SnackConfirmComponent, {
-  //     panelClass: ['error-snackbar'],
-  //     duration: 5 * 1000,
-  //   });
-  // }
 }
