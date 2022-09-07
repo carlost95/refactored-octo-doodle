@@ -1,8 +1,0 @@
-.select {
-  transition: 1s;
-}
-
-.select:hover {
-  transform: scale(1.3);
-  color: rgb(255, 172, 7);
-}

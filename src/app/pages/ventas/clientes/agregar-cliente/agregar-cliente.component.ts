@@ -1,8 +1,12 @@
-import {Cliente} from '../../../../models/Cliente';
-import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {ClienteService} from '../../../../service/cliente.service';
+import { Cliente } from '../../../../models/cliente';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ClienteService } from '../../../../service/cliente.service';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { cliente } from '../../../../../environments/global-route';
+import { TipoModal } from '../../../../shared/models/tipo-modal.enum';
+import { SnackConfirmComponent } from '../../../../shared/snack-confirm/snack-confirm.component';
 
 @Component({
   selector: 'app-agregar-cliente',
@@ -10,104 +14,118 @@ import {ClienteService} from '../../../../service/cliente.service';
   styleUrls: ['./agregar-cliente.component.css'],
 })
 export class AgregarClienteComponent implements OnInit {
-  client: Cliente = new Cliente();
-  updating = false;
-  consultar = false;
-  clientForm: any;
-  clients: Cliente[] = [];
-  duplicateDni = false;
+  clientForm: FormGroup;
+  cliente: Cliente = new Cliente();
+  errorInForm: boolean = false;
   submitted = false;
-  errorInForm = true;
 
-
-  constructor(private service: ClienteService,
-              private formBuilder: FormBuilder,
-              public dialogRef: MatDialogRef<AgregarClienteComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any) {
-  }
+  titulo: string;
+  tipoModal: TipoModal;
+  constructor(
+    private clientservice: ClienteService,
+    private formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef<AgregarClienteComponent>,
+    private snackBar: MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
 
   ngOnInit(): void {
-    this.service.getAll().subscribe(resp => {
-      this.clients = resp.data;
-      console.log(resp);
-    });
-    const {cliente} = this.data;
+    this.titulo = this.data.titulo;
+    this.tipoModal = this.data.tipoModal;
 
-    if (cliente) {
-      this.consultar = this.data.consulting;
-      console.log(this.consultar ? 'true' : 'false');
-      this.clientForm = this.formBuilder.group({
-        id: [cliente.id, null],
-        apellido: [{value: cliente.apellido, disabled: this.consultar}, Validators.required],
-        nombre: [{value: cliente.nombre, disabled: this.consultar}, Validators.required],
-        dni: [{value: cliente.dni, disabled: this.consultar}, Validators.required],
-        mail: [{value: cliente.mail, disabled: this.consultar}, null],
-        estado: [{value: cliente.estado, disabled: this.consultar}, null],
-      });
-      this.updating = !this.consultar;
+    if (
+      this.tipoModal === TipoModal.consulta ||
+      this.tipoModal === TipoModal.actualizacion
+    ) {
+      this.establecerModalDatos(this.data, this.tipoModal);
     } else {
-      this.clientForm = this.formBuilder.group({
-        apellido: ['', Validators.required],
-        nombre: ['', Validators.required],
-        dni: ['', Validators.required],
-        mail: ['', null]
-      });
+      this.establecerModalVacio();
     }
   }
 
-  validate({target}): void {
-    const {value: dni} = target;
-    const finded = this.clients.find(c => dni === c.dni);
-    this.duplicateDni = finded ? true : false;
+  establecerModalDatos(data: any, tipoModal: TipoModal): void {
+    const { cliente } = data;
+    const disabled = tipoModal === TipoModal.consulta ? true : false;
+    this.clientForm = this.formBuilder.group({
+      idCliente: [{ value: cliente.idCliente, disabled }, null],
+      nombre: [{ value: cliente.nombre, disabled }, Validators.required],
+      apellido: [{ value: cliente.apellido, disabled }, Validators.required],
+      dni: [{ value: cliente.dni, disabled }, Validators.required],
+      email: [{ value: cliente.email, disabled }, null],
+      status: [{ value: cliente.status, disabled }, Validators.required],
+    });
+    return;
   }
 
+  establecerModalVacio(): void {
+    this.clientForm = this.formBuilder.group({
+      nombre: ['', Validators.required],
+      apellido: ['', Validators.required],
+      dni: ['', Validators.required],
+      email: ['', null],
+    });
+  }
   close(): void {
-    this.data.save = false;
-    this.dialogRef.close(false);
+    this.dialogRef.close();
   }
-
   onSubmit(): void {
     this.submitted = true;
     this.errorInForm = this.submitted && this.clientForm.invalid;
-    if (this.errorInForm || this.duplicateDni) {
-      this.clientForm.controls.dni.markAsTouched();
+
+    if (this.errorInForm) {
+      this.clientForm.controls.nombre.markAllAsTouched();
+      this.clientForm.controls.apellido.markAllAsTouched();
+      this.clientForm.controls.dni.markAllAsTouched();
     } else {
       this.makeDTO();
     }
   }
-
   makeDTO(): void {
-    this.client.apellido = (this.clientForm.controls.apellido.value).trim().toUpperCase();
-    this.client.nombre = (this.clientForm.controls.nombre.value).trim().toUpperCase();
-    this.client.dni = (this.clientForm.controls.dni.value).trim();
-    this.client.mail = (this.clientForm.controls.mail.value).trim();
-    if (this.updating) {
-      this.client.id = this.clientForm.controls.id.value;
-      this.client.estado = this.clientForm.controls.estado.value;
+    this.cliente.nombre = this.clientForm.controls.nombre.value
+      .trim()
+      .toUpperCase();
+    this.cliente.apellido = this.clientForm.controls.apellido.value
+      .trim()
+      .toUpperCase();
+    this.cliente.dni = this.clientForm.controls.dni.value;
+    this.cliente.email = this.clientForm.controls.email.value;
+
+    if (this.tipoModal === TipoModal.actualizacion) {
+      this.cliente.idCliente = this.clientForm.controls.idCliente.value;
+      this.cliente.status = this.clientForm.controls.status.value;
       this.update();
     } else {
       this.save();
     }
   }
-
-  save(): void {
-    this.service.save(this.client).subscribe(data => {
-      this.msgSnack(data);
-    });
+  private save(): void {
+    this.clientservice.saveClient(this.cliente).subscribe(
+      (data) => {
+        this.msgSnack(data.nombre + ' Guardado con Exito');
+      },
+      ({ error }) => {
+        this.msgSnack(error);
+      }
+    );
   }
-
-  update(): void {
-    this.service.update(this.client).subscribe(data => {
-      this.msgSnack(data);
-    });
+  private update(): void {
+    this.clientservice.updatedClient(this.cliente).subscribe(
+      (data) => {
+        this.msgSnack(data.nombre + ' Actualizado con Exito');
+      },
+      ({ error }) => {
+        this.openSnackBar(error);
+      }
+    );
   }
-
   msgSnack(data): void {
-    const {msg} = data;
-    if (data.code === 200) {
-      this.dialogRef.close(msg);
-    } else {
-      this.dialogRef.close('Error en el proceso');
-    }
+    this.dialogRef.close(data);
+  }
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
+    });
   }
 }

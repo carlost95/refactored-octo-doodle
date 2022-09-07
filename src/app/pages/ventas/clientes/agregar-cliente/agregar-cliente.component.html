@@ -1,4 +1,4 @@
-<div class="modal-content-wrapper">
+<!-- <div class="modal-content-wrapper">
   <header class="modal-header modal-header-size2">
     <h1 class="modal-title" *ngIf="!updating && !consultar">Nuevo Cliente</h1>
     <h1 class="modal-title" *ngIf="updating">Actualizar Cliente</h1>
@@ -55,4 +55,45 @@
     <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>
     <button *ngIf="!consultar" class="btn btn-warning" (click)="onSubmit()">Guardar</button>
   </footer>
-</div>
+</div> -->
+
+<header class="modal-header  modal-header-size1">
+  <h1 class="modal-title">{{titulo}}</h1>
+</header>
+<section class="d-flex justify-content-center w-100">
+  <form [formGroup]="clientForm" class="p-4 w-100" onsubmit="">
+    <mat-form-field appearance="legacy" class="w-100">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre" required autocomplete="off" class="w-100" />
+      <mat-error *ngIf="clientForm.controls.nombre.errors">
+        nombre es<strong> requerido</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="legacy" class="w-100">
+      <mat-label>Apellido</mat-label>
+      <input matInput formControlName="apellido" required autocomplete="off" />
+      <mat-error *ngIf="clientForm.controls.apellido.errors">
+        Apellido es<strong> requerido</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="legacy" class="w-100">
+      <mat-label>DNI</mat-label>
+      <input matInput formControlName="dni" required autocomplete="off" />
+      <mat-error *ngIf="clientForm.controls.dni.errors">
+        DNI es<strong> requerido</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="legacy" class="w-100">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" autocomplete="off" />
+    </mat-form-field>
+  </form>
+</section>
+
+<footer class="modal-footer">
+  <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>
+  <button *ngIf="tipoModal !== 0" class="btn btn-warning" (click)="onSubmit()">Guardar</button>
+</footer>

@@ -1,21 +1,27 @@
-import {AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {Direccion} from '../../../../models/Direccion';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {DistritoService} from '../../../../service/distrito.service';
-import {Distrito} from '../../../../models/Distrito';
-import {DireccionesService} from '../../../../service/direcciones.service';
-import {MapMarker} from '@angular/google-maps';
-import {Ubicacion} from '../../../../models/Ubicacion';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Direccion } from '../../../../models/Direccion';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DistritoService } from '../../../../service/distrito.service';
+import { Distrito } from '../../../../models/Distrito';
+import { DireccionesService } from '../../../../service/direcciones.service';
+import { MapMarker } from '@angular/google-maps';
+import { Ubicacion } from '../../../../models/Ubicacion';
 import LatLng = google.maps.LatLng;
 
 @Component({
   selector: 'app-agregar-direccion',
   templateUrl: './agregar-direccion.component.html',
-  styleUrls: ['./agregar-direccion.component.scss']
+  styleUrls: ['./agregar-direccion.component.scss'],
 })
 export class AgregarDireccionComponent implements OnInit {
-
   // Apunta al componente marker que aparece en el html
   @ViewChild(MapMarker) marker: google.maps.Marker = new google.maps.Marker();
   direccion: Direccion = new Direccion();
@@ -30,11 +36,11 @@ export class AgregarDireccionComponent implements OnInit {
   lastPosition: LatLng;
   label = {
     color: 'black',
-    text: 'ubicacion'
+    text: 'ubicacion',
   };
 
   markerOptions: google.maps.MarkerOptions = {
-    draggable: true
+    draggable: true,
   };
 
   init = true;
@@ -48,30 +54,40 @@ export class AgregarDireccionComponent implements OnInit {
     private direccionService: DireccionesService,
     // tslint:disable-next-line:variable-name
     private _elementRef: ElementRef
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.distritoService.listarDistritosHabilitados().subscribe(res => {
+    this.distritoService.listarDistritosHabilitados().subscribe((res) => {
       this.distritos = res.data;
       this.initForm(res.data);
     });
   }
 
-
   initForm(data: any): void {
-    const {direccion, cliente} = this.data;
+    const { direccion, cliente } = this.data;
 
     if (direccion) {
       this.consultar = this.data.consultar;
       this.direccionForm = this.formBuilder.group({
         id: [direccion.id, null],
-        calle: [{value: direccion.calle, disabled: this.consultar}, Validators.required],
-        distrito: [{value: direccion.distritoId, disabled: this.consultar}, Validators.required],
-        descripcion: [{value: direccion.descripcion, disabled: this.consultar}, null],
-        numerocalle: [{value: direccion.numerocalle, disabled: this.consultar}, Validators.required],
-        estado: [{value: direccion.estado, disabled: this.consultar}, null],
-        cliente: [cliente, null]
+        calle: [
+          { value: direccion.calle, disabled: this.consultar },
+          Validators.required,
+        ],
+        distrito: [
+          { value: direccion.distritoId, disabled: this.consultar },
+          Validators.required,
+        ],
+        descripcion: [
+          { value: direccion.descripcion, disabled: this.consultar },
+          null,
+        ],
+        numerocalle: [
+          { value: direccion.numerocalle, disabled: this.consultar },
+          Validators.required,
+        ],
+        estado: [{ value: direccion.estado, disabled: this.consultar }, null],
+        cliente: [cliente, null],
       });
       this.setPosition(direccion.ubicacion);
       this.updating = !this.consultar;
@@ -81,7 +97,7 @@ export class AgregarDireccionComponent implements OnInit {
         distrito: ['', Validators.required],
         descripcion: ['', null],
         numerocalle: ['', Validators.required],
-        cliente: [cliente, null]
+        cliente: [cliente, null],
       });
       const ubicacion = new Ubicacion();
       ubicacion.lat = -29.164942382332168;
@@ -90,7 +106,6 @@ export class AgregarDireccionComponent implements OnInit {
     }
     this.showMarker = true;
   }
-
 
   setPosition(ubicacion: Ubicacion): void {
     console.log(ubicacion);
@@ -120,20 +135,18 @@ export class AgregarDireccionComponent implements OnInit {
   }
 
   makeDTO(): void {
-    console.log(this.direccionForm.controls.calle.value);
-    this.direccion.calle = this.direccionForm.controls.calle.value;
-    this.direccion.numerocalle = this.direccionForm.controls.numerocalle.value;
-    this.direccion.descripcion = (this.direccionForm.controls.descripcion.value).trim();
-    this.direccion.distritoId = this.direccionForm.controls.distrito.value;
-    this.direccion.clienteId = this.direccionForm.controls.cliente.value;
-    const ubicacion = new Ubicacion();
-    ubicacion.lng = this.lastPosition.lng();
-    ubicacion.lat = this.lastPosition.lat();
-    this.direccion.ubicacion = ubicacion;
+    // console.log(this.direccionForm.controls.calle.value);
+    // this.direccion.calle = this.direccionForm.controls.calle.value;
+    // this.direccion.numerocalle = this.direccionForm.controls.numerocalle.value;
+    // this.direccion.descripcion = (this.direccionForm.controls.descripcion.value).trim();idDistrito = this.direccionForm.controls.distrito.value;
+    // this.direccion.clienteId = this.direccionForm.controls.cliente.value;
+    // const ubicacion = new Ubicacion();
+    // ubicacion.lng = this.lastPosition.lng();
+    // ubicacion.lat = this.lastPosition.lat();
 
     if (this.updating) {
-      this.direccion.id = this.direccionForm.controls.id.value;
-      this.direccion.estado = this.direccionForm.controls.estado.value;
+      this.direccion.idDireccion = this.direccionForm.controls.id.value;
+      this.direccion.status = this.direccionForm.controls.estado.value;
       this.update();
     } else {
       this.save();
@@ -142,15 +155,14 @@ export class AgregarDireccionComponent implements OnInit {
 
   private update(): void {
     console.log(this.direccion);
-    console.log(this.direccion.ubicacion);
-    this.direccionService.update(this.direccion).subscribe(resp => {
+    this.direccionService.update(this.direccion).subscribe((resp) => {
       this.dialogRef.close(true);
     });
   }
 
   private save(): void {
     console.log(this.direccion);
-    this.direccionService.save(this.direccion).subscribe(resp => {
+    this.direccionService.save(this.direccion).subscribe((resp) => {
       this.dialogRef.close(true);
     });
   }
@@ -176,7 +188,8 @@ export class AgregarDireccionComponent implements OnInit {
   }
 
   getCurrentPosition(): void {
-    this.lastPosition = this.marker ? this.marker.getPosition() : this.lastPosition;
+    this.lastPosition = this.marker
+      ? this.marker.getPosition()
+      : this.lastPosition;
   }
-
 }

@@ -1,10 +1,8 @@
-export class Cliente{
-  id: number;
+export class Cliente {
+  idCliente: number;
   nombre: string;
   apellido: string;
-  mail: string;
+  email: string;
   dni: string;
-  estado: boolean;
-  direcciones: [];
-
+  status: boolean;
 }
