@@ -1,25 +1,25 @@
-import {Pedido} from '../models/Pedido';
+import {Pedido} from '@models/pedido';
 import {Response} from '../models/Response';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment.prod';
 import {pedidos} from '../../environments/global-route';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PedidosService {
-  // Url = "//localhost:8081";
   private url: string;
 
   constructor(private http: HttpClient) {
     this.url = environment.url + pedidos.path;
   }
 
-  // SERVICE THE PEDIDO
-  // tslint:disable-next-line:typedef
-  listarPedidoTodos() {
-    return this.http.get<Response>(this.url);
+
+  obtenerPedidos(): Observable<Pedido[]> {
+    console.log(this.url)
+    return this.http.get<Pedido[]>(this.url);
   }
 
   // tslint:disable-next-line: typedef

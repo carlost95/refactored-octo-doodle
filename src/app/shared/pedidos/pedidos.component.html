@@ -1,108 +1,111 @@
-<div class="container">
-  <div class="card m-1">
-    <h1 class="text-center mt-4" *ngIf="consultar">Consulta de pedido</h1>
-    <h1 class="text-center" *ngIf="!consultar">Carga de pedido</h1>
-    <section>
-      <form [formGroup]="pedidoForm">
-        <div class="form-row justify-content-center">
-          <mat-form-field class="col-md-5 py-3" appearance="legacy">
-            <mat-label>Nombre</mat-label>
-            <input matInput autocomplete="off" formControlName="nombre"
-                   (keyup)="validarNombre($event)"/>
-            <mat-error *ngIf="pedidoForm.controls.nombre.errors">
-              Nombre es <strong>requerido</strong>
-            </mat-error>
-            <label *ngIf="nombreRepe" style="color: #f44336; font-size: 75%"> Nombre repetido</label>
-          </mat-form-field>
+<!--<div class="container">-->
+<!--  <div class="card m-1">-->
+<!--    <h1 class="text-center mt-4" *ngIf="consultar">Consulta de pedido</h1>-->
+<!--    <h1 class="text-center" *ngIf="!consultar">Carga de pedido</h1>-->
+<!--    <section>-->
+<!--      <form [formGroup]="pedidoForm">-->
+<!--        <div class="form-row justify-content-center">-->
+<!--          <mat-form-field class="col-md-5 py-3" appearance="legacy">-->
+<!--            <mat-label>Nombre</mat-label>-->
+<!--            <input matInput autocomplete="off" formControlName="nombre"-->
+<!--                   (keyup)="validarNombre($event)"/>-->
+<!--            <mat-error *ngIf="pedidoForm.controls.nombre.errors">-->
+<!--              Nombre es <strong>requerido</strong>-->
+<!--            </mat-error>-->
+<!--            <label *ngIf="nombreRepe" style="color: #f44336; font-size: 75%"> Nombre repetido</label>-->
+<!--          </mat-form-field>-->
 
 
-          <mat-form-field class="col-md-5 py-3" appearance="legacy">
-            <mat-label> Fecha</mat-label>
-            <input matInput type="date" formControlName="fecha">
-            <mat-error *ngIf="pedidoForm.controls.nombre.errors">
-              Fecha es <strong>requerido</strong>
-            </mat-error>
-          </mat-form-field>
+<!--          <mat-form-field class="col-md-5 py-3" appearance="legacy">-->
+<!--            <mat-label> Fecha</mat-label>-->
+<!--            <input matInput type="date" formControlName="fecha">-->
+<!--            <mat-error *ngIf="pedidoForm.controls.nombre.errors">-->
+<!--              Fecha es <strong>requerido</strong>-->
+<!--            </mat-error>-->
+<!--          </mat-form-field>-->
 
-          <mat-form-field class="col-md-5 py-3" appearance="legacy">
-            <mat-label>Descripción</mat-label>
-            <input matInput formControlName="descripcion" maxlength="100"
-                   autocomplete="off"/>
-            <mat-hint align="start"><strong>Descripcion del ajuste a realizar </strong></mat-hint>
-          </mat-form-field>
+<!--          <mat-form-field class="col-md-5 py-3" appearance="legacy">-->
+<!--            <mat-label>Descripción</mat-label>-->
+<!--            <input matInput formControlName="descripcion" maxlength="100"-->
+<!--                   autocomplete="off"/>-->
+<!--            <mat-hint align="start"><strong>Descripcion del ajuste a realizar </strong></mat-hint>-->
+<!--          </mat-form-field>-->
 
-          <mat-form-field class="col-md-5" appearance="fill">
-            <mat-label> Proveedores</mat-label>
-            <mat-select (selectionChange)="listarFiltro()"
-                        formControlName="proveedorId"
-                        [(ngModel)]=proveedorId autocomplete="off">
-              <mat-option *ngFor="let prov of proveedores" [value]="prov.id">
-                {{ prov.razonSocial }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="pedidoForm.controls.nombre.errors">
-              Proveedor es <strong>requerido</strong>
-            </mat-error>
-            <mat-hint align="start"><strong>Se debe cargar un proveedor </strong></mat-hint>
-          </mat-form-field>
-        </div>
-      </form>
-    </section>
-  </div>
-    <div
-      class="card-body p-0"
-      style="width: 1100px; height: 450px; overflow: auto"
-    >
-      <table class="table table-striped">
-        <thead class="thead-dark">
-        <tr class="text-lg-center">
-          <th scope="col">Codigo</th>
-          <th scope="col">Nombre</th>
-          <th scope="col" *ngIf="consultar">Stock Previo</th>
-          <th scope="col" *ngIf="!consultar">Stock Actual</th>
-          <th scope="col">Ingreso</th>
-        </tr>
-        </thead>
-        <tbody *ngIf="articulos != null" class="tbody-scroll p-0 m-0">
-        <tr
-          *ngFor="
-              let artStoMov of articulosStockMovimientoFilter;
-              let i = index
-            "
-          class="text-center"
-        >
-          <td>{{ artStoMov.articulo.codigoArt }}</td>
-          <td>{{ artStoMov.articulo.nombre }}</td>
-          <td>{{ artStoMov.stock }}</td>
-          <td>
-            <input
-              type="number"
-              min="0"
-              maxlength="8"
-              (change)="guardarCarga()"
-              [(ngModel)]="artStoMov.movimiento.movimiento"
-              class="form-control text-center"
-              oninput="this.value=this.value.slice(0,this.maxLength|| 0/0);this.value=(this.value< 0) ? (0/0) : this.value;"
-              placeholder="cantidad"
-              [disabled]="consultar"
-            />
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-    <hr class="m-0 p-0">
-    <div class="row justify-content-end m-1 p-2" *ngIf="consultar">
-      <button (click)="volverAtras()" class="btn btn-outline-danger">Cerrar</button>
-    </div>
-    <div class="row justify-content-end m-2 p-2" *ngIf="!consultar">
-      <button (click)="volverAtras()" class="btn btn-outline-danger">
-        Cancelar
-      </button>
-      &nbsp; &nbsp; &nbsp;
-      <button (click)="onSubmit()" class="btn btn-warning">
-        Aceptar
-      </button>
-    </div>
+<!--          <mat-form-field class="col-md-5" appearance="fill">-->
+<!--            <mat-label> Proveedores</mat-label>-->
+<!--            <mat-select (selectionChange)="listarFiltro()"-->
+<!--                        formControlName="proveedorId"-->
+<!--                        [(ngModel)]=proveedorId autocomplete="off">-->
+<!--              <mat-option *ngFor="let prov of proveedores" [value]="prov.id">-->
+<!--                {{ prov.razonSocial }}-->
+<!--              </mat-option>-->
+<!--            </mat-select>-->
+<!--            <mat-error *ngIf="pedidoForm.controls.nombre.errors">-->
+<!--              Proveedor es <strong>requerido</strong>-->
+<!--            </mat-error>-->
+<!--            <mat-hint align="start"><strong>Se debe cargar un proveedor </strong></mat-hint>-->
+<!--          </mat-form-field>-->
+<!--        </div>-->
+<!--      </form>-->
+<!--    </section>-->
+<!--  </div>-->
+<!--    <div-->
+<!--      class="card-body p-0"-->
+<!--      style="width: 1100px; height: 450px; overflow: auto"-->
+<!--    >-->
+<!--      <table class="table table-striped">-->
+<!--        <thead class="thead-dark">-->
+<!--        <tr class="text-lg-center">-->
+<!--          <th scope="col">Codigo</th>-->
+<!--          <th scope="col">Nombre</th>-->
+<!--          <th scope="col" *ngIf="consultar">Stock Previo</th>-->
+<!--          <th scope="col" *ngIf="!consultar">Stock Actual</th>-->
+<!--          <th scope="col">Ingreso</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody *ngIf="articulos != null" class="tbody-scroll p-0 m-0">-->
+<!--        <tr-->
+<!--          *ngFor="-->
+<!--              let artStoMov of articulosStockMovimientoFilter;-->
+<!--              let i = index-->
+<!--            "-->
+<!--          class="text-center"-->
+<!--        >-->
+<!--          <td>{{ artStoMov.articulo.codigoArt }}</td>-->
+<!--          <td>{{ artStoMov.articulo.nombre }}</td>-->
+<!--          <td>{{ artStoMov.stock }}</td>-->
+<!--          <td>-->
+<!--            <input-->
+<!--              type="number"-->
+<!--              min="0"-->
+<!--              maxlength="8"-->
+<!--              (change)="guardarCarga()"-->
+<!--              [(ngModel)]="artStoMov.movimiento.movimiento"-->
+<!--              class="form-control text-center"-->
+<!--              oninput="this.value=this.value.slice(0,this.maxLength|| 0/0);this.value=(this.value< 0) ? (0/0) : this.value;"-->
+<!--              placeholder="cantidad"-->
+<!--              [disabled]="consultar"-->
+<!--            />-->
+<!--          </td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--      </table>-->
+<!--    </div>-->
+<!--    <hr class="m-0 p-0">-->
+<!--    <div class="row justify-content-end m-1 p-2" *ngIf="consultar">-->
+<!--      <button (click)="volverAtras()" class="btn btn-outline-danger">Cerrar</button>-->
+<!--    </div>-->
+<!--    <div class="row justify-content-end m-2 p-2" *ngIf="!consultar">-->
+<!--      <button (click)="volverAtras()" class="btn btn-outline-danger">-->
+<!--        Cancelar-->
+<!--      </button>-->
+<!--      &nbsp; &nbsp; &nbsp;-->
+<!--      <button (click)="onSubmit()" class="btn btn-warning">-->
+<!--        Aceptar-->
+<!--      </button>-->
+<!--    </div>-->
 
-  </div>
+<!--  </div>-->
+<div>
+
+</div>
