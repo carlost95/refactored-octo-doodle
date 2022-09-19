@@ -4,13 +4,14 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment.prod';
 import {articulos, subRubro} from '../../environments/global-route';
-import {ArticuloRest} from '@models/articulo-rest';
+import {ArticuloRest, ArticuloStock} from '@models/articulo-rest';
 import {forkJoin, Observable, of} from 'rxjs';
 import {SubRubroRest} from '@models/subrubro-rest';
 import {map, switchMap} from 'rxjs/operators';
 import {UnidadMedidaService} from '@service/unidad-medida.service';
 import {RubrosService} from '@service/rubros.service';
 import {Articulo} from '@models/Articulo';
+import {Proveedor} from "@models/Proveedor";
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +43,10 @@ export class ArticulosService {
         }))));
   }
 
+  obtenerArticuloByProveedor(id: string): Observable<ArticuloStock[]> {
+    return this.http.get<ArticuloStock[]>(`${this.url}/proveedor/${id}`);
+  }
+
   guardar(articulo: ArticuloRest): Observable<ArticuloRest> {
     return this.http.post<ArticuloRest>(this.url, articulo);
   }
@@ -55,33 +60,7 @@ export class ArticulosService {
   }
 
   // tslint:disable-next-line:typedef
-  listarArticuloTodos() {
-    return this.http.get<Response>(this.url);
-  }
-
-  // tslint:disable-next-line:typedef
   listarArticuloHabilitados() {
     return this.http.get<Response>(this.url + '/habilitados');
   }
-
-  // tslint:disable-next-line:typedef
-  guardarArticulo(articuloDTO: ArticuloDTO) {
-    return this.http.post<Response>(this.url, articuloDTO);
-  }
-
-  // tslint:disable-next-line:typedef
-  actualizarArticulo(articuloDTO: ArticuloDTO) {
-    return this.http.put<Response>(this.url + '/', articuloDTO);
-  }
-
-  // tslint:disable-next-line:typedef
-  listarArticuloId(id: number) {
-    return this.http.get<Response>(this.url + id);
-  }
-
-  // tslint:disable-next-line:typedef
-  desabilitarArticulo(id: number) {
-    return this.http.delete(this.url + id);
-  }
-
 }

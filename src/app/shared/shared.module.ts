@@ -54,20 +54,21 @@ import { ProveedorDropdownComponent } from './proveedor/dropdown/proveedor-dropd
     ReactiveFormsModule,
     RouterModule,
   ],
-  exports: [
-    PedidosComponent,
-    AjustesComponent,
-    NavbarComponent,
-    DropdownComponent,
-    TemplatePageComponent,
-    MenuComponent,
-    DropdownComponent,
-    UnidadMedidaDropdownComponent,
-    RubroDropdownComponent,
-    SubrubroDropdownComponent,
-    MarcaDropdownComponent,
-    ProveedorDropdownComponent
-  ],
+    exports: [
+        PedidosComponent,
+        AjustesComponent,
+        NavbarComponent,
+        DropdownComponent,
+        TemplatePageComponent,
+        MenuComponent,
+        DropdownComponent,
+        UnidadMedidaDropdownComponent,
+        RubroDropdownComponent,
+        SubrubroDropdownComponent,
+        MarcaDropdownComponent,
+        ProveedorDropdownComponent,
+        HeaderComponent
+    ],
   providers: [
     {
       provide: MatPaginatorIntl,

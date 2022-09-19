@@ -7,7 +7,8 @@ import {TokenService} from '@service/token.service';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
-import {BuscadorService} from "@shared/helpers/buscador.service";
+import {BuscadorService} from '@shared/helpers/buscador.service';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-listar-pedido',
@@ -34,6 +35,7 @@ export class ListarPedidoComponent implements OnInit {
     private readonly pedidoService: PedidosService,
     private readonly buscadorService: BuscadorService,
     private readonly tokenService: TokenService,
+    private readonly router: Router,
     private snackBar: MatSnackBar,
     ) {
   }
@@ -67,8 +69,8 @@ export class ListarPedidoComponent implements OnInit {
     });
   }
 
-  nuevo() {
-
+  nuevo(): void {
+    this.router.navigate([`/compras/agregar-pedido`]);
   }
 
   filtrarPedido(value: string): void {
