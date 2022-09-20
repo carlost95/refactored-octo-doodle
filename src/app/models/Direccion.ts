@@ -6,8 +6,7 @@ export class Direccion {
   barrio: string;
   descripcion: string;
   status: boolean;
-  latitud: number;
-  longitud: number;
+  ubicacion: [number, number];
   idCliente: number;
   idDistrito: number;
 }

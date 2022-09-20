@@ -17,6 +17,7 @@ import { AgregarVentaComponent } from './agregar-venta/agregar-venta.component';
 import { AgregarRemitoComponent } from './agregar-remito/agregar-remito.component';
 import { NuevaVentaComponent } from './nueva-venta/nueva-venta.component';
 import { SharedModule } from '../../shared/shared.module';
+import { CrearDireccionComponent } from './direcciones/crear-direccion/crear-direccion.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { SharedModule } from '../../shared/shared.module';
     AgregarVentaComponent,
     AgregarRemitoComponent,
     NuevaVentaComponent,
+    CrearDireccionComponent,
   ],
   imports: [
     CommonModule,

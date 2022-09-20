@@ -1,0 +1,85 @@
+<!-- <div class="container"> -->
+<!-- <div class="py-3"> -->
+<!-- <h1 style="text-align: center" *ngIf="!updating && !consultar">Nueva direccion</h1>
+        <h1 style="text-align: center" *ngIf="updating">Actualizar direccion</h1>
+        <h1 style="text-align: center" *ngIf="consultar">Direccion de cliente</h1> -->
+<!-- </div> -->
+<header class="modal-header  modal-header-size1 d-flex justify-content-center">
+    <h1 class="modal-title">{{titulo}}</h1>
+</header>
+<!-- <hr> -->
+<div class="container-fluid mt-2">
+    <section>
+        <!-- <section *ngIf="init"> -->
+        <form [formGroup]="direccionForm" *ngIf="this.direccionForm">
+            <!-- <div class="form-row justify-content-center"> -->
+            <mat-form-field class="col-md-6 col-sm-12" appearance="legacy">
+                <mat-label>Calle</mat-label>
+                <input matInput formControlName="calle" required autocomplete="off" />
+                <mat-error *ngIf="direccionForm.controls.calle.errors">
+                    Campo <strong>requerido</strong>
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="col-md-6 col-sm-12" appearance="legacy">
+                <mat-label>Numero de Calle</mat-label>
+                <input matInput formControlName="numeroCalle" required autocomplete="off" />
+                <mat-error *ngIf="direccionForm.controls.numeroCalle.errors">
+                    Campo <strong>requerido</strong>
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="col-md-6 col-sm-12" appearance="legacy">
+                <mat-label>Entre Calle</mat-label>
+                <input matInput formControlName="entreCalle" autocomplete="off" />
+            </mat-form-field>
+            <mat-form-field class="col-md-6 col-sm-12" appearance="legacy">
+                <mat-label>Barrio</mat-label>
+                <input matInput formControlName="barrio" autocomplete="off" />
+
+            </mat-form-field>
+            <mat-form-field class="col-md-6 col-sm-12" appearance="legacy">
+                <mat-label>Descripcion</mat-label>
+                <input matInput formControlName="descripcion" autocomplete="off" />
+
+            </mat-form-field>
+            <distrito-dropdown formControlName="idDistrito" (distritoChange)="establecerDistrito($event)">
+            </distrito-dropdown>
+            <!-- </div> -->
+        </form>
+    </section>
+</div>
+<footer class="modal-footer">
+    <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>
+    <button *ngIf="tipoModal !== 0" class="btn btn-warning" (click)="onSubmit()">Guardar</button>
+</footer>
+
+<!-- <section *ngIf="!init" class="justify-content-center">
+        <div class="container-maps mr-2">
+            <google-map #map [center]="position">
+                <map-marker *ngIf="showMarker" [position]="position" [label]="label" [title]="'sample'"
+                    [options]="markerOptions" (positionChanged)="getCurrentPosition()">
+                </map-marker>
+            </google-map>
+        </div>
+    </section> -->
+<!-- <hr> -->
+<!-- <div class="text-right py-3"> -->
+<!-- <button (click)="close()" class="btn btn-outline-danger" *ngIf="!consultar">
+        Cancelar
+      </button>
+      <button (click)="close()" class="btn btn-outline-danger" *ngIf="consultar">
+        Cerrar
+      </button>
+      &nbsp;
+      <button class="btn btn-primary" (click)="prevMap()" *ngIf="!init">
+        Anterior
+      </button>
+      &nbsp;
+      <button class="btn btn-warning" (click)="showMap()" *ngIf="init">
+        Siguiente
+      </button>
+      &nbsp;
+      <button class="btn btn-warning" (click)="onSubmit()" *ngIf="!init && !consultar">
+        Aceptar
+      </button> -->
+<!-- </div> -->
+<!-- </div> -->

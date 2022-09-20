@@ -10,6 +10,7 @@ import { AgregarRemitoComponent } from './agregar-remito/agregar-remito.componen
 import { ListarVentaComponent } from './listar-venta/listar-venta.component';
 import { ListarRemitosComponent } from './listar-remitos/listar-remitos.component';
 import { NuevaVentaComponent } from './nueva-venta/nueva-venta.component';
+import { CrearDireccionComponent } from './direcciones/crear-direccion/crear-direccion.component';
 
 const routes: Routes = [
   {
@@ -19,8 +20,8 @@ const routes: Routes = [
       { path: 'clientes', component: ClientesComponent },
       { path: 'listar-venta', component: ListarVentaComponent },
       { path: 'listar-remitos', component: ListarRemitosComponent },
-      { path: 'direcciones/:id', component: DireccionesComponent },
-      { path: 'agregar-direccion/:id', component: AgregarDireccionComponent },
+      { path: 'direcciones/:idCliente', component: DireccionesComponent },
+      { path: 'crear-direccion', component: CrearDireccionComponent },
       { path: 'agregar-venta', component: AgregarVentaComponent },
       { path: 'nueva-venta', component: NuevaVentaComponent },
       { path: 'agregar-remitos', component: AgregarRemitoComponent },
@@ -32,4 +33,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class VentasRoutingModule {}
+export class VentasRoutingModule { }

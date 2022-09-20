@@ -15,6 +15,8 @@ import { TituloDireccion } from '../../../shared/models/titulo-direccin.enum';
 import { TipoModal } from '../../../shared/models/tipo-modal.enum';
 import { TokenService } from '../../../service/token.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { concatMap } from 'rxjs/operators';
+import { CrearDireccionComponent } from './crear-direccion/crear-direccion.component';
 
 @Component({
   selector: 'app-direcciones',
@@ -46,7 +48,7 @@ export class DireccionesComponent implements OnInit {
     public matDialog: MatDialog,
     private tokenService: TokenService,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.roles = this.tokenService.getAuthorities();
@@ -54,9 +56,7 @@ export class DireccionesComponent implements OnInit {
       this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_GERENTE');
 
     this.route.params.subscribe((p) => {
-      console.log(p);
-
-      this.idCliente = Number(p['id']);
+      this.idCliente = Number(p['idCliente']);
       this.loadingDirection();
     });
   }
@@ -101,6 +101,7 @@ export class DireccionesComponent implements OnInit {
     const data = {
       titulo: TituloDireccion.creacion,
       tipoModal: TipoModal.creacion,
+      idCliente: this.idCliente,
     };
     this.openDialog(data);
   }
@@ -108,6 +109,7 @@ export class DireccionesComponent implements OnInit {
     const data = {
       titulo: TituloDireccion.consulta,
       tipoModal: TipoModal.consulta,
+      idCliente: this.idCliente,
       direccion,
     };
     this.openDialog(data);
@@ -116,16 +118,18 @@ export class DireccionesComponent implements OnInit {
     const data = {
       titulo: TituloDireccion.actualizacion,
       tipoModal: TipoModal.actualizacion,
-      direccion,
+      idCliente: this.idCliente,
+      direccion
     };
     this.openDialog(data);
   }
   openDialog(data: any): void {
-    const dialog = this.matDialog.open(AgregarDireccionComponent, {
+    // const dialog = this.matDialog.open(AgregarDireccionComponent, {
+    const dialog = this.matDialog.open(CrearDireccionComponent, {
       id: 'modal-component',
       disableClose: true,
       height: 'auto',
-      width: '20rem',
+      width: 'auto',
       data,
       panelClass: 'no-padding',
     });
@@ -147,8 +151,8 @@ export class DireccionesComponent implements OnInit {
     // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
-    dialogConfig.height = '15rem';
-    dialogConfig.width = '20rem';
+    dialogConfig.height = 'auto';
+    dialogConfig.width = 'auto';
     dialogConfig.data = {
       message: '¿Desea cambiar estado?',
       title: 'Cambio estado',
@@ -160,13 +164,11 @@ export class DireccionesComponent implements OnInit {
     );
     modalDialog.afterClosed().subscribe((result) => {
       if (result.state) {
-        // this.clientService
-        //   .changeStatusClient(cliente.idCliente)
-        //   .pipe(concatMap((data) => this.clientService.getAllClient()))
-        //   .subscribe((clientes) => {
-        //     this.clientes = clientes;
-        //     this.establecerDatasource(this.clientes);
-        //   });
+        this.direccionService.changeStatusDirection(direccion.idDireccion)
+          .pipe(concatMap((data) => this.direccionService.getAllDirectionByClientId(this.idCliente))).subscribe((data) => {
+            this.direcciones = data;
+            this.establecerDatasource(this.direcciones);
+          });
         this.openSnackBar('Estado actualizado');
       } else {
         this.openSnackBar('Error en la actualizacion');

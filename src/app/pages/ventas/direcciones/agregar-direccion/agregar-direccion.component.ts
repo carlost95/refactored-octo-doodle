@@ -10,10 +10,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Direccion } from '../../../../models/Direccion';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DistritoService } from '../../../../service/distrito.service';
-import { Distrito } from '../../../../models/Distrito';
 import { DireccionesService } from '../../../../service/direcciones.service';
 import { MapMarker } from '@angular/google-maps';
 import { Ubicacion } from '../../../../models/Ubicacion';
+import { DistritoRest } from '../../../../models/distrito-rest';
 import LatLng = google.maps.LatLng;
 
 @Component({
@@ -28,7 +28,7 @@ export class AgregarDireccionComponent implements OnInit {
   consultar: boolean;
   updating: boolean;
   direccionForm: FormGroup;
-  distritos: Distrito[] = [];
+  distritos: DistritoRest[] = [];
   submitted: boolean;
   errorInForm: any;
 
@@ -54,12 +54,12 @@ export class AgregarDireccionComponent implements OnInit {
     private direccionService: DireccionesService,
     // tslint:disable-next-line:variable-name
     private _elementRef: ElementRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.distritoService.listarDistritosHabilitados().subscribe((res) => {
-      this.distritos = res.data;
-      this.initForm(res.data);
+      this.distritos = res;
+      this.initForm(res);
     });
   }
 
@@ -135,10 +135,11 @@ export class AgregarDireccionComponent implements OnInit {
   }
 
   makeDTO(): void {
-    // console.log(this.direccionForm.controls.calle.value);
-    // this.direccion.calle = this.direccionForm.controls.calle.value;
+    console.log(this.direccionForm.controls.calle.value);
+    this.direccion.calle = this.direccionForm.controls.calle.value;
     // this.direccion.numerocalle = this.direccionForm.controls.numerocalle.value;
-    // this.direccion.descripcion = (this.direccionForm.controls.descripcion.value).trim();idDistrito = this.direccionForm.controls.distrito.value;
+    this.direccion.descripcion = (this.direccionForm.controls.descripcion.value).trim();
+    // idDistrito = this.direccionForm.controls.distrito.value;
     // this.direccion.clienteId = this.direccionForm.controls.cliente.value;
     // const ubicacion = new Ubicacion();
     // ubicacion.lng = this.lastPosition.lng();
