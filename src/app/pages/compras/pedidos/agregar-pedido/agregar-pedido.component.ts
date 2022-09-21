@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ProveedoresService} from '@service/proveedores.service';
 import {Proveedor} from '@models/Proveedor';
 import {ArticulosService} from '@service/articulos.service';
@@ -11,16 +11,18 @@ import {ArticuloStock} from '@models/articulo-rest';
 @Component({
   selector: 'app-agregar-pedido',
   templateUrl: './agregar-pedido.component.html',
-  styleUrls: ['./agregar-pedido.component.css']
+  styleUrls: ['./agregar-pedido.component.css'],
+  encapsulation : ViewEncapsulation.None,
 })
 export class AgregarPedidoComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   dataSource: MatTableDataSource<ArticuloStock> = new MatTableDataSource<ArticuloStock>();
-  proveedores: Proveedor[];
+  proveedores: Proveedor[] = [];
   pedidoForm: FormGroup;
-  displayedColumns = ['nombre', 'codigoArt', 'stockActual', 'cantidad' ];
+  displayedColumns = ['nombre', 'codigoArt', 'stockActual', 'cantidad', 'stockFinal' ];
+  articuloMessage = 'No se selecciono un proveedor';
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -38,10 +40,25 @@ export class AgregarPedidoComponent implements OnInit {
   inicializarPedidoFormDatos(): void {
     this.pedidoForm = this.formBuilder.group({
       nombre: ['', Validators.required],
-      fecha: ['', Validators.required]
+      fecha: ['', Validators.required],
+      descripcion: ['', Validators.required],
+      proveedorId: ['', Validators.required]
     });
   }
 
+  establecerDataSource(articulos: ArticuloStock[]): void {
+    this.dataSource = new MatTableDataSource<ArticuloStock>(articulos);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    if(articulos.length === 0 ){
+      this.articuloMessage = 'No se encontraron productos para el proveedor';
+    }
+  }
 
+  proveedorChange(proveedorId: number): void {
+    this.articuloService
+      .obtenerArticuloPorProveedor(proveedorId)
+      .subscribe(articulos => this.establecerDataSource(articulos));
+  }
 }
 

@@ -24,4 +24,6 @@ export class ArticuloStock {
   codigoArt?: string;
   idProveedor?: number;
   stockActual?: number;
+  cantidad?: number;
+  stockFinal?: number;
 }

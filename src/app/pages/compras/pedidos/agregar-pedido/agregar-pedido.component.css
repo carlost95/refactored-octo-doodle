@@ -11,3 +11,8 @@
   margin-left: 0;
   margin-right: 0;
 }
+
+.my-form-field .mat-form-field-wrapper {
+  padding-bottom: 0;
+}
+

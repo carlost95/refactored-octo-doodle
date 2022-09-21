@@ -63,4 +63,8 @@ export class ArticulosService {
   listarArticuloHabilitados() {
     return this.http.get<Response>(this.url + '/habilitados');
   }
+
+  obtenerArticuloPorProveedor(proveedorId: number): Observable<ArticuloRest[]> {
+    return this.http.get<ArticuloStock[]>(`${this.url}/proveedor/${proveedorId}`);
+  }
 }
