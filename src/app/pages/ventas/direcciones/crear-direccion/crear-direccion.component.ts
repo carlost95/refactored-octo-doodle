@@ -8,6 +8,8 @@ import { DireccionesService } from '../../../../service/direcciones.service';
 import { DistritoRest } from '../../../../models/distrito-rest';
 import { TipoModal } from '@shared/models/tipo-modal.enum';
 import { direccion } from '../../../../../environments/global-route';
+import { PlaceService } from '@app/service/place.service';
+import { Subscriber } from 'rxjs';
 
 @Component({
   selector: 'app-crear-direccion',
@@ -25,6 +27,7 @@ export class CrearDireccionComponent implements OnInit {
   titulo: string;
   tipoModal: TipoModal;
   idCliente: number;
+  ubicationActual: [number, number];
 
   constructor(
     public dialogRef: MatDialogRef<AgregarDireccionComponent>,
@@ -32,17 +35,22 @@ export class CrearDireccionComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private distritoService: DistritoService,
     private direccionService: DireccionesService,
+    private placesService: PlaceService,
     private elementRef: ElementRef
 
-  ) { }
+  ) {
 
-  ngOnInit(): void {
+  }
+  async ngOnInit() {
     this.titulo = this.data.titulo;
     this.tipoModal = this.data.tipoModal;
     this.idCliente = this.data.idCliente;
+    await this.loadingLocation();
 
     console.log('titulo de modal', this.titulo);
     console.log('id cliente', this.idCliente);
+    console.log('location', this.ubicationActual);
+
 
     if (
       this.tipoModal === TipoModal.consulta ||
@@ -53,6 +61,8 @@ export class CrearDireccionComponent implements OnInit {
       this.establecerModalVacio();
     }
   }
+
+
   establecerModalDatos(data: any, tipoModal: TipoModal): void {
     const { direccion } = data;
     console.log('direccion', direccion);
@@ -77,7 +87,7 @@ export class CrearDireccionComponent implements OnInit {
       entreCalle: ['', null],
       barrio: ['', null],
       descripcion: ['', null],
-      ubicacion: ['', Validators.required],
+      ubicacion: [[], Validators.required],
       idDistrito: ['', Validators.required],
     });
 
@@ -85,6 +95,10 @@ export class CrearDireccionComponent implements OnInit {
   close(): void {
     this.dialogRef.close();
   }
+  async loadingLocation() {
+    this.ubicationActual = await this.placesService.getUserLocation();
+  }
+}
   // initForm(data: any): void {
   // const { direccion, cliente } = this.data;
 
@@ -125,4 +139,4 @@ export class CrearDireccionComponent implements OnInit {
   // this.showMarker = true;
   // }
 
-}
+// }
