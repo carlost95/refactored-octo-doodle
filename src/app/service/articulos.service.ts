@@ -65,6 +65,7 @@ export class ArticulosService {
   }
 
   obtenerArticuloPorProveedor(proveedorId: number): Observable<ArticuloRest[]> {
-    return this.http.get<ArticuloStock[]>(`${this.url}/proveedor/${proveedorId}`);
+    return this.http.get<ArticuloStock[]>(`${this.url}/proveedor/${proveedorId}`)
+      .pipe( map( articulos => articulos.map(articulo => ({...articulo, stockFinal: articulo.stockActual, cantidad: 0}))));
   }
 }

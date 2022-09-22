@@ -39,11 +39,15 @@
       </div>
     </section>
     <section class="row justify-content-end">
-      <button mat-raised-button color="primary" title="Guardar pedido" type="submit" class="col-sm-12 col-md-3 m-3">
+      <button mat-raised-button color="primary"
+              title="Guardar pedido" (click)="guardar()"
+              class="col-sm-12 col-md-3 m-3">
         <i [ngClass]=""></i>
         Guardar pedido
       </button>
     </section>
+    <template-search (filtro)="filtrarTermino($event)">
+    </template-search>
     <section class="py-3">
       <table class="w-100" mat-table [dataSource]="dataSource" matSort>
         <ng-container matColumnDef="nombre">
@@ -62,37 +66,20 @@
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Ingreso </th>
           <td mat-cell *matCellDef="let row">
             <mat-form-field appearance="outline" class="my-form-field py-1">
-              <input matInput required type="number" min="0" autocomplete="off"/>
+              <input matInput required
+                     min="0"
+                     OnlyNumber="true"
+                     type="number"
+                     [value]="row.cantidad"
+                     (change)="actualizarCantidad($event, row.id)"
+                     autocomplete="off"/>
             </mat-form-field>
           </td>
         </ng-container>
         <ng-container matColumnDef="stockFinal">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Stock Final </th>
-          <td mat-cell *matCellDef="let row"> {{ 0 }} </td>
+          <td mat-cell *matCellDef="let row"> {{ row.stockFinal }} </td>
         </ng-container>
-<!--        <ng-container matColumnDef="abreviatura">-->
-<!--          <th mat-header-cell *matHeaderCellDef> Abreviatura </th>-->
-<!--          <td mat-cell *matCellDef="let row"> {{row.abreviatura | uppercase}} </td>-->
-<!--        </ng-container>-->
-<!--        <ng-container matColumnDef="habilitado" *ngIf="mostrarHabilitacion">-->
-<!--          <th mat-header-cell *matHeaderCellDef> Habilitacion </th>-->
-<!--          <td mat-cell *matCellDef="let row">-->
-<!--            <mat-slide-toggle [checked]="row.habilitado" (click)="showModal(row)" color="primary">-->
-<!--            </mat-slide-toggle>-->
-<!--          </td>-->
-<!--        </ng-container>-->
-<!--        <ng-container matColumnDef="acciones">-->
-<!--          <th mat-header-cell *matHeaderCellDef> Opciones</th>-->
-<!--          <td mat-cell *matCellDef="let row">-->
-<!--            <button class="btn btn-default m-0 p-0" title="Consultar" (click)="consultarBanco(row)">-->
-<!--              <i class="fas fa-info"></i>-->
-<!--            </button>-->
-<!--            <button class="btn btn-default" title="Modificar " (click)="modificarBanco(row)" *ngIf="mostrarHabilitacion">-->
-<!--              <i class="fas fa-pencil-alt"></i>-->
-<!--            </button>-->
-<!--          </td>-->
-<!--        </ng-container>-->
-
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 

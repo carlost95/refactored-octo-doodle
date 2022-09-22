@@ -7,6 +7,8 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {ArticuloStock} from '@models/articulo-rest';
+import {Pedido} from '@models/pedido';
+import {BuscadorService} from '@shared/helpers/buscador.service';
 
 @Component({
   selector: 'app-agregar-pedido',
@@ -16,6 +18,14 @@ import {ArticuloStock} from '@models/articulo-rest';
 })
 export class AgregarPedidoComponent implements OnInit {
 
+  constructor(
+    private readonly formBuilder: FormBuilder,
+    private readonly proveedorService: ProveedoresService,
+    private readonly articuloService: ArticulosService,
+    private readonly buscadorService: BuscadorService,
+  ){}
+
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   dataSource: MatTableDataSource<ArticuloStock> = new MatTableDataSource<ArticuloStock>();
@@ -23,14 +33,9 @@ export class AgregarPedidoComponent implements OnInit {
   pedidoForm: FormGroup;
   displayedColumns = ['nombre', 'codigoArt', 'stockActual', 'cantidad', 'stockFinal' ];
   articuloMessage = 'No se selecciono un proveedor';
+  articulos: ArticuloStock[] = [];
 
-  constructor(
-    private readonly formBuilder: FormBuilder,
-    private readonly proveedorService: ProveedoresService,
-    private readonly articuloService: ArticulosService
-  ){}
-  // tslint:disable-next-line:typedef
-  ngOnInit() {
+  ngOnInit(): void {
     this.proveedorService
       .getEnabledSupplier()
       .subscribe(proveedores => this.proveedores = proveedores);
@@ -41,7 +46,7 @@ export class AgregarPedidoComponent implements OnInit {
     this.pedidoForm = this.formBuilder.group({
       nombre: ['', Validators.required],
       fecha: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      descripcion: ['', null],
       proveedorId: ['', Validators.required]
     });
   }
@@ -50,7 +55,7 @@ export class AgregarPedidoComponent implements OnInit {
     this.dataSource = new MatTableDataSource<ArticuloStock>(articulos);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    if(articulos.length === 0 ){
+    if (articulos.length === 0 ){
       this.articuloMessage = 'No se encontraron productos para el proveedor';
     }
   }
@@ -58,7 +63,44 @@ export class AgregarPedidoComponent implements OnInit {
   proveedorChange(proveedorId: number): void {
     this.articuloService
       .obtenerArticuloPorProveedor(proveedorId)
-      .subscribe(articulos => this.establecerDataSource(articulos));
+      .subscribe(articulos => {
+        this.articulos = articulos;
+        this.establecerDataSource(articulos);
+      });
+  }
+
+  guardar(): void {
+    const pedido: Pedido = this.pedidoForm.getRawValue();
+    const articulos = this.dataSource.data.filter(articulo => articulo.cantidad !== 0);
+    console.log(pedido);
+    console.log(articulos);
+  }
+
+  actualizarCantidad(event: Event, id: number): void {
+    const cantidad = Number(event.target?.value);
+    const articulos = this.articulos;
+    const articulosUpdated = articulos.map(articulo => {
+      if (articulo.id === id){
+        return {
+          ...articulo,
+          cantidad,
+          stockFinal: articulo.stockActual + cantidad
+        };
+      }
+      return articulo;
+    });
+    this.articulos = articulosUpdated;
+    this.establecerDataSource(articulosUpdated);
+  }
+
+  filtrarTermino(value: string): void {
+    const TERMINO = 'nombre';
+    const articulos = this.buscadorService.buscarTermino(
+      this.articulos,
+      TERMINO,
+      value
+    );
+    this.establecerDataSource(articulos);
   }
 }
 

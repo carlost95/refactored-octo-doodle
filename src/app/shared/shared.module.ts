@@ -24,6 +24,7 @@ import {RubroDropdownComponent} from './rubro/dropdown/rubro-dropdown.component'
 import {SubrubroDropdownComponent} from './subrubro/dropdown/subrubro-dropdown.component';
 import {MarcaDropdownComponent} from './marca/dropdown/marca-dropdown.component';
 import { ProveedorDropdownComponent } from './proveedor/dropdown/proveedor-dropdown.component';
+import { OnlyNumber } from './directives/only-numbers.directive';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { ProveedorDropdownComponent } from './proveedor/dropdown/proveedor-dropd
     RubroDropdownComponent,
     SubrubroDropdownComponent,
     MarcaDropdownComponent,
-    ProveedorDropdownComponent
+    ProveedorDropdownComponent,
+    OnlyNumber
   ],
   imports: [
     FormsModule,
@@ -54,21 +56,23 @@ import { ProveedorDropdownComponent } from './proveedor/dropdown/proveedor-dropd
     ReactiveFormsModule,
     RouterModule,
   ],
-    exports: [
-        PedidosComponent,
-        AjustesComponent,
-        NavbarComponent,
-        DropdownComponent,
-        TemplatePageComponent,
-        MenuComponent,
-        DropdownComponent,
-        UnidadMedidaDropdownComponent,
-        RubroDropdownComponent,
-        SubrubroDropdownComponent,
-        MarcaDropdownComponent,
-        ProveedorDropdownComponent,
-        HeaderComponent
-    ],
+  exports: [
+    PedidosComponent,
+    AjustesComponent,
+    NavbarComponent,
+    DropdownComponent,
+    TemplatePageComponent,
+    MenuComponent,
+    DropdownComponent,
+    UnidadMedidaDropdownComponent,
+    RubroDropdownComponent,
+    SubrubroDropdownComponent,
+    MarcaDropdownComponent,
+    ProveedorDropdownComponent,
+    HeaderComponent,
+    OnlyNumber,
+    SearchComponent
+  ],
   providers: [
     {
       provide: MatPaginatorIntl,
