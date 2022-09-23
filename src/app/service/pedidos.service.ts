@@ -18,8 +18,12 @@ export class PedidosService {
 
 
   obtenerPedidos(): Observable<Pedido[]> {
-    console.log(this.url)
+    console.log(this.url);
     return this.http.get<Pedido[]>(this.url);
+  }
+
+  guardar(pedido: Pedido): Observable<Pedido> {
+    return this.http.post<Pedido>(this.url, pedido);
   }
 
   // tslint:disable-next-line: typedef

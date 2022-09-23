@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ProveedoresService} from '@service/proveedores.service';
 import {Proveedor} from '@models/Proveedor';
 import {ArticulosService} from '@service/articulos.service';
@@ -9,6 +9,11 @@ import {MatTableDataSource} from '@angular/material/table';
 import {ArticuloStock} from '@models/articulo-rest';
 import {Pedido} from '@models/pedido';
 import {BuscadorService} from '@shared/helpers/buscador.service';
+import {PedidosService} from '@service/pedidos.service';
+import {SearchComponent} from '@shared/template/search/search.component';
+import {Router} from "@angular/router";
+import {SnackConfirmComponent} from "@shared/snack-confirm/snack-confirm.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-agregar-pedido',
@@ -23,8 +28,12 @@ export class AgregarPedidoComponent implements OnInit {
     private readonly proveedorService: ProveedoresService,
     private readonly articuloService: ArticulosService,
     private readonly buscadorService: BuscadorService,
+    private readonly pedidoService: PedidosService,
+    private readonly snackbar: MatSnackBar,
+    private readonly router: Router,
   ){}
-
+  private submitted = false;
+  @ViewChild(SearchComponent) searcher: SearchComponent;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -34,6 +43,8 @@ export class AgregarPedidoComponent implements OnInit {
   displayedColumns = ['nombre', 'codigoArt', 'stockActual', 'cantidad', 'stockFinal' ];
   articuloMessage = 'No se selecciono un proveedor';
   articulos: ArticuloStock[] = [];
+  termino = '';
+
 
   ngOnInit(): void {
     this.proveedorService
@@ -70,14 +81,29 @@ export class AgregarPedidoComponent implements OnInit {
   }
 
   guardar(): void {
+
+    if (this.pedidoForm.invalid){
+      this.pedidoForm.controls.nombre.markAsTouched();
+      this.pedidoForm.controls.fecha.markAsTouched();
+      this.pedidoForm.controls.proveedorId.markAsTouched();
+      return;
+    }
+
     const pedido: Pedido = this.pedidoForm.getRawValue();
     const articulos = this.dataSource.data.filter(articulo => articulo.cantidad !== 0);
-    console.log(pedido);
-    console.log(articulos);
+
+    pedido.articulos = articulos;
+
+    this.pedidoService.guardar(pedido).subscribe( result => {
+      this.router.navigate(['/compras/listar-pedido']);
+      this.openSnackBar('Se guardo pedido exitosamente');
+    });
   }
 
+
   actualizarCantidad(event: Event, id: number): void {
-    const cantidad = Number(event.target?.value);
+    const target = event.target as HTMLInputElement ;
+    const cantidad = Number(target?.value);
     const articulos = this.articulos;
     const articulosUpdated = articulos.map(articulo => {
       if (articulo.id === id){
@@ -91,6 +117,7 @@ export class AgregarPedidoComponent implements OnInit {
     });
     this.articulos = articulosUpdated;
     this.establecerDataSource(articulosUpdated);
+    this.searcher.reset();
   }
 
   filtrarTermino(value: string): void {
@@ -101,6 +128,14 @@ export class AgregarPedidoComponent implements OnInit {
       value
     );
     this.establecerDataSource(articulos);
+  }
+
+  openSnackBar(msg: string): void {
+    this.snackbar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
+    });
   }
 }
 

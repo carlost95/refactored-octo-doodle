@@ -8,7 +8,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {BuscadorService} from '@shared/helpers/buscador.service';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-listar-pedido',
@@ -49,6 +49,7 @@ export class ListarPedidoComponent implements OnInit {
     this.pedidoService.obtenerPedidos().subscribe(pedidos => {
       this.pedidos = pedidos;
       this.establecerDatasource(pedidos);
+      console.log(pedidos);
     });
   }
 
