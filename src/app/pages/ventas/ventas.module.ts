@@ -10,13 +10,15 @@ import { VentasComponent } from './ventas.component';
 import { SubMenuComponent } from './sub-menu/sub-menu.component';
 import { ClientesComponent } from './clientes/clientes.component';
 import { DireccionesComponent } from './direcciones/direcciones.component';
-import { AgregarDireccionComponent } from './direcciones/agregar-direccion/agregar-direccion.component';
 import { ListarVentaComponent } from './listar-venta/listar-venta.component';
 import { ListarRemitosComponent } from './listar-remitos/listar-remitos.component';
 import { AgregarVentaComponent } from './agregar-venta/agregar-venta.component';
 import { AgregarRemitoComponent } from './agregar-remito/agregar-remito.component';
 import { NuevaVentaComponent } from './nueva-venta/nueva-venta.component';
 import { SharedModule } from '../../shared/shared.module';
+import { CrearDireccionComponent } from './direcciones/crear-direccion/crear-direccion.component';
+import { LoadingMapComponent } from './direcciones/loading-map/loading-map.component';
+import { ViewMapClientComponent } from './direcciones/view-map-client/view-map-client.component';
 
 @NgModule({
   declarations: [
@@ -25,12 +27,14 @@ import { SharedModule } from '../../shared/shared.module';
     AgregarClienteComponent,
     ClientesComponent,
     DireccionesComponent,
-    AgregarDireccionComponent,
     ListarVentaComponent,
     ListarRemitosComponent,
     AgregarVentaComponent,
     AgregarRemitoComponent,
     NuevaVentaComponent,
+    CrearDireccionComponent,
+    LoadingMapComponent,
+    ViewMapClientComponent,
   ],
   imports: [
     CommonModule,
@@ -43,4 +47,4 @@ import { SharedModule } from '../../shared/shared.module';
   ],
   // entryComponents: [ConfirmDialogComponent],
 })
-export class VentasModule {}
+export class VentasModule { }

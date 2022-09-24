@@ -18,7 +18,24 @@ export class DireccionesService {
   getAllDirectionByClientId(clientId: number): Observable<Direccion[]> {
     return this.http.get<Direccion[]>(this.url + '/cliente/' + clientId);
   }
+  getAllEnabledDirectionByIdClient(id: number): Observable<Direccion[]> {
+    return this.http.get<Direccion[]>(this.url + '/enabled/cliente/' + id);
+  }
+  getDirectionById(id: number): Observable<Direccion> {
+    return this.http.get<Direccion>(this.url + '/' + id);
+  }
+  updatedDirection(direction: Direccion): Observable<Direccion> {
+    return this.http.put<Direccion>(this.url, direction);
+  }
+  saveDirection(direction: Direccion): Observable<Direccion> {
+    return this.http.post<Direccion>(this.url, direction);
+  }
 
+  changeStatusDirection(id: number): Observable<Direccion> {
+    return this.http.put<Direccion>(this.url + '/' + id, id);
+  }
+
+  // TODO: Eliminar metodos
   getByClientId(clientId: number) {
     return this.http.get<Response>(this.url + `/${clientId}`);
   }
@@ -31,8 +48,8 @@ export class DireccionesService {
     return this.http.put<Response>(this.url, direccion);
   }
 
-  changeStatus(direction: Direccion) {
-    console.log(this.url + direccion.status);
-    return this.http.put<Response>(this.url + direccion.status, direction);
-  }
+  // changeStatus(direction: Direccion) {
+  //   console.log(this.url + direccion.status);
+  //   return this.http.put<Response>(this.url + direccion.status, direction);
+  // }
 }

@@ -1,11 +1,11 @@
-import {Injectable} from '@angular/core';
-import {Response} from "../models/Response";
-import {Distrito} from "../models/Distrito";
-import {HttpClient} from "@angular/common/http";
-import {environment} from "../../environments/environment.prod";
-import {departamento, distrito} from "../../environments/global-route";
-import {DistritoRest} from "@models/distrito-rest";
-import {Observable} from "rxjs";
+import { Injectable } from '@angular/core';
+import { Response } from "../models/Response";
+import { Distrito } from "../models/Distrito";
+import { HttpClient } from "@angular/common/http";
+import { environment } from "../../environments/environment.prod";
+import { departamento, distrito } from "../../environments/global-route";
+import { DistritoRest } from "@models/distrito-rest";
+import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class DistritoService {
     this.url = environment.url + distrito.path;
   }
 
-  obtenerDistritos(): Observable<DistritoRest[]>{
+  obtenerDistritos(): Observable<DistritoRest[]> {
     return this.http.get<DistritoRest[]>(this.url);
   }
 
@@ -36,11 +36,11 @@ export class DistritoService {
     return this.http.put<DistritoRest>(`${this.url}/${id}`, null);
   }
 
-  listarDistritosHabilitados() {
-    return this.http.get<Response>(this.url + "/habilitado");
+  listarDistritosHabilitados(): Observable<DistritoRest[]> {
+    return this.http.get<DistritoRest[]>(this.url + "/habilitado");
   }
 
-  save(distrito: Distrito){
+  save(distrito: Distrito) {
     return this.http.post<Response>(this.url, distrito);
   }
 
