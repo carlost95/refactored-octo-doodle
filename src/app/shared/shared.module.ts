@@ -47,7 +47,7 @@ import { OnlyNumber } from './directives/only-numbers.directive';
     RubroDropdownComponent,
     SubrubroDropdownComponent,
     MarcaDropdownComponent,
-    DistritoDropdownComponent
+    DistritoDropdownComponent,
     ProveedorDropdownComponent,
     OnlyNumber
   ],
@@ -71,7 +71,7 @@ import { OnlyNumber } from './directives/only-numbers.directive';
     SubrubroDropdownComponent,
     MarcaDropdownComponent,
     ProveedorDropdownComponent,
-    DistritoDropdownComponent
+    DistritoDropdownComponent,
     HeaderComponent,
     OnlyNumber,
     SearchComponent
