@@ -1,0 +1,50 @@
+<header class="modal-header  modal-header-size1 d-flex justify-content-center">
+    <h1 class="modal-title">{{titulo}}</h1>
+</header>
+<div class="container-fluid mt-2">
+    <section class="d-flex justify-content-center map">
+        <loading-map class="col-md-12 p-0" *ngIf="!isUserLocationReady; else mapReady"></loading-map>
+        <ng-template #mapReady>
+            <view-map class="col-md-12 p-0" (markerChange)="establecerLocation($event)" [draggable]="tipoModal!=0">
+            </view-map>
+        </ng-template>
+    </section>
+    <section class="mt-2">
+        <form [formGroup]="direccionForm" *ngIf="this.direccionForm">
+            <mat-form-field class="col-md-6 col-sm-12" appearance="legacy">
+                <mat-label>Calle</mat-label>
+                <input matInput formControlName="calle" required autocomplete="off" />
+                <mat-error *ngIf="direccionForm.controls.calle.errors">
+                    Campo <strong>requerido</strong>
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="col-md-6 col-sm-12" appearance="legacy">
+                <mat-label>Numero de Calle</mat-label>
+                <input matInput formControlName="numeroCalle" required autocomplete="off" />
+                <mat-error *ngIf="direccionForm.controls.numeroCalle.errors">
+                    Campo <strong>requerido</strong>
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="col-md-6 col-sm-12" appearance="legacy">
+                <mat-label>Entre Calle</mat-label>
+                <input matInput formControlName="entreCalle" autocomplete="off" />
+            </mat-form-field>
+            <mat-form-field class="col-md-6 col-sm-12" appearance="legacy">
+                <mat-label>Barrio</mat-label>
+                <input matInput formControlName="barrio" autocomplete="off" />
+
+            </mat-form-field>
+            <mat-form-field class="col-md-6 col-sm-12" appearance="legacy">
+                <mat-label>Descripcion</mat-label>
+                <input matInput formControlName="descripcion" autocomplete="off" />
+
+            </mat-form-field>
+            <distrito-dropdown formControlName="idDistrito" (distritoChange)="establecerDistrito($event)">
+            </distrito-dropdown>
+        </form>
+    </section>
+</div>
+<footer class="modal-footer">
+    <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>
+    <button *ngIf="tipoModal !== 0" class="btn btn-warning" (click)="onSubmit()">Guardar</button>
+</footer>

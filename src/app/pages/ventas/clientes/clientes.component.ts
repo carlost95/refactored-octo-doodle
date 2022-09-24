@@ -46,7 +46,7 @@ export class ClientesComponent implements OnInit {
     public matDialog: MatDialog,
     private tokenService: TokenService,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.roles = this.tokenService.getAuthorities();
@@ -59,7 +59,7 @@ export class ClientesComponent implements OnInit {
   }
 
   filtrarClient(value: string): void {
-    const TERMINO = 'nombre';
+    const TERMINO = 'apellido';
     const clientes = this.buscadorService.buscarTermino(
       this.clientes,
       TERMINO,
@@ -111,7 +111,6 @@ export class ClientesComponent implements OnInit {
       data,
       panelClass: 'no-padding',
     });
-    // The user can't close the dialog by clicking outside its body
     dialog.afterClosed().subscribe((result) => {
       this.clientService.getAllClient().subscribe((clientes) => {
         this.clientes = clientes;
@@ -124,7 +123,6 @@ export class ClientesComponent implements OnInit {
   }
   showModal(cliente: Cliente): void {
     const dialogConfig = new MatDialogConfig();
-    // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
     dialogConfig.height = '15rem';

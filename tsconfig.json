@@ -19,6 +19,7 @@
 ],
   "compilerOptions": {
     "baseUrl": "src",
+    "allowSyntheticDefaultImports": true,
     "paths": {
       "@app/*": ["app/*"],
       "@auth/*": ["app/auth/*"],

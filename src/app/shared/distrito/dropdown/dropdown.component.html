@@ -1,0 +1,11 @@
+<mat-form-field class="col-md-6 col-sm-12" appearance="legacy">
+    <mat-label class="w-100">Distrito</mat-label>
+    <mat-select [formControl]="control" class="w-100" (selectionChange)="onChange($event)">
+        <mat-option *ngFor="let distrito of distritos" [value]="distrito.idDistrito">
+            {{ distrito.nombre }}
+        </mat-option>
+    </mat-select>
+    <mat-error *ngIf="control?.errors">
+        Distrito es<strong> requerido</strong>
+    </mat-error>
+</mat-form-field>

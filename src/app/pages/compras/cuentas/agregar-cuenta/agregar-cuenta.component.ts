@@ -29,15 +29,12 @@ export class AgregarCuentaComponent implements OnInit {
     private snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<AgregarCuentaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.titulo = this.data.titulo;
     this.tipoModal = this.data.tipoModal;
     this.idProveedor = this.data.idProveedor;
-
-    console.log('titulo de modal', this.titulo);
-    console.log('id proveedor', this.idProveedor);
 
     if (
       this.tipoModal === TipoModal.consulta ||
