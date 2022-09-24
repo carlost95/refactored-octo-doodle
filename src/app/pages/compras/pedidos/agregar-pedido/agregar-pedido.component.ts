@@ -11,9 +11,11 @@ import {Pedido} from '@models/pedido';
 import {BuscadorService} from '@shared/helpers/buscador.service';
 import {PedidosService} from '@service/pedidos.service';
 import {SearchComponent} from '@shared/template/search/search.component';
-import {Router} from "@angular/router";
-import {SnackConfirmComponent} from "@shared/snack-confirm/snack-confirm.component";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {ActivatedRoute, Router} from '@angular/router';
+import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {map, switchMap} from 'rxjs/operators';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-agregar-pedido',
@@ -22,6 +24,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   encapsulation : ViewEncapsulation.None,
 })
 export class AgregarPedidoComponent implements OnInit {
+  loading = false;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -31,10 +34,9 @@ export class AgregarPedidoComponent implements OnInit {
     private readonly pedidoService: PedidosService,
     private readonly snackbar: MatSnackBar,
     private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute,
   ){}
-  private submitted = false;
   @ViewChild(SearchComponent) searcher: SearchComponent;
-
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   dataSource: MatTableDataSource<ArticuloStock> = new MatTableDataSource<ArticuloStock>();
@@ -44,22 +46,51 @@ export class AgregarPedidoComponent implements OnInit {
   articuloMessage = 'No se selecciono un proveedor';
   articulos: ArticuloStock[] = [];
   termino = '';
+  CONSULTA = false;
 
 
   ngOnInit(): void {
+    const id = this.activatedRoute.snapshot.paramMap.get('id');
+    if (id){
+      this.CONSULTA = true;
+      this.loading = true;
+      this.inicializarPedidoFormConDatos(id);
+      return;
+    }
     this.proveedorService
       .getEnabledSupplier()
       .subscribe(proveedores => this.proveedores = proveedores);
-    this.inicializarPedidoFormDatos();
+    this.inicializarPedidoFormSinDatos();
   }
 
-  inicializarPedidoFormDatos(): void {
+  inicializarPedidoFormSinDatos(): void {
     this.pedidoForm = this.formBuilder.group({
       nombre: ['', Validators.required],
       fecha: ['', Validators.required],
       descripcion: ['', null],
       proveedorId: ['', Validators.required]
     });
+  }
+
+  inicializarPedidoFormConDatos(id): void {
+    this.pedidoService
+      .obtenerPedido(id)
+      .pipe(
+        map( pedido => {
+          this.pedidoForm = this.formBuilder.group({
+            nombre: [{value: pedido.nombre, disabled: true}, Validators.required],
+            fecha: [{value: new Date(pedido.fecha), disabled: true}, Validators.required],
+            descripcion: [{value: pedido.descripcion, disabled: true}, null],
+            proveedorId: [{value: pedido.idProveedor, disabled: true}, Validators.required]
+          });
+          const articulos = pedido.articulos.map(articulo => ({...articulo, stockFinal: articulo.stockActual + articulo.cantidad}));
+          this.establecerDataSource(articulos);
+          return pedido.idProveedor;
+        }),
+      )
+      .subscribe(arts => {
+        this.loading = false;
+      } );
   }
 
   establecerDataSource(articulos: ArticuloStock[]): void {
@@ -90,6 +121,7 @@ export class AgregarPedidoComponent implements OnInit {
     }
 
     const pedido: Pedido = this.pedidoForm.getRawValue();
+    pedido.fecha = this.addTimeToDate(pedido.fecha);
     const articulos = this.dataSource.data.filter(articulo => articulo.cantidad !== 0);
 
     pedido.articulos = articulos;
@@ -100,6 +132,11 @@ export class AgregarPedidoComponent implements OnInit {
     });
   }
 
+  addTimeToDate(newdate): Date {
+    const _ = moment();
+    const date = moment(newdate).add({hours: _.hour(), minutes: _.minute() , seconds: _.second()});
+    return date.toDate();
+  }
 
   actualizarCantidad(event: Event, id: number): void {
     const target = event.target as HTMLInputElement ;

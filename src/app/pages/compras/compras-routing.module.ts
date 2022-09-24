@@ -55,7 +55,7 @@ const routes: Routes = [
       },
       {
         path: 'consultar-pedido/:id',
-        component: ConsultarPedidoComponent,
+        component: AgregarPedidoComponent,
         canActivate: [guard],
         data: { expectedRol: ['admin', 'user'] },
       },

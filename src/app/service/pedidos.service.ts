@@ -18,8 +18,11 @@ export class PedidosService {
 
 
   obtenerPedidos(): Observable<Pedido[]> {
-    console.log(this.url);
     return this.http.get<Pedido[]>(this.url);
+  }
+
+  obtenerPedido(id): Observable<Pedido> {
+    return this.http.get<Pedido>(`${this.url}/${id}`);
   }
 
   guardar(pedido: Pedido): Observable<Pedido> {

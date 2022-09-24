@@ -59,9 +59,6 @@ export class ListarPedidoComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  // tslint:disable-next-line: typedef
-
-
   openSnackBar(msg: string): void {
     this.snackBar.openFromComponent(SnackConfirmComponent, {
       panelClass: ['error-snackbar'],
@@ -85,6 +82,6 @@ export class ListarPedidoComponent implements OnInit {
   }
 
   consultar(row) {
-
+    this.router.navigate([`/compras/consultar-pedido/${row.idPedido}`]);
   }
 }

@@ -6,5 +6,6 @@ export class Pedido {
   descripcion?: string;
   fecha?: Date;
   habilitado?: boolean;
+  idProveedor?: number;
   articulos?: ArticuloStock[];
 }
