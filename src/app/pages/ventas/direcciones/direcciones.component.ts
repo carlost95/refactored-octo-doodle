@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DireccionesService } from '../../../service/direcciones.service';
 import { Direccion } from '../../../models/Direccion';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { AgregarDireccionComponent } from './agregar-direccion/agregar-direccion.component';
 import { SnackConfirmComponent } from '../../../shared/snack-confirm/snack-confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmModalComponent } from '../../../shared/confirm-modal/confirm-modal.component';
@@ -74,12 +73,12 @@ export class DireccionesComponent implements OnInit {
   }
   filtrarDirection(value: string): void {
     const TERMINO = 'calle';
-    const Direcciones = this.buscadorService.buscarTermino(
+    const direcciones = this.buscadorService.buscarTermino(
       this.direcciones,
       TERMINO,
       value
     );
-    this.establecerDatasource(this.direcciones);
+    this.establecerDatasource(direcciones);
   }
   establecerDatasource(direcciones: Direccion[]): void {
     this.dataSource = new MatTableDataSource(direcciones);
@@ -124,16 +123,14 @@ export class DireccionesComponent implements OnInit {
     this.openDialog(data);
   }
   openDialog(data: any): void {
-    // const dialog = this.matDialog.open(AgregarDireccionComponent, {
     const dialog = this.matDialog.open(CrearDireccionComponent, {
       id: 'modal-component',
       disableClose: true,
       height: 'auto',
-      width: 'auto',
+      width: '40rem',
       data,
       panelClass: 'no-padding',
     });
-    // The user can't close the dialog by clicking outside its body
     dialog.afterClosed().subscribe((result) => {
       this.direccionService
         .getAllDirectionByClientId(this.idCliente)

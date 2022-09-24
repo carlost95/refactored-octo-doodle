@@ -46,7 +46,7 @@ export class ClientesComponent implements OnInit {
     public matDialog: MatDialog,
     private tokenService: TokenService,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.roles = this.tokenService.getAuthorities();
@@ -59,7 +59,7 @@ export class ClientesComponent implements OnInit {
   }
 
   filtrarClient(value: string): void {
-    const TERMINO = 'nombre';
+    const TERMINO = 'apellido';
     const clientes = this.buscadorService.buscarTermino(
       this.clientes,
       TERMINO,

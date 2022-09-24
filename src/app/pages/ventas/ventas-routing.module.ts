@@ -4,7 +4,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { VentasComponent } from './ventas.component';
 import { ClientesComponent } from './clientes/clientes.component';
 import { DireccionesComponent } from './direcciones/direcciones.component';
-import { AgregarDireccionComponent } from './direcciones/agregar-direccion/agregar-direccion.component';
 import { AgregarVentaComponent } from './agregar-venta/agregar-venta.component';
 import { AgregarRemitoComponent } from './agregar-remito/agregar-remito.component';
 import { ListarVentaComponent } from './listar-venta/listar-venta.component';

@@ -29,4 +29,7 @@ export class PlaceService {
         }
       ));
   }
+  setLocation(ubicacion: [number, number]) {
+    this.userLocation = ubicacion;
+  }
 }

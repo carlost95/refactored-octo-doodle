@@ -23,6 +23,9 @@ import { SharedModule } from '../../shared/shared.module';
     CommonModule,
     LogisticaRoutingModule,
     GoogleMapsModule],
-  exports: [ScreenMapComponent]
+  exports: [
+    ScreenMapComponent,
+    LoadingComponent,
+    MapViewComponent]
 })
 export class LogisticaModule { }

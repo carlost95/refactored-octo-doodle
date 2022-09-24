@@ -27,29 +27,18 @@ export class MapService {
   setMap(map: Map) {
     this.map = map;
   }
+
   //TODO: Se define los parametros para inicializar mapa
   flyTo(coords: LngLatLike) {
     if (!this.isMapReady) throw new Error('El mapa no esta inicailizado');
     // TODO: se define en centro del mapa con las coordenadas recibidas
-
-
 
     this.map?.flyTo({
       zoom: 14,
       center: coords,
     });
   }
-  // createMarker(ubication: [number, number]) {
-  //   if (!this.map) throw new Error("Mapa no inicializado");
-  //   this.markers.forEach((marker) => marker.remove());
-  //   const newMarkers = [];
-  //   const newMarker = new Marker()
-  //     .setLngLat(ubication)
-  //     .addTo(this.map);
-  //   newMarkers.push(newMarker);
-  //   this.markers = newMarkers;
 
-  // }
   // createMarkerFromPlaces(places: Feature[], userLocation: [number, number]) {
   //   if (!this.map) throw new Error("Mapa no inicializado");
   //   this.markers.forEach((marker) => marker.remove());

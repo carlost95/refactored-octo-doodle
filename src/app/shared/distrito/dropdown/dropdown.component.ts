@@ -31,7 +31,6 @@ export class DistritoDropdownComponent implements ControlValueAccessor, OnInit {
   distritos: DistritoRest[] = [];
   control: AbstractControl;
   @Input() formControlName: string;
-  @Input() classNames = 'w-100';
   @Output('distritoChange') idDistrito: EventEmitter<number> =
     new EventEmitter<number>();
 
