@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'template-search',
@@ -7,7 +7,10 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 })
 export class SearchComponent implements OnInit {
 
+  @ViewChild('searcher') searcher: ElementRef;
   @Output() filtro = new EventEmitter<string>();
+  value = 'searcher';
+
   constructor() { }
 
   ngOnInit(): void {
@@ -16,5 +19,9 @@ export class SearchComponent implements OnInit {
   filtrar($event: KeyboardEvent): void {
     const value = ($event.target as HTMLInputElement).value;
     this.filtro.emit(value);
+  }
+
+  reset(): void {
+    this.searcher.nativeElement.value = '';
   }
 }

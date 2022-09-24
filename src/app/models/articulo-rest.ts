@@ -17,3 +17,13 @@ export class ArticuloRest {
   rubroNombre?: string;
 
 }
+
+export class ArticuloStock {
+  id?: number;
+  nombre?: string;
+  codigoArt?: string;
+  idProveedor?: number;
+  stockActual?: number;
+  cantidad?: number;
+  stockFinal?: number;
+}

@@ -19,6 +19,7 @@ export class ProveedorDropdownComponent implements ControlValueAccessor, OnInit{
   proveedores: ProveedorRest[] | Proveedor[] = [];
   @Input() consulta: boolean;
   @Input() formControlName: string;
+  @Input() classNames = 'w-100';
   control: AbstractControl;
   isLoading = true;
 
