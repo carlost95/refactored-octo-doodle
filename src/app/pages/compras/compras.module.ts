@@ -10,9 +10,9 @@ import { ListarProveedorComponent } from './proveedores/listar-proveedor/listar-
 import { ListarArticulosComponent } from './articulos/listar-articulos/listar-articulos.component';
 import { AgregarProveedorComponent } from './proveedores/agregar-proveedor/agregar-proveedor.component';
 import { AgregarArticuloComponent } from './articulos/agregar-articulo/agregar-articulo.component';
-import { ListarPedidoComponent } from './listar-pedido/listar-pedido.component';
-import { AgregarPedidoComponent } from './agregar-pedido/agregar-pedido.component';
-import { ConsultarPedidoComponent } from './consultar-pedido/consultar-pedido.component';
+import { ListarPedidoComponent } from './pedidos/listar-pedido/listar-pedido.component';
+import { AgregarPedidoComponent } from './pedidos/agregar-pedido/agregar-pedido.component';
+import { ConsultarPedidoComponent } from './pedidos/consultar-pedido/consultar-pedido.component';
 import { ListarCuentasComponent } from './cuentas/listar-cuentas/listar-cuentas.component';
 import { AgregarCuentaComponent } from './cuentas/agregar-cuenta/agregar-cuenta.component';
 import { ExcelExportService } from '../../service/excel-export.service';

@@ -25,6 +25,7 @@ import { SubrubroDropdownComponent } from './subrubro/dropdown/subrubro-dropdown
 import { MarcaDropdownComponent } from './marca/dropdown/marca-dropdown.component';
 import { ProveedorDropdownComponent } from './proveedor/dropdown/proveedor-dropdown.component';
 import { DistritoDropdownComponent } from './distrito/dropdown/dropdown.component';
+import { OnlyNumber } from './directives/only-numbers.directive';
 
 @NgModule({
   declarations: [
@@ -46,8 +47,9 @@ import { DistritoDropdownComponent } from './distrito/dropdown/dropdown.componen
     RubroDropdownComponent,
     SubrubroDropdownComponent,
     MarcaDropdownComponent,
-    ProveedorDropdownComponent,
     DistritoDropdownComponent
+    ProveedorDropdownComponent,
+    OnlyNumber
   ],
   imports: [
     FormsModule,
@@ -70,6 +72,9 @@ import { DistritoDropdownComponent } from './distrito/dropdown/dropdown.componen
     MarcaDropdownComponent,
     ProveedorDropdownComponent,
     DistritoDropdownComponent
+    HeaderComponent,
+    OnlyNumber,
+    SearchComponent
   ],
   providers: [
     {
