@@ -18,9 +18,7 @@ import { AgregarCuentaComponent } from './cuentas/agregar-cuenta/agregar-cuenta.
 import { ExcelExportService } from '../../service/excel-export.service';
 import { AbmComprasModule } from '../abm-compras/abm-compras.module';
 import { MaterialModule } from '../../material/material.module';
-import { PaginacionPipe } from './paginacion.pipe';
 import { MatPaginatorIntl } from '@angular/material/paginator';
-import { CustomMatPaginatorIntl } from './paginacion-es';
 import { interceptorProvider } from '../../interceptors/prod-interceptor.service';
 
 @NgModule({
@@ -34,7 +32,6 @@ import { interceptorProvider } from '../../interceptors/prod-interceptor.service
     AgregarPedidoComponent,
     AgregarArticuloComponent,
     ConsultarPedidoComponent,
-    PaginacionPipe,
     ListarCuentasComponent,
     AgregarCuentaComponent,
   ],
@@ -52,8 +49,7 @@ import { interceptorProvider } from '../../interceptors/prod-interceptor.service
     interceptorProvider,
     {
       provide: MatPaginatorIntl,
-      useClass: CustomMatPaginatorIntl,
     },
   ],
 })
-export class ComprasModule {}
+export class ComprasModule { }

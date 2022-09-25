@@ -28,7 +28,7 @@ export class AgregarProveedorComponent implements OnInit {
     private snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<AgregarProveedorComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.titulo = this.data.titulo;
@@ -49,21 +49,11 @@ export class AgregarProveedorComponent implements OnInit {
     const disabled = tipoModal === TipoModal.consulta ? true : false;
     this.proveedorForm = this.formBuilder.group({
       idProveedor: [{ value: proveedor.idProveedor, disabled }, null],
-      razonSocial: [
-        { value: proveedor.razonSocial, disabled },
-        Validators.required,
-      ],
-      domicilio: [
-        { value: proveedor.domicilio, disabled },
-        Validators.required,
-      ],
-      email: [{ value: proveedor.email, disabled }, Validators.required],
+      razonSocial: [{ value: proveedor.razonSocial, disabled }, Validators.required],
+      cuit: [{ value: proveedor.cuit, disabled }, Validators.required],
+      domicilio: [{ value: proveedor.domicilio, disabled }, Validators.required],
+      email: [{ value: proveedor.email, disabled }, null],
       telefono: [{ value: proveedor.telefono, disabled }, null],
-      habilitado: [
-        { value: proveedor.habilitado, disabled },
-        Validators.required,
-      ],
-      // bancos: [{ value: proveedor.bancos, disabled }, Validators.required],
     });
     return;
   }
@@ -72,7 +62,8 @@ export class AgregarProveedorComponent implements OnInit {
     this.proveedorForm = this.formBuilder.group({
       razonSocial: ['', Validators.required],
       domicilio: ['', Validators.required],
-      email: ['', Validators.required],
+      cuit: ['', Validators.required],
+      email: ['', null],
       telefono: ['', null],
     });
   }
@@ -89,7 +80,7 @@ export class AgregarProveedorComponent implements OnInit {
     if (this.errorInForm) {
       this.proveedorForm.controls.razonSocial.markAllAsTouched();
       this.proveedorForm.controls.domicilio.markAllAsTouched();
-      this.proveedorForm.controls.email.markAllAsTouched();
+      this.proveedorForm.controls.cuit.markAllAsTouched();
     } else {
       this.makeDTO();
     }
@@ -103,6 +94,7 @@ export class AgregarProveedorComponent implements OnInit {
       .trim()
       .toUpperCase();
     this.proveedor.email = this.proveedorForm.controls.email.value;
+    this.proveedor.cuit = this.proveedorForm.controls.cuit.value;
     this.proveedor.telefono = this.proveedorForm.controls.telefono.value;
 
     if (this.tipoModal === TipoModal.actualizacion) {

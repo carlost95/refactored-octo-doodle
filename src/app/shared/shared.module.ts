@@ -8,9 +8,9 @@ import { MaterialModule } from '../material/material.module';
 import { PedidosComponent } from './pedidos/pedidos.component';
 import { AjustesComponent } from './ajustes/ajustes.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
-import { PaginacionPipe } from './paginacion.pipe';
+// import { PaginacionPipe } from './paginacion.pipe';
 import { MatPaginatorIntl } from '@angular/material/paginator';
-import { CustomMatPaginatorIntl } from '../pages/compras/paginacion-es';
+// import { CustomMatPaginatorIntl } from '../pages/compras/paginacion-es';
 import { NavbarComponent } from './navbar/navbar.component';
 import { FooterComponent } from './footer/footer.component';
 import { DropdownComponent } from './banco/dropdown/dropdown.component';
@@ -32,7 +32,6 @@ import { OnlyNumber } from './directives/only-numbers.directive';
     PedidosComponent,
     AjustesComponent,
     ConfirmDialogComponent,
-    PaginacionPipe,
     NavbarComponent,
     FooterComponent,
     DropdownComponent,
@@ -79,7 +78,6 @@ import { OnlyNumber } from './directives/only-numbers.directive';
   providers: [
     {
       provide: MatPaginatorIntl,
-      useClass: CustomMatPaginatorIntl,
     },
   ],
 })
