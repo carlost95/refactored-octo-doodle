@@ -1,19 +1,21 @@
-import {Articulo} from '@models/Articulo';
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {AgregarArticuloComponent} from '../agregar-articulo/agregar-articulo.component';
-import {ArticulosService} from '@service/articulos.service';
-import {MatPaginator} from '@angular/material/paginator';
-import {ConfirmModalComponent} from '@shared/confirm-modal/confirm-modal.component';
-import {TokenService} from '@service/token.service';
-import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.component';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {ArticuloRest} from '../../../../models/articulo-rest';
-import {TipoModal} from '../../../../shared/models/tipo-modal.enum';
-import {TituloArticulo} from '../models/titulo-articulo.enum';
-import {BuscadorService} from "../../../../shared/helpers/buscador.service";
+import { Articulo } from '@models/Articulo';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { AgregarArticuloComponent } from '../agregar-articulo/agregar-articulo.component';
+import { ArticulosService } from '@service/articulos.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { ConfirmModalComponent } from '@shared/confirm-modal/confirm-modal.component';
+import { TokenService } from '@service/token.service';
+import { SnackConfirmComponent } from '@shared/snack-confirm/snack-confirm.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { ArticuloRest } from '../../../../models/articulo-rest';
+import { TipoModal } from '../../../../shared/models/tipo-modal.enum';
+import { TituloArticulo } from '../models/titulo-articulo.enum';
+import { BuscadorService } from "../../../../shared/helpers/buscador.service";
+import { concat } from 'rxjs';
+import { concatMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-listar-articulos',
@@ -127,18 +129,15 @@ export class ListarArticulosComponent implements OnInit {
     const modalDialog = this.matDialog.open(ConfirmModalComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       if (result.state) {
-        // tslint:disable-next-line:no-shadowed-variable
-        this.articuloService.cambiarEstado(articulo.id).subscribe(result => {
-          this.articuloService.obtenerArticulos().subscribe(articulos => {
+        this.articuloService.cambiarEstado(articulo.id)
+          .pipe(concatMap((data) => this.articuloService.obtenerArticulos()))
+          .subscribe(articulos => {
             this.articulos = articulos;
             this.establecerDatasource(articulos);
           });
-        });
+        this.openSnackBar('Estado Actualizado');
       } else {
-        this.articuloService.obtenerArticulos().subscribe(articulos => {
-          this.articulos = articulos;
-          this.establecerDatasource(articulos);
-        });
+        this.openSnackBar('Error en la actualizacion');
       }
     });
   }

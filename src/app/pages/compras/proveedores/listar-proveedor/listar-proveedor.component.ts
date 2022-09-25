@@ -27,6 +27,7 @@ export class ListarProveedorComponent implements OnInit {
   dataSource: MatTableDataSource<Proveedor>;
   displayedColumns: string[] = [
     'razonSocial',
+    'cuit',
     'telefono',
     'email',
     'habilitado',
@@ -47,7 +48,7 @@ export class ListarProveedorComponent implements OnInit {
     private tokenService: TokenService,
     private snackBar: MatSnackBar,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.roles = this.tokenService.getAuthorities();
@@ -147,8 +148,9 @@ export class ListarProveedorComponent implements OnInit {
             this.proveedores = proveedores;
             this.establecerDatasource(proveedores);
           });
+        this.openSnackBar(proveedor.razonSocial + ' cambio de estado');
       } else {
-        // this.getData();
+        this.openSnackBar('Error al ejecutar cambio de estado');
       }
     });
   }
