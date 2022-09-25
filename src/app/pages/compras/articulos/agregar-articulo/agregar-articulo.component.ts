@@ -12,10 +12,10 @@ import { RubrosService } from '@service/rubros.service';
 import { UnidadMedidaService } from '@service/unidad-medida.service';
 import { ProveedoresService } from '@service/proveedores.service';
 import { ArticulosService } from '@service/articulos.service';
-import {TipoModal} from '@shared/models/tipo-modal.enum';
-import {ArticuloRest} from '@models/articulo-rest';
-import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.component';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { TipoModal } from '@shared/models/tipo-modal.enum';
+import { ArticuloRest } from '@models/articulo-rest';
+import { SnackConfirmComponent } from '@shared/snack-confirm/snack-confirm.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -33,18 +33,12 @@ export class AgregarArticuloComponent implements OnInit {
 
   constructor(
     private readonly articuloService: ArticulosService,
-    private serviceCompra: PedidosService,
-    private subRubroService: SubRubroService,
-    private marcaService: MarcasService,
-    private rubroService: RubrosService,
-    private unidadMedidaService: UnidadMedidaService,
-    private proveedorService: ProveedoresService,
     private formBuilder: FormBuilder,
     public matDialog: MatDialog,
     public dialogRef: MatDialogRef<AgregarArticuloComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private snackBar: MatSnackBar,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.titulo = this.data.titulo;
@@ -58,16 +52,16 @@ export class AgregarArticuloComponent implements OnInit {
   }
 
   private establecerModalDatos(data: any, tipoModal: any): void {
-    const { articulo }: {articulo: ArticuloRest} = data;
+    const { articulo }: { articulo: ArticuloRest } = data;
     const disabled = tipoModal === TipoModal.consulta ? true : false;
     this.articuloForm = this.formBuilder.group({
-      id: [{value: articulo.id}, null],
+      id: [{ value: articulo.id }, null],
       codigo: [{ value: articulo.codigoArt, disabled }, Validators.required],
       nombre: [{ value: articulo.nombre, disabled }, Validators.required],
       abreviatura: [{ value: articulo.abreviatura, disabled }, Validators.required],
       stockMin: [{ value: articulo.stockMin, disabled }, null],
       stockMax: [{ value: articulo.stockMax, disabled }, null],
-      estado: [{value: articulo.habilitado, disabled}, null],
+      estado: [{ value: articulo.habilitado, disabled }, null],
       unidadMedidaId: [{ value: articulo.idUnidadMedida, disabled }, Validators.required],
       rubroId: [{ value: articulo.idRubro, disabled }, Validators.required],
       subRubroId: [{ value: articulo.idSubRubro, disabled }, null],
@@ -78,7 +72,7 @@ export class AgregarArticuloComponent implements OnInit {
     });
   }
 
-  private establecerModalVacio(): void{
+  private establecerModalVacio(): void {
     this.articuloForm = this.formBuilder.group({
       codigo: ['', Validators.required],
       nombre: ['', Validators.required],
@@ -99,7 +93,7 @@ export class AgregarArticuloComponent implements OnInit {
     this.submitted = true;
     this.errorInForm = this.submitted && this.articuloForm.invalid;
 
-    if ( this.errorInForm ) {
+    if (this.errorInForm) {
       this.articuloForm.controls.codigo.markAsTouched();
       this.articuloForm.controls.nombre.markAsTouched();
       this.articuloForm.controls.abreviatura.markAsTouched();
@@ -118,18 +112,18 @@ export class AgregarArticuloComponent implements OnInit {
   }
 
   makeDTO(): void {
-    this.articulo.codigoArt =  this.articuloForm.controls.codigo.value.trim();
-    this.articulo.nombre =  this.articuloForm.controls.nombre.value.trim();
-    this.articulo.abreviatura =  this.articuloForm.controls.abreviatura.value.trim();
-    this.articulo.stockMin =  this.articuloForm.controls.stockMin.value;
-    this.articulo.stockMax =  this.articuloForm.controls.stockMax.value;
-    this.articulo.idUnidadMedida =  this.articuloForm.controls.unidadMedidaId.value;
-    this.articulo.idRubro =  this.articuloForm.controls.rubroId.value;
-    this.articulo.idSubRubro =  this.articuloForm.controls.subRubroId.value;
-    this.articulo.idMarca =  this.articuloForm.controls.marcaId.value;
-    this.articulo.idProveedor =  this.articuloForm.controls.proveedorId.value;
-    this.articulo.costo =  this.articuloForm.controls.costo.value;
-    this.articulo.precio =  this.articuloForm.controls.precio.value;
+    this.articulo.codigoArt = this.articuloForm.controls.codigo.value.trim();
+    this.articulo.nombre = this.articuloForm.controls.nombre.value.trim();
+    this.articulo.abreviatura = this.articuloForm.controls.abreviatura.value.trim();
+    this.articulo.stockMin = this.articuloForm.controls.stockMin.value;
+    this.articulo.stockMax = this.articuloForm.controls.stockMax.value;
+    this.articulo.idUnidadMedida = this.articuloForm.controls.unidadMedidaId.value;
+    this.articulo.idRubro = this.articuloForm.controls.rubroId.value;
+    this.articulo.idSubRubro = this.articuloForm.controls.subRubroId.value;
+    this.articulo.idMarca = this.articuloForm.controls.marcaId.value;
+    this.articulo.idProveedor = this.articuloForm.controls.proveedorId.value;
+    this.articulo.costo = this.articuloForm.controls.costo.value;
+    this.articulo.precio = this.articuloForm.controls.precio.value;
 
     if (this.tipoModal === TipoModal.actualizacion) {
       this.articulo.id = this.articuloForm.controls.id.value.value;
@@ -142,16 +136,16 @@ export class AgregarArticuloComponent implements OnInit {
 
   save(): void {
     this.articuloService.guardar(this.articulo).subscribe((data) => {
-      this.msgSnack('Guardado con éxito');
-    }, ({error}) => {
+      this.msgSnack(data.nombre + ' Guardado con éxito');
+    }, ({ error }) => {
       this.openSnackBar(error);
     });
   }
 
   update(): void {
     this.articuloService.actualizar(this.articulo).subscribe((data) => {
-      this.msgSnack('Actualizado con éxito');
-    }, ({error}) => {
+      this.msgSnack(data.nombre + ' Actualizado con éxito');
+    }, ({ error }) => {
       this.openSnackBar(error);
     });
   }
@@ -173,22 +167,22 @@ export class AgregarArticuloComponent implements OnInit {
   }
 
   establecerUnidad(unidadMedidaId: number): void {
-      this.articuloForm.patchValue({ unidadMedidaId});
+    this.articuloForm.patchValue({ unidadMedidaId });
   }
 
   establecerRubro(rubroId: number): void {
-    this.articuloForm.patchValue({rubroId});
+    this.articuloForm.patchValue({ rubroId });
   }
 
   establecerSubRubro(subRubroId: number): void {
-    this.articuloForm.patchValue({subRubroId});
+    this.articuloForm.patchValue({ subRubroId });
   }
 
   establecerMarca(marcaId: number): void {
-    this.articuloForm.patchValue({marcaId});
+    this.articuloForm.patchValue({ marcaId });
   }
 
   establecerProveedor(proveedorId: number): void {
-    this.articuloForm.patchValue({proveedorId});
+    this.articuloForm.patchValue({ proveedorId });
   }
 }

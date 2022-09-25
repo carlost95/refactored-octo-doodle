@@ -18,7 +18,6 @@ import { ResetPasswordComponent } from './pages/seguridad/reset-password/reset-p
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
-  // tslint:disable-next-line:max-line-length
   declarations: [
     AppComponent,
     LoginComponent,

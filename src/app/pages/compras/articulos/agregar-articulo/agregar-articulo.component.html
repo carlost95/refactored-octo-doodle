@@ -6,22 +6,21 @@
     <div class="col-md-5 py-3">
       <mat-form-field class="w-100" appearance="legacy">
         <mat-label>Codigo</mat-label>
-        <input matInput formControlName="codigo" required autocomplete="off"/>
+        <input matInput formControlName="codigo" required autocomplete="off" />
         <mat-error *ngIf="articuloForm.controls.codigo.errors">
           Código es <strong>requerido</strong>
         </mat-error>
       </mat-form-field>
       <mat-form-field class="w-100" appearance="legacy">
         <mat-label> Nombre</mat-label>
-        <input matInput formControlName="nombre" required autocomplete="off"/>
+        <input matInput formControlName="nombre" required autocomplete="off" />
         <mat-error *ngIf="articuloForm.controls.nombre.errors">
           Nombre es <strong>requerido</strong>
         </mat-error>
       </mat-form-field>
       <mat-form-field class="w-100" appearance="legacy">
         <mat-label>Abreviatura</mat-label>
-        <input matInput formControlName="abreviatura" required
-               autocomplete="off"/>
+        <input matInput formControlName="abreviatura" required autocomplete="off" />
         <mat-error *ngIf="articuloForm.controls.abreviatura.errors">
           Abrevaitura es <strong>requerido</strong>
         </mat-error>
@@ -29,22 +28,17 @@
       <div class="form-row d-flex justify-content-between">
         <mat-form-field class="col-md-5" appearance="legacy">
           <mat-label>Stock min</mat-label>
-          <input matInput formControlName="stockMin"
-                 autocomplete="off" type="number" min="0" maxlength="8"
-                 oninput="this.value=this.value.slice(0,this.maxLength|| 0/0);this.value=(this.value< 0) ? (0/0) : this.value;"/>
+          <input matInput formControlName="stockMin" autocomplete="off" type="number" min="0" maxlength="8" oninput="this.value=this.value.slice(0,this.maxLength|| 0/0);this.value=(this.value< 0) ? (0/0) : this.value;" />
         </mat-form-field>
         <mat-form-field class="col-md-5" appearance="legacy">
           <mat-label>Stock max</mat-label>
-          <input matInput formControlName="stockMax"
-                 autocomplete="off" type="number" min="0" maxlength="8"
-                 oninput="this.value=this.value.slice(0,this.maxLength|| 0/0);this.value=(this.value< 0) ? (0/0) : this.value;"/>
+          <input matInput formControlName="stockMax" autocomplete="off" type="number" min="0" maxlength="8" oninput="this.value=this.value.slice(0,this.maxLength|| 0/0);this.value=(this.value< 0) ? (0/0) : this.value;" />
         </mat-form-field>
       </div>
       <div class="form-row d-flex justify-content-between">
         <mat-form-field class="col-md-5" appearance="legacy">
           <mat-label>Costo compra</mat-label>
-          <input matInput formControlName="costo"
-                 autocomplete="off" type="number" min="0" maxlength="8">
+          <input matInput formControlName="costo" autocomplete="off" type="number" min="0" maxlength="8">
           <span matPrefix>$&nbsp;</span>
           <mat-error *ngIf="articuloForm.controls.costo.errors">
             Costo es <strong>requerido</strong>
@@ -52,8 +46,7 @@
         </mat-form-field>
         <mat-form-field class="col-md-5" appearance="legacy">
           <mat-label>Precio venta</mat-label>
-          <input matInput formControlName="precio"
-                 autocomplete="off" type="number" min="0" maxlength="8"/>
+          <input matInput formControlName="precio" autocomplete="off" type="number" min="0" maxlength="8" />
           <span matPrefix>$&nbsp;</span>
           <mat-error *ngIf="articuloForm.controls.nombre.errors">
             Precio es <strong>requerido</strong>
@@ -62,33 +55,18 @@
       </div>
     </div>
     <div class="col-md-5 py-3">
-      <unidad-medida-dropdown
-        formControlName="unidadMedidaId"
-        class="w-100"
-        (unidadChange)="establecerUnidad($event)">
+      <unidad-medida-dropdown formControlName="unidadMedidaId" class="w-100" (unidadChange)="establecerUnidad($event)">
       </unidad-medida-dropdown>
-      <rubro-dropdown
-        formControlName="rubroId"
-        class="w-100"
-        (rubroChange)="establecerRubro($event)">
+      <rubro-dropdown formControlName="rubroId" class="w-100" (rubroChange)="establecerRubro($event)">
       </rubro-dropdown>
-      <subrubro-dropdown
-        formControlName="subRubroId"
-        class="w-100"
-        (subrubroChange)="establecerSubRubro($event)">
+      <subrubro-dropdown formControlName="subRubroId" class="w-100" (subrubroChange)="establecerSubRubro($event)">
       </subrubro-dropdown>
-      <marca-dropdown
-        formControlName="marcaId"
-        class="w-100"
-        (marcaChange)="establecerMarca($event)">
+      <marca-dropdown formControlName="marcaId" class="w-100" (marcaChange)="establecerMarca($event)">
       </marca-dropdown>
-      <proveedor-dropdown
-        formControlName="proveedorId"
-        class="w-100"
-        (proveedorChange)="establecerProveedor($event)">
+      <proveedor-dropdown formControlName="proveedorId" class="w-100" (proveedorChange)="establecerProveedor($event)">
       </proveedor-dropdown>
     </div>
-</form>
+  </form>
 </section>
 <footer class="modal-footer">
   <button class="btn btn-outline-danger" (click)="closeForm()">Cerrar</button>
