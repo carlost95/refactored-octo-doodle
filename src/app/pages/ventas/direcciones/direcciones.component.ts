@@ -16,6 +16,8 @@ import { TokenService } from '../../../service/token.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { concatMap } from 'rxjs/operators';
 import { CrearDireccionComponent } from './crear-direccion/crear-direccion.component';
+import { ClienteService } from '@app/service/cliente.service';
+import { Cliente } from '@app/models/cliente';
 
 @Component({
   selector: 'app-direcciones',
@@ -39,6 +41,7 @@ export class DireccionesComponent implements OnInit {
   direccion: Direccion = new Direccion();
   roles: string[];
   idCliente: number;
+  cliente: Cliente;
 
   constructor(
     private readonly buscadorService: BuscadorService,
@@ -46,7 +49,7 @@ export class DireccionesComponent implements OnInit {
     private direccionService: DireccionesService,
     public matDialog: MatDialog,
     private tokenService: TokenService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
   ) { }
 
   ngOnInit(): void {
@@ -145,7 +148,6 @@ export class DireccionesComponent implements OnInit {
   }
   showModal(direccion: Direccion): void {
     const dialogConfig = new MatDialogConfig();
-    // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
     dialogConfig.height = 'auto';

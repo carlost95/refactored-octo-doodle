@@ -21,6 +21,9 @@ export class ClienteService {
   getAllEnabledClient(): Observable<Cliente[]> {
     return this.http.get<Cliente[]>(this.url + '/enabled');
   }
+  getClientById(id: number): Observable<Cliente> {
+    return this.http.get<Cliente>(this.url + '/' + id);
+  }
 
   saveClient(client: Cliente): Observable<Cliente> {
     return this.http.post<Cliente>(this.url, client);
