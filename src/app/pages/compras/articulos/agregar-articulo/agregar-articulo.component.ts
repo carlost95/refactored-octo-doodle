@@ -6,11 +6,6 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MarcasService } from '@service/marcas.service';
-import { SubRubroService } from '@service/sub-rubro.service';
-import { RubrosService } from '@service/rubros.service';
-import { UnidadMedidaService } from '@service/unidad-medida.service';
-import { ProveedoresService } from '@service/proveedores.service';
 import { ArticulosService } from '@service/articulos.service';
 import { TipoModal } from '@shared/models/tipo-modal.enum';
 import { ArticuloRest } from '@models/articulo-rest';

@@ -6,7 +6,6 @@ import { TipoModal } from '../../../../shared/models/tipo-modal.enum';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SnackConfirmComponent } from '../../../../shared/snack-confirm/snack-confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TituloAccount } from '../../../../shared/models/titulo-account.enum';
 
 @Component({
   selector: 'app-agregar-cuenta',
@@ -55,8 +54,9 @@ export class AgregarCuentaComponent implements OnInit {
       numero: [{ value: cuenta.numero, disabled }, Validators.required],
       cbu: [{ value: cuenta.cbu, disabled }, Validators.required],
       alias: [{ value: cuenta.alias, disabled }, Validators.required],
-      habilitado: [{ value: cuenta.habilitado, disabled }, null],
       idBanco: [{ value: cuenta.idBanco, disabled }, Validators.required],
+      habilitado: [{ value: cuenta.habilitado, disabled }, null],
+      idProveedor: [{ value: cuenta.idProveedor, disabled }, Validators.required],
     });
     return;
   }
@@ -68,6 +68,7 @@ export class AgregarCuentaComponent implements OnInit {
       cbu: ['', Validators.required],
       alias: ['', Validators.required],
       idBanco: ['', Validators.required],
+      idProveedor: [this.idProveedor, Validators.required],
     });
   }
   close(): void {
@@ -84,6 +85,7 @@ export class AgregarCuentaComponent implements OnInit {
       this.accountForm.controls['cbu'].markAsTouched();
       this.accountForm.controls['alias'].markAsTouched();
       this.accountForm.controls['idBanco'].markAsTouched();
+      this.accountForm.controls['idProveedor'].markAsTouched();
     } else {
       this.makeDTO();
     }
@@ -96,19 +98,17 @@ export class AgregarCuentaComponent implements OnInit {
     this.cuenta.cbu = this.accountForm.controls.cbu.value;
     this.cuenta.alias = this.accountForm.controls.alias.value;
     this.cuenta.idBanco = this.accountForm.controls.idBanco.value;
+    this.cuenta.idProveedor = this.accountForm.controls.idProveedor.value;
     if (this.tipoModal === TipoModal.actualizacion) {
       this.cuenta.id = this.accountForm.controls.id.value;
       this.cuenta.habilitado = this.accountForm.controls.habilitado.value;
       this.update();
     } else {
-      this.cuenta.idProveedor = this.idProveedor;
       this.save();
     }
   }
 
   private save(): void {
-    console.log('carga de cuenta bancaria');
-    console.log(this.cuenta);
     this.cuentaService.saveAccountbBank(this.cuenta).subscribe(
       (data) => {
         this.msgSnack(data.titular + ' agregado correctamente');

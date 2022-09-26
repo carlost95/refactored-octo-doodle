@@ -49,7 +49,7 @@ export class ListarCuentasComponent implements OnInit {
     private tokenService: TokenService,
     private snackBar: MatSnackBar,
     private cuentaService: CuentaService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.roles = this.tokenService.getAuthorities();
@@ -159,17 +159,17 @@ export class ListarCuentasComponent implements OnInit {
       if (result.state) {
         this.cuentaService
           .changeStatusAccountBank(cuenta.id)
-          .pipe(
-            concatMap((data) =>
-              this.cuentaService.getAccountBankByIdProveedor(this.idProveedor)
-            )
+          .pipe(concatMap((data) =>
+            this.cuentaService.getAccountBankByIdProveedor(this.idProveedor)
           )
-          .subscribe((cuentasBancarias) => {
-            this.cuentas = cuentasBancarias;
+          )
+          .subscribe((cuentas) => {
+            this.cuentas = cuentas;
             this.establecerDatasource(this.cuentas);
           });
+        this.openSnackBar("Se actualizo el estado de la cuenta");
       } else {
-        this.openSnackBar('Error en recuperacion de cuenta ' + result);
+        this.openSnackBar('No se pudo hacer el cambio de estado ');
       }
     });
   }

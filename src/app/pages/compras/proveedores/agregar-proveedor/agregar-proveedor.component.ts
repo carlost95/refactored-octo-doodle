@@ -54,6 +54,7 @@ export class AgregarProveedorComponent implements OnInit {
       domicilio: [{ value: proveedor.domicilio, disabled }, Validators.required],
       email: [{ value: proveedor.email, disabled }, null],
       telefono: [{ value: proveedor.telefono, disabled }, null],
+      habilitado: [{ value: proveedor.habilitado, disabled }, null],
     });
     return;
   }
@@ -98,8 +99,7 @@ export class AgregarProveedorComponent implements OnInit {
     this.proveedor.telefono = this.proveedorForm.controls.telefono.value;
 
     if (this.tipoModal === TipoModal.actualizacion) {
-      this.proveedor.idProveedor =
-        this.proveedorForm.controls.idProveedor.value;
+      this.proveedor.idProveedor = this.proveedorForm.controls.idProveedor.value;
       this.proveedor.habilitado = this.proveedorForm.controls.habilitado.value;
       this.update();
     } else {
