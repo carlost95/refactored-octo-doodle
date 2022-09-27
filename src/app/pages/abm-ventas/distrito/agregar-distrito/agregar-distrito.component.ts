@@ -1,11 +1,13 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {DistritoService} from '../../../../service/distrito.service';
-import {DepartamentosService} from '../../../../service/departamentos.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {TipoModal} from '@shared/models/tipo-modal.enum';
-import {DistritoRest} from '@models/distrito-rest';
-import {DepartamentoRest} from '@models/departamento-rest';
+import { Component, Inject, OnInit } from '@angular/core';
+import { DistritoService } from '../../../../service/distrito.service';
+import { DepartamentosService } from '../../../../service/departamentos.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TipoModal } from '@shared/models/tipo-modal.enum';
+import { DistritoRest } from '@models/distrito-rest';
+import { DepartamentoRest } from '@models/departamento-rest';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackConfirmComponent } from '../../../../shared/snack-confirm/snack-confirm.component';
 
 @Component({
   selector: 'app-agregar-distrito',
@@ -28,8 +30,9 @@ export class AgregarDistritoComponent implements OnInit {
     private readonly departamentoService: DepartamentosService,
     public dialogRef: MatDialogRef<AgregarDistritoComponent>,
     private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.titulo = this.data.titulo;
@@ -39,7 +42,7 @@ export class AgregarDistritoComponent implements OnInit {
       .obtenerDepartamentosHabilitados()
       .subscribe(departamentos => {
         this.departamentos = departamentos;
-        if ( this.tipoModal === TipoModal.consulta || this.tipoModal === TipoModal.actualizacion) {
+        if (this.tipoModal === TipoModal.consulta || this.tipoModal === TipoModal.actualizacion) {
           this.establecerModalDatos(this.data, this.tipoModal);
         } else {
           this.establecerModalVacio();
@@ -50,14 +53,14 @@ export class AgregarDistritoComponent implements OnInit {
   }
 
   private establecerModalDatos(data, tipoModal): void {
-    const {distrito} = data;
+    const { distrito } = data;
     const disabled = tipoModal === TipoModal.consulta ? true : false;
     this.distritoForm = this.formBuilder.group({
-      id: [{value: distrito.idDistrito}, null],
-      nombre: [{ value: distrito.nombre, disabled}, Validators.required],
-      abreviatura: [{ value: distrito.abreviatura, disabled}, Validators.required],
-      departamento: [{ value: distrito.idDepartamento, disabled}, Validators.required],
-      estado: [{ value: distrito.habilitado, disabled}, null],
+      id: [{ value: distrito.idDistrito }, null],
+      nombre: [{ value: distrito.nombre, disabled }, Validators.required],
+      abreviatura: [{ value: distrito.abreviatura, disabled }, Validators.required],
+      departamento: [{ value: distrito.idDepartamento, disabled }, Validators.required],
+      estado: [{ value: distrito.habilitado, disabled }, null],
     });
   }
 
@@ -86,7 +89,7 @@ export class AgregarDistritoComponent implements OnInit {
 
   private makeDTO(): void {
     const distrito = new DistritoRest();
-    const {id, nombre, abreviatura, departamento, estado } = this.distritoForm.controls;
+    const { id, nombre, abreviatura, departamento, estado } = this.distritoForm.controls;
     distrito.nombre = nombre.value.trim().toUpperCase();
     distrito.abreviatura = abreviatura.value.trim().toUpperCase();
     distrito.idDepartamento = departamento.value;
@@ -101,13 +104,30 @@ export class AgregarDistritoComponent implements OnInit {
 
   private update(distrito: DistritoRest): void {
     this.distritoService.actualizar(distrito).subscribe((data) => {
-      this.dialogRef.close('Actualizado con éxito');
+      this.msgSnack(data.nombre + ' Actualizado con éxito');
+    }, ({ error }) => {
+      this.openSnackBar(error)
     });
   }
 
   private save(distrito: DistritoRest): void {
-    this.distritoService.guardar(distrito).subscribe(() => {
-      this.dialogRef.close('Guardado con éxito');
+    this.distritoService.guardar(distrito).subscribe((data) => {
+      this.msgSnack(data.nombre + ' Guardado con éxito');
+    },
+      ({ error }) => {
+        this.openSnackBar(error)
+      });
+  }
+
+  msgSnack(msg: string): void {
+    this.dialogRef.close(msg);
+  }
+
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
     });
   }
 }
