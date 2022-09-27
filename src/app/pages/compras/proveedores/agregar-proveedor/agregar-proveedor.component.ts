@@ -80,8 +80,8 @@ export class AgregarProveedorComponent implements OnInit {
 
     if (this.errorInForm) {
       this.proveedorForm.controls.razonSocial.markAllAsTouched();
-      this.proveedorForm.controls.domicilio.markAllAsTouched();
       this.proveedorForm.controls.cuit.markAllAsTouched();
+      this.proveedorForm.controls.domicilio.markAllAsTouched();
     } else {
       this.makeDTO();
     }
@@ -91,11 +91,11 @@ export class AgregarProveedorComponent implements OnInit {
     this.proveedor.razonSocial = this.proveedorForm.controls.razonSocial.value
       .trim()
       .toUpperCase();
+    this.proveedor.cuit = this.proveedorForm.controls.cuit.value;
     this.proveedor.domicilio = this.proveedorForm.controls.domicilio.value
       .trim()
       .toUpperCase();
     this.proveedor.email = this.proveedorForm.controls.email.value;
-    this.proveedor.cuit = this.proveedorForm.controls.cuit.value;
     this.proveedor.telefono = this.proveedorForm.controls.telefono.value;
 
     if (this.tipoModal === TipoModal.actualizacion) {
@@ -113,7 +113,7 @@ export class AgregarProveedorComponent implements OnInit {
         this.msgSnack(data.razonSocial + ' Guardado con Exito');
       },
       ({ error }) => {
-        this.msgSnack(error);
+        this.openSnackBar(error);
       }
     );
   }
@@ -128,7 +128,7 @@ export class AgregarProveedorComponent implements OnInit {
       }
     );
   }
-  msgSnack(data): void {
+  msgSnack(data: string): void {
     this.dialogRef.close(data);
   }
   openSnackBar(msg: string): void {

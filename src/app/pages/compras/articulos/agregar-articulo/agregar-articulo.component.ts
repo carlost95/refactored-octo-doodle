@@ -60,7 +60,7 @@ export class AgregarArticuloComponent implements OnInit {
       unidadMedidaId: [{ value: articulo.idUnidadMedida, disabled }, Validators.required],
       rubroId: [{ value: articulo.idRubro, disabled }, Validators.required],
       subRubroId: [{ value: articulo.idSubRubro, disabled }, null],
-      marcaId: [{ value: articulo.idMarca, disabled }, null],
+      marcaId: [{ value: articulo.idMarca, disabled }, Validators.required],
       proveedorId: [{ value: articulo.idProveedor, disabled }, Validators.required],
       costo: [{ value: articulo.costo, disabled }, Validators.required],
       precio: [{ value: articulo.precio, disabled }, Validators.required],
@@ -77,7 +77,7 @@ export class AgregarArticuloComponent implements OnInit {
       unidadMedidaId: ['', Validators.required],
       rubroId: ['', Validators.required],
       subRubroId: ['', null],
-      marcaId: ['', null],
+      marcaId: ['', Validators.required],
       proveedorId: ['', Validators.required],
       costo: ['', Validators.required],
       precio: ['', Validators.required],
@@ -92,11 +92,8 @@ export class AgregarArticuloComponent implements OnInit {
       this.articuloForm.controls.codigo.markAsTouched();
       this.articuloForm.controls.nombre.markAsTouched();
       this.articuloForm.controls.abreviatura.markAsTouched();
-      this.articuloForm.controls.stockMin.markAsTouched();
-      this.articuloForm.controls.stockMax.markAsTouched();
       this.articuloForm.controls.unidadMedidaId.markAsTouched();
       this.articuloForm.controls.rubroId.markAsTouched();
-      this.articuloForm.controls.subRubroId.markAsTouched();
       this.articuloForm.controls.marcaId.markAsTouched();
       this.articuloForm.controls.proveedorId.markAsTouched();
       this.articuloForm.controls.costo.markAsTouched();

@@ -114,7 +114,7 @@ export class AgregarCuentaComponent implements OnInit {
         this.msgSnack(data.titular + ' agregado correctamente');
       },
       ({ error }) => {
-        this.msgSnack(error);
+        this.openSnackBar(error);
       }
     );
   }
