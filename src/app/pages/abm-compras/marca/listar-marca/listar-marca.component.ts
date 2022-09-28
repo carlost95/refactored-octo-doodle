@@ -1,18 +1,18 @@
-import {MatDialog} from '@angular/material/dialog';
-import {ConfirmModalComponent} from '@shared/confirm-modal/confirm-modal.component';
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {MarcasService} from '@service/marcas.service';
-import {AgregarMarcaComponent} from '../agregar-marca/agregar-marca.component';
-import {TokenService} from '@service/token.service';
-import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.component';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {MarcaRest} from '../../../../models/marca-rest';
-import {BuscadorService} from '../../../../shared/helpers/buscador.service';
-import {TipoModal} from '../../../../shared/models/tipo-modal.enum';
-import {TituloMarca} from '../models/titulo-marca.enum';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmModalComponent } from '@shared/confirm-modal/confirm-modal.component';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MarcasService } from '@service/marcas.service';
+import { AgregarMarcaComponent } from '../agregar-marca/agregar-marca.component';
+import { TokenService } from '@service/token.service';
+import { SnackConfirmComponent } from '@shared/snack-confirm/snack-confirm.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { MarcaRest } from '../../../../models/marca-rest';
+import { BuscadorService } from '../../../../shared/helpers/buscador.service';
+import { TipoModal } from '../../../../shared/models/tipo-modal.enum';
+import { TituloMarca } from '../models/titulo-marca.enum';
 
 @Component({
   selector: 'app-listar-marca',
@@ -121,11 +121,9 @@ export class ListarMarcaComponent implements OnInit {
             this.establecerDatasource(marcas);
           });
         });
+        this.openSnackBar('Estado actualizado')
       } else {
-        this.marcasService.obtenerMarcas().subscribe(marcas => {
-          this.marcas = marcas;
-          this.establecerDatasource(marcas);
-        });
+        this.openSnackBar('error al actualizar estado');
       }
     });
   }

@@ -1,12 +1,12 @@
-import {Marca} from '@models/Marca';
-import {Component, OnInit, Inject} from '@angular/core';
-import {FormGroup, FormBuilder, Validators} from '@angular/forms';
-import {MarcasService} from '@service/marcas.service';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {TipoModal} from '@shared/models/tipo-modal.enum';
-import {MarcaRest} from '@models/marca-rest';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.component';
+import { Marca } from '@models/Marca';
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MarcasService } from '@service/marcas.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TipoModal } from '@shared/models/tipo-modal.enum';
+import { MarcaRest } from '@models/marca-rest';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackConfirmComponent } from '@shared/snack-confirm/snack-confirm.component';
 
 @Component({
   selector: 'app-agregar-marca',
@@ -42,13 +42,13 @@ export class AgregarMarcaComponent implements OnInit {
   }
 
   private establecerModalDatos(data, tipoModal): void {
-    const {marca} = data;
+    const { marca } = data;
     const disabled = tipoModal === TipoModal.consulta ? true : false;
     this.marcaForm = this.formBuilder.group({
-      id: [{value: marca.idMarca, disabled}, null],
-      nombre: [{value: marca.nombre, disabled}, Validators.required],
-      abreviatura: [{value: marca.abreviatura, disabled}, Validators.required],
-      estado: [{value: marca.habilitado, disabled}, null],
+      id: [{ value: marca.idMarca, disabled }, null],
+      nombre: [{ value: marca.nombre, disabled }, Validators.required],
+      abreviatura: [{ value: marca.abreviatura, disabled }, Validators.required],
+      estado: [{ value: marca.habilitado, disabled }, null],
     });
   }
 
@@ -89,15 +89,15 @@ export class AgregarMarcaComponent implements OnInit {
   save(): void {
     this.marcaService.guardar(this.marca).subscribe((data) => {
       this.msgSnack('Guardado con éxito');
-    }, error => {
+    }, ({ error }) => {
       this.openSnackBar(error);
     });
   }
 
   update(): void {
     this.marcaService.actualizar(this.marca).subscribe((data) => {
-      this.msgSnack('Actualizado con éxito');
-    }, error => {
+      this.msgSnack(data.nombre + ' Actualizada con éxito');
+    }, ({ error }) => {
       this.openSnackBar(error);
     });
   }
