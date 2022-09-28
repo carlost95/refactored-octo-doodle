@@ -45,7 +45,7 @@ export class ListarBancoComponent implements OnInit {
     public matDialog: MatDialog,
     private tokenService: TokenService,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.roles = this.tokenService.getAuthorities();
@@ -145,6 +145,10 @@ export class ListarBancoComponent implements OnInit {
             this.bancos = bancos;
             this.establecerDatasource(bancos);
           });
+        this.openSnackBar('Estado actualizado')
+      }
+      else {
+        this.openSnackBar('Error al actualizar estado')
       }
     });
   }

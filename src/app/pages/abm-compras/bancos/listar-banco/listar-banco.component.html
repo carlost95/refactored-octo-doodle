@@ -1,5 +1,4 @@
-<template-page [title]="'Bancos'" [backRoute]="'abm-compras'" [titleButton]="'Nuevo Banco'"
-  (filtro)="filtrarBancos($event)" (onClickButton)="newBanco()">
+<template-page [title]="'Bancos'" [backRoute]="'abm-compras'" [titleButton]="'Nuevo Banco'" (filtro)="filtrarBancos($event)" (onClickButton)="newBanco()">
   <div>
     <table class="w-100" mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="nombre">
@@ -20,10 +19,10 @@
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef> Opciones</th>
         <td mat-cell *matCellDef="let row">
-          <button class="btn btn-default m-0 p-0" title="Consultar" (click)="consultarBanco(row)">
+          <button class="btn btn-default select" title="Consultar" (click)="consultarBanco(row)">
             <i class="fas fa-info"></i>
           </button>
-          <button class="btn btn-default" title="Modificar " (click)="modificarBanco(row)" *ngIf="mostrarHabilitacion">
+          <button class="btn btn-default select" title="Modificar " (click)="modificarBanco(row)" *ngIf="mostrarHabilitacion">
             <i class="fas fa-pencil-alt"></i>
           </button>
         </td>
