@@ -1,18 +1,18 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {RubrosService} from '@service/rubros.service';
-import {MatDialog} from '@angular/material/dialog';
-import {ConfirmModalComponent} from '@shared/confirm-modal/confirm-modal.component';
-import {AgregarRubroComponent} from '../agregar-rubro/agregar-rubro.component';
-import {TokenService} from '@service/token.service';
-import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.component';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {RubroRest} from '../../../../models/rubro-rest';
-import {BuscadorService} from '../../../../shared/helpers/buscador.service';
-import {TipoModal} from '../../../../shared/models/tipo-modal.enum';
-import {TituloRubro} from '../models/titulo-rubro.enum';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { RubrosService } from '@service/rubros.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmModalComponent } from '@shared/confirm-modal/confirm-modal.component';
+import { AgregarRubroComponent } from '../agregar-rubro/agregar-rubro.component';
+import { TokenService } from '@service/token.service';
+import { SnackConfirmComponent } from '@shared/snack-confirm/snack-confirm.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { RubroRest } from '../../../../models/rubro-rest';
+import { BuscadorService } from '../../../../shared/helpers/buscador.service';
+import { TipoModal } from '../../../../shared/models/tipo-modal.enum';
+import { TituloRubro } from '../models/titulo-rubro.enum';
 
 
 @Component({
@@ -115,18 +115,15 @@ export class ListarRubroComponent implements OnInit {
     });
     dialog.afterClosed().subscribe(result => {
       if (result.state) {
-        // tslint:disable-next-line:no-shadowed-variable
         this.rubroService.cambiarEstado(rubro.idRubro).subscribe(result => {
           this.rubroService.obtenerRubros().subscribe(rubros => {
             this.rubros = rubros;
             this.establecerDatasource(rubros);
           });
         });
+        this.openSnackBar('Estado actualizado');
       } else {
-        this.rubroService.obtenerRubros().subscribe(rubros => {
-          this.rubros = rubros;
-          this.establecerDatasource(rubros);
-        });
+        this.openSnackBar('Error al actualizar Estado');
       }
     });
   }

@@ -1,11 +1,11 @@
-import {Component, OnInit, Inject} from '@angular/core';
-import {FormGroup, FormBuilder, Validators} from '@angular/forms';
-import {RubrosService} from '@service/rubros.service';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {TipoModal} from '@shared/models/tipo-modal.enum';
-import {RubroRest} from '@models/rubro-rest';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.component';
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { RubrosService } from '@service/rubros.service';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TipoModal } from '@shared/models/tipo-modal.enum';
+import { RubroRest } from '@models/rubro-rest';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackConfirmComponent } from '@shared/snack-confirm/snack-confirm.component';
 
 @Component({
   selector: 'app-agregar-rubro',
@@ -41,13 +41,13 @@ export class AgregarRubroComponent implements OnInit {
   }
 
   private establecerModalDatos(data, tipoModal): void {
-    const {rubro} = data;
+    const { rubro } = data;
     const disabled = tipoModal === TipoModal.consulta ? true : false;
     this.rubroForm = this.formBuilder.group({
-      id: [{value: rubro.idRubro, disabled}, null],
-      nombre: [{value: rubro.nombre, disabled}, Validators.required],
-      abreviatura: [{value: rubro.abreviatura, disabled}, Validators.required],
-      estado: [{value: rubro.habilitado, disabled}, null],
+      id: [{ value: rubro.idRubro, disabled }, null],
+      nombre: [{ value: rubro.nombre, disabled }, Validators.required],
+      abreviatura: [{ value: rubro.abreviatura, disabled }, Validators.required],
+      estado: [{ value: rubro.habilitado, disabled }, null],
     });
   }
 
@@ -65,7 +65,7 @@ export class AgregarRubroComponent implements OnInit {
   onSubmit(): void {
     this.submitted = true;
     this.errorInForm = this.submitted && this.rubroForm.invalid;
-    if (this.errorInForm ) {
+    if (this.errorInForm) {
       this.rubroForm.controls.nombre.markAsTouched();
       this.rubroForm.controls.abreviatura.markAsTouched();
     } else {
@@ -87,16 +87,16 @@ export class AgregarRubroComponent implements OnInit {
 
   save(): void {
     this.rubroService.guardar(this.rubro).subscribe((data) => {
-      this.msgSnack('Guardado con éxito');
-    }, error => {
+      this.msgSnack(data.nombre + ' Guardado con éxito');
+    }, ({ error }) => {
       this.openSnackBar(error);
     });
   }
 
   update(): void {
     this.rubroService.actualizar(this.rubro).subscribe((data) => {
-      this.msgSnack('Actualizado con éxito');
-    }, error => {
+      this.msgSnack(data.nombre + ' Actualizado con éxito');
+    }, ({ error }) => {
       this.openSnackBar(error);
     });
   }
