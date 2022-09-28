@@ -1,18 +1,18 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {UnidadMedidaService} from '@service/unidad-medida.service';
-import {MatDialog} from '@angular/material/dialog';
-import {AgregarUnidadMedidaComponent} from '../agregar-unidad-medida/agregar-unidad-medida.component';
-import {ConfirmModalComponent} from '@shared/confirm-modal/confirm-modal.component';
-import {TokenService} from '@service/token.service';
-import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.component';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {UnidadMedidaRest} from '../../../../models/unidad-medida-rest';
-import {BuscadorService} from '../../../../shared/helpers/buscador.service';
-import {TipoModal} from '../../../../shared/models/tipo-modal.enum';
-import {TituloUnidadMedida} from '../models/titulo-unidad-medida.enum';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { UnidadMedidaService } from '@service/unidad-medida.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AgregarUnidadMedidaComponent } from '../agregar-unidad-medida/agregar-unidad-medida.component';
+import { ConfirmModalComponent } from '@shared/confirm-modal/confirm-modal.component';
+import { TokenService } from '@service/token.service';
+import { SnackConfirmComponent } from '@shared/snack-confirm/snack-confirm.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { UnidadMedidaRest } from '../../../../models/unidad-medida-rest';
+import { BuscadorService } from '../../../../shared/helpers/buscador.service';
+import { TipoModal } from '../../../../shared/models/tipo-modal.enum';
+import { TituloUnidadMedida } from '../models/titulo-unidad-medida.enum';
 
 @Component({
   selector: 'app-listar-unidad-medida',
@@ -115,7 +115,6 @@ export class ListarUnidadMedidaComponent implements OnInit {
     });
     dialog.afterClosed().subscribe((result) => {
       if (result.state) {
-        // tslint:disable-next-line:no-shadowed-variable
         this.unidadMedidaService
           .cambiarEstado(unidadMedida.idUnidadMedida)
           .subscribe(() => {
@@ -124,13 +123,12 @@ export class ListarUnidadMedidaComponent implements OnInit {
               this.establecerDatasource(unidadesDeMedida);
             });
           });
+        this.openSnackBar('Estado actualizado');
       } else {
-        this.unidadMedidaService.obtenerUnidadesMedida().subscribe(unidadesDeMedida => {
-          this.unidadesDeMedida = unidadesDeMedida;
-          this.establecerDatasource(unidadesDeMedida);
-        });
+        this.openSnackBar('Error al actualizar estado')
       }
-    });  }
+    });
+  }
 
   openSnackBar(msg: string): void {
     this.snackBar.openFromComponent(SnackConfirmComponent, {

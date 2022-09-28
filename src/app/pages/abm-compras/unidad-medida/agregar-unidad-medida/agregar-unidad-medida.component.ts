@@ -1,12 +1,12 @@
-import {Component, OnInit, Inject} from '@angular/core';
-import {FormGroup, FormBuilder, Validators} from '@angular/forms';
-import {UnidadMedidaService} from '@service/unidad-medida.service';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {TipoModal} from '@shared/models/tipo-modal.enum';
-import {UnidadMedidaRest} from '@models/unidad-medida-rest';
-import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.component';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {unidadMedida} from "../../../../../environments/global-route";
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UnidadMedidaService } from '@service/unidad-medida.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TipoModal } from '@shared/models/tipo-modal.enum';
+import { UnidadMedidaRest } from '@models/unidad-medida-rest';
+import { SnackConfirmComponent } from '@shared/snack-confirm/snack-confirm.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { unidadMedida } from "../../../../../environments/global-route";
 
 @Component({
   selector: 'app-agregar-unidad-medida',
@@ -41,13 +41,13 @@ export class AgregarUnidadMedidaComponent implements OnInit {
     }
   }
   private establecerModalDatos(data, tipoModal): void {
-    const {unidadDeMedida} = data;
+    const { unidadDeMedida } = data;
     const disabled = tipoModal === TipoModal.consulta ? true : false;
     this.unidadDeMedidaForm = this.formBuilder.group({
-      id: [{value: unidadDeMedida.idUnidadMedida, disabled}, null],
-      nombre: [{value: unidadDeMedida.nombre, disabled}, Validators.required],
-      abreviatura: [{value: unidadDeMedida.abreviatura, disabled}, Validators.required],
-      estado: [{value: unidadDeMedida.habilitado, disabled}, null],
+      id: [{ value: unidadDeMedida.idUnidadMedida, disabled }, null],
+      nombre: [{ value: unidadDeMedida.nombre, disabled }, Validators.required],
+      abreviatura: [{ value: unidadDeMedida.abreviatura, disabled }, Validators.required],
+      estado: [{ value: unidadDeMedida.habilitado, disabled }, null],
     });
   }
 
@@ -85,16 +85,16 @@ export class AgregarUnidadMedidaComponent implements OnInit {
 
   private save(): void {
     this.unidadDeMedidaService.guardar(this.unidadDeMedida).subscribe((data) => {
-      this.msgSnack('Guardado con éxito');
-    }, error => {
+      this.msgSnack(data.nombre + ' Guardado con éxito');
+    }, ({ error }) => {
       this.openSnackBar(error);
     });
   }
 
   private update(): void {
     this.unidadDeMedidaService.actualizar(this.unidadDeMedida).subscribe((data) => {
-      this.msgSnack('Actualizado con éxito');
-    }, error => {
+      this.msgSnack(data.nombre + ' Actualizado con éxito');
+    }, ({ error }) => {
       this.openSnackBar(error);
     });
   }

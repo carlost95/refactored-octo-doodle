@@ -88,7 +88,7 @@ export class AgregarMarcaComponent implements OnInit {
 
   save(): void {
     this.marcaService.guardar(this.marca).subscribe((data) => {
-      this.msgSnack('Guardado con éxito');
+      this.msgSnack(data.nombre + ' Guardada con éxito');
     }, ({ error }) => {
       this.openSnackBar(error);
     });
