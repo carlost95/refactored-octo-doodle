@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Departamento } from '../../../models/Departamento';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -7,13 +7,13 @@ import { SnackConfirmComponent } from '../../../shared/snack-confirm/snack-confi
 import { DistritoService } from '../../../service/distrito.service';
 import { AgregarDistritoComponent } from './agregar-distrito/agregar-distrito.component';
 import { TokenService } from '../../../service/token.service';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {DistritoRest} from '../../../models/distrito-rest';
-import {TipoModal} from '../../../shared/models/tipo-modal.enum';
-import {TituloDistrito} from './models/titulo-distrito.enum';
-import {BuscadorService} from '../../../shared/helpers/buscador.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { DistritoRest } from '../../../models/distrito-rest';
+import { TipoModal } from '../../../shared/models/tipo-modal.enum';
+import { TituloDistrito } from './models/titulo-distrito.enum';
+import { BuscadorService } from '../../../shared/helpers/buscador.service';
 
 @Component({
   selector: 'app-distrito',
@@ -37,7 +37,7 @@ export class DistritoComponent implements OnInit {
     public matDialog: MatDialog,
     private snackBar: MatSnackBar,
     private tokenService: TokenService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.roles = this.tokenService.getAuthorities();
@@ -80,7 +80,7 @@ export class DistritoComponent implements OnInit {
     this.abrirModalDistrito(data);
   }
 
-  abrirModalDistrito( data: any ): void {
+  abrirModalDistrito(data: any): void {
     const dialog = this.matDialog.open(AgregarDistritoComponent, {
       disableClose: true,
       id: 'modal-component',
@@ -127,11 +127,9 @@ export class DistritoComponent implements OnInit {
               this.establecerDatasource(distritos);
             });
           });
+        this.openSnackBar('Estado actualizado')
       } else {
-        this.distritoService.obtenerDistritos().subscribe(distritos => {
-          this.distritos = distritos;
-          this.establecerDatasource(distritos);
-        });
+        this.openSnackBar('Error: Estado NO actualizado')
       }
     });
   }

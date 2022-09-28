@@ -1,19 +1,19 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {DepartamentosService} from '../../../service/departamentos.service';
-import {Departamento} from '../../../models/Departamento';
-import {MatDialog} from '@angular/material/dialog';
-import {AgregarDepartamentoComponent} from './agregar-departamento/agregar-departamento.component';
-import {SnackConfirmComponent} from '../../../shared/snack-confirm/snack-confirm.component';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {ConfirmModalComponent} from '../../../shared/confirm-modal/confirm-modal.component';
-import {TokenService} from '../../../service/token.service';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {DepartamentoRest} from '../../../models/departamento-rest';
-import {BuscadorService} from '../../../shared/helpers/buscador.service';
-import {TituloDepartamento} from './models/titulo-departamento.enum';
-import {TipoModal} from '../../../shared/models/tipo-modal.enum';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { DepartamentosService } from '../../../service/departamentos.service';
+import { Departamento } from '../../../models/Departamento';
+import { MatDialog } from '@angular/material/dialog';
+import { AgregarDepartamentoComponent } from './agregar-departamento/agregar-departamento.component';
+import { SnackConfirmComponent } from '../../../shared/snack-confirm/snack-confirm.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmModalComponent } from '../../../shared/confirm-modal/confirm-modal.component';
+import { TokenService } from '../../../service/token.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { DepartamentoRest } from '../../../models/departamento-rest';
+import { BuscadorService } from '../../../shared/helpers/buscador.service';
+import { TituloDepartamento } from './models/titulo-departamento.enum';
+import { TipoModal } from '../../../shared/models/tipo-modal.enum';
 
 @Component({
   selector: 'app-departamento',
@@ -37,7 +37,7 @@ export class DepartamentoComponent implements OnInit {
     private readonly tokenService: TokenService,
     public matDialog: MatDialog,
     private snackBar: MatSnackBar,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.roles = this.tokenService.getAuthorities();
@@ -114,7 +114,6 @@ export class DepartamentoComponent implements OnInit {
     });
     dialog.afterClosed().subscribe((result) => {
       if (result.state) {
-        // tslint:disable-next-line:no-shadowed-variable
         this.departamentoService
           .cambiarEstado(departamento.idDepartamento)
           .subscribe(() => {
@@ -123,11 +122,9 @@ export class DepartamentoComponent implements OnInit {
               this.establecerDatasource(departamentos);
             });
           });
+        this.openSnackBar('Estado actualizado')
       } else {
-        this.departamentoService.obtenerDepartamentos().subscribe(departamentos => {
-          this.departamentos = departamentos;
-          this.establecerDatasource(departamentos);
-        });
+        this.openSnackBar('Error: Estado NO actualizado')
       }
     });
   }

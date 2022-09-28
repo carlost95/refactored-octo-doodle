@@ -1,11 +1,11 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {DepartamentosService} from '../../../../service/departamentos.service';
-import {TipoModal} from '@shared/models/tipo-modal.enum';
-import {DepartamentoRest} from '@models/departamento-rest';
-import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.component';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DepartamentosService } from '../../../../service/departamentos.service';
+import { TipoModal } from '@shared/models/tipo-modal.enum';
+import { DepartamentoRest } from '@models/departamento-rest';
+import { SnackConfirmComponent } from '@shared/snack-confirm/snack-confirm.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-agregar-departamento',
@@ -41,13 +41,13 @@ export class AgregarDepartamentoComponent implements OnInit {
   }
 
   private establecerModalDatos(data, tipoModal): void {
-    const {departamento} = data;
+    const { departamento } = data;
     const disabled = tipoModal === TipoModal.consulta ? true : false;
     this.departamentoForm = this.formBuilder.group({
-      id: [{value: departamento.idDepartamento, disabled}, null],
-      nombre: [{value: departamento.nombre, disabled}, Validators.required],
-      abreviatura: [{value: departamento.abreviatura, disabled}, Validators.required],
-      estado: [{value: departamento.habilitado, disabled}, null],
+      id: [{ value: departamento.idDepartamento, disabled }, null],
+      nombre: [{ value: departamento.nombre, disabled }, Validators.required],
+      abreviatura: [{ value: departamento.abreviatura, disabled }, Validators.required],
+      estado: [{ value: departamento.habilitado, disabled }, null],
     });
   }
 
@@ -88,16 +88,16 @@ export class AgregarDepartamentoComponent implements OnInit {
 
   save(): void {
     this.service.guardar(this.departamento).subscribe((data) => {
-      this.msgSnack('Guardado con éxito');
-    }, error => {
+      this.msgSnack(data.nombre + ' Guardado con éxito');
+    }, ({ error }) => {
       this.openSnackBar(error);
     });
   }
 
   update(): void {
     this.service.actualizar(this.departamento).subscribe((data) => {
-      this.msgSnack('Actualizado con éxito');
-    }, error => {
+      this.msgSnack(data.nombre + ' Actualizado con éxito');
+    }, ({ error }) => {
       this.openSnackBar(error);
     });
   }
