@@ -27,7 +27,7 @@ export class AgregarClienteComponent implements OnInit {
     public dialogRef: MatDialogRef<AgregarClienteComponent>,
     private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.titulo = this.data.titulo;
@@ -104,7 +104,7 @@ export class AgregarClienteComponent implements OnInit {
         this.msgSnack(data.nombre + ' Guardado con Exito');
       },
       ({ error }) => {
-        this.msgSnack(error);
+        this.openSnackBar(error);
       }
     );
   }
@@ -118,7 +118,7 @@ export class AgregarClienteComponent implements OnInit {
       }
     );
   }
-  msgSnack(data): void {
+  msgSnack(data: string): void {
     this.dialogRef.close(data);
   }
   openSnackBar(msg: string): void {
