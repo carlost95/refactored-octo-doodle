@@ -1,19 +1,19 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {AgregarSubRubroComponent} from '../agregar-sub-rubro/agregar-sub-rubro.component';
-import {SubRubroService} from '@service/sub-rubro.service';
-import {ConfirmModalComponent} from '@shared/confirm-modal/confirm-modal.component';
-import {TokenService} from '@service/token.service';
-import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.component';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {RubroRest} from '../../../../models/rubro-rest';
-import {SubRubroRest} from '../../../../models/subrubro-rest';
-import {BuscadorService} from '../../../../shared/helpers/buscador.service';
-import {TipoModal} from '../../../../shared/models/tipo-modal.enum';
-import {TituloSubRubro} from '../models/titulo-rubro.enum';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { AgregarSubRubroComponent } from '../agregar-sub-rubro/agregar-sub-rubro.component';
+import { SubRubroService } from '@service/sub-rubro.service';
+import { ConfirmModalComponent } from '@shared/confirm-modal/confirm-modal.component';
+import { TokenService } from '@service/token.service';
+import { SnackConfirmComponent } from '@shared/snack-confirm/snack-confirm.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { RubroRest } from '../../../../models/rubro-rest';
+import { SubRubroRest } from '../../../../models/subrubro-rest';
+import { BuscadorService } from '../../../../shared/helpers/buscador.service';
+import { TipoModal } from '../../../../shared/models/tipo-modal.enum';
+import { TituloSubRubro } from '../models/titulo-rubro.enum';
 
 @Component({
   selector: 'app-listar-sub-rubro',
@@ -117,18 +117,15 @@ export class ListarSubRubroComponent implements OnInit {
     });
     dialog.afterClosed().subscribe(result => {
       if (result.state) {
-        // tslint:disable-next-line:no-shadowed-variable
         this.subrubroService.cambiarEstado(subrubro.idSubRubro).subscribe(result => {
           this.subrubroService.obtenerSubRubros().subscribe(subrubros => {
             this.subrubros = subrubros;
             this.establecerDatasource(subrubros);
           });
         });
+        this.openSnackBar('Estado actualizado')
       } else {
-        this.subrubroService.obtenerSubRubros().subscribe(subrubros => {
-          this.subrubros = subrubros;
-          this.establecerDatasource(subrubros);
-        });
+        this.openSnackBar('Error al actualizar estado');
       }
     });
   }

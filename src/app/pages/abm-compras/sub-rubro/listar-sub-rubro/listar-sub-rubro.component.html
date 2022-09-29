@@ -1,9 +1,4 @@
-<template-page
-  [title]="'Sub Rubros'"
-  [backRoute]="'abm-compras'"
-  [titleButton]="'Nuevo Sub Rubro'"
-  (filtro)="filtrarSubRubros($event)"
-  (onClickButton)="nuevo()">
+<template-page [title]="'Sub Rubros'" [backRoute]="'abm-compras'" [titleButton]="'Nuevo Sub Rubro'" (filtro)="filtrarSubRubros($event)" (onClickButton)="nuevo()">
   <table class="w-100" mat-table [dataSource]="dataSource" matSort>
     <ng-container matColumnDef="nombre">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre</th>
@@ -29,8 +24,8 @@
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> Opciones</th>
       <td mat-cell *matCellDef="let row">
-        <button class="btn btn-default m-0 p-0" title="Consultar" (click)="consultar(row)">
-          <i class="fas fa-info"></i>
+        <button class="btn btn-default select" title="Consultar" (click)="consultar(row)">
+          <i class="fas fa-info select"></i>
         </button>
         <button class="btn btn-default" title="Modificar " (click)="editar(row)" *ngIf="mostrarHabilitacion">
           <i class="fas fa-pencil-alt"></i>

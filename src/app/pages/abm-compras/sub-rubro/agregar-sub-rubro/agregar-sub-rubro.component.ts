@@ -1,13 +1,13 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {SubRubroService} from '@service/sub-rubro.service';
-import {FormGroup, FormBuilder, Validators} from '@angular/forms';
-import {RubrosService} from '@service/rubros.service';
-import {TipoModal} from '@shared/models/tipo-modal.enum';
-import {SubRubroRest} from '@models/subrubro-rest';
-import {RubroRest} from '@models/rubro-rest';
-import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.component';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { SubRubroService } from '@service/sub-rubro.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { RubrosService } from '@service/rubros.service';
+import { TipoModal } from '@shared/models/tipo-modal.enum';
+import { SubRubroRest } from '@models/subrubro-rest';
+import { RubroRest } from '@models/rubro-rest';
+import { SnackConfirmComponent } from '@shared/snack-confirm/snack-confirm.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-agregar-sub-rubro',
@@ -49,14 +49,14 @@ export class AgregarSubRubroComponent implements OnInit {
     });
   }
   private establecerModalDatos(data, tipoModal): void {
-    const {subrubro} = data;
+    const { subrubro } = data;
     const disabled = tipoModal === TipoModal.consulta ? true : false;
     this.subrubroForm = this.formBuilder.group({
-      id: [{value: subrubro.idSubRubro, disabled}, null],
-      nombre: [{value: subrubro.nombre, disabled}, Validators.required],
-      abreviatura: [{value: subrubro.abreviatura, disabled}, Validators.required],
-      estado: [{value: subrubro.habilitado, disabled}, null],
-      rubroId: [{value: subrubro.rubroId, disabled}, Validators.required]
+      id: [{ value: subrubro.idSubRubro, disabled }, null],
+      nombre: [{ value: subrubro.nombre, disabled }, Validators.required],
+      abreviatura: [{ value: subrubro.abreviatura, disabled }, Validators.required],
+      estado: [{ value: subrubro.habilitado, disabled }, null],
+      rubroId: [{ value: subrubro.rubroId, disabled }, Validators.required]
     });
   }
 
@@ -80,7 +80,6 @@ export class AgregarSubRubroComponent implements OnInit {
       this.subrubroForm.controls.nombre.markAsTouched();
       this.subrubroForm.controls.abreviatura.markAsTouched();
       this.subrubroForm.controls.rubroId.markAsTouched();
-      console.log('Error en los datos');
     } else {
       this.makeDTO();
     }
@@ -101,16 +100,16 @@ export class AgregarSubRubroComponent implements OnInit {
 
   update(): void {
     this.subRubroService.actualizar(this.subrubro).subscribe((data) => {
-      this.msgSnack('Guardado con éxito');
-    }, error => {
+      this.msgSnack(data.nombre + ' Guardado con éxito');
+    }, ({ error }) => {
       this.openSnackBar(error);
     });
   }
 
   save(): void {
     this.subRubroService.guardar(this.subrubro).subscribe((data) => {
-      this.msgSnack('Actualizado con éxito');
-    }, error => {
+      this.msgSnack(data.nombre + ' Actualizado con éxito');
+    }, ({ error }) => {
       this.openSnackBar(error);
     });
   }
@@ -128,6 +127,6 @@ export class AgregarSubRubroComponent implements OnInit {
   }
 
   establecerRubro(rubroId: number): void {
-    this.subrubroForm.patchValue({rubroId});
+    this.subrubroForm.patchValue({ rubroId });
   }
 }
