@@ -51,6 +51,7 @@ export class AgregarClienteComponent implements OnInit {
       nombre: [{ value: cliente.nombre, disabled }, Validators.required],
       apellido: [{ value: cliente.apellido, disabled }, Validators.required],
       dni: [{ value: cliente.dni, disabled }, Validators.required],
+      contacto: [{ value: cliente.contacto, disabled }, null],
       email: [{ value: cliente.email, disabled }, null],
       status: [{ value: cliente.status, disabled }, Validators.required],
     });
@@ -62,6 +63,7 @@ export class AgregarClienteComponent implements OnInit {
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
       dni: ['', Validators.required],
+      contacto: ['', null],
       email: ['', null],
     });
   }
@@ -88,7 +90,8 @@ export class AgregarClienteComponent implements OnInit {
       .trim()
       .toUpperCase();
     this.cliente.dni = this.clientForm.controls.dni.value;
-    this.cliente.email = this.clientForm.controls.email.value;
+    this.cliente.contacto = this.clientForm.controls.contacto.value.trim();
+    this.cliente.email = this.clientForm.controls.email.value.trim();
 
     if (this.tipoModal === TipoModal.actualizacion) {
       this.cliente.idCliente = this.clientForm.controls.idCliente.value;

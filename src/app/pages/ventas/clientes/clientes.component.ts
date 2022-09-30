@@ -28,7 +28,7 @@ export class ClientesComponent implements OnInit {
   displayedColumns: string[] = [
     'apellido',
     'dni',
-    'email',
+    'contacto',
     'status',
     'acciones',
   ];
