@@ -4,12 +4,12 @@ import { Routes, RouterModule } from '@angular/router';
 import { VentasComponent } from './ventas.component';
 import { ClientesComponent } from './clientes/clientes.component';
 import { DireccionesComponent } from './direcciones/direcciones.component';
-import { AgregarVentaComponent } from './agregar-venta/agregar-venta.component';
 import { AgregarRemitoComponent } from './agregar-remito/agregar-remito.component';
-import { ListarVentaComponent } from './listar-venta/listar-venta.component';
+import { ListarVentaComponent } from './venta/listar-venta/listar-venta.component';
 import { ListarRemitosComponent } from './listar-remitos/listar-remitos.component';
-import { NuevaVentaComponent } from './nueva-venta/nueva-venta.component';
+import { AgregarVentaComponent } from './venta/agregar-venta/agregar-venta.component';
 import { CrearDireccionComponent } from './direcciones/crear-direccion/crear-direccion.component';
+import { ConsultarVentaComponent } from './venta/consultar-venta/consultar-venta.component';
 
 const routes: Routes = [
   {
@@ -21,9 +21,9 @@ const routes: Routes = [
       { path: 'listar-remitos', component: ListarRemitosComponent },
       { path: 'direcciones/:idCliente', component: DireccionesComponent },
       { path: 'crear-direccion', component: CrearDireccionComponent },
-      { path: 'agregar-venta', component: AgregarVentaComponent },
-      { path: 'nueva-venta', component: NuevaVentaComponent },
       { path: 'agregar-remitos', component: AgregarRemitoComponent },
+      { path: 'agregar-venta', component: AgregarVentaComponent },
+      { path: 'consultar-venta/:idVenta', component: ConsultarVentaComponent },
     ],
   },
 ];

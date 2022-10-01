@@ -27,3 +27,12 @@ export class ArticuloStock {
   cantidad?: number;
   stockFinal?: number;
 }
+
+export class ArticuloVenta {
+  id?: number;
+  nombre?: string;
+  codigoArt?: string;
+  cantidad?: number;
+  precio?: number;
+  subTotal?: number;
+}
