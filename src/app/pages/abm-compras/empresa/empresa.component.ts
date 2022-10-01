@@ -8,11 +8,11 @@ import { BuscadorService } from '../../../shared/helpers/buscador.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TokenService } from '../../../service/token.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TituloMarca } from '../marca/models/titulo-marca.enum';
 import { TipoModal } from '../../../shared/models/tipo-modal.enum';
 import { AgregarEmpresaComponent } from './agregar-empresa/agregar-empresa.component';
 import { ConfirmModalComponent } from '../../../shared/confirm-modal/confirm-modal.component';
 import { SnackConfirmComponent } from '../../../shared/snack-confirm/snack-confirm.component';
+import { TituloEmpresa } from './models/titulo-empresa';
 
 @Component({
   selector: 'app-empresa',
@@ -31,7 +31,7 @@ export class EmpresaComponent implements OnInit {
   roles: string[];
 
   constructor(
-    private readonly EmpresaService: EmpresaService,
+    private readonly empresaService: EmpresaService,
     private readonly buscadorService: BuscadorService,
     public matDialog: MatDialog,
     private tokenService: TokenService,
@@ -41,7 +41,7 @@ export class EmpresaComponent implements OnInit {
   ngOnInit(): void {
     this.roles = this.tokenService.getAuthorities();
     this.mostrarHabilitacion = this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_ADMIN_BANCO');
-    this.EmpresaService.getAllEmpresas().subscribe(data => {
+    this.empresaService.getAllEmpresas().subscribe(data => {
       this.empresas = data;
       this.establecerDatasource(this.empresas);
     });
@@ -55,7 +55,7 @@ export class EmpresaComponent implements OnInit {
 
   nueva(): void {
     const data = {
-      titulo: TituloMarca.creacion,
+      titulo: TituloEmpresa.creacion,
       tipo: TipoModal.creacion
     };
     this.openDialog(data);
@@ -63,7 +63,7 @@ export class EmpresaComponent implements OnInit {
 
   consultar(empresa: Empresa): void {
     const data = {
-      titulo: TituloMarca.consulta,
+      titulo: TituloEmpresa.consulta,
       tipo: TipoModal.consulta,
       empresa
     };
@@ -72,7 +72,7 @@ export class EmpresaComponent implements OnInit {
 
   editar(empresa: Empresa): void {
     const data = {
-      titulo: TituloMarca.actualizacion,
+      titulo: TituloEmpresa.actualizacion,
       tipo: TipoModal.actualizacion,
       empresa
     };
@@ -84,13 +84,13 @@ export class EmpresaComponent implements OnInit {
       disableClose: true,
       id: 'modal-component',
       height: 'auto',
-      width: '20rem',
+      width: '25rem',
       panelClass: 'no-padding',
       data,
     });
 
     dialog.afterClosed().subscribe(result => {
-      this.EmpresaService.getAllEmpresas().subscribe(data => {
+      this.empresaService.getAllEmpresas().subscribe(data => {
         this.empresas = data;
         this.establecerDatasource(this.empresas);
       });
@@ -114,8 +114,8 @@ export class EmpresaComponent implements OnInit {
     });
     dialog.afterClosed().subscribe(result => {
       if (result.state) {
-        this.EmpresaService.changeStatusEmpresa(empresa.idEmpresa).subscribe(result => {
-          this.EmpresaService.getAllEmpresas().subscribe(data => {
+        this.empresaService.changeStatusEmpresa(empresa.idEmpresa).subscribe(result => {
+          this.empresaService.getAllEmpresas().subscribe(data => {
             this.empresas = data;
             this.establecerDatasource(this.empresas);
           });
@@ -136,7 +136,7 @@ export class EmpresaComponent implements OnInit {
   }
 
   filtrarEmpresa(value: string): void {
-    const TERMINO = 'rasoSocial';
+    const TERMINO = 'rasonSocial';
     const empresas = this.buscadorService.buscarTermino(this.empresas, TERMINO, value);
     this.establecerDatasource(empresas);
   }

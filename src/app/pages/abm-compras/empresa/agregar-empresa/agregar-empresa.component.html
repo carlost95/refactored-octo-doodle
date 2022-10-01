@@ -1,1 +1,46 @@
-<p>agregar-empresa works!</p>
+<header class="modal-header  modal-header-size1">
+    <h1 class="modal-title">{{titulo}}</h1>
+</header>
+<section class="d-flex justify-content-center w-100">
+    <form [formGroup]="empresaForm" class="p-4 w-100">
+        <mat-form-field appearance="legacy" class="w-100">
+            <mat-label>Razon Social</mat-label>
+            <input matInput formControlName="razonSocial" required autocomplete="off" />
+            <mat-error *ngIf="empresaForm.controls.razonSocial.errors">
+                Razon social es <strong>requerido</strong>
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="legacy" class="w-100">
+            <mat-label>CUIT</mat-label>
+            <input matInput formControlName="cuit" required autocomplete="off" />
+            <mat-error *ngIf="empresaForm.controls.cuit.errors">
+                CUIT es <strong>requerido</strong>
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="legacy" class="w-100">
+            <mat-label>Telefono</mat-label>
+            <input matInput formControlName="telefono" autocomplete="off" />
+            <mat-error *ngIf="empresaForm.controls.telefono.errors">
+                Telefono es <strong>requerido</strong>
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="legacy" class="w-100">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" type="email" autocomplete="off" />
+            <mat-error *ngIf="empresaForm.controls.email.errors">
+                Email es <strong>requerido</strong>
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="legacy" class="w-100">
+            <mat-label>Domicilio</mat-label>
+            <input matInput formControlName="domicilio" required autocomplete="off" />
+            <mat-error *ngIf="empresaForm.controls.domicilio.errors">
+                Domicilio es <strong>requerido</strong>
+            </mat-error>
+        </mat-form-field>
+    </form>
+</section>
+<footer class="modal-footer">
+    <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>
+    <button class="btn btn-warning" *ngIf="tipoModal !== 0" (click)="onSubmit()">Guardar</button>
+</footer>
