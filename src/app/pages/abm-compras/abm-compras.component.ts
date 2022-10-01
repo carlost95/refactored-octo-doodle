@@ -9,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 export class AbmComprasComponent implements OnInit {
   menuDeplegado = true;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   validaMenu(): boolean {
     if (
@@ -20,6 +20,7 @@ export class AbmComprasComponent implements OnInit {
       this.router.url.includes('/listar-rubro') ||
       this.router.url.includes('/listar-sub-rubro') ||
       this.router.url.includes('/listar-ajuste') ||
+      this.router.url.includes('/listar-empresa') ||
       this.router.url.includes('/agregar-banco') ||
       this.router.url.includes('/agregar-marca') ||
       this.router.url.includes('/agregar-forma-pago') ||
@@ -27,19 +28,19 @@ export class AbmComprasComponent implements OnInit {
       this.router.url.includes('/agregar-rubro') ||
       this.router.url.includes('/agregar-ajuste') ||
       this.router.url.includes('/agregar-sub-rubro') ||
+      this.router.url.includes('/agregar-empresa') ||
       this.router.url.includes('/modificar-marca') ||
       this.router.url.includes('/modificar-forma-pago') ||
       this.router.url.includes('/modificar-unidad-medida') ||
       this.router.url.includes('/modificar-banco') ||
       this.router.url.includes('/modificar-rubro') ||
       this.router.url.includes('/modificar-sub-rubro') ||
-      this.router.url.includes('consultar-ajuste')
-    ) {
+      this.router.url.includes('consultar-ajuste')) {
       return false;
     } else {
       return true;
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 }

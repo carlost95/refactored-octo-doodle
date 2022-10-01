@@ -15,6 +15,7 @@ import { ConsultarAjusteComponent } from './consultar-ajuste/consultar-ajuste.co
 import { AgregarAjusteComponent } from './agregar-ajuste/agregar-ajuste.component';
 import { ListarAjusteComponent } from './listar-ajuste/listar-ajuste.component';
 import { ProdGuardService as guard } from '../../guars/prod-guard.service';
+import { EmpresaComponent } from './empresa/empresa.component';
 
 const routes: Routes = [
   {
@@ -99,6 +100,12 @@ const routes: Routes = [
         canActivate: [guard],
         data: { expectedRol: ['admin', 'user', 'gerente'] },
       },
+      {
+        path: 'listar-empresa',
+        component: EmpresaComponent,
+        canActivate: [guard],
+        data: { expectedRol: ['admin', 'user', 'gerente'] },
+      }
     ],
   },
 ];
@@ -107,4 +114,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AbmComprasRoutingModule {}
+export class AbmComprasRoutingModule { }

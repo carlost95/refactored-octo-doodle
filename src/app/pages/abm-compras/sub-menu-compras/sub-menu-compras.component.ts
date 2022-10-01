@@ -38,9 +38,14 @@ export class SubMenuComprasComponent implements OnInit {
       label: 'ajustes',
       icon: 'ajuste',
     },
+    {
+      ruta: 'listar-empresa',
+      label: 'empresas',
+      icon: 'empresa'
+    }
   ];
 
-  constructor() {}
+  constructor() { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 }

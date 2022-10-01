@@ -22,6 +22,8 @@ import { AgregarAjusteComponent } from './agregar-ajuste/agregar-ajuste.componen
 import { ConsultarAjusteComponent } from './consultar-ajuste/consultar-ajuste.component';
 import { ListarAjusteComponent } from './listar-ajuste/listar-ajuste.component';
 import { interceptorProvider } from '../../interceptors/prod-interceptor.service';
+import { EmpresaComponent } from './empresa/empresa.component';
+import { AgregarEmpresaComponent } from './empresa/agregar-empresa/agregar-empresa.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +43,8 @@ import { interceptorProvider } from '../../interceptors/prod-interceptor.service
     ListarAjusteComponent,
     AgregarAjusteComponent,
     ConsultarAjusteComponent,
+    EmpresaComponent,
+    AgregarEmpresaComponent,
   ],
   imports: [
     CommonModule,
@@ -53,4 +57,4 @@ import { interceptorProvider } from '../../interceptors/prod-interceptor.service
   providers: [interceptorProvider],
   exports: [AgregarMarcaComponent],
 })
-export class AbmComprasModule {}
+export class AbmComprasModule { }
