@@ -17,7 +17,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { CrearDireccionComponent } from './direcciones/crear-direccion/crear-direccion.component';
 import { LoadingMapComponent } from './direcciones/loading-map/loading-map.component';
 import { ViewMapClientComponent } from './direcciones/view-map-client/view-map-client.component';
-import { ConsultarVentaComponent } from './venta/consultar-venta/consultar-venta.component';
+import { AgregarVentaComponent } from './venta/agregar-venta/agregar-venta.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +32,7 @@ import { ConsultarVentaComponent } from './venta/consultar-venta/consultar-venta
     CrearDireccionComponent,
     LoadingMapComponent,
     ViewMapClientComponent,
-    ConsultarVentaComponent,
+    AgregarVentaComponent
   ],
   imports: [
     CommonModule,
@@ -43,6 +43,5 @@ import { ConsultarVentaComponent } from './venta/consultar-venta/consultar-venta
     GoogleMapsModule,
     SharedModule,
   ],
-  // entryComponents: [ConfirmDialogComponent],
 })
 export class VentasModule { }
