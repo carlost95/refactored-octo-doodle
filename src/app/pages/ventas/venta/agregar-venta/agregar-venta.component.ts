@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ArticulosService } from '../../../../service/articulos.service';
 import { BuscadorService } from '../../../../shared/helpers/buscador.service';
 import { VentasService } from '../../../../service/ventas.service';
@@ -38,6 +38,9 @@ export class AgregarVentaComponent implements OnInit {
   cliente: Cliente;
   termino = '';
   CONSULTA = false;
+  control = new FormControl();
+  filteredClient: Observable<Cliente[]>;
+
   displayedColumns = ['nombreArt', 'cantidad', 'precioUnitario', 'total'];
   articuloMensaje = 'No se cargo ningun articulo a la venta';
   constructor(
@@ -50,10 +53,16 @@ export class AgregarVentaComponent implements OnInit {
     private readonly router: Router,
     private readonly buscadorService: BuscadorService,
     private readonly activatedRoute: ActivatedRoute,
-  ) { }
+  ) {
+
+  }
 
 
   ngOnInit(): void {
+    this.filteredClient = this.control.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterStates(value))
+    );
     this.clienteService.getAllEnabledClient().subscribe(client => {
       this.clientes = client
     })
@@ -76,11 +85,8 @@ export class AgregarVentaComponent implements OnInit {
       pipe(
         map(empresas => {
           if (empresas.length > 0) {
-            console.log('empresa');
-
-            console.log(empresas[0]);
-
             this.ventaForm = this.formBuilder.group({
+              idCliente: ['', Validators.required],
               nroVenta: ['', Validators.required],
               fecha: ['', Validators.required],
               razonSocial: [{ value: empresas[0].razonSocial, disabled: true }, Validators.required],
@@ -89,41 +95,22 @@ export class AgregarVentaComponent implements OnInit {
               email: [{ value: empresas[0].email, disabled: true }, Validators.required],
               domicilio: [{ value: empresas[0].domicilio, disabled: true }, Validators.required],
             });
-            console.log(this.ventaForm.value);
-
-            console.log('clientes');
-            console.log(this.clientes);
-
-
           }
         }),
       ).subscribe(data => {
         this.loading = false
       });
   }
-  filtrarCliente(value: string): void {
-    console.log(value);
 
-    const TERMINO = 'apellido';
-    const clientesFilter = this.buscadorService.buscarTermino(
-      this.clientes,
-      TERMINO,
-      value
-    );
-    console.log(clientesFilter);
+  // finterClient(event: any) {
+  //   const value = event.target.value;
+  //   const valor = this._filterStates(value);
 
-    this.establecerCliente()
-    // this.establecerDataSource(articulos);
-  }
-  establecerCliente() {
+  //   console.log(valor);
 
-  }
-  filtrarTermino(value: string): void {
-    const TERMINO = 'apellido';
-    const articulos = this.buscadorService.buscarTermino(
-      this.clientes,
-      TERMINO,
-      value
-    );
+  // }
+  private _filterStates(value: string): Cliente[] {
+    const filterValue = value.toLowerCase().trim();
+    return this.clientes.filter(cliente => cliente.dni.toLowerCase().indexOf(filterValue) === 0);
   }
 }

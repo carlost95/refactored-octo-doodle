@@ -3,20 +3,20 @@
   </template-header>
   <form [formGroup]="ventaForm" *ngIf="ventaForm" class="p-3">
     <div class="row">
-      <!-- <div class=" col-md-4 carga"> -->
       <section class="col-md-4 col-sm-12 carga">
-        <!-- <mat-label class="mt-3"> Ingrese cliente</mat-label>
+        <div class="row p-2">
+          <mat-form-field class="col-md-12 col-sm-12">
+            <input matInput placeholder="Ingrese DNI" [matAutocomplete]="auto" [formControl]="control">
 
-        <template-search class="mt-3" (filtro)="filtrarCliente($event)"> -->
-
-        <!-- </template-search> -->
-
-        <mat-label class="mt-5"> Ingrese cliente</mat-label>
-
-        <template-search class="p-3" (filtro)="filtrarTermino($event)">
-        </template-search>
+            <!-- <input matInput placeholder="Ingrese DNI" (keypress)="finterClient($event)" [matAutocomplete]="auto" [formControl]="control"> -->
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+              <mat-option *ngFor="let cliente of filteredClient | async" [value]="cliente">
+                {{cliente.nombre}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
       </section>
-      <!-- </div> -->
 
       <section class="col-md-8 col-sm-12 formulario">
         <div class="row p-2">
