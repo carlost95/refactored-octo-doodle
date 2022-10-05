@@ -6,14 +6,13 @@
       <section class="col-md-4 col-sm-12 carga">
         <div class="row p-2">
           <mat-form-field class="col-md-12 col-sm-12">
-            <input matInput placeholder="Ingrese DNI" [matAutocomplete]="auto" [formControl]="control">
-
-            <!-- <input matInput placeholder="Ingrese DNI" (keypress)="finterClient($event)" [matAutocomplete]="auto" [formControl]="control"> -->
-            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-              <mat-option *ngFor="let cliente of filteredClient | async" [value]="cliente">
-                {{cliente.nombre}}
+            <mat-label>Cliente</mat-label>
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let cliente of filteredClient | async" [value]="cliente.idCliente">
+                {{cliente.apellido}}, {{cliente.nombre}}
               </mat-option>
             </mat-autocomplete>
+            <input matInput [matAutocomplete]="auto" formControlName="idCliente">
           </mat-form-field>
         </div>
       </section>

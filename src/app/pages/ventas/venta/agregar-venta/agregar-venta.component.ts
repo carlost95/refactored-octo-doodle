@@ -12,7 +12,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ArticuloVenta } from '../../../../models/articulo-rest';
 import { EmpresaService } from '../../../../service/empresa.service';
 import { Empresa } from '../../../../models/Empresa';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, debounceTime } from 'rxjs/operators';
 import { ClienteService } from '../../../../service/cliente.service';
 import { Cliente } from '@app/models/cliente';
 import { Observable } from 'rxjs';
@@ -38,7 +38,6 @@ export class AgregarVentaComponent implements OnInit {
   cliente: Cliente;
   termino = '';
   CONSULTA = false;
-  control = new FormControl();
   filteredClient: Observable<Cliente[]>;
 
   displayedColumns = ['nombreArt', 'cantidad', 'precioUnitario', 'total'];
@@ -59,10 +58,7 @@ export class AgregarVentaComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.filteredClient = this.control.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterStates(value))
-    );
+
     this.clienteService.getAllEnabledClient().subscribe(client => {
       this.clientes = client
     })
@@ -96,21 +92,22 @@ export class AgregarVentaComponent implements OnInit {
               domicilio: [{ value: empresas[0].domicilio, disabled: true }, Validators.required],
             });
           }
+          this.filteredClient = this.ventaForm.controls.idCliente.valueChanges.pipe(
+            debounceTime(500),
+            startWith(''),
+            map(value => this._filterClient(value))
+          );
+
         }),
       ).subscribe(data => {
         this.loading = false
       });
   }
 
-  // finterClient(event: any) {
-  //   const value = event.target.value;
-  //   const valor = this._filterStates(value);
+  private _filterClient(value: string): Cliente[] {
+    const filterValue = value.toString().toLowerCase().trim();
+    console.log(this.ventaForm.controls.idCliente.value);
 
-  //   console.log(valor);
-
-  // }
-  private _filterStates(value: string): Cliente[] {
-    const filterValue = value.toLowerCase().trim();
     return this.clientes.filter(cliente => cliente.dni.toLowerCase().indexOf(filterValue) === 0);
   }
 }
