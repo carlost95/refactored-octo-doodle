@@ -7,12 +7,12 @@
         <div class="row p-2">
           <mat-form-field class="col-md-12 col-sm-12">
             <mat-label>Cliente</mat-label>
+            <input matInput [matAutocomplete]="auto" formControlName="idCliente">
             <mat-autocomplete #auto="matAutocomplete">
               <mat-option *ngFor="let cliente of filteredClient | async" [value]="cliente.idCliente">
                 {{cliente.apellido}}, {{cliente.nombre}}
               </mat-option>
             </mat-autocomplete>
-            <input matInput [matAutocomplete]="auto" formControlName="idCliente">
           </mat-form-field>
         </div>
       </section>

@@ -93,7 +93,7 @@ export class AgregarVentaComponent implements OnInit {
             });
           }
           this.filteredClient = this.ventaForm.controls.idCliente.valueChanges.pipe(
-            debounceTime(500),
+            debounceTime(250),
             startWith(''),
             map(value => this._filterClient(value))
           );
