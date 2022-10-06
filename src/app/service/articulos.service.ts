@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.prod';
 import { articulos, subRubro } from '../../environments/global-route';
-import { ArticuloRest, ArticuloStock } from '@models/articulo-rest';
+import {ArticuloRest, ArticuloStock, ArticuloVenta} from '@models/articulo-rest';
 import { forkJoin, Observable, of } from 'rxjs';
 import { SubRubroRest } from '@models/subrubro-rest';
 import { map, switchMap } from 'rxjs/operators';
@@ -67,5 +67,9 @@ export class ArticulosService {
   obtenerArticuloPorProveedor(proveedorId: number): Observable<ArticuloRest[]> {
     return this.http.get<ArticuloStock[]>(`${this.url}/proveedor/${proveedorId}`)
       .pipe(map(articulos => articulos.map(articulo => ({ ...articulo, stockFinal: articulo.stockActual, cantidad: 0 }))));
+  }
+
+  obtenerArticulosVenta(): Observable<ArticuloVenta[]> {
+    return this.http.get<ArticuloVenta[]>(`${this.url}/venta`);
   }
 }

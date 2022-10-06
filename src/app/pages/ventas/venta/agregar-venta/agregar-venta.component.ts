@@ -56,13 +56,15 @@ export class AgregarVentaComponent implements OnInit {
     private readonly router: Router,
     private readonly buscadorService: BuscadorService,
     private readonly activatedRoute: ActivatedRoute,
-  ) {
-
-  }
+  ) {}
 
 
   ngOnInit(): void {
 
+    this.articuloService.obtenerArticulosVenta().subscribe(articulos => {
+      this.articulos = articulos
+      console.log(articulos)
+    });
     this.clienteService.getAllEnabledClient().subscribe(client => {
       this.clientes = client;
     });
