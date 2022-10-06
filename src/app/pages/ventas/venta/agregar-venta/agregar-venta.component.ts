@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ArticulosService } from '../../../../service/articulos.service';
 import { BuscadorService } from '../../../../shared/helpers/buscador.service';
 import { VentasService } from '../../../../service/ventas.service';
@@ -14,8 +14,10 @@ import { EmpresaService } from '../../../../service/empresa.service';
 import { Empresa } from '../../../../models/Empresa';
 import { map, startWith, debounceTime } from 'rxjs/operators';
 import { ClienteService } from '../../../../service/cliente.service';
-import { Cliente } from '@app/models/cliente';
+import { Cliente } from '@models/Cliente';
 import { Observable } from 'rxjs';
+import {DireccionesService} from '../../../../service/direcciones.service';
+import {Direccion} from '../../../../models/Direccion';
 
 
 
@@ -35,7 +37,8 @@ export class AgregarVentaComponent implements OnInit {
   articulos: ArticuloVenta[] = [];
   empresa: Empresa;
   clientes: Cliente[] = [];
-  cliente: Cliente;
+  direcciones: Direccion[] = [];
+  cliente: Cliente = new Cliente();
   termino = '';
   CONSULTA = false;
   filteredClient: Observable<Cliente[]>;
@@ -48,6 +51,7 @@ export class AgregarVentaComponent implements OnInit {
     private readonly ventaService: VentasService,
     private readonly empresaService: EmpresaService,
     private readonly clienteService: ClienteService,
+    private readonly direccionesService: DireccionesService,
     private readonly snackbar: MatSnackBar,
     private readonly router: Router,
     private readonly buscadorService: BuscadorService,
@@ -60,8 +64,8 @@ export class AgregarVentaComponent implements OnInit {
   ngOnInit(): void {
 
     this.clienteService.getAllEnabledClient().subscribe(client => {
-      this.clientes = client
-    })
+      this.clientes = client;
+    });
     const id = this.activatedRoute.snapshot.paramMap.get('idVenta');
     if (id) {
       this.CONSULTA = true;
@@ -83,6 +87,7 @@ export class AgregarVentaComponent implements OnInit {
           if (empresas.length > 0) {
             this.ventaForm = this.formBuilder.group({
               idCliente: ['', Validators.required],
+              idDireccion: ['', Validators.required],
               nroVenta: ['', Validators.required],
               fecha: ['', Validators.required],
               razonSocial: [{ value: empresas[0].razonSocial, disabled: true }, Validators.required],
@@ -92,6 +97,7 @@ export class AgregarVentaComponent implements OnInit {
               domicilio: [{ value: empresas[0].domicilio, disabled: true }, Validators.required],
             });
           }
+          this.cliente = new Cliente();
           this.filteredClient = this.ventaForm.controls.idCliente.valueChanges.pipe(
             debounceTime(250),
             startWith(''),
@@ -100,7 +106,7 @@ export class AgregarVentaComponent implements OnInit {
 
         }),
       ).subscribe(data => {
-        this.loading = false
+        this.loading = false;
       });
   }
 
@@ -109,5 +115,15 @@ export class AgregarVentaComponent implements OnInit {
     console.log(this.ventaForm.controls.idCliente.value);
 
     return this.clientes.filter(cliente => cliente.dni.toLowerCase().indexOf(filterValue) === 0);
+  }
+  displayCliente(cliente: Cliente): string {
+    return cliente.dni || '';
+  }
+
+  setCliente(event: any): void {
+    this.cliente = event.option.value;
+    this.direccionesService
+      .getAllEnabledDirectionByIdClient(this.cliente.idCliente)
+      .subscribe(direcciones => this.direcciones = direcciones, error => this.direcciones = []);
   }
 }

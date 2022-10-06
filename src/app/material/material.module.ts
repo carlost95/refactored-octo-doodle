@@ -15,6 +15,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSortModule } from '@angular/material/sort';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   imports: [
@@ -34,6 +35,7 @@ import { MatSortModule } from '@angular/material/sort';
     MatPaginatorModule,
     MatSortModule,
     MatAutocompleteModule,
+    MatDividerModule
   ],
   exports: [
     MatToolbarModule,
@@ -51,6 +53,7 @@ import { MatSortModule } from '@angular/material/sort';
     MatDatepickerModule,
     MatSortModule,
     MatAutocompleteModule,
+    MatDividerModule
 
   ],
 })
