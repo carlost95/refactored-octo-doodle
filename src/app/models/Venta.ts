@@ -11,6 +11,6 @@ export class Venta {
     fecha?: DatePipe;
     IVA?: number;
     descuento?: number;
-    monto?: number;
+    total?: number;
     articulos?: ArticuloVenta[];
 }

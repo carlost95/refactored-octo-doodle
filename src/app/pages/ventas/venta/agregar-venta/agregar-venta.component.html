@@ -5,75 +5,81 @@
     <div class="row">
       <section class="col-md-4 col-sm-12 carga">
         <div class="row p-2">
+          <h4 class="col-md-12 col-sm-12">Datos Cliente</h4>
+          <mat-divider></mat-divider>
           <mat-form-field class="col-md-12 col-sm-12">
-            <mat-label>Cliente</mat-label>
+            <mat-label>DNI</mat-label>
             <input matInput [matAutocomplete]="auto" formControlName="idCliente">
-            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCliente" (optionSelected)="setCliente($event)">
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayCliente" (optionSelected)="setCliente($event)">
               <mat-option *ngFor="let cliente of filteredClient | async" [value]="cliente">
                 {{cliente.apellido}}, {{cliente.nombre}}
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
+          <mat-form-field class="col-md-12 col-sm-12" appearance="legacy">
+            <mat-label>Apellidos</mat-label>
+            <input matInput autocomplete="off" disabled [(ngModel)]="cliente.apellido" [ngModelOptions]="{standalone: true}" />
+          </mat-form-field>
+          <mat-form-field class="col-md-12 col-sm-12" appearance="legacy">
+            <mat-label>Nombres</mat-label>
+            <input matInput disabled [(ngModel)]="cliente.nombre" [ngModelOptions]="{standalone: true}" />
+          </mat-form-field>
+          <h4 class="col-md-12 col-sm-12">Datos Direccion</h4>
           <mat-form-field class="col-md-12 col-sm-12">
             <mat-label>Direccion</mat-label>
-            <mat-select
-              name="idDireccion"
-              formControlName="idDireccion"
-              autocomplete="off">
+            <mat-select name="idDireccion" formControlName="idDireccion" autocomplete="off">
               <mat-option *ngFor="let direccion of direcciones" [value]="direccion.idDireccion">
                 {{ direccion.calle }} - Nro {{ direccion.numeroCalle}}
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <h4 class="col-md-12 col-sm-12">Agregar Articulo</h4>
+          <mat-form-field class="col-md-12 col-sm-12">
+            <mat-label>Codigo Articulo</mat-label>
+            <input matInput [matAutocomplete]="auto3" formArrayName="detalleVenta">
+            <!-- <input matInput [matAutocomplete]="auto3" (keyup)="cargarArticulo($event)"> -->
+            <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayArticulo" (optionSelected)="setArticulo($event)">
+              <mat-option *ngFor="let articulo of filteredArticulo | async" [value]="articulo">
+                {{articulo.codigoArt}}, {{articulo.nombre}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
         </div>
       </section>
-
       <section class="col-md-8 col-sm-12 formulario">
-        <h3>Datos empresa</h3>
-        <mat-divider></mat-divider>
+        <!-- <mat-divider></mat-divider> -->
         <div class="row p-2">
-          <mat-form-field class="col-md-6 col-sm-12" appearance="legacy">
-            <mat-label>Razon Social</mat-label>
-            <input matInput autocomplete="off" formControlName="razonSocial" />
-          </mat-form-field>
-          <mat-form-field class="col-md-6 col-sm-12" appearance="legacy">
+          <h4 class="col-md-12 ">Datos empresa</h4>
+
+          <mat-form-field class="col-md-4 col-sm-12">
             <mat-label>CUIT</mat-label>
-            <input matInput autocomplete="off" formControlName="cuit" />
+            <input matInput [matAutocomplete]="auto2" formControlName="idEmpresa">
+            <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete" [displayWith]="displayEmpresa" (optionSelected)="setEmpresa($event)">
+              <mat-option *ngFor="let empresa of filterEmpresa | async" [value]="empresa">
+                {{empresa.razonSocial}}
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
-          <mat-form-field class="col-md-6 col-sm-12" appearance="legacy">
-            <mat-label>telefono</mat-label>
-            <input matInput autocomplete="off" formControlName="telefono" />
+          <mat-form-field class="col-md-4 col-sm-12" appearance="legacy">
+            <mat-label>Razon Social</mat-label>
+            <input matInput disabled [(ngModel)]="empresa.razonSocial" [ngModelOptions]="{standalone: true}" />
           </mat-form-field>
-          <mat-form-field class="col-md-6 col-sm-12" appearance="legacy">
-            <mat-label>email</mat-label>
-            <input matInput autocomplete="off" formControlName="email" />
+          <mat-form-field class="col-md-4 col-sm-12" appearance="legacy">
+            <mat-label>Telefono</mat-label>
+            <input matInput disabled [(ngModel)]="empresa.telefono" [ngModelOptions]="{standalone: true}" />
           </mat-form-field>
           <mat-form-field class="col-md-6 col-sm-12" appearance="legacy">
             <mat-label>Domicilio</mat-label>
-            <input matInput autocomplete="off" formControlName="domicilio" />
+            <input matInput disabled [(ngModel)]="empresa.domicilio" [ngModelOptions]="{standalone: true}" />
+          </mat-form-field>
+          <mat-form-field class="col-md-6 col-sm-12" appearance="legacy">
+            <mat-label>Email</mat-label>
+            <input matInput disabled [(ngModel)]="empresa.email" [ngModelOptions]="{standalone: true}" />
           </mat-form-field>
         </div>
-
-        <h3>Datos Cliente</h3>
+        <h4>Productos</h4>
         <mat-divider></mat-divider>
-        <div class="row p-2">
-          <mat-form-field class="col-md-6 col-sm-12" appearance="legacy">
-            <mat-label>Apellidos</mat-label>
-            <input matInput autocomplete="off" disabled  [(ngModel)]="cliente.apellido" [ngModelOptions]="{standalone: true}"/>
-          </mat-form-field>
-          <mat-form-field class="col-md-6 col-sm-12" appearance="legacy">
-            <mat-label>Nombres</mat-label>
-            <input matInput disabled [(ngModel)]="cliente.nombre" [ngModelOptions]="{standalone: true}"/>
-          </mat-form-field>
-          <mat-form-field class="col-md-6 col-sm-12" appearance="legacy">
-            <mat-label>D.N.I</mat-label>
-            <input matInput autocomplete="off" disabled  [(ngModel)]="cliente.dni" [ngModelOptions]="{standalone: true}"/>
-          </mat-form-field>
-        </div>
-
-        <h3>Productos</h3>
-        <mat-divider></mat-divider>
-        <div class="row p-2">
+        <div class="row p-2 d-flex justify-content-between">
           <table mat-table [dataSource]="dataSource" class="w-100">
             <ng-container matColumnDef="nombreArt">
               <th mat-header-cell *matHeaderCellDef> Nombre </th>

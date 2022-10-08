@@ -12,12 +12,12 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ArticuloVenta } from '../../../../models/articulo-rest';
 import { EmpresaService } from '../../../../service/empresa.service';
 import { Empresa } from '../../../../models/Empresa';
-import { map, startWith, debounceTime } from 'rxjs/operators';
+import { map, startWith, debounceTime, filter } from 'rxjs/operators';
 import { ClienteService } from '../../../../service/cliente.service';
 import { Cliente } from '@models/Cliente';
 import { Observable } from 'rxjs';
-import {DireccionesService} from '../../../../service/direcciones.service';
-import {Direccion} from '../../../../models/Direccion';
+import { DireccionesService } from '../../../../service/direcciones.service';
+import { Direccion } from '../../../../models/Direccion';
 
 
 
@@ -35,13 +35,18 @@ export class AgregarVentaComponent implements OnInit {
   dataSource: MatTableDataSource<ArticuloVenta> = new MatTableDataSource<ArticuloVenta>();
   ventaForm: FormGroup;
   articulos: ArticuloVenta[] = [];
-  empresa: Empresa;
+  articulosSave: ArticuloVenta[] = [];
+  empresas: Empresa[] = [];
   clientes: Cliente[] = [];
   direcciones: Direccion[] = [];
   cliente: Cliente = new Cliente();
+  empresa: Empresa = new Empresa();
+  articulo: ArticuloVenta = new ArticuloVenta();
   termino = '';
   CONSULTA = false;
   filteredClient: Observable<Cliente[]>;
+  filterEmpresa: Observable<Empresa[]>;
+  filteredArticulo: Observable<ArticuloVenta[]>;
 
   displayedColumns = ['nombreArt', 'cantidad', 'precioUnitario', 'total'];
   articuloMensaje = 'No se cargo ningun articulo a la venta';
@@ -56,18 +61,21 @@ export class AgregarVentaComponent implements OnInit {
     private readonly router: Router,
     private readonly buscadorService: BuscadorService,
     private readonly activatedRoute: ActivatedRoute,
-  ) {}
+  ) { }
 
 
   ngOnInit(): void {
 
     this.articuloService.obtenerArticulosVenta().subscribe(articulos => {
       this.articulos = articulos
-      console.log(articulos)
     });
     this.clienteService.getAllEnabledClient().subscribe(client => {
       this.clientes = client;
     });
+    this.empresaService.getEnabledEmpresas()
+      .subscribe(empresas =>
+        this.empresas = empresas, error => this.empresas = []);
+
     const id = this.activatedRoute.snapshot.paramMap.get('idVenta');
     if (id) {
       this.CONSULTA = true;
@@ -79,53 +87,105 @@ export class AgregarVentaComponent implements OnInit {
     this.establecerventasFormSinDatos();
   }
   establecerventasFormConDatos(id: string): void {
-    // this.ventaForm = this.formBuilder.group({
-    // });
+
   }
   establecerventasFormSinDatos(): void {
-    this.empresaService.getEnabledEmpresas().
-      pipe(
-        map(empresas => {
-          if (empresas.length > 0) {
-            this.ventaForm = this.formBuilder.group({
-              idCliente: ['', Validators.required],
-              idDireccion: ['', Validators.required],
-              nroVenta: ['', Validators.required],
-              fecha: ['', Validators.required],
-              razonSocial: [{ value: empresas[0].razonSocial, disabled: true }, Validators.required],
-              cuit: [{ value: empresas[0].cuit, disabled: true }, Validators.required],
-              telefono: [{ value: empresas[0].telefono, disabled: true }, Validators.required],
-              email: [{ value: empresas[0].email, disabled: true }, Validators.required],
-              domicilio: [{ value: empresas[0].domicilio, disabled: true }, Validators.required],
-            });
-          }
-          this.cliente = new Cliente();
-          this.filteredClient = this.ventaForm.controls.idCliente.valueChanges.pipe(
-            debounceTime(250),
-            startWith(''),
-            map(value => this._filterClient(value))
-          );
 
-        }),
-      ).subscribe(data => {
-        this.loading = false;
-      });
+    this.ventaForm = this.formBuilder.group({
+      idVenta: ['', Validators.required],
+      idEmpresa: ['', Validators.required],
+      idCliente: ['', Validators.required],
+      idDireccion: ['', Validators.required],
+      nroVenta: ['', Validators.required],
+      fecha: ['', Validators.required],
+      iva: ['', Validators.required],
+      descuento: ['', Validators.required],
+      total: ['', Validators.required],
+      detalleVenta: this.formBuilder.array([
+        this.formBuilder.control('', Validators.required),
+      ])
+    }),
+      this.cliente = new Cliente();
+    this.filteredClient = this.ventaForm.controls.idCliente.valueChanges.pipe(
+      debounceTime(250),
+      startWith(''),
+      map(value => this._filterClient(value))
+    );
+    this.empresa = new Empresa();
+    this.filterEmpresa = this.ventaForm.controls.idEmpresa.valueChanges.pipe(
+      debounceTime(250),
+      startWith(''),
+      map(value => this._filterEnterpise(value))
+    );
+    this.articulo = new ArticuloVenta();
+    this.filteredArticulo = this.ventaForm.controls.detalleVenta.valueChanges.pipe(
+      debounceTime(250),
+      startWith(''),
+      map(value => this._filterArticle(value))
+    );
   }
+  establecerDataSource(articulos: ArticuloVenta[]): void {
+    this.dataSource = new MatTableDataSource<ArticuloVenta>(articulos);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    if (articulos.length === 0) {
+      this.articuloMensaje = 'No se cargo ningun articulo a la venta';
+    }
+  }
+
 
   private _filterClient(value: string): Cliente[] {
     const filterValue = value.toString().toLowerCase().trim();
-    console.log(this.ventaForm.controls.idCliente.value);
-
     return this.clientes.filter(cliente => cliente.dni.toLowerCase().indexOf(filterValue) === 0);
   }
+  private _filterEnterpise(value: string): Empresa[] {
+    const filterValue = value.toString().toLowerCase().trim();
+    return this.empresas.filter(empresa => empresa.cuit.toLowerCase().indexOf(filterValue) === 0);
+  }
+  private _filterArticle(value: string): ArticuloVenta[] {
+    const filterValue = value.toString().toLowerCase().trim();
+    console.log('valora  filtrar' + filterValue);
+
+    return this.articulos.filter(
+      articulo => articulo.nombre.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  // TODO: FUNCION QUE NO LANZA ERROR PERO FALLA --> VERIFICAR EL FORM.array
+  // cargarArticulo(event: any): void {
+  //   this.filteredArticulo = event.target.value.pipe(
+  //     debounceTime(250),
+  //     startWith(''),
+  //     map(value => this._filterArticle(value.toString()))
+  //   )
+  //   console.log(this.filteredArticulo);
+  // }
+
+
   displayCliente(cliente: Cliente): string {
     return cliente.dni || '';
   }
+  displayEmpresa(empresa: Empresa): string {
+    return empresa.cuit || '';
+  }
+  displayArticulo(articulo: ArticuloVenta): string {
+    return articulo.codigoArt || '';
+  }
+
 
   setCliente(event: any): void {
     this.cliente = event.option.value;
     this.direccionesService
       .getAllEnabledDirectionByIdClient(this.cliente.idCliente)
       .subscribe(direcciones => this.direcciones = direcciones, error => this.direcciones = []);
+  }
+  setEmpresa(event: any): void {
+    this.empresa = event.option.value;
+  }
+  setArticulo(event: any): void {
+    console.log('articulo selected' + event);
+    this.articulo = event.option.value;
+    this.articulosSave.push(this.articulo);
+    this.establecerDataSource(this.articulosSave);
+
   }
 }
