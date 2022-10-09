@@ -29,7 +29,7 @@ export class ArticuloStock {
 }
 
 export class ArticuloVenta {
-  id?: number;
+  idArticulo?: number;
   nombre?: string;
   codigoArticulo?: string;
   cantidad?: number;

@@ -30,3 +30,19 @@
   padding: 0.4rem;
   margin: 0rem -7rem 0rem 0rem;
 }
+
+.inputArticle {
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 0.3rem;
+  padding: .6rem;
+
+}
+
+.inputArticle:hover {
+  border: 1.5px solid rgba(255, 179, 0, 1);
+  cursor: pointer;
+}
+
+.inputCursor {
+  cursor: pointer;
+}

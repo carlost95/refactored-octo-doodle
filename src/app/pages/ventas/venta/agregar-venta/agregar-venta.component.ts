@@ -18,6 +18,7 @@ import { Cliente } from '@models/Cliente';
 import { Observable, of } from 'rxjs';
 import { DireccionesService } from '../../../../service/direcciones.service';
 import { Direccion } from '../../../../models/Direccion';
+import { SnackConfirmComponent } from '../../../../shared/snack-confirm/snack-confirm.component';
 
 
 
@@ -44,13 +45,14 @@ export class AgregarVentaComponent implements OnInit {
   articulo: ArticuloVenta = new ArticuloVenta();
   termino = '';
   CONSULTA = false;
+  validateClient = true;
   filteredClient: Observable<Cliente[]>;
   filterEmpresa: Observable<Empresa[]>;
   filteredArticulo: Observable<ArticuloVenta[]>;
   valueInput: string = null;
 
   // displayedColumns = ['cantidad', 'nombre'];
-  displayedColumns = ['codigo', 'nombre', 'cantidad', 'precioUnitario', 'total'];
+  displayedColumns = ['codigo', 'nombre', 'cantidad', 'precioUnitario', 'total', 'accion'];
   articuloMensaje = 'No se cargo ningun articulo a la venta';
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -97,7 +99,7 @@ export class AgregarVentaComponent implements OnInit {
       idVenta: ['', Validators.required],
       idEmpresa: ['', Validators.required],
       idCliente: ['', Validators.required],
-      idDireccion: ['', Validators.required],
+      idDireccion: [null, Validators.required],
       nroVenta: ['', Validators.required],
       fecha: ['', Validators.required],
       iva: ['', Validators.required],
@@ -167,27 +169,45 @@ export class AgregarVentaComponent implements OnInit {
     this.direccionesService
       .getAllEnabledDirectionByIdClient(this.cliente.idCliente)
       .subscribe(direcciones => this.direcciones = direcciones, error => this.direcciones = []);
+    this.validateClient = false;
   }
   setEmpresa(event: any): void {
     this.empresa = event.option.value;
   }
   setArticulo(event: any): void {
     this.articulo = event.option.value;
+    for (const article of this.articulosSave) {
+      if (this.articulo.idArticulo === article.idArticulo) {
+        this.openSnackBar('El articulo ' + this.articulo.nombre + ' ya se encuentra registrado para esta venta');
+        // this.snackbar.open('El articulo ya se encuentra en la lista', 'Cerrar', { duration: 10000 });
+        return;
+      }
+    }
     this.articulosSave.push(this.articulo);
     this.establecerDataSource(this.articulosSave);
-
   }
   actualizarCantidad(event: any, id: number): void {
     if (event.keyCode == 13) {
       const target = event.target as HTMLInputElement;
       const cantidad = Number(target?.value);
       for (const article of this.articulosSave) {
-        if (article.id === id) {
+        if (article.idArticulo === id) {
           article.cantidad = cantidad;
           article.subTotal = cantidad * article.precio;
         }
-        this.establecerDataSource(this.articulosSave);
       }
+      this.establecerDataSource(this.articulosSave);
     }
+  }
+  removeArticle(id: number): void {
+    this.articulosSave = this.articulosSave.filter(articulo => articulo.idArticulo !== id);
+    this.establecerDataSource(this.articulosSave);
+  }
+  openSnackBar(msg: string): void {
+    this.snackbar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
+    });
   }
 }
