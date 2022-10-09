@@ -35,19 +35,18 @@
           </mat-form-field>
           <h4 class="col-md-12 col-sm-12">Agregar Articulo</h4>
           <mat-form-field class="col-md-12 col-sm-12">
-            <mat-label>Codigo Articulo</mat-label>
-            <input matInput [matAutocomplete]="auto3" formArrayName="detalleVenta">
-            <!-- <input matInput [matAutocomplete]="auto3" (keyup)="cargarArticulo($event)"> -->
+            <mat-label>Nombre articulo</mat-label>
+            <input matInput [matAutocomplete]="auto3" (keyup)="cargarArticulo($event)" autocomplete="off">
             <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayArticulo" (optionSelected)="setArticulo($event)">
               <mat-option *ngFor="let articulo of filteredArticulo | async" [value]="articulo">
-                {{articulo.codigoArt}}, {{articulo.nombre}}
+                {{articulo.codigoArticulo}}, {{articulo.nombre}}
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
         </div>
       </section>
       <section class="col-md-8 col-sm-12 formulario">
-        <!-- <mat-divider></mat-divider> -->
+        <mat-divider></mat-divider>
         <div class="row p-2">
           <h4 class="col-md-12 ">Datos empresa</h4>
 
@@ -81,24 +80,28 @@
         <mat-divider></mat-divider>
         <div class="row p-2 d-flex justify-content-between">
           <table mat-table [dataSource]="dataSource" class="w-100">
-            <ng-container matColumnDef="nombreArt">
+            <ng-container matColumnDef="codigo">
+              <th mat-header-cell *matHeaderCellDef> Codigo </th>
+              <td mat-cell *matCellDef="let row"> {{row.codigoArticulo}} </td>
+            </ng-container>
+            <ng-container matColumnDef="nombre">
               <th mat-header-cell *matHeaderCellDef> Nombre </th>
               <td mat-cell *matCellDef="let row"> {{row.nombre}} </td>
             </ng-container>
-
             <ng-container matColumnDef="cantidad">
-              <th mat-header-cell *matHeaderCellDef> Cantidad </th>
-              <td mat-cell *matCellDef="let row"> {{row.cantidad}} </td>
+              <th mat-header-cell *matHeaderCellDef> Ingreso </th>
+              <td mat-cell *matCellDef="let row">
+                <input matInput required class="my-form-field" [disabled]="CONSULTA" min="0" OnlyNumber="true" type="number" (keyup)="actualizarCantidad($event, row.id)" autocomplete="off" />
+              </td>
             </ng-container>
-
             <ng-container matColumnDef="precioUnitario">
-              <th mat-header-cell *matHeaderCellDef> Precio </th>
-              <td mat-cell *matCellDef="let row"> {{row.precioUnitario}} </td>
+              <th class="pl-2" mat-header-cell *matHeaderCellDef> Precio </th>
+              <td class="pl-2" mat-cell *matCellDef="let row"> {{row.precio}} </td>
             </ng-container>
 
             <ng-container matColumnDef="total">
               <th mat-header-cell *matHeaderCellDef> Total </th>
-              <td mat-cell *matCellDef="let row"> {{row.total}} </td>
+              <td mat-cell *matCellDef="let row"> {{row.subTotal}} </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

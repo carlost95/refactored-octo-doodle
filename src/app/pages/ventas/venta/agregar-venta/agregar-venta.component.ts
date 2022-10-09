@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ArticulosService } from '../../../../service/articulos.service';
 import { BuscadorService } from '../../../../shared/helpers/buscador.service';
 import { VentasService } from '../../../../service/ventas.service';
@@ -15,7 +15,7 @@ import { Empresa } from '../../../../models/Empresa';
 import { map, startWith, debounceTime, filter } from 'rxjs/operators';
 import { ClienteService } from '../../../../service/cliente.service';
 import { Cliente } from '@models/Cliente';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { DireccionesService } from '../../../../service/direcciones.service';
 import { Direccion } from '../../../../models/Direccion';
 
@@ -47,8 +47,10 @@ export class AgregarVentaComponent implements OnInit {
   filteredClient: Observable<Cliente[]>;
   filterEmpresa: Observable<Empresa[]>;
   filteredArticulo: Observable<ArticuloVenta[]>;
+  valueInput: string = null;
 
-  displayedColumns = ['nombreArt', 'cantidad', 'precioUnitario', 'total'];
+  // displayedColumns = ['cantidad', 'nombre'];
+  displayedColumns = ['codigo', 'nombre', 'cantidad', 'precioUnitario', 'total'];
   articuloMensaje = 'No se cargo ningun articulo a la venta';
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -101,9 +103,6 @@ export class AgregarVentaComponent implements OnInit {
       iva: ['', Validators.required],
       descuento: ['', Validators.required],
       total: ['', Validators.required],
-      detalleVenta: this.formBuilder.array([
-        this.formBuilder.control('', Validators.required),
-      ])
     }),
       this.cliente = new Cliente();
     this.filteredClient = this.ventaForm.controls.idCliente.valueChanges.pipe(
@@ -116,12 +115,6 @@ export class AgregarVentaComponent implements OnInit {
       debounceTime(250),
       startWith(''),
       map(value => this._filterEnterpise(value))
-    );
-    this.articulo = new ArticuloVenta();
-    this.filteredArticulo = this.ventaForm.controls.detalleVenta.valueChanges.pipe(
-      debounceTime(250),
-      startWith(''),
-      map(value => this._filterArticle(value))
     );
   }
   establecerDataSource(articulos: ArticuloVenta[]): void {
@@ -143,22 +136,19 @@ export class AgregarVentaComponent implements OnInit {
     return this.empresas.filter(empresa => empresa.cuit.toLowerCase().indexOf(filterValue) === 0);
   }
   private _filterArticle(value: string): ArticuloVenta[] {
-    const filterValue = value.toString().toLowerCase().trim();
-    console.log('valora  filtrar' + filterValue);
-
+    const filterValue = value.toLowerCase().trim();
     return this.articulos.filter(
-      articulo => articulo.nombre.toLowerCase().indexOf(filterValue) === 0);
+      articulo => (articulo.nombre.toLowerCase() || articulo.codigoArticulo.toLowerCase()).indexOf(filterValue) === 0);
   }
 
   // TODO: FUNCION QUE NO LANZA ERROR PERO FALLA --> VERIFICAR EL FORM.array
-  // cargarArticulo(event: any): void {
-  //   this.filteredArticulo = event.target.value.pipe(
-  //     debounceTime(250),
-  //     startWith(''),
-  //     map(value => this._filterArticle(value.toString()))
-  //   )
-  //   console.log(this.filteredArticulo);
-  // }
+  cargarArticulo(event: any): void {
+    this.filteredArticulo = of(event.target.value).pipe(
+      debounceTime(250),
+      startWith(''),
+      map(value => this._filterArticle(value.toString()))
+    )
+  }
 
 
   displayCliente(cliente: Cliente): string {
@@ -167,8 +157,8 @@ export class AgregarVentaComponent implements OnInit {
   displayEmpresa(empresa: Empresa): string {
     return empresa.cuit || '';
   }
-  displayArticulo(articulo: ArticuloVenta): string {
-    return articulo.codigoArt || '';
+  displayArticulo(): string {
+    return '';
   }
 
 
@@ -182,10 +172,22 @@ export class AgregarVentaComponent implements OnInit {
     this.empresa = event.option.value;
   }
   setArticulo(event: any): void {
-    console.log('articulo selected' + event);
     this.articulo = event.option.value;
     this.articulosSave.push(this.articulo);
     this.establecerDataSource(this.articulosSave);
 
+  }
+  actualizarCantidad(event: any, id: number): void {
+    if (event.keyCode == 13) {
+      const target = event.target as HTMLInputElement;
+      const cantidad = Number(target?.value);
+      for (const article of this.articulosSave) {
+        if (article.id === id) {
+          article.cantidad = cantidad;
+          article.subTotal = cantidad * article.precio;
+        }
+        this.establecerDataSource(this.articulosSave);
+      }
+    }
   }
 }

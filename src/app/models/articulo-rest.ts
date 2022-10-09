@@ -31,7 +31,7 @@ export class ArticuloStock {
 export class ArticuloVenta {
   id?: number;
   nombre?: string;
-  codigoArt?: string;
+  codigoArticulo?: string;
   cantidad?: number;
   precio?: number;
   subTotal?: number;
