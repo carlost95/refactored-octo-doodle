@@ -51,7 +51,6 @@ export class AgregarVentaComponent implements OnInit {
   filteredArticulo: Observable<ArticuloVenta[]>;
   valueInput: string = null;
 
-  // displayedColumns = ['cantidad', 'nombre'];
   displayedColumns = ['codigo', 'nombre', 'cantidad', 'precioUnitario', 'total', 'accion'];
   articuloMensaje = 'No se cargo ningun articulo a la venta';
   constructor(
@@ -179,7 +178,6 @@ export class AgregarVentaComponent implements OnInit {
     for (const article of this.articulosSave) {
       if (this.articulo.idArticulo === article.idArticulo) {
         this.openSnackBar('El articulo ' + this.articulo.nombre + ' ya se encuentra registrado para esta venta');
-        // this.snackbar.open('El articulo ya se encuentra en la lista', 'Cerrar', { duration: 10000 });
         return;
       }
     }
@@ -203,11 +201,20 @@ export class AgregarVentaComponent implements OnInit {
     this.articulosSave = this.articulosSave.filter(articulo => articulo.idArticulo !== id);
     this.establecerDataSource(this.articulosSave);
   }
+  getTotalCost() {
+    return this.articulosSave.map(article => article.subTotal).reduce((acc, value) => acc + value, 0);
+  }
   openSnackBar(msg: string): void {
     this.snackbar.openFromComponent(SnackConfirmComponent, {
       panelClass: ['error-snackbar'],
       duration: 5 * 1000,
       data: msg,
     });
+  }
+  guardar() {
+    console.log('guardar');
+  }
+  cancelar() {
+    this.router.navigate(['/ventas/listar-venta']);
   }
 }
