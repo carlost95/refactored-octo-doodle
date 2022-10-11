@@ -1,6 +1,4 @@
-import { Data } from '@angular/router';
 import { ArticuloVenta } from './articulo-rest';
-import { DatePipe } from '@angular/common';
 export class Venta {
     idVenta?: number;
     idEmpresa?: number;
@@ -8,8 +6,7 @@ export class Venta {
     idDireccion?: number;
     nombreCliente?: string;
     nroVenta?: string;
-    fecha?: DatePipe;
-    IVA?: number;
+    fecha?: Date;
     descuento?: number;
     total?: number;
     articulos?: ArticuloVenta[];
