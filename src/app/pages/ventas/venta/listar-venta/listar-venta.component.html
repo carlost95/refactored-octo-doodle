@@ -3,23 +3,23 @@
     <table class="w-100" mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="nroVenta">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Numero </th>
-        <td mat-cell *matCellDef="let row"> {{row.nroVenta}} </td>
+        <td mat-cell *matCellDef="let row"> {{row.nroVenta| number}} </td>
       </ng-container>
       <ng-container matColumnDef="nombreCliente">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Cliente </th>
-        <td mat-cell *matCellDef="let row"> {{row.nombreCliente}} </td>
+        <td mat-cell *matCellDef="let row"> {{row.idCliente.apellido| titlecase}}, {{ row.idCliente.nombre |titlecase}} </td>
+      </ng-container>
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
+        <td mat-cell *matCellDef="let row"> {{row.total | currency}} </td>
       </ng-container>
       <ng-container matColumnDef="descuento">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Descuento </th>
         <td mat-cell *matCellDef="let row"> {{row.descuento}} </td>
       </ng-container>
-      <ng-container matColumnDef="monto">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Monto </th>
-        <td mat-cell *matCellDef="let row"> {{row.monto}} </td>
-      </ng-container>
       <ng-container matColumnDef="fecha">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
-        <td mat-cell *matCellDef="let row"> {{row.fecha | date: 'short':'+0000'}} </td>
+        <td mat-cell *matCellDef="let row"> {{row.fechaVenta | date: 'short':'+0000'}} </td>
       </ng-container>
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef> Opciones</th>

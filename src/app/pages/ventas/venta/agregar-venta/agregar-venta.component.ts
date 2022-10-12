@@ -1,27 +1,27 @@
 /* tslint:disable:align */
-import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ArticulosService} from '../../../../service/articulos.service';
-import {BuscadorService} from '../../../../shared/helpers/buscador.service';
-import {VentasService} from '../../../../service/ventas.service';
-import {MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition} from '@angular/material/snack-bar';
-import {Router, ActivatedRoute} from '@angular/router';
-import {SearchComponent} from '../../../../shared/template/search/search.component';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {ArticuloVenta} from '../../../../models/articulo-rest';
-import {EmpresaService} from '../../../../service/empresa.service';
-import {Empresa} from '../../../../models/Empresa';
-import {map, startWith, debounceTime, filter} from 'rxjs/operators';
-import {ClienteService} from '../../../../service/cliente.service';
-import {Cliente} from '@models/Cliente';
-import {Observable, of} from 'rxjs';
-import {DireccionesService} from '../../../../service/direcciones.service';
-import {Direccion} from '../../../../models/Direccion';
-import {SnackConfirmComponent} from '../../../../shared/snack-confirm/snack-confirm.component';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ArticulosService } from '../../../../service/articulos.service';
+import { BuscadorService } from '../../../../shared/helpers/buscador.service';
+import { VentasService } from '../../../../service/ventas.service';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
+import { Router, ActivatedRoute } from '@angular/router';
+import { SearchComponent } from '../../../../shared/template/search/search.component';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { ArticuloVenta } from '../../../../models/articulo-rest';
+import { EmpresaService } from '../../../../service/empresa.service';
+import { Empresa } from '../../../../models/Empresa';
+import { map, startWith, debounceTime, filter } from 'rxjs/operators';
+import { ClienteService } from '../../../../service/cliente.service';
+import { Cliente } from '@models/Cliente';
+import { Observable, of } from 'rxjs';
+import { DireccionesService } from '../../../../service/direcciones.service';
+import { Direccion } from '../../../../models/Direccion';
+import { SnackConfirmComponent } from '../../../../shared/snack-confirm/snack-confirm.component';
 import * as moment from 'moment';
-import {Venta} from '../../../../models/Venta';
+import { Venta } from '../../../../models/Venta';
 
 
 @Component({
@@ -50,15 +50,15 @@ export class AgregarVentaComponent implements OnInit {
   termino = '';
   CONSULTA = false;
   validateVenta = false;
-  validateClient = true;
+  validateClient = false;
   filteredClient: Observable<Cliente[]>;
   filterEmpresa: Observable<Empresa[]>;
   filteredArticulo: Observable<ArticuloVenta[]>;
-  valueInput: string = null;
   submitted: boolean;
   errorInForm: any;
   descuento = 0;
   total = 0;
+  nroVenta: number = 0;
 
   displayedColumns = ['codigo', 'nombre', 'cantidad', 'precioUnitario', 'total', 'accion'];
   articuloMensaje = 'No se cargo ningun articulo a la venta';
@@ -71,8 +71,8 @@ export class AgregarVentaComponent implements OnInit {
     private readonly clienteService: ClienteService,
     private readonly direccionesService: DireccionesService,
     private readonly snackbar: MatSnackBar,
-    private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
+    private readonly router: Router
   ) {
   }
 
@@ -108,9 +108,9 @@ export class AgregarVentaComponent implements OnInit {
       idEmpresa: ['', Validators.required],
       idCliente: ['', Validators.required],
       idDireccion: ['', Validators.required],
-      nroVenta: ['', null],
+      nroVenta: [0, null],
       fecha: ['', null],
-      descuento: ['', null],
+      descuento: [0, null],
       total: ['', null],
 
     }),
@@ -181,7 +181,7 @@ export class AgregarVentaComponent implements OnInit {
     this.direccionesService
       .getAllEnabledDirectionByIdClient(this.cliente.idCliente)
       .subscribe(direcciones => this.direcciones = direcciones, error => this.direcciones = []);
-    this.validateClient = false;
+    this.validateClient = true;
   }
 
   setEmpresa(event: any): void {
@@ -275,18 +275,22 @@ export class AgregarVentaComponent implements OnInit {
     const venta = this.ventaForm.getRawValue();
     const articulos = this.dataSource.data;
     venta.idCliente = venta.idCliente.idCliente;
+    venta.nombreCliente = (this.cliente.apellido + ', ' + this.cliente.nombre);
     venta.idEmpresa = venta.idEmpresa.idEmpresa;
     venta.fecha = this.addTimeToDate(Date.now());
     venta.total = this.getTotal();
     venta.articulos = articulos;
 
-    console.log('datos de la venta');
-    console.log(venta);
+    this.ventaService.saveSale(venta).subscribe(data => {
+      this.openSnackBar('Venta' + data.nroVenta + ' registrada con exito');
+      this.router.navigate(['/ventas/listar-venta']);
+    });
   }
 
   addTimeToDate(newdate): Date {
     const _ = moment();
-    const date = moment(newdate).add({hours: _.hour(), minutes: _.minute(), seconds: _.second()});
+    const date = moment(newdate).add({ hours: _.hour(), minutes: _.minute(), seconds: _.second() });
     return date.toDate();
   }
+  getDateNow() { return moment(new Date()).add({ hours: 0, minutes: 0, seconds: 0 }).toDate(); }
 }

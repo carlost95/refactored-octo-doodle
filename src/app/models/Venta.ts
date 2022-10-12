@@ -5,7 +5,7 @@ export class Venta {
     idCliente?: number;
     idDireccion?: number;
     nombreCliente?: string;
-    nroVenta?: string;
+    nroVenta?: number;
     fecha?: Date;
     descuento?: number;
     total?: number;
