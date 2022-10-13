@@ -77,6 +77,7 @@ export class AgregarClienteComponent implements OnInit {
       this.clientForm.controls.nombre.markAllAsTouched();
       this.clientForm.controls.apellido.markAllAsTouched();
       this.clientForm.controls.dni.markAllAsTouched();
+      this.clientForm.controls.contacto.markAllAsTouched();
     } else {
       this.makeDTO();
     }

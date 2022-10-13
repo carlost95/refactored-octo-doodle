@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {TokenService} from './service/token.service';
+import { Component, OnInit } from '@angular/core';
+import { TokenService } from './service/token.service';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +15,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.tokenService.getToken()) {
-      console.log(this.tokenService.getToken());
       this.isLogged = true;
     } else {
       this.isLogged = false;

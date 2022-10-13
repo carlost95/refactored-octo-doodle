@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment.prod';
 import { ventas } from '../../environments/global-route';
 import { Observable } from 'rxjs';
+import { VentaConsult } from '../models/Venta';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +21,8 @@ export class VentasService {
     return this.http.get<Venta[]>(this.url);
   }
 
-  getSaleById(id: number): Observable<Venta> {
-    return this.http.get<Venta>(`${this.url}/${id}`);
+  getSaleById(id: number): Observable<VentaConsult> {
+    return this.http.get<VentaConsult>(`${this.url}/${id}`);
   }
 
   saveSale(venta: Venta): Observable<Venta> {

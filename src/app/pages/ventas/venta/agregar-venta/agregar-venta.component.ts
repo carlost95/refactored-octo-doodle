@@ -22,6 +22,7 @@ import { Direccion } from '../../../../models/Direccion';
 import { SnackConfirmComponent } from '../../../../shared/snack-confirm/snack-confirm.component';
 import * as moment from 'moment';
 import { Venta } from '../../../../models/Venta';
+import { cliente } from '../../../../../environments/global-route';
 
 
 @Component({
@@ -78,6 +79,7 @@ export class AgregarVentaComponent implements OnInit {
 
 
   ngOnInit(): void {
+    const id = this.activatedRoute.snapshot.paramMap.get('idVenta');
 
     this.articuloService.obtenerArticulosVenta().subscribe(articulos => {
       this.articulos = articulos;
@@ -88,7 +90,6 @@ export class AgregarVentaComponent implements OnInit {
     this.empresaService.getEnabledEmpresas()
       .subscribe(empresas =>
         this.empresas = empresas, error => this.empresas = []);
-    const id = this.activatedRoute.snapshot.paramMap.get('idVenta');
     if (id) {
       this.CONSULTA = true;
       this.loading = true;
@@ -99,8 +100,38 @@ export class AgregarVentaComponent implements OnInit {
     this.establecerventasFormSinDatos();
   }
 
-  establecerventasFormConDatos(id: string): void {
+  establecerventasFormConDatos(id): void {
+    this.ventaService
+      .getSaleById(id)
+      .pipe(
+        map(venta => {
+          this.ventaForm = this.formBuilder.group({
+            idEmpresa: [{ value: venta.empresa.idEmpresa, disabled: true }, Validators.required],
+            idCliente: [{ value: venta.cliente.idCliente, disabled: true }, Validators.required],
+            idDireccion: [{ value: venta.direccion.idDireccion, disabled: true }, Validators.required],
+            nroVenta: [{ value: venta.nroVenta, disabled: true }, Validators.required],
+            fecha: [{ value: new Date(venta.fechaVenta), disabled: true }, Validators.required],
+            total: [{ value: venta.total, disabled: true }, Validators.required],
+            descuento: [{ value: venta.descuento, disabled: true }, Validators.required],
 
+          });
+          this.cliente = venta.cliente;
+          this.empresa = venta.empresa;
+          this.direcciones = [venta.direccion];
+          this.nroVenta = venta.nroVenta;
+          this.descuento = venta.descuento;
+          this.validateVenta = true;
+          this.establecerDataSource(venta.articulos);
+          if (venta.articulos.length != 0) {
+            this.getTotalCost();
+            this.getTotal();
+            console.log(venta);
+          }
+        }),
+      )
+      .subscribe(arts => {
+        this.loading = false;
+      });
   }
 
   establecerventasFormSinDatos(): void {
@@ -177,7 +208,7 @@ export class AgregarVentaComponent implements OnInit {
 
 
   setCliente(event: any): void {
-    this.cliente = event.option.value;
+    this.cliente = event?.option?.value;
     this.direccionesService
       .getAllEnabledDirectionByIdClient(this.cliente.idCliente)
       .subscribe(direcciones => this.direcciones = direcciones, error => this.direcciones = []);
