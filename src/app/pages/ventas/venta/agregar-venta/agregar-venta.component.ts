@@ -59,6 +59,9 @@ export class AgregarVentaComponent implements OnInit {
   errorInForm: any;
   descuento = 0;
   total = 0;
+  totalAPagar = 0;
+  totalSinDescuento = 0;
+  totalDescontado = 0;
   nroVenta: number = 0;
   articulosVenta: ArticuloVenta[]; //
 
@@ -119,6 +122,10 @@ export class AgregarVentaComponent implements OnInit {
           this.empresa = venta.empresa;
           this.direcciones = [venta.direccion];
           this.validateVenta = true;
+
+          this.totalAPagar = venta.total;
+          this.totalDescontado = venta.descuento * venta.total / (100 - venta.descuento);
+          this.totalSinDescuento = venta.total + this.totalDescontado;
           this.establecerDataSource(venta.articulos);
 
 

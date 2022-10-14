@@ -172,16 +172,16 @@
                 <input autocomplete="off" matInput disabled />{{descuento}}
               </mat-form-field>
               <mat-form-field appearance="legacy" class="col-md-3 col-sm-6" *ngIf="CONSULTA">
-                <mat-label class="mb-2">Total sin Descuento</mat-label>
-                <input autocomplete="off" matInput disabled />{{total|currency}}
+                <mat-label class="mb-2">Total sin descuento</mat-label>
+                <input autocomplete="off" matInput disabled />{{totalSinDescuento|currency}}
               </mat-form-field>
               <mat-form-field appearance="legacy" class="col-md-3 col-sm-6" *ngIf="CONSULTA">
                 <mat-label class="mb-2">Descuento</mat-label>
-                <input autocomplete="off" matInput disabled />{{total*descuento/100|currency}}
+                <input autocomplete="off" matInput disabled />{{totalDescontado|currency}}
               </mat-form-field>
               <mat-form-field class="col-md-3 col-sm-6" appearance="legacy" *ngIf="CONSULTA">
-                <mat-label class="mb-2">Total</mat-label>
-                <input autocomplete="off" matInput disabled />{{total-(total*descuento/100) |currency}}
+                <mat-label class="mb-2">Total a pagar</mat-label>
+                <input autocomplete="off" matInput disabled />{{totalAPagar |currency}}
               </mat-form-field>
             </div>
           </div>
