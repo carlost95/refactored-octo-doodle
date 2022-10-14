@@ -60,6 +60,7 @@ export class AgregarVentaComponent implements OnInit {
   descuento = 0;
   total = 0;
   nroVenta: number = 0;
+  articulosVenta: ArticuloVenta[]; //
 
   displayedColumns = ['codigo', 'nombre', 'cantidad', 'precioUnitario', 'total', 'accion'];
   articuloMensaje = 'No se cargo ningun articulo a la venta';
@@ -113,20 +114,18 @@ export class AgregarVentaComponent implements OnInit {
             fecha: [{ value: new Date(venta.fechaVenta), disabled: true }, Validators.required],
             total: [{ value: venta.total, disabled: true }, Validators.required],
             descuento: [{ value: venta.descuento, disabled: true }, Validators.required],
-
           });
           this.cliente = venta.cliente;
           this.empresa = venta.empresa;
           this.direcciones = [venta.direccion];
-          this.nroVenta = venta.nroVenta;
-          this.descuento = venta.descuento;
           this.validateVenta = true;
           this.establecerDataSource(venta.articulos);
-          if (venta.articulos.length != 0) {
-            this.getTotalCost();
-            this.getTotal();
-            console.log(venta);
-          }
+
+
+
+          this.total = this.ventaForm.controls.total.value;
+          this.descuento = this.ventaForm.controls.descuento.value;
+
         }),
       )
       .subscribe(arts => {
@@ -264,9 +263,24 @@ export class AgregarVentaComponent implements OnInit {
       this.descuento = this.total - (this.getTotalCost() - descuento * this.getTotalCost() / 100);
     }
   }
+  cargarTotal(): number {
+    return this.ventaForm.controls.total.value;
+  }
+  cargarTotalCost(): number {
+    return this.cargarTotal() - this.cargarDescuento();
+  }
+  cargarDescuento() {
+    let totalSinDescuento = (this.total - (this.ventaForm.controls.descuento.value * this.total) / 100)
+    console.log('descuento' + totalSinDescuento);
+
+    return this.total - totalSinDescuento;
+  }
 
   getTotal(): number {
     return (this.total - this.descuento);
+  }
+  getDescuento(): number {
+    return this.descuento;
   }
 
   openSnackBar(msg: string): void {
@@ -313,7 +327,7 @@ export class AgregarVentaComponent implements OnInit {
     venta.articulos = articulos;
 
     this.ventaService.saveSale(venta).subscribe(data => {
-      this.openSnackBar('Venta' + data.nroVenta + ' registrada con exito');
+      this.openSnackBar('Venta registrada con exito');
       this.router.navigate(['/ventas/listar-venta']);
     });
   }
@@ -323,5 +337,4 @@ export class AgregarVentaComponent implements OnInit {
     const date = moment(newdate).add({ hours: _.hour(), minutes: _.minute(), seconds: _.second() });
     return date.toDate();
   }
-  getDateNow() { return moment(new Date()).add({ hours: 0, minutes: 0, seconds: 0 }).toDate(); }
 }

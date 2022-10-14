@@ -8,7 +8,8 @@
           <h4 class="col-md-12 col-sm-12">Datos Cliente</h4>
           <mat-form-field class="col-md-12 col-sm-12">
             <mat-label>DNI</mat-label>
-            <input matInput [matAutocomplete]="auto" formControlName="idCliente" class="inputCursor">
+            <input matInput [matAutocomplete]="auto" formControlName="idCliente" class="inputCursor" *ngIf="!CONSULTA">
+            <input matInput [matAutocomplete]="auto" class="inputCursor" [value]="cliente.dni" disabled *ngIf="CONSULTA">
             <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayCliente" (optionSelected)="setCliente($event)">
               <mat-option *ngFor="let cliente of filteredClient | async" [value]="cliente">
                 {{cliente.apellido}}, {{cliente.nombre}}
@@ -27,9 +28,9 @@
             <input matInput disabled [(ngModel)]="cliente.nombre" [ngModelOptions]="{standalone: true}" />
           </mat-form-field>
           <h4 class="col-md-12 col-sm-12">Datos Direccion</h4>
-          <mat-form-field class="col-md-12 col-sm-12">
+          <mat-form-field class="col-md-12 col-sm-12" [disabled]="!validateClient">
             <mat-label>Direccion</mat-label>
-            <mat-select name="idDireccion" formControlName="idDireccion" autocomplete="off" [disabled]="!validateClient">
+            <mat-select name="idDireccion" formControlName="idDireccion" autocomplete="off">
               <mat-option *ngFor="let direccion of direcciones" [value]="direccion.idDireccion">
                 {{ direccion.calle }} - Nro {{ direccion.numeroCalle}}
               </mat-option>
@@ -46,7 +47,8 @@
           <mat-divider></mat-divider>
           <mat-form-field class="col-md-4 col-sm-12">
             <mat-label>CUIT</mat-label>
-            <input matInput [matAutocomplete]="auto2" formControlName="idEmpresa" class="inputCursor">
+            <input matInput [matAutocomplete]="auto2" [value]="empresa.cuit" class="inputCursor" disabled *ngIf="CONSULTA">
+            <input matInput [matAutocomplete]="auto2" formControlName="idEmpresa" class="inputCursor" *ngIf="!CONSULTA">
             <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete" [displayWith]="displayEmpresa" (optionSelected)="setEmpresa($event)">
               <mat-option *ngFor="let empresa of filterEmpresa | async" [value]="empresa">
                 {{empresa.razonSocial}}
@@ -72,15 +74,15 @@
             <mat-label>Email</mat-label>
             <input matInput disabled [(ngModel)]="empresa.email" [ngModelOptions]="{standalone: true}" />
           </mat-form-field>
-          <div class="col-md-12">
+          <div class="col-md-12 col-sm-12">
             <div class="row d-flex justify-content-between">
               <mat-form-field appearance="legacy" class="col-md-3 col-sm-6" *ngIf="CONSULTA">
-                <mat-label>Fecha</mat-label>
+                <mat-label class="mb-2">Fecha</mat-label>
                 <input autocomplete="off" matInput formControlName="fecha" [matDatepicker]="picker" disabled />
               </mat-form-field>
               <mat-form-field class="col-md-3 col-sm-6" appearance="legacy" *ngIf="CONSULTA">
                 <mat-label class="mb-2">Nro venta</mat-label>
-                <input autocomplete="off" matInput formControlName="nroVenta" [matDatepicker]="picker" disabled />{{nroVenta}}
+                <input autocomplete="off" matInput formControlName="nroVenta" disabled />
               </mat-form-field>
             </div>
           </div>
@@ -102,32 +104,43 @@
             <ng-container matColumnDef="codigo">
               <th mat-header-cell *matHeaderCellDef> Codigo</th>
               <td mat-cell *matCellDef="let row"> {{row.codigoArticulo}} </td>
-              <td mat-footer-cell *matFooterCellDef> % desc.</td>
+              <ng-container *ngIf="!CONSULTA">
+                <td mat-footer-cell *matFooterCellDef> % desc.</td>
+              </ng-container>
             </ng-container>
             <ng-container matColumnDef="nombre">
               <th mat-header-cell *matHeaderCellDef> Nombre</th>
               <td mat-cell *matCellDef="let row"> {{row.nombre| titlecase}} </td>
-              <td mat-footer-cell *matFooterCellDef>
-                <input class="inputDescuento" maxlength="2" type="number" formControlName="descuento" *ngIf="validateVenta" min="0" max="99" OnlyNumber="true" autocomplete="off" (keyup)="aplicarDescuento($event)" />
-              </td>
+              <ng-container *ngIf="!CONSULTA">
+                <td mat-footer-cell *matFooterCellDef>
+                  <input class="inputDescuento" maxlength="2" type="number" formControlName="descuento" *ngIf="validateVenta" min="0" max="99" OnlyNumber="true" autocomplete="off" (keyup)="aplicarDescuento($event)" />
+                </td>
+              </ng-container>
             </ng-container>
             <ng-container matColumnDef="cantidad">
               <th mat-header-cell *matHeaderCellDef> Cantidad</th>
               <td mat-cell *matCellDef="let row">
                 <input placeholder="candidad" matInput required class="my-form-field" [value]="row.cantidad" [disabled]="CONSULTA" min="0" OnlyNumber="true" type="number" (keyup)="actualizarCantidad($event, row.idArticulo)" autocomplete="off" />
               </td>
-              <td mat-footer-cell *matFooterCellDef>{{descuento | currency}}</td>
+              <ng-container *ngIf="!CONSULTA">
+                <td mat-footer-cell *matFooterCellDef>{{getDescuento() | currency}}</td>
+              </ng-container>
             </ng-container>
             <ng-container matColumnDef="precioUnitario">
               <th class="pl-3" mat-header-cell *matHeaderCellDef> Precio</th>
               <td class="pl-3" mat-cell *matCellDef="let row"> {{row.precio | currency}} </td>
-              <td class="pl-3" mat-footer-cell *matFooterCellDef>Total</td>
+
+              <ng-container *ngIf="!CONSULTA">
+                <td class="pl-3" mat-footer-cell *matFooterCellDef>Total</td>
+              </ng-container>
             </ng-container>
 
             <ng-container matColumnDef="total">
               <th mat-header-cell *matHeaderCellDef> Sub-total</th>
               <td mat-cell *matCellDef="let row"> {{row.subTotal | currency}} </td>
-              <td mat-footer-cell *matFooterCellDef> {{getTotalCost() | currency}} </td>
+              <ng-container *ngIf="!CONSULTA">
+                <td mat-footer-cell *matFooterCellDef> {{getTotalCost() | currency}} </td>
+              </ng-container>
             </ng-container>
 
             <ng-container matColumnDef="accion">
@@ -137,18 +150,41 @@
                   <i class="fas fa-trash-alt"></i>
                 </button>
               </td>
-              <td mat-footer-cell *matFooterCellDef>{{getTotal() | currency}} </td>
+              <ng-container *ngIf="!CONSULTA">
+                <td mat-footer-cell *matFooterCellDef>{{getTotal() | currency}} </td>
+              </ng-container>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+            <ng-container *ngIf="!CONSULTA">
+              <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+            </ng-container>
 
             <tr class="mat-row" *matNoDataRow>
               <td class="mat-cell pl-4" colspan="6">No se cargo ningun producto</td>
             </tr>
           </table>
-
+          <div class="col-md-12 col-sm-12 mt-2">
+            <div class="row d-flex justify-content-between">
+              <mat-form-field appearance="legacy" class="col-md-3 col-sm-6" *ngIf="CONSULTA">
+                <mat-label class="mb-2">% Descuento</mat-label>
+                <input autocomplete="off" matInput disabled />{{descuento}}
+              </mat-form-field>
+              <mat-form-field appearance="legacy" class="col-md-3 col-sm-6" *ngIf="CONSULTA">
+                <mat-label class="mb-2">Total sin Descuento</mat-label>
+                <input autocomplete="off" matInput disabled />{{total|currency}}
+              </mat-form-field>
+              <mat-form-field appearance="legacy" class="col-md-3 col-sm-6" *ngIf="CONSULTA">
+                <mat-label class="mb-2">Descuento</mat-label>
+                <input autocomplete="off" matInput disabled />{{total*descuento/100|currency}}
+              </mat-form-field>
+              <mat-form-field class="col-md-3 col-sm-6" appearance="legacy" *ngIf="CONSULTA">
+                <mat-label class="mb-2">Total</mat-label>
+                <input autocomplete="off" matInput disabled />{{total-(total*descuento/100) |currency}}
+              </mat-form-field>
+            </div>
+          </div>
           <div class="col-md-12 col-sm-12 px-3">
             <div class="row mt-2 d-flex justify-content-end">
               <button class="col-md-3 col-sm-12 btn btn-warning my-1 ml-1" (click)="guardar()" *ngIf="!CONSULTA">
