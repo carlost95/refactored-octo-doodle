@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {Router} from '@angular/router';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ventas-component',
@@ -20,7 +20,8 @@ export class VentasComponent {
       this.router.url.includes('/agregar-direccion') ||
       this.router.url.includes('/agregar-remito') ||
       this.router.url.includes('/agregar-cliente') ||
-      this.router.url.includes('/nueva-venta')
+      this.router.url.includes('/agregar-venta') ||
+      this.router.url.includes('/consultar-venta')
     ) {
       return false;
     } else {

@@ -16,8 +16,7 @@ import { TokenService } from '../../../service/token.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { concatMap } from 'rxjs/operators';
 import { CrearDireccionComponent } from './crear-direccion/crear-direccion.component';
-import { ClienteService } from '@app/service/cliente.service';
-import { Cliente } from '@app/models/cliente';
+import { Cliente } from '@models/Cliente';
 
 @Component({
   selector: 'app-direcciones',

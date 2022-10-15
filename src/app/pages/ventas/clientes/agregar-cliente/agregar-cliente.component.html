@@ -29,6 +29,9 @@
     <mat-form-field appearance="legacy" class="w-100">
       <mat-label>Contacto</mat-label>
       <input matInput formControlName="contacto" required autocomplete="off" />
+      <mat-error *ngIf="clientForm.controls.contacto.errors">
+        Contacto es<strong> requerido</strong>
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="legacy" class="w-100">

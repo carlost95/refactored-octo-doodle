@@ -1,10 +1,9 @@
-import { Cliente } from '../../../../models/cliente';
+import { Cliente } from '@models/Cliente';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ClienteService } from '../../../../service/cliente.service';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
-import { cliente } from '../../../../../environments/global-route';
 import { TipoModal } from '../../../../shared/models/tipo-modal.enum';
 import { SnackConfirmComponent } from '../../../../shared/snack-confirm/snack-confirm.component';
 
@@ -78,6 +77,7 @@ export class AgregarClienteComponent implements OnInit {
       this.clientForm.controls.nombre.markAllAsTouched();
       this.clientForm.controls.apellido.markAllAsTouched();
       this.clientForm.controls.dni.markAllAsTouched();
+      this.clientForm.controls.contacto.markAllAsTouched();
     } else {
       this.makeDTO();
     }
