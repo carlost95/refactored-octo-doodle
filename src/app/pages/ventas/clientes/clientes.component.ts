@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Cliente } from '../../../models/cliente';
+import { Cliente } from '@models/Cliente';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AgregarClienteComponent } from './agregar-cliente/agregar-cliente.component';

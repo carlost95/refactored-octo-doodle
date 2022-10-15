@@ -1,9 +1,9 @@
 export class Cliente {
-  idCliente: number;
-  nombre: string;
-  apellido: string;
-  dni: string;
-  contacto: string;
-  email: string;
-  status: boolean;
+  nombre?: string;
+  apellido?: string;
+  dni?: string;
+  idCliente?: number;
+  contacto?: string;
+  email?: string;
+  status?: boolean;
 }

@@ -1,27 +1,27 @@
-import {AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {ProveedoresService} from '@service/proveedores.service';
-import {Proveedor} from '@models/Proveedor';
-import {ArticulosService} from '@service/articulos.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {ArticuloStock} from '@models/articulo-rest';
-import {Pedido} from '@models/pedido';
-import {BuscadorService} from '@shared/helpers/buscador.service';
-import {PedidosService} from '@service/pedidos.service';
-import {SearchComponent} from '@shared/template/search/search.component';
-import {ActivatedRoute, Router} from '@angular/router';
-import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.component';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {map, switchMap} from 'rxjs/operators';
+import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ProveedoresService } from '@service/proveedores.service';
+import { Proveedor } from '@models/Proveedor';
+import { ArticulosService } from '@service/articulos.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { ArticuloStock } from '@models/articulo-rest';
+import { Pedido } from '@models/pedido';
+import { BuscadorService } from '@shared/helpers/buscador.service';
+import { PedidosService } from '@service/pedidos.service';
+import { SearchComponent } from '@shared/template/search/search.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SnackConfirmComponent } from '@shared/snack-confirm/snack-confirm.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { map, switchMap } from 'rxjs/operators';
 import * as moment from 'moment';
 
 @Component({
   selector: 'app-agregar-pedido',
   templateUrl: './agregar-pedido.component.html',
   styleUrls: ['./agregar-pedido.component.css'],
-  encapsulation : ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.None,
 })
 export class AgregarPedidoComponent implements OnInit {
   loading = false;
@@ -35,14 +35,14 @@ export class AgregarPedidoComponent implements OnInit {
     private readonly snackbar: MatSnackBar,
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
-  ){}
+  ) { }
   @ViewChild(SearchComponent) searcher: SearchComponent;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   dataSource: MatTableDataSource<ArticuloStock> = new MatTableDataSource<ArticuloStock>();
   proveedores: Proveedor[] = [];
   pedidoForm: FormGroup;
-  displayedColumns = ['nombre', 'codigoArt', 'stockActual', 'cantidad', 'stockFinal' ];
+  displayedColumns = ['nombre', 'codigoArt', 'stockActual', 'cantidad', 'stockFinal'];
   articuloMessage = 'No se selecciono un proveedor';
   articulos: ArticuloStock[] = [];
   termino = '';
@@ -51,7 +51,7 @@ export class AgregarPedidoComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.activatedRoute.snapshot.paramMap.get('id');
-    if (id){
+    if (id) {
       this.CONSULTA = true;
       this.loading = true;
       this.inicializarPedidoFormConDatos(id);
@@ -76,28 +76,28 @@ export class AgregarPedidoComponent implements OnInit {
     this.pedidoService
       .obtenerPedido(id)
       .pipe(
-        map( pedido => {
+        map(pedido => {
           this.pedidoForm = this.formBuilder.group({
-            nombre: [{value: pedido.nombre, disabled: true}, Validators.required],
-            fecha: [{value: new Date(pedido.fecha), disabled: true}, Validators.required],
-            descripcion: [{value: pedido.descripcion, disabled: true}, null],
-            proveedorId: [{value: pedido.idProveedor, disabled: true}, Validators.required]
+            nombre: [{ value: pedido.nombre, disabled: true }, Validators.required],
+            fecha: [{ value: new Date(pedido.fecha), disabled: true }, Validators.required],
+            descripcion: [{ value: pedido.descripcion, disabled: true }, null],
+            proveedorId: [{ value: pedido.idProveedor, disabled: true }, Validators.required]
           });
-          const articulos = pedido.articulos.map(articulo => ({...articulo, stockFinal: articulo.stockActual + articulo.cantidad}));
+          const articulos = pedido.articulos.map(articulo => ({ ...articulo, stockFinal: articulo.stockActual + articulo.cantidad }));
           this.establecerDataSource(articulos);
           return pedido.idProveedor;
         }),
       )
       .subscribe(arts => {
         this.loading = false;
-      } );
+      });
   }
 
   establecerDataSource(articulos: ArticuloStock[]): void {
     this.dataSource = new MatTableDataSource<ArticuloStock>(articulos);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    if (articulos.length === 0 ){
+    if (articulos.length === 0) {
       this.articuloMessage = 'No se encontraron productos para el proveedor';
     }
   }
@@ -113,7 +113,7 @@ export class AgregarPedidoComponent implements OnInit {
 
   guardar(): void {
 
-    if (this.pedidoForm.invalid){
+    if (this.pedidoForm.invalid) {
       this.pedidoForm.controls.nombre.markAsTouched();
       this.pedidoForm.controls.fecha.markAsTouched();
       this.pedidoForm.controls.proveedorId.markAsTouched();
@@ -126,7 +126,7 @@ export class AgregarPedidoComponent implements OnInit {
 
     pedido.articulos = articulos;
 
-    this.pedidoService.guardar(pedido).subscribe( result => {
+    this.pedidoService.guardar(pedido).subscribe(result => {
       this.router.navigate(['/compras/listar-pedido']);
       this.openSnackBar('Se guardo pedido exitosamente');
     });
@@ -134,16 +134,16 @@ export class AgregarPedidoComponent implements OnInit {
 
   addTimeToDate(newdate): Date {
     const _ = moment();
-    const date = moment(newdate).add({hours: _.hour(), minutes: _.minute() , seconds: _.second()});
+    const date = moment(newdate).add({ hours: _.hour(), minutes: _.minute(), seconds: _.second() });
     return date.toDate();
   }
 
   actualizarCantidad(event: Event, id: number): void {
-    const target = event.target as HTMLInputElement ;
+    const target = event.target as HTMLInputElement;
     const cantidad = Number(target?.value);
     const articulos = this.articulos;
     const articulosUpdated = articulos.map(articulo => {
-      if (articulo.id === id){
+      if (articulo.id === id) {
         return {
           ...articulo,
           cantidad,
