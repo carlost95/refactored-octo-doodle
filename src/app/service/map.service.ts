@@ -1,16 +1,12 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
-  AnySourceData,
-  LngLatBounds,
   LngLatLike,
   Map,
   Marker,
   Popup,
-  Layer
+  AnyLayer
 } from 'mapbox-gl';
-import { Feature } from '../pages/logistica/interfaces/places';
-import { DirectionsApiClient } from '../pages/logistica/api/directionsApiClient';
-import { DirectionsResponse, Route } from '../pages/logistica/interfaces/directions';
+import {Feature} from '../pages/logistica/interfaces/places';
 import _ from 'lodash';
 
 @Injectable({
@@ -18,15 +14,15 @@ import _ from 'lodash';
 })
 
 export class MapService {
-  private map?: Map;
-  private markers: Marker[] = [];
-
-  setMarker(mark: Marker){
-    this.markers.push(mark);
-  }
 
   get isMapReady() {
     return !!this.map;
+  }
+  private map?: Map;
+  private markers: Marker[] = [];
+any;
+  setMarker(mark: Marker) {
+    this.markers.push(mark);
   }
 
   setMap(map: Map) {
@@ -35,7 +31,9 @@ export class MapService {
 
   // TODO: Se define los parametros para inicializar mapa
   flyTo(coords: LngLatLike) {
-    if (!this.isMapReady) { throw new Error('El mapa no esta inicailizado'); }
+    if (!this.isMapReady) {
+      throw new Error('El mapa no esta inicailizado');
+    }
     // TODO: se define en centro del mapa con las coordenadas recibidas
 
     this.map?.flyTo({
@@ -51,12 +49,15 @@ export class MapService {
     });
   }
 
-  updateMarker(coord: any[], color: string) {
+  updateMarker(coord: any[], color: string, label?: string) {
     const mark = this.markers.find(marker => {
       return marker.getLngLat().lng === Number(coord[0]) && marker.getLngLat().lat === Number(coord[1]);
     });
     mark.remove();
-    const marker = new Marker({ color, draggable: false })
+    const popUp = new Popup()
+      .setText(label || '')
+      .addTo(this.map);
+    const marker = new Marker({color, draggable: false})
       .setLngLat([coord[0], coord[1]]);
     const marks = this.markers.filter(markl => {
       return !(markl.getLngLat().lng === Number(coord[0]) && markl.getLngLat().lat === Number(coord[1]));
@@ -64,155 +65,223 @@ export class MapService {
     const result = new Array<any>(marker, marks);
     this.markers = _.flatten(result);
     marker.addTo(this.map);
-    console.log(mark.getElement());
-  }
-
-  // createMarkerFromPlaces(places: Feature[], userLocation: [number, number]) {
-  //   if (!this.map) throw new Error("Mapa no inicializado");
-  //   this.markers.forEach((marker) => marker.remove());
-  //   const newMarkers = [];
-  //   for (const place of places) {
-  //     const [lng, lat] = place.center;
-  //     const popup = new Popup().setHTML(`<h6>${place.text}</h6>
-  //     <span> ${place.place_name}</span>`);
-  //     const newMarker = new Marker()
-  //       .setLngLat([lng, lat])
-  //       .setPopup(popup)
-  //       .addTo(this.map);
-  //     newMarkers.push(newMarker);
-  //   }
-  //   this.markers = newMarkers;
-  //   if (places.length === 0) return;
-
-  //   // Limites del mapa
-  //   const bounds = new LngLatBounds();
-  //   newMarkers.forEach(marker => bounds.extend(marker.getLngLat()));
-  //   bounds.extend(userLocation);
-
-  //   this.map.fitBounds(bounds, {
-  //     padding: 150,
-  //   });
-  // }
-  // getRouteBeetwenPoints(origin: [number, number], destination: [number, number]) {
-  //   this.directionsApi.get<DirectionsResponse>(`/${origin.join(',')};${destination.join(',')}`).subscribe(resp =>
-  //     this.drawPolyline(resp.routes[0]));
-  // }
-
-  // private drawPolyline(route: Route) {
-  //   console.log({ KMs: route.distance / 1000, Duracion: route.duration / 60 });
-  //   if (!this.map) throw new Error("Mapa no inicializado");
-
-  //   const coords = route.geometry.coordinates;
-
-  //   const bounds = new LngLatBounds();
-  //   coords.forEach(([lng, lat]) => { bounds.extend([lng, lat]) });
-
-  //   this.map?.fitBounds(bounds, {
-  //     padding: 150,
-  //   })
-
-  //   const sourceDate: AnySourceData = {
-  //     type: 'geojson',
-  //     data: {
-  //       type: 'FeatureCollection',
-  //       features: [{
-  //         type: 'Feature',
-  //         properties: {},
-  //         geometry: {
-  //           type: 'LineString',
-  //           coordinates: coords
-  //         }
-  //       }],
-  //     }
-  //   }
-  //   if (this.map.getLayer('RouteString')) {
-  //     this.map.removeLayer('RouteString');
-  //     this.map.removeSource('RouteString');
-
-  //   }
-  //   this.map.addSource('RouteString', sourceDate);
-  //   this.map.addLayer({
-  //     id: 'RouteString',
-  //     type: 'line',
-  //     source: 'RouteString',
-  //     layout: {
-  //       "line-cap": "round",
-  //       "line-join": "round"
-  //     },
-  //     paint: {
-  //       "line-color": "green",
-  //       "line-width": 3
-  //     }
-  //   });
-  // }
-  drawRoute(ruta: any) {
-    const data = ruta.routes[0];
-    const route = data.geometry.coordinates;
-    const geojson = {
-      type: 'Feature',
-      properties: {
-        gradient: -7.304883803013038
-      },
-      geometry: {
-        type: 'LineString',
-        coordinates: route
-      }
-    };
-    // if the route already exists on the map, we'll reset it using setData
-    if (this.map.getSource('route')) {
-      this.map.getSource('route');
-    }
-    // otherwise, we'll make a new request
-    else {
-      this.map.addLayer({
-        id: 'route',
-        type: 'line',
-        source: {
-          type: 'geojson',
-          data: geojson
-        },
-        layout: {
-          'line-join': 'round',
-          'line-cap': 'round',
-        },
-        paint: {
-          'line-color': [
-            'interpolate',
-            ['linear'],
-            ['get', 'gradient'],
-            0,
-            'hsl(241, 100%, 65%)',
-            5,
-            'hsl(197, 100%, 65%)',
-            10,
-            'hsl(125, 100%, 65%)',
-            15,
-            'hsl(59, 100%, 65%)',
-            20,
-            'hsl(0, 100%, 65%)',
-          ],
-          'line-width': 5,
-          'line-opacity': 0.75,
-        },
-
+    if (this.map.getSource('points')) {
+      const source = this.map.getSource('points');
+      const layer: AnyLayer = this.map.getLayer('points');
+    } else {
+      this.map.addSource('points', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: [
+            {
+// feature for Mapbox DC
+              type: 'Feature',
+              geometry: {
+                type: 'Point',
+                coordinates: coord
+              },
+              properties: {
+                title: '1',
+              }
+            },
+          ]
+        }
       });
       this.map.addLayer({
-        id: 'directions',
+        id: 'points',
         type: 'symbol',
-        source: {
-          type: 'geojson',
-          data: geojson
-        },
-        paint: {},
+        source: 'points',
         layout: {
-          'symbol-placement': 'line',
-          'icon-image': 'car-15',
-          'icon-rotate': 90,
-          'icon-rotation-alignment': 'map',
-          'icon-allow-overlap': true,
-          'icon-ignore-placement': true
+// get the title name from the source's "title" property
+          'text-field': ['get', 'title'],
+          'text-font': [
+            'Open Sans Semibold',
+            'Arial Unicode MS Bold'
+          ],
+          'text-offset': [0, 1.25],
+          'text-anchor': 'top'
         }
       });
     }
   }
+
+  updateMarkers(ruta: any[]): void {
+    const coordenadas = ruta.map(({latitud, longitud}) => ({latitud, longitud}));
+    console.log(coordenadas);
+    const marcadoresAEliminar = this.markers.filter(marcador => this.marcadorCoincidenteConCoordenadas(marcador, coordenadas));
+    const marcadoresAConservar = this.markers.filter(marcador => this.marcadoresNoCoincidentesConCoordenadas(marcador, coordenadas));
+    marcadoresAEliminar.forEach(marcador => marcador.remove());
+    const color = '#2aa532';
+    const marcadoresACrear = marcadoresAEliminar.map(marcador => {
+      const nuevoMarcador = new Marker({color, draggable: false});
+      const coord = [marcador.getLngLat().lng, marcador.getLngLat().lat];
+      nuevoMarcador.setLngLat(coord);
+      return nuevoMarcador;
+    });
+    const marcadoresLayer = _.flatten(new Array<any>(marcadoresACrear, marcadoresAConservar));
+
+    marcadoresLayer.forEach(marcador => marcador.addTo(this.map));
+
+
+    this.map.addSource('points', {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: []
+      }
+    });
+    this.map.addLayer({
+      id: 'points',
+      type: 'symbol',
+      source: 'points',
+      layout: {
+        'text-field': ['get', 'title'],
+        'text-font': [
+          'Open Sans Semibold',
+          'Arial Unicode MS Bold'
+        ],
+        'text-offset': [0, 1.25],
+        'text-anchor': 'top'
+      }
+    });
+  }
+
+  marcadorCoincidenteConCoordenadas(marcador, coordenadas: any[]): number {
+    return coordenadas.findIndex(coordenada => marcador.getLngLat().lng === Number(coordenada.longitud)
+      && marcador.getLngLat().lat === Number(coordenada.latitud));
+  }
+
+  marcadoresNoCoincidentesConCoordenadas(marcador, coordenadas: any[]): number {
+    return coordenadas.findIndex(({latitud, longitud}) => !(marcador.getLngLat().lng === Number(longitud)
+      && marcador.getLngLat().lat === Number(latitud)));
+  }
+
+  configuracionDeLayerParaCoordenadas(marcadores: any[]): any{
+    const features = marcadores.map((marcador, index) => ({
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [marcador.getLngLat().lng, marcador.getLngLat().lat]
+      },
+      properties: {
+        title: (index === 0 ? 'Inicio' : `${index}`),
+      }
+    }));
+    console.log(features);
+    return features;
+  }
+
+  drawRoute(ruta: any): void {
+    const coordenadas = ruta.routes[0].geometry.coordinates;
+    const waypoints = ruta.waypoints.map(w => w.location);
+    const indices: number[] = waypoints.map(w => coordenadas.findIndex(c => w[0] === c[0] && w[1] === c[1]));
+    const tramos = [];
+    indices.reduce((acc, indice, i) => {
+      if (i === indices.length - 1) {
+        tramos.push(coordenadas.slice(acc));
+      } else {
+        tramos.push(coordenadas.slice(acc, indice));
+        return indice;
+      }
+    });
+    const geojson = this.configuracionDeTramos(tramos, coordenadas);
+
+    if (this.map.getSource('route')) { } {
+      this.map.getSource('route');
+    } else {
+      this.map.addSource('route', {
+        type: 'geojson',
+        data: geojson,
+      });
+      this.agregarLayerRuta();
+      this.agregarLayerAuto(geojson);
+    }
+  }
+
+configuracionDeTramos(tramos: any[], coordenadas): any {
+    const gradientes = [0, 5, 10, 15, 20, 30];
+
+    const configuracion = {
+      type: 'FeatureCollection',
+      features: [{
+        type: 'Feature',
+        properties: {
+          gradient: gradientes[0]
+        },
+        geometry: {
+          type: 'LineString',
+          coordinates: coordenadas
+        }
+      }]
+    };
+
+    tramos.forEach((tramo, index) => {
+      const gradient = gradientes[Number(index % gradientes.length)];
+      configuracion.features.push({
+        type: 'Feature',
+        properties: {
+          gradient
+        },
+        geometry: {
+          type: 'LineString',
+          coordinates: tramo
+        }
+      });
+    });
+
+    return configuracion;
+  }
+
+agregarLayerRuta(): void {
+    this.map.addLayer({
+      id: 'route',
+      type: 'line',
+      source: 'route',
+      layout: {
+        'line-join': 'miter',
+        'line-cap': 'butt'
+      },
+      paint: {
+        'line-width': 3,
+        'line-color': [
+          'interpolate',
+          ['linear'],
+          ['get', 'gradient'],
+          0,
+          'hsl(241,80%,64%)',
+          5,
+          'hsl(124,59%,41%)',
+          10,
+          'hsl(0, 100%, 65%)',
+          15,
+          'hsl(197,82%,32%)',
+          20,
+          'hsl(34,100%,51%)',
+          30,
+          'hsl(284,51%,63%)'
+        ]
+      }
+    });
+  };
+
+agregarLayerAuto(data): void {
+    this.map.addLayer({
+      id: 'directions',
+      type: 'symbol',
+      source: {
+        type: 'geojson',
+        data
+      },
+      paint: {},
+      layout: {
+        'symbol-placement': 'line',
+        'icon-image': 'car-15',
+        'icon-rotate': -90,
+        'icon-rotation-alignment': 'map',
+        'icon-allow-overlap': true,
+        'icon-ignore-placement': true
+      }
+    });
+  };
 }

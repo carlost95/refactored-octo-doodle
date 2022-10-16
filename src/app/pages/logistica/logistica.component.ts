@@ -30,11 +30,12 @@ export class LogisticaComponent implements OnInit {
     this.mapService.updateMarker([parada.longitud, parada.latitud], '#ffc107');
   }
 
-  trazarRuta($event: MouseEvent) {
+  trazarRuta() {
     const mapa = new Map(this.paradasAVisitar.map((object, index) => {
       return [index, object];
     }));
     const paradas = this.paradasAVisitar.map( (parada, index) => ({...parada, numero: index }));
+    console.log(paradas)
     this.logisticaService.getDistancesFromMapbox(paradas).subscribe(result => {
       console.log('distances from mapbox')
       console.log(result)
@@ -43,7 +44,7 @@ export class LogisticaComponent implements OnInit {
         const ruta = parada.map(p => mapa.get(p));
         this.logisticaService.getRouteFromMapbox(ruta).subscribe(r => {
           this.mapService.drawRoute(r)
-          console.log(r)
+          this.mapService.updateMarkers(ruta.slice(0, -1))
         });
         console.log(mapa)
         console.log(ruta);
