@@ -42,6 +42,7 @@ export class LogisticaComponent implements OnInit {
       const distancias = {distancia : result.distances };
       this.logisticaService.obtenerRutaYDistanciaRecorrida(distancias).subscribe(({parada, distancia}) => {
         const ruta = parada.map(p => mapa.get(p));
+        console.log(ruta)
         this.logisticaService.getRouteFromMapbox(ruta).subscribe(r => {
           this.mapService.drawRoute(r)
           this.mapService.updateMarkers(ruta.slice(0, -1))

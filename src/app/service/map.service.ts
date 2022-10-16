@@ -108,27 +108,29 @@ any;
 
   updateMarkers(ruta: any[]): void {
     const coordenadas = ruta.map(({latitud, longitud}) => ({latitud, longitud}));
-    console.log(coordenadas);
+    console.error(coordenadas)
     const marcadoresAEliminar = this.markers.filter(marcador => this.marcadorCoincidenteConCoordenadas(marcador, coordenadas));
-    const marcadoresAConservar = this.markers.filter(marcador => this.marcadoresNoCoincidentesConCoordenadas(marcador, coordenadas));
+    const marcadoresAConservar = this.markers.filter(marcador => !this.marcadorCoincidenteConCoordenadas(marcador, coordenadas));
     marcadoresAEliminar.forEach(marcador => marcador.remove());
-    const color = '#2aa532';
-    const marcadoresACrear = marcadoresAEliminar.map(marcador => {
+    const color = '#ffc107';
+    const marcadoresACrear = coordenadas.map(({latitud, longitud}) => {
       const nuevoMarcador = new Marker({color, draggable: false});
-      const coord = [marcador.getLngLat().lng, marcador.getLngLat().lat];
-      nuevoMarcador.setLngLat(coord);
+      nuevoMarcador.setLngLat([longitud, latitud]);
       return nuevoMarcador;
     });
     const marcadoresLayer = _.flatten(new Array<any>(marcadoresACrear, marcadoresAConservar));
 
     marcadoresLayer.forEach(marcador => marcador.addTo(this.map));
-
-
+    const features = this.configuracionDeLayerParaCoordenadas(marcadoresACrear);
+    if (this.map.getLayer('points')){
+      this.map.removeLayer('points');
+      this.map.removeSource('points')
+    }
     this.map.addSource('points', {
       type: 'geojson',
       data: {
         type: 'FeatureCollection',
-        features: []
+        features
       }
     });
     this.map.addLayer({
@@ -147,15 +149,11 @@ any;
     });
   }
 
-  marcadorCoincidenteConCoordenadas(marcador, coordenadas: any[]): number {
-    return coordenadas.findIndex(coordenada => marcador.getLngLat().lng === Number(coordenada.longitud)
-      && marcador.getLngLat().lat === Number(coordenada.latitud));
+  marcadorCoincidenteConCoordenadas(marcador, coordenadas: any[]): any {
+    const {lat, lng} =  marcador.getLngLat()
+    return coordenadas.find(coordenada => lng === Number(coordenada.longitud) && lat === Number(coordenada.latitud));
   }
 
-  marcadoresNoCoincidentesConCoordenadas(marcador, coordenadas: any[]): number {
-    return coordenadas.findIndex(({latitud, longitud}) => !(marcador.getLngLat().lng === Number(longitud)
-      && marcador.getLngLat().lat === Number(latitud)));
-  }
 
   configuracionDeLayerParaCoordenadas(marcadores: any[]): any{
     const features = marcadores.map((marcador, index) => ({
@@ -187,7 +185,7 @@ any;
     });
     const geojson = this.configuracionDeTramos(tramos, coordenadas);
 
-    if (this.map.getSource('route')) { } {
+    if (this.map.getSource('route'))  {
       this.map.getSource('route');
     } else {
       this.map.addSource('route', {
@@ -263,7 +261,7 @@ agregarLayerRuta(): void {
         ]
       }
     });
-  };
+  }
 
 agregarLayerAuto(data): void {
     this.map.addLayer({
@@ -283,5 +281,5 @@ agregarLayerAuto(data): void {
         'icon-ignore-placement': true
       }
     });
-  };
+  }
 }

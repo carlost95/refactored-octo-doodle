@@ -3,17 +3,17 @@ export const distances = {
   distances: [
     [
       0,
-      5147.8,
-      1121.4
+      2305.2,
+      5147.8
+    ],
+    [
+      1861.3,
+      0,
+      3229.2
     ],
     [
       5401.8,
-      0,
-      4515.4
-    ],
-    [
-      1742.1,
-      3843.2,
+      4002.3,
       0
     ]
   ],
@@ -27,19 +27,19 @@ export const distances = {
       ]
     },
     {
+      distance: 8.843507891,
+      name: 'Juan XXIII',
+      location: [
+        -67.506482,
+        -29.156509
+      ]
+    },
+    {
       distance: 7.932747828,
       name: 'Manzana O',
       location: [
         -67.527528,
         -29.142907
-      ]
-    },
-    {
-      distance: 79.923119532,
-      name: '20 de Junio',
-      location: [
-        -67.501441,
-        -29.156027
       ]
     }
   ],
@@ -53,19 +53,19 @@ export const distances = {
       ]
     },
     {
+      distance: 8.843507891,
+      name: 'Juan XXIII',
+      location: [
+        -67.506482,
+        -29.156509
+      ]
+    },
+    {
       distance: 7.932747828,
       name: 'Manzana O',
       location: [
         -67.527528,
         -29.142907
-      ]
-    },
-    {
-      distance: 79.923119532,
-      name: '20 de Junio',
-      location: [
-        -67.501441,
-        -29.156027
       ]
     }
   ]
@@ -76,9 +76,9 @@ export const routes = {
     {
       country_crossed: false,
       weight_name: 'auto',
-      weight: 1742.353,
-      duration: 1594.36,
-      distance: 11459.877,
+      weight: 1781.013,
+      duration: 1627.623,
+      distance: 11517.688,
       legs: [
         {
           via_waypoints: [],
@@ -88,11 +88,11 @@ export const routes = {
               iso_3166_1: 'AR'
             }
           ],
-          weight: 278.699,
-          duration: 230.184,
+          weight: 427.844,
+          duration: 360.116,
           steps: [],
-          distance: 1121.819,
-          summary: 'Castro y Bazán, Antonia Iribarren'
+          distance: 1794.379,
+          summary: 'Antonia Iribarren, Juan XXIII'
         },
         {
           via_waypoints: [],
@@ -102,11 +102,11 @@ export const routes = {
               iso_3166_1: 'AR'
             }
           ],
-          weight: 614.212,
-          duration: 562.018,
+          weight: 503.726,
+          duration: 465.349,
           steps: [],
-          distance: 3846.896,
-          summary: 'Maestra Celina Mercado, Ruta Provincial 14'
+          distance: 3232.148,
+          summary: 'Domingo Faustino Sarmiento, Ruta Provincial 14'
         },
         {
           via_waypoints: [],
@@ -138,24 +138,16 @@ export const routes = {
             -29.155952
           ],
           [
-            -67.500209,
-            -29.156466
+            -67.501197,
+            -29.158475
           ],
           [
-            -67.501441,
-            -29.156028
+            -67.506482,
+            -29.156509
           ],
           [
-            -67.503398,
-            -29.15531
-          ],
-          [
-            -67.503737,
-            -29.154568
-          ],
-          [
-            -67.507058,
-            -29.156387
+            -67.506924,
+            -29.156331
           ],
           [
             -67.510239,
@@ -332,11 +324,11 @@ export const routes = {
       ]
     },
     {
-      distance: 80.304,
-      name: '20 de Junio',
+      distance: 8.871,
+      name: 'Juan XXIII',
       location: [
-        -67.501441,
-        -29.156028
+        -67.506482,
+        -29.156509
       ]
     },
     {
@@ -357,5 +349,5 @@ export const routes = {
     }
   ],
   code: 'Ok',
-  uuid: 'Ppep9FRxIfupXM0GMO87QwbZmVRb1s4D1if_1F6VzhLNmDLJjZ7o4g=='
+  uuid: 'OFHtQpcbx9km-iaEwLrkhQ0-snQV6J9MWHCOcDQN_lK2HEh68JHCBQ=='
 };
