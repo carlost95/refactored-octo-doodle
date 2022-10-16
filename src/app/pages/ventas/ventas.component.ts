@@ -16,6 +16,7 @@ export class VentasComponent {
       this.router.url.includes('/direcciones') ||
       this.router.url.includes('/listar-venta') ||
       this.router.url.includes('/listar-remitos') ||
+      this.router.url.includes('/consultar-remito') ||
       this.router.url.includes('/modificar-cliente') ||
       this.router.url.includes('/agregar-direccion') ||
       this.router.url.includes('/agregar-remito') ||

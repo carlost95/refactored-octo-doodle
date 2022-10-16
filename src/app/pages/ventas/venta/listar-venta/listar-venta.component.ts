@@ -78,9 +78,8 @@ export class ListarVentaComponent implements OnInit {
   }
 
   filtrarVenta(value: string): void {
-    const TERMINO = 'nombreCliente';
-    // TODO: remove por valores de ventas
-    const ventas = this.buscadorService.buscarTermino(
+    const TERMINO = 'nroVenta';
+    const ventas = this.buscadorService.buscarTerminoNumber(
       this.ventas,
       TERMINO,
       value

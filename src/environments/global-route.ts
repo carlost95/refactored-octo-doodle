@@ -82,3 +82,8 @@ export const empresa = {
   status: '/status',
   active: '/active',
 };
+export const remito = {
+  path: '/remitos',
+  status: '/status',
+  active: '/active',
+};
