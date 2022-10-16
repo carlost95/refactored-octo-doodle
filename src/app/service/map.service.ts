@@ -5,12 +5,13 @@ import {
   LngLatLike,
   Map,
   Marker,
-  Popup
+  Popup,
+  Layer
 } from 'mapbox-gl';
 import { Feature } from '../pages/logistica/interfaces/places';
 import { DirectionsApiClient } from '../pages/logistica/api/directionsApiClient';
 import { DirectionsResponse, Route } from '../pages/logistica/interfaces/directions';
-
+import _ from 'lodash';
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +21,10 @@ export class MapService {
   private map?: Map;
   private markers: Marker[] = [];
 
+  setMarker(mark: Marker){
+    this.markers.push(mark);
+  }
+
   get isMapReady() {
     return !!this.map;
   }
@@ -28,15 +33,38 @@ export class MapService {
     this.map = map;
   }
 
-  //TODO: Se define los parametros para inicializar mapa
+  // TODO: Se define los parametros para inicializar mapa
   flyTo(coords: LngLatLike) {
-    if (!this.isMapReady) throw new Error('El mapa no esta inicailizado');
+    if (!this.isMapReady) { throw new Error('El mapa no esta inicailizado'); }
     // TODO: se define en centro del mapa con las coordenadas recibidas
 
     this.map?.flyTo({
       zoom: 14,
       center: coords,
     });
+  }
+
+  addMarker(coord: any[]) {
+    const mark = this.markers.find(marker => {
+      console.log(marker.getLngLat());
+      return marker.getLngLat().lng === Number(coord[0]) && marker.getLngLat().lat === Number(coord[1]);
+    });
+  }
+
+  updateMarker(coord: any[], color: string) {
+    const mark = this.markers.find(marker => {
+      return marker.getLngLat().lng === Number(coord[0]) && marker.getLngLat().lat === Number(coord[1]);
+    });
+    mark.remove();
+    const marker = new Marker({ color, draggable: false })
+      .setLngLat([coord[0], coord[1]]);
+    const marks = this.markers.filter(markl => {
+      return !(markl.getLngLat().lng === Number(coord[0]) && markl.getLngLat().lat === Number(coord[1]));
+    });
+    const result = new Array<any>(marker, marks);
+    this.markers = _.flatten(result);
+    marker.addTo(this.map);
+    console.log(mark.getElement());
   }
 
   // createMarkerFromPlaces(places: Feature[], userLocation: [number, number]) {
@@ -117,4 +145,74 @@ export class MapService {
   //     }
   //   });
   // }
+  drawRoute(ruta: any) {
+    const data = ruta.routes[0];
+    const route = data.geometry.coordinates;
+    const geojson = {
+      type: 'Feature',
+      properties: {
+        gradient: -7.304883803013038
+      },
+      geometry: {
+        type: 'LineString',
+        coordinates: route
+      }
+    };
+    // if the route already exists on the map, we'll reset it using setData
+    if (this.map.getSource('route')) {
+      this.map.getSource('route');
+    }
+    // otherwise, we'll make a new request
+    else {
+      this.map.addLayer({
+        id: 'route',
+        type: 'line',
+        source: {
+          type: 'geojson',
+          data: geojson
+        },
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round',
+        },
+        paint: {
+          'line-color': [
+            'interpolate',
+            ['linear'],
+            ['get', 'gradient'],
+            0,
+            'hsl(241, 100%, 65%)',
+            5,
+            'hsl(197, 100%, 65%)',
+            10,
+            'hsl(125, 100%, 65%)',
+            15,
+            'hsl(59, 100%, 65%)',
+            20,
+            'hsl(0, 100%, 65%)',
+          ],
+          'line-width': 5,
+          'line-opacity': 0.75,
+        },
+
+      });
+      this.map.addLayer({
+        id: 'directions',
+        type: 'symbol',
+        source: {
+          type: 'geojson',
+          data: geojson
+        },
+        paint: {},
+        layout: {
+          'symbol-placement': 'line',
+          'icon-image': 'car-15',
+          'icon-rotate': 90,
+          'icon-rotation-alignment': 'map',
+          'icon-allow-overlap': true,
+          'icon-ignore-placement': true
+        }
+      });
+    }
+  }
 }
