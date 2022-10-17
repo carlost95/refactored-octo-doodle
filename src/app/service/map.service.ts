@@ -54,9 +54,6 @@ any;
       return marker.getLngLat().lng === Number(coord[0]) && marker.getLngLat().lat === Number(coord[1]);
     });
     mark.remove();
-    const popUp = new Popup()
-      .setText(label || '')
-      .addTo(this.map);
     const marker = new Marker({color, draggable: false})
       .setLngLat([coord[0], coord[1]]);
     const marks = this.markers.filter(markl => {
@@ -65,45 +62,6 @@ any;
     const result = new Array<any>(marker, marks);
     this.markers = _.flatten(result);
     marker.addTo(this.map);
-    if (this.map.getSource('points')) {
-      const source = this.map.getSource('points');
-      const layer: AnyLayer = this.map.getLayer('points');
-    } else {
-      this.map.addSource('points', {
-        type: 'geojson',
-        data: {
-          type: 'FeatureCollection',
-          features: [
-            {
-// feature for Mapbox DC
-              type: 'Feature',
-              geometry: {
-                type: 'Point',
-                coordinates: coord
-              },
-              properties: {
-                title: '1',
-              }
-            },
-          ]
-        }
-      });
-      this.map.addLayer({
-        id: 'points',
-        type: 'symbol',
-        source: 'points',
-        layout: {
-// get the title name from the source's "title" property
-          'text-field': ['get', 'title'],
-          'text-font': [
-            'Open Sans Semibold',
-            'Arial Unicode MS Bold'
-          ],
-          'text-offset': [0, 1.25],
-          'text-anchor': 'top'
-        }
-      });
-    }
   }
 
   updateMarkers(ruta: any[]): void {
