@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../../environments/environment.prod';
-import {empresa, logistica, mapbox} from '../../environments/global-route';
-import {Observable, of} from 'rxjs';
-import {distances, routes} from './mock.data';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment.prod';
+import { empresa, logistica, mapbox } from '../../environments/global-route';
+import { Observable, of } from 'rxjs';
+import { distances, routes } from './mock.data';
 
 @Injectable({
   providedIn: 'root'
@@ -25,18 +25,18 @@ export class LogisticaService {
 
 
   getDistancesFromMapbox(paradasAVisitar: any[]): Observable<any> {
-    const locations = paradasAVisitar.map( ({latitud, longitud}) => ({latitud, longitud}));
+    const locations = paradasAVisitar.map(({ latitud, longitud }) => ({ latitud, longitud }));
     const urlLocations = this.generateUrlLocations(locations);
     const curbs = paradasAVisitar.map(parada => 'curb;').join('').slice(0, -1);
-    // return this.http.get<any>(`${this.mapboxMatrixUrl}/${urlLocations}`, {
-    //   params: {
-    //     approaches: curbs,
-    //     annotations: 'distance',
-    //     access_token: environment.apikey
-    //   }
-    // })
+    return this.http.get<any>(`${this.mapboxMatrixUrl}/${urlLocations}`, {
+      params: {
+        approaches: curbs,
+        annotations: 'distance',
+        access_token: environment.apikey
+      }
+    })
 
-    return of(distances);
+    // return of(distances);
   }
 
   generateUrlLocations(locations: any[]) {
@@ -46,22 +46,22 @@ export class LogisticaService {
     }, '');
   }
 
-  obtenerRutaYDistanciaRecorrida(matrixDistancia: any){
+  obtenerRutaYDistanciaRecorrida(matrixDistancia: any) {
     return this.http.post<any>(this.url, matrixDistancia);
   }
 
   getRouteFromMapbox(ruta: any[]): Observable<any> {
-    const locations = ruta.map(({latitud, longitud}) => ({latitud, longitud}));
+    const locations = ruta.map(({ latitud, longitud }) => ({ latitud, longitud }));
     const urlLocations = this.generateUrlLocations(locations);
-    // return this.http.get<any>(`${this.mapboxDirectionsUrl}/${urlLocations}`, {
-    //   params: {
-    //     geometries: 'geojson',
-    //     language: 'es',
-    //     overview: 'simplified',
-    //     access_token: environment.apikey
-    //   }
-    // });
-    return of(routes)
+    return this.http.get<any>(`${this.mapboxDirectionsUrl}/${urlLocations}`, {
+      params: {
+        geometries: 'geojson',
+        language: 'es',
+        overview: 'simplified',
+        access_token: environment.apikey
+      }
+    });
+    // return of(routes)
   }
 
 
