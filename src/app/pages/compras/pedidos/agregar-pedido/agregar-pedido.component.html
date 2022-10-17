@@ -1,5 +1,7 @@
 <div class="proveedor__container card p-2 " *ngIf="!loading">
-  <template-header backRoute="/compras/listar-pedido" title="Agregar Pedido" class="marginHeader"></template-header>
+  <template-header backRoute="/compras/listar-pedido" class="marginHeader" title={{titulo}}>
+
+  </template-header>
   <form class="p-3" [formGroup]="pedidoForm">
     <section class="row">
       <div class="col-md-6">

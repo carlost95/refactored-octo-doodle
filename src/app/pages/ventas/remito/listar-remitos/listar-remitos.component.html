@@ -13,6 +13,13 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Direccion </th>
         <td mat-cell *matCellDef="let row"> {{row.direccion.calle}}-{{row.direccion.numeroCalle}}</td>
       </ng-container>
+      <ng-container matColumnDef="entregado">
+        <th mat-header-cell *matHeaderCellDef> Entregado</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-slide-toggle [checked]="row.entregado" (click)="showModal(row)" color="primary">
+          </mat-slide-toggle>
+        </td>
+      </ng-container>
       <ng-container matColumnDef="fecha">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
         <td mat-cell *matCellDef="let row"> {{row.fechaRemito | date: 'short':'+0000'}} </td>

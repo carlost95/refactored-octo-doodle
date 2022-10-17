@@ -1,5 +1,5 @@
 <div class="container-fluid container-venta" *ngIf="!loading">
-  <template-header backRoute="/ventas/listar-venta" title="Nueva venta">
+  <template-header backRoute="/ventas/listar-venta" title={{titulo}}>
   </template-header>
   <form [formGroup]="ventaForm" *ngIf="ventaForm" class="p-3 ">
     <div class="row">

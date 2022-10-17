@@ -5,11 +5,11 @@ import { Cliente } from './Cliente';
 
 export class Remito {
     idRemito?: number;
-    empresa?: Empresa;;
     cliente?: Cliente;
     direccion?: Direccion;
     nroRemito?: number;
-    fechaVenta?: Date;
+    fechaRemito?: Date;
+    entregado?: boolean;
 }
 export class RemitoConsult {
     idRemito?: number;

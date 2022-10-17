@@ -63,7 +63,8 @@ export class AgregarVentaComponent implements OnInit {
   totalSinDescuento = 0;
   totalDescontado = 0;
   nroVenta: number = 0;
-  articulosVenta: ArticuloVenta[]; //
+  articulosVenta: ArticuloVenta[];
+  titulo = '';
 
   displayedColumns = ['codigo', 'nombre', 'cantidad', 'precioUnitario', 'total', 'accion'];
   articuloMensaje = 'No se cargo ningun articulo a la venta';
@@ -105,6 +106,7 @@ export class AgregarVentaComponent implements OnInit {
   }
 
   establecerventasFormConDatos(id): void {
+    this.titulo = 'Consulta de Venta'
     this.ventaService
       .getSaleById(id)
       .pipe(
@@ -141,6 +143,8 @@ export class AgregarVentaComponent implements OnInit {
   }
 
   establecerventasFormSinDatos(): void {
+    this.titulo = 'Nueva venta'
+
     this.ventaForm = this.formBuilder.group({
       idEmpresa: ['', Validators.required],
       idCliente: ['', Validators.required],

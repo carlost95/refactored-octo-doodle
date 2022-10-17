@@ -47,6 +47,7 @@ export class AgregarPedidoComponent implements OnInit {
   articulos: ArticuloStock[] = [];
   termino = '';
   CONSULTA = false;
+  titulo = "";
 
 
   ngOnInit(): void {
@@ -64,6 +65,7 @@ export class AgregarPedidoComponent implements OnInit {
   }
 
   inicializarPedidoFormSinDatos(): void {
+    this.titulo = "Nuevo pedido";
     this.pedidoForm = this.formBuilder.group({
       nombre: ['', Validators.required],
       fecha: ['', Validators.required],
@@ -73,6 +75,8 @@ export class AgregarPedidoComponent implements OnInit {
   }
 
   inicializarPedidoFormConDatos(id): void {
+    this.titulo = "Consulta de pedido";
+
     this.pedidoService
       .obtenerPedido(id)
       .pipe(
