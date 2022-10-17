@@ -1,3 +1,21 @@
-<!-- <app-mapa></app-mapa> -->
-<app-screen-map></app-screen-map>
-<router-outlet></router-outlet>
+<div class="d-flex flex-row justify-content-between">
+  <section class="col-md-3 d-flex flex-column justify-content-between scrollable view ">
+    <div class="d-flex flex-column justify-content-between scrollable view ">
+      <app-card-parada
+        class="w-100 mb-2"
+        (agregarParada)="agregarParada($event)"
+        [parada]="parada"
+        *ngFor="let parada of paradas">
+      </app-card-parada>
+    </div>
+    <button class="btn btn-warning mt-3" (click)="trazarRuta()">Trazar Ruta</button>
+  </section>
+  <section class="d-flex justify-content-center map">
+    <h1 class="col-md-12 p-0" *ngIf="!isUserLocationReady; else mapReady">Loading</h1>
+    <ng-template #mapReady>
+      <app-view-map class="col-md-12" [draggable]="false">
+      </app-view-map>
+    </ng-template>
+  </section>
+</div>
+
