@@ -21,9 +21,9 @@ export class SubMenuComponent implements OnInit {
       ruta: 'listar-remitos',
       label: 'remitos',
       icon: 'remito',
-    },
+    }
   ];
-  constructor() {}
+  constructor() { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 }

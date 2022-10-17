@@ -82,3 +82,18 @@ export const empresa = {
   status: '/status',
   active: '/active',
 };
+
+export const logistica = {
+  path: '/logistica',
+};
+
+export const mapbox = {
+  matrix: 'directions-matrix/v1/mapbox/driving',
+  directions: 'directions/v5/mapbox/driving',
+}
+
+export const remito = {
+  path: '/remitos',
+  status: '/status',
+  active: '/active',
+};

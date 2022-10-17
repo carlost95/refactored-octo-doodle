@@ -27,12 +27,20 @@ export class ArticuloStock {
   cantidad?: number;
   stockFinal?: number;
 }
-
+// TODO: agregar el stck al articulo venta
 export class ArticuloVenta {
   idArticulo?: number;
   nombre?: string;
   codigoArticulo?: string;
   cantidad?: number;
   precio?: number;
+  stock?: number;
   subTotal?: number;
+}
+
+export class ArticuloRemito {
+  idArticulo?: number;
+  codigoArticulo?: string;
+  nombre?: string;
+  cantidad?: number;
 }
