@@ -64,7 +64,7 @@ export class AgregarVentaComponent implements OnInit {
   totalDescontado = 0;
   nroVenta: number = 0;
   articulosVenta: ArticuloVenta[];
-  titulo = '';
+  titulo = 'cambiar estado de remito';
 
   displayedColumns = ['codigo', 'nombre', 'cantidad', 'precioUnitario', 'total', 'accion'];
   articuloMensaje = 'No se cargo ningun articulo a la venta';

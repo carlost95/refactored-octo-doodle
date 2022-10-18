@@ -24,6 +24,7 @@ import { MarcaDropdownComponent } from './marca/dropdown/marca-dropdown.componen
 import { ProveedorDropdownComponent } from './proveedor/dropdown/proveedor-dropdown.component';
 import { DistritoDropdownComponent } from './distrito/dropdown/dropdown.component';
 import { OnlyNumber } from './directives/only-numbers.directive';
+import { RemitoModalComponent } from './remito-modal/remito-modal.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { OnlyNumber } from './directives/only-numbers.directive';
     MarcaDropdownComponent,
     DistritoDropdownComponent,
     ProveedorDropdownComponent,
-    OnlyNumber
+    OnlyNumber,
+    RemitoModalComponent
   ],
   imports: [
     FormsModule,

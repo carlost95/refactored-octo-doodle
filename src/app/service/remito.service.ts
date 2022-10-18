@@ -19,17 +19,17 @@ export class RemitoService {
   getAllRemitos(): Observable<Remito[]> {
     return this.http.get<Remito[]>(this.url);
   }
-  getRemitoEntregados(): Observable<Remito[]> {
+  getRemitosEntregados(): Observable<Remito[]> {
     return this.http.get<Remito[]>(`${this.url}/entregados`);
   }
   getRemitosNoEntregados(): Observable<Remito[]> {
     return this.http.get<Remito[]>(`${this.url}/no-entregados`);
   }
-  getSaleById(id: number): Observable<RemitoConsult> {
+  getRemitoById(id: number): Observable<RemitoConsult> {
     return this.http.get<RemitoConsult>(`${this.url}/${id}`);
   }
   changeStatusRemito(remito: RemitoConsult): Observable<Remito> {
-    return this.http.put<Remito>(`${this.url}/${remito.idRemito}`, remito);
+    return this.http.put<Remito>(`${this.url}`, remito);
   }
 
 }

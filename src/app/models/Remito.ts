@@ -17,6 +17,6 @@ export class RemitoConsult {
     cliente?: Cliente;
     direccion?: Direccion;
     nroRemito?: number;
-    fechaVenta?: Date;
+    fechaRemito?: Date;
     articulos?: ArticuloRemito[];
 }

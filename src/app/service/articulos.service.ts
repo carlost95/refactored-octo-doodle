@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.prod';
 import { articulos, subRubro } from '../../environments/global-route';
-import {ArticuloRest, ArticuloStock, ArticuloVenta} from '@models/articulo-rest';
+import { ArticuloRest, ArticuloStock, ArticuloVenta } from '@models/articulo-rest';
 import { forkJoin, Observable, of } from 'rxjs';
 import { SubRubroRest } from '@models/subrubro-rest';
 import { map, switchMap } from 'rxjs/operators';
@@ -12,6 +12,7 @@ import { UnidadMedidaService } from '@service/unidad-medida.service';
 import { RubrosService } from '@service/rubros.service';
 import { Articulo } from '@models/Articulo';
 import { Proveedor } from "@models/Proveedor";
+import { ArticuloRemito } from '../models/articulo-rest';
 
 @Injectable({
   providedIn: 'root'
@@ -71,5 +72,8 @@ export class ArticulosService {
 
   obtenerArticulosVenta(): Observable<ArticuloVenta[]> {
     return this.http.get<ArticuloVenta[]>(`${this.url}/venta`);
+  }
+  obtenerArticulosRemito(): Observable<ArticuloRemito[]> {
+    return this.http.get<ArticuloRemito[]>(`${this.url}/remito`);
   }
 }

@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmModalComponent } from '../../../../shared/confirm-modal/confirm-modal.component';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { SnackConfirmComponent } from '../../../../shared/snack-confirm/snack-confirm.component';
+import { RemitoModalComponent } from '../../../../shared/remito-modal/remito-modal.component';
 
 
 @Component({
@@ -34,6 +35,7 @@ export class ListarRemitosComponent implements OnInit {
 
   remitos: Remito[] = [];
   remito: Remito;
+  remitoConsult: RemitoConsult;
   mostrarHabilitacion: boolean;
   roles: string[];
 
@@ -78,44 +80,49 @@ export class ListarRemitosComponent implements OnInit {
   consultar(row: Remito) {
     this.router.navigate([`/ventas/consultar-remito/${row.idRemito}`]);
   }
+  cargarRemitos(value: number): void {
+    if (value === 1) {
+
+      this.remitoService.getAllRemitos().subscribe(remitos => {
+        this.remitos = remitos;
+        this.establecerDatasource(remitos);
+      });
+    } else if (value === 2) {
+      this.remitoService.getRemitosEntregados().subscribe(remitos => {
+        this.remitos = remitos;
+        this.establecerDatasource(remitos);
+      });
+    } else if (value === 3) {
+      this.remitoService.getRemitosNoEntregados().subscribe(remitos => {
+        this.remitos = remitos;
+        this.establecerDatasource(remitos);
+      });
+    }
+  }
 
   showModal(remito: Remito): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
     dialogConfig.height = '15rem';
-    dialogConfig.width = '20rem';
+    dialogConfig.width = 'auto';
     dialogConfig.data = {
-      message: '¿Desea cambiar estado?',
-      title: 'Cambio estado',
+      message: '¿Desea cambiar el estado del remito?',
+      title: 'Cambiar estado de remito',
       state: remito.entregado,
     };
     const modalDialog = this.matDialog.open(
-      ConfirmModalComponent,
+      RemitoModalComponent,
       dialogConfig
     );
     modalDialog.afterClosed().subscribe((result) => {
       if (result.state) {
-
-        // this.remitoService.changeStatusRemito(remito)
-        //   .pipe(concatMap((data) => this.remitoService.getAllRemitos()))
-        //   .subscribe((remitos) => {
-        //     this.remitos = remitos;
-        //     this.establecerDatasource(this.remitos);
-        //   });
-        this.router.navigate([`/ventas/consultar-remito/${remito.idRemito}`]);
-
-        this.openSnackBar(remito.nroRemito + ' cambio de estado');
-      } else {
-        this.openSnackBar('Error al ejecutar cambio de estado');
+        this.router.navigate([`/ventas/cambiar-estado-remito/${remito.idRemito}`]);
+      }
+      else {
+        this.cargarRemitos(3);
       }
     });
   }
-  openSnackBar(msg: string): void {
-    this.snackBar.openFromComponent(SnackConfirmComponent, {
-      panelClass: ['error-snackbar'],
-      duration: 5 * 1000,
-      data: msg,
-    });
-  }
+
 }

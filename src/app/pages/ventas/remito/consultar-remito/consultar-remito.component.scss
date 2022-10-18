@@ -1,0 +1,76 @@
+.container-fluid {
+    padding: 0.5rem;
+    background-color: #fafafa;
+    box-sizing: border-box;
+    padding: 1rem;
+    overflow: hidden;
+
+}
+
+.marginHeader {
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.carga {
+    background-color: rgba(255, 255, 255, 1);
+    // padding: 0.5rem;
+    // margin: 0.5rem;
+}
+
+.formulario {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.my-form-field {
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 0.3rem;
+    padding: 0.4rem;
+    margin: 0rem -8rem 0rem 0rem;
+}
+
+.inputArticle {
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 0.3rem;
+    padding: .6rem;
+}
+
+.inputDescuento {
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 0.3rem;
+    padding: .3rem;
+    text-align: center
+}
+
+.inputArticle:hover {
+    border: 1.5px solid rgba(255, 179, 0, 1);
+    cursor: pointer;
+}
+
+.inputCursor {
+    cursor: pointer;
+}
+
+th.mat-header-cell:last-of-type,
+td.mat-cell:last-of-type,
+td.mat-footer-cell:last-of-type {
+    padding: 0;
+}
+
+.mat-option.mat-active {
+    background-color: rgba(255, 179, 0, .75);
+    color: black;
+    font-size: large;
+}
+
+tr.mat-footer-row {
+    font-weight: bold;
+    background-color: rgba(255, 179, 0, .45);
+}
+
+
+.mat-table-sticky {
+    border-top: 1px solid #e0e0e0;
+}

@@ -63,6 +63,12 @@ const routes: Routes = [
         component: ConsultarRemitoComponent,
         canActivate: [guard],
         data: { expectedRol: ['admin', 'user'] }
+      },
+      {
+        path: 'cambiar-estado-remito/:idRemito',
+        component: ConsultarRemitoComponent,
+        canActivate: [guard],
+        data: { expectedRol: ['admin', 'user'] }
       }
     ],
   },
