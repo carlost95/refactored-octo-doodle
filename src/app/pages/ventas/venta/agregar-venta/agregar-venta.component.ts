@@ -247,8 +247,14 @@ export class AgregarVentaComponent implements OnInit {
       const cantidad = Number(target?.value);
       for (const article of this.articulosSave) {
         if (article.idArticulo === id) {
-          article.cantidad = cantidad;
-          article.subTotal = cantidad * article.precio;
+          if (cantidad > article.stock || cantidad <= 0) {
+            article.cantidad = 0;
+            this.openSnackBar('La cantidad ingresada supera el stock ' + article.stock + 'o es 0');
+            return;
+          } else {
+            article.cantidad = cantidad;
+            article.subTotal = cantidad * article.precio;
+          }
         }
       }
       this.establecerDataSource(this.articulosSave);
@@ -268,7 +274,6 @@ export class AgregarVentaComponent implements OnInit {
 
   aplicarDescuento(event: any): void {
     if (event.keyCode === 13) {
-      // tslint:disable-next-line:one-variable-per-declaration
       const target = event.target as HTMLInputElement, descuento = Number(target?.value);
       this.ventaForm.controls.descuento.setValue(descuento);
       this.descuento = this.total - (this.getTotalCost() - descuento * this.getTotalCost() / 100);

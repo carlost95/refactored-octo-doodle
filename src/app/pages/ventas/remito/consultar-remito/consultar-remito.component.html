@@ -29,7 +29,7 @@
                     <mat-form-field class="col-md-12 col-sm-12" [disabled]="!validateClient">
                         <mat-label>Direccion</mat-label>
                         <mat-select name="direccion" formControlName="direccion" autocomplete="off">
-                            <mat-option *ngFor="let direccion of direcciones" [value]="direccion.idDireccion">
+                            <mat-option *ngFor="let direccion of direcciones" [value]="direccion">
                                 {{ direccion.calle }} - Nro {{ direccion.numeroCalle}}
                             </mat-option>
                         </mat-select>
@@ -104,7 +104,7 @@
                     <button class="col-md-3 col-sm-12 btn btn-outline-danger my-1 ml-1" (click)="volver()" *ngIf="ENTREGADO">
                         Cancelar cambio de estado
                     </button>
-                    <button class="col-md-3 col-sm-12 btn btn-outline-danger my-1 ml-1" (click)="volver()" *ngIf="!ENTREGADO">
+                    <button class="col-md-3 col-sm-12 btn btn-outline-danger btn-lg my-1 ml-1" (click)="volver()" *ngIf="!ENTREGADO">
                         volver Atras
                     </button>
                     <button class="col-md-3 col-sm-12 btn btn-warning my-1 ml-1" (click)="confirmarCambioEstado()" *ngIf="ENTREGADO">
