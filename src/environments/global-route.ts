@@ -97,3 +97,8 @@ export const remito = {
   status: '/status',
   active: '/active',
 };
+
+
+export const reporte = {
+  ventaPorMes: '/venta-por-mes',
+};
