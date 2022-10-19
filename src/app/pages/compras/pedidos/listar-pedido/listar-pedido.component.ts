@@ -1,14 +1,14 @@
-import {PedidosService} from '@service/pedidos.service';
-import {Pedido} from '@models/pedido';
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {SnackConfirmComponent} from '@shared/snack-confirm/snack-confirm.component';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {TokenService} from '@service/token.service';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {BuscadorService} from '@shared/helpers/buscador.service';
-import {Router} from '@angular/router';
+import { PedidosService } from '@service/pedidos.service';
+import { Pedido } from '@models/pedido';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { SnackConfirmComponent } from '@shared/snack-confirm/snack-confirm.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TokenService } from '@service/token.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { BuscadorService } from '@shared/helpers/buscador.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-listar-pedido',
@@ -37,7 +37,7 @@ export class ListarPedidoComponent implements OnInit {
     private readonly tokenService: TokenService,
     private readonly router: Router,
     private snackBar: MatSnackBar,
-    ) {
+  ) {
   }
 
   ngOnInit(): void {
@@ -49,7 +49,6 @@ export class ListarPedidoComponent implements OnInit {
     this.pedidoService.obtenerPedidos().subscribe(pedidos => {
       this.pedidos = pedidos;
       this.establecerDatasource(pedidos);
-      console.log(pedidos);
     });
   }
 
