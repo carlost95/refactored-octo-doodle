@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {months} from '@app/pages/reportes/domain/util';
+import { months } from '@app/pages/reportes/domain/util';
 import Chart from 'chart.js/auto';
-import {ReporteService} from '@service/reporte.service';
+import { ReporteService } from '@service/reporte.service';
 import _ from 'lodash';
 
 @Component({
@@ -20,14 +20,14 @@ export class VentaPorMesComponent implements OnInit {
     });
   }
 
-  createChart(dataset: any[]): void{
+  createChart(dataset: any[]): void {
     const meses = dataset.map(dataset => Number(dataset.mes));
     const maxMonth = _.max(meses);
-    const labels = months({count: maxMonth});
+    const labels = months({ count: maxMonth });
     const ventas = [];
-    for (let i = 1; i <= maxMonth; i++){
-      const venta = dataset.find( v => v.mes === i);
-      ventas.push( venta?.ventas || 0 );
+    for (let i = 1; i <= maxMonth; i++) {
+      const venta = dataset.find(v => v.mes === i);
+      ventas.push(venta?.ventas || 0);
     }
     const data = {
       labels,
@@ -35,13 +35,13 @@ export class VentaPorMesComponent implements OnInit {
         label: 'Ventas por mes',
         data: ventas,
         backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(255, 159, 64, 0.2)',
-          'rgba(255, 205, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(201, 203, 207, 0.2)'
+          'rgba(255, 99, 132, .8)',
+          'rgba(255, 159, 64, .8)',
+          'rgba(255, 205, 86, 0.8)',
+          'rgba(75, 192, 192, 0.8)',
+          'rgba(54, 162, 235, 0.8)',
+          'rgba(153, 102, 255, 0.8)',
+          'rgba(201, 203, 207, 0.8)'
         ],
         borderColor: [
           'rgb(255, 99, 132)',
