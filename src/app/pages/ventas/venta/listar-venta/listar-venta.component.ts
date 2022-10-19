@@ -1,6 +1,4 @@
 
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { PedidosService } from '@service/pedidos.service';
 import { Pedido } from '@models/pedido';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SnackConfirmComponent } from '@shared/snack-confirm/snack-confirm.component';

@@ -62,6 +62,9 @@ export class VentaPorMesComponent implements OnInit {
         scales: {
           y: {
             beginAtZero: true
+          },
+          x: {
+            beginAtZero: true
           }
         }
       },
