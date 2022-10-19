@@ -59,6 +59,15 @@ const routes: Routes = [
     data: { expectedRol: ['admin', 'user'] },
   },
   {
+    path: 'reportes',
+    loadChildren: () =>
+      import('./pages/reportes/reportes.module').then(
+        (m) => m.ReportesModule
+      ),
+    canActivate: [guard],
+    data: { expectedRol: ['admin', 'user'] },
+  },
+  {
     path: 'reset-password',
     component: ResetPasswordComponent,
   },

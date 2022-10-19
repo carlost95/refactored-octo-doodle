@@ -1,0 +1,30 @@
+const MONTHS = [
+  'Enero',
+  'Febrero',
+  'Marzo',
+  'Abril',
+  'Mayo',
+  'Junio',
+  'Julio',
+  'Agosto',
+  'Septiembre',
+  'Octubre',
+  'Noviembre',
+  'Deciembre'
+];
+
+export function months(config) {
+  const cfg = config || {};
+  const count = cfg.count || 12;
+  const section = cfg.section;
+  const values = [];
+  let i;
+  let value;
+
+  for (i = 0; i < count; ++i) {
+    value = MONTHS[Math.ceil(i) % 12];
+    values.push(value.substring(0, section));
+  }
+
+  return values;
+}
