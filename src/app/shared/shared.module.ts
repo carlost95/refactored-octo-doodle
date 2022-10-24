@@ -25,6 +25,7 @@ import { ProveedorDropdownComponent } from './proveedor/dropdown/proveedor-dropd
 import { DistritoDropdownComponent } from './distrito/dropdown/dropdown.component';
 import { OnlyNumber } from './directives/only-numbers.directive';
 import { RemitoModalComponent } from './remito-modal/remito-modal.component';
+import { ReporteComponent } from './template/reporte/reporte.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { RemitoModalComponent } from './remito-modal/remito-modal.component';
     DistritoDropdownComponent,
     ProveedorDropdownComponent,
     OnlyNumber,
-    RemitoModalComponent
+    RemitoModalComponent,
+    ReporteComponent
   ],
   imports: [
     FormsModule,
@@ -73,7 +75,8 @@ import { RemitoModalComponent } from './remito-modal/remito-modal.component';
     DistritoDropdownComponent,
     HeaderComponent,
     OnlyNumber,
-    SearchComponent
+    SearchComponent,
+    ReporteComponent
   ],
   providers: [
     {

@@ -100,5 +100,10 @@ export const remito = {
 
 
 export const reporte = {
-  ventaPorMes: '/venta-por-mes',
+  // ventaPorMes: '/venta-por-mes',
+  ventas: '/ventas',
+  remitos: '/remitos',
+  pedidos: '/pedidos',
+  clientes: '/clientes',
+  proveedores: '/proveedores',
 };

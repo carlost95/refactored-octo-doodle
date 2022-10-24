@@ -16,4 +16,7 @@ export default {
   rubro: 'fas fa-archive',
   subRubro: 'fas fa-folder-open',
   empresa: 'fas fa-building',
+  reporte_venta: 'fas fa-chart-bar',
+  reporte_pedido: 'fas fa-chart-line',
+  reporte_remito: 'fas fa-luggage-cart'
 };
