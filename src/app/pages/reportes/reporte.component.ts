@@ -62,7 +62,11 @@ export class ReporteComponent implements OnInit {
 
   validaMenu(): boolean {
     if (
-      this.router.url.includes('/reporte-venta')
+      this.router.url.includes('/reporte-venta') ||
+      this.router.url.includes('/reporte-remito') ||
+      this.router.url.includes('/reporte-pedido') ||
+      this.router.url.includes('/reporte-cliente') ||
+      this.router.url.includes('/reporte-proveedor')
     ) {
       return false;
     } else {

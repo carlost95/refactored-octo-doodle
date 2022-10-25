@@ -4,7 +4,6 @@ import { ReporteService } from '@service/reporte.service';
 import _ from 'lodash';
 import { ReporteFechas } from '../../../../models/ReporteFechas';
 import moment from "moment";
-import { MONTHS } from '../../domain/util';
 import { SnackConfirmComponent } from '../../../../shared/snack-confirm/snack-confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -52,13 +51,13 @@ export class VentasComponent implements OnInit {
       return;
 
     }
-    console.log(this.startDate);
-    console.log(this.endDate);
-
     this.reporteFechas.fechaInicial = this.startDate;
     this.reporteFechas.fechaFinal = this.endDate;
     this.reporteService.getVentasPorMes(this.reporteFechas).subscribe(dataset => {
       this.chart.destroy();
+      if (dataset.length === 0) {
+        this.openSnackBar("No se registraron ventas en el periodo de fecha CARGADOS")
+      }
       this.createChart(dataset);
     });
   }
@@ -68,21 +67,8 @@ export class VentasComponent implements OnInit {
   }
 
   createChart(dataset: any[]): void {
-    const dateMonth: string[] = [];
-    const meses = dataset.map(dataset => Number(dataset.mes));
-    const maxMonth = _.max(meses);
-    const minMonth = _.min(meses);
-    for (let i = minMonth; i <= maxMonth; i++) {
-      dateMonth.push(MONTHS[i - 1]);
-    }
-    console.log(dateMonth);
-
-    const labels = dateMonth;
-    const ventas = [];
-    for (let i = minMonth; i <= maxMonth; i++) {
-      const venta = dataset.find(v => v.mes === i);
-      ventas.push(venta?.ventas || 0);
-    }
+    const labels = dataset.map(dataset => String(dataset.fecha));
+    const ventas = dataset.map(dataset => Number(dataset.acciones));
     const data = {
       labels,
       datasets: [{

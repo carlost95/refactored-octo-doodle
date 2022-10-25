@@ -16,11 +16,11 @@ export class ReporteService {
     this.url = environment.url + '/reportes';
   }
 
-  // obtenerVentasPorMes(): Observable<any[]> {
-  //   return this.http.get<any[]>(this.url+ + reporte.ventaPorMes);
-  // }
+
   getVentasPorMes(reporteFechas: ReporteFechas): Observable<any[]> {
     return this.http.post<any[]>(this.url + reporte.ventas, reporteFechas);
   }
+  getRemitoPorMes(reporteFechas: ReporteFechas): Observable<any[]> {
+    return this.http.post<any[]>(this.url + reporte.remitos, reporteFechas);
+  }
 }
-
