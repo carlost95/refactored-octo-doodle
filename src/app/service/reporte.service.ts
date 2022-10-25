@@ -23,4 +23,7 @@ export class ReporteService {
   getRemitoPorMes(reporteFechas: ReporteFechas): Observable<any[]> {
     return this.http.post<any[]>(this.url + reporte.remitos, reporteFechas);
   }
+  getPedidosPorMes(reporteFechas: ReporteFechas): Observable<any[]> {
+    return this.http.post<any[]>(this.url + reporte.pedidos, reporteFechas);
+  }
 }

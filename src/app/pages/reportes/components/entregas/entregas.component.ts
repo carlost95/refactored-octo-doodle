@@ -74,8 +74,8 @@ export class EntregasComponent implements OnInit {
       datasets: [{
         label: 'entregas por mes',
         data: ventas,
-        backgroundColor: "rgba(75, 192, 192, 0.8)",
-        borderColor: "rgb(75, 192, 192)",
+        backgroundColor: "rgba(153, 102, 255,.8)",
+        borderColor: "rgba(153, 102, 255,1)",
         borderWidth: 1
       }]
     };

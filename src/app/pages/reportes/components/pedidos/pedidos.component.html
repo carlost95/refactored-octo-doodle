@@ -1,1 +1,22 @@
-<p>pedidos works!</p>
+<template-reporte [title]="'Reporte de Pedidos'" [backRoute]="'reportes'">
+    <div class="row mt-3 justify-content-around">
+
+        <div class="col-6 col-md-3 text-center">
+            <h5>Fecha Inicio</h5>
+            <input type="date" [(ngModel)]="startDate">
+        </div>
+        <div class="col-6 col-md-3 text-center">
+            <h5>Fecha Fin</h5>
+            <input type="date" [(ngModel)]="endDate">
+        </div>
+        <div class="col-6 col-md-3 text-center">
+            <h5>Buscar por fecha</h5>
+            <button class="btn btn-warning" (click)="filtrarFechas()">Buscar pedidos</button>
+        </div>
+        <div class="col-6 col-md-3 text-center">
+            <h5>Limpiar Filtro</h5>
+            <button class="btn btn-outline-danger" (click)="reset()">Reset filtro</button>
+        </div>
+        <canvas id="pedidos" class="grafica col-11 col-md-11 my-2" width="30" height="10">{{ chart }}</canvas>
+    </div>
+</template-reporte>
