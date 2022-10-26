@@ -1,20 +1,26 @@
-<div class=" text-center">
-  <div class="d-flex justify-content-center h-100 centro" >
-    <div class="card">
-      <div *ngIf="isLogged; else loggedOut" class="col-md-12 mt-4 md-display-4">
-        <h1 style="color:white">
-          <b> Bienvenido "{{nombreUsuario}} "</b>
-        </h1>
-        <div>
-          <input type="image" src="../../assets/images/logo.jpg"
-                 class="imgRedonda" title="Corralón Santo Domingo">
+<section class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card" *ngIf="isLogged; else loggedOut">
+        <div class="card-header">
+          <h3 class="card-title titulo">Bienvenido {{nombreUsuario|titlecase}}</h3>
         </div>
-        <h5 style="color: white;text-align: right" class="mt-5">Sistema de stock y logistica </h5>
+        <div class="card-body d-flex justify-content-center">
+          <img type="image" src="../../assets/images/logo.jpg" class="imgRedonda" title="Corralón Santo Domingo">
+        </div>
+        <div class="card-footer ">
+          <p class="card-text titulo text-right">Sistema de stock y logistica </p>
+        </div>
       </div>
-
-      <ng-template #loggedOut>
-        <h1 class="m-5">No has iniciado sesión</h1>
-      </ng-template>
     </div>
   </div>
-</div>
+  <ng-template #loggedOut>
+    <div class="row">
+      <div class="card">
+        <div class="card-body ">
+          <h3 class="card-title titulo">No has iniciado sesión</h3>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</section>
