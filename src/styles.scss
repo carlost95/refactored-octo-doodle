@@ -81,8 +81,9 @@ mat-dialog-container#modal-component {
 }
 
 .fondo {
-  // background-image: url(./assets/images/bg-05.jpg);
-  background-color: rgba(225, 225, 225, 1);
+  background-image: url(./assets/images/bg-01.jpg);
+  background-repeat: no-repeat;
+  // background-color: rgba(225, 225, 225, 1);
   background-size: cover;
   background-repeat: repeat;
   min-width: 100%;

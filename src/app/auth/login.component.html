@@ -1,53 +1,51 @@
-<div class="fondo">
+<section class="fondo">
   <div class="text-center" *ngIf="isLogged; else loggedOut">
-    <h2> ¡Usted ya esta Logueado!</h2>
+    <h2 class="mt-5"> ¡Usted ya esta Logueado!</h2>
   </div>
   <ng-template #loggedOut>
-    <!--  <ng-template>-->
-    <div class="d-flex justify-content-center h-100 centro">
+    <div class="d-flex justify-content-center centro">
       <div class="card">
         <div class="card-header ">
-          <h3> Login</h3>
+          <h3 class="text-center">
+            Login
+          </h3>
         </div>
         <div class="card-body">
           <form #f="ngForm" (ngSubmit)="onLogin()" novalidate>
-            <div class="input-group form-group">
-              <div class="input-group-prepend">
-                           <span class="input-group-text">
-                                <i class="fas fa-user"></i>
-                           </span>
+            <div class="row">
+              <div class="input-group form-group col-md-12 col-sm-12 my-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-user"></i>
+                  </span>
+                </div>
+                <input type="text" name="nombreUsuario" id="nombreUsuario" class="form-control" placeholder="nombre de usuario" [(ngModel)]="nombreUsuario" required autocomplete="off" />
               </div>
-              <input type="text" name="nombreUsuario" id="nombreUsuario"
-                     class="form-control" placeholder="nombre de usuario"
-                     [(ngModel)]="nombreUsuario" required autocomplete="off"/>
-            </div>
-            <br>
-            <div class="input-group form-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text"><i class="fas fa-key"></i></span>
+              <div class="input-group form-group col-md-12 col-sm-12 my-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-key"></i>
+                  </span>
+                </div>
+                <input [type]="viewPassword?'password' :'text'" class="form-control" name="password" id="password" placeholder="ingrese contraseña" [(ngModel)]="password" required autocomplete="off" />
+                <button mat-icon-button matSuffix (click)="viewPassword = !viewPassword" style="color: #ffc312">
+                  <mat-icon>{{viewPassword ? "visibility_off" : "visibility"}}</mat-icon>
+                </button>
               </div>
-              <input [type]="viewPassword?'password' :'text'"
-                     class="form-control" name="password"
-                     id="password" placeholder="ingrese contraseña"
-                     [(ngModel)]="password" required autocomplete="off"/>
-              <button mat-icon-button matSuffix (click)="viewPassword = !viewPassword" style="color: #ffc312">
-                <mat-icon>{{viewPassword ? "visibility_off" : "visibility"}}</mat-icon>
-              </button>
-            </div>
-            <br>
-            <div class="form-group">
-              <button class="btn btn-block login_btn" [disabled]="!f.valid">
-                Iniciar Sesion
-              </button>
+              <div class="form-group col-md-12 col-sm-12 my-3">
+                <button class="btn btn-block login_btn" [disabled]="!f.valid">
+                  Iniciar Sesion
+                </button>
+              </div>
             </div>
           </form>
         </div>
         <div class="card-footer">
-          <div *ngIf="f.submitted && isLoginsFail" style="color: #f44336; font-weight: bold" class="text-center">
-            Error en login: {{errMsj}}
+          <div *ngIf="f.submitted && isLoginsFail" class="text-center message">
+            Error en login:<span> {{errMsj}}</span>
           </div>
         </div>
       </div>
     </div>
   </ng-template>
-</div>
+</section>
