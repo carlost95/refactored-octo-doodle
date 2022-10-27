@@ -23,15 +23,10 @@ export class SubMenuComponent implements OnInit {
       icon: 'reporte_pedido',
     },
     {
-      ruta: 'reporte-cliente',
-      label: 'reporte clientes',
-      icon: 'cliente',
+      ruta: 'reporte-recaudacion',
+      label: 'recaudaciones por Articulo',
+      icon: 'reporte_recaudacion',
     },
-    {
-      ruta: 'reporte-proveedor',
-      label: 'reporte proveedores',
-      icon: 'proveedor',
-    }
   ];
 
   constructor() { }
