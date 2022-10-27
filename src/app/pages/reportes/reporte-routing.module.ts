@@ -4,9 +4,8 @@ import { ReporteComponent } from './reporte.component';
 import { ProdGuardService as guard } from '../../guars/prod-guard.service';
 import { EntregasComponent } from './components/entregas/entregas.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
-import { ClientesComponent } from './components/clientes/clientes.component';
-import { ProveedoresComponent } from './components/proveedores/proveedores.component';
 import { VentasComponent } from './components/ventas/ventas.component';
+import { RecaudacionesComponent } from './components/recaudaciones/recaudaciones.component';
 
 
 
@@ -34,17 +33,11 @@ const routes: Routes = [
         data: { expectedRol: ['admin', 'user'] }
       },
       {
-        path: 'reporte-cliente',
-        component: ClientesComponent,
+        path: 'reporte-recaudacion',
+        component: RecaudacionesComponent,
         canActivate: [guard],
         data: { expectedRol: ['admin', 'user'] }
-      },
-      {
-        path: 'reporte-proveedor',
-        component: ProveedoresComponent,
-        canActivate: [guard],
-        data: { expectedRol: ['admin', 'user'] }
-      },
+      }
     ],
   },
 

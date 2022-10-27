@@ -18,5 +18,6 @@ export default {
   empresa: 'fas fa-building',
   reporte_venta: 'fas fa-chart-bar',
   reporte_pedido: 'fas fa-chart-line',
-  reporte_remito: 'fas fa-luggage-cart'
+  reporte_remito: 'fas fa-luggage-cart',
+  reporte_recaudacion: 'fas fa-cash-register'
 };
