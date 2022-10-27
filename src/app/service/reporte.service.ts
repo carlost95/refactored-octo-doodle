@@ -26,4 +26,7 @@ export class ReporteService {
   getPedidosPorMes(reporteFechas: ReporteFechas): Observable<any[]> {
     return this.http.post<any[]>(this.url + reporte.pedidos, reporteFechas);
   }
+  getRecaudacionByArticle(reporteFechas: ReporteFechas): Observable<any[]> {
+    return this.http.post<any[]>(this.url + reporte.recaudaciones, reporteFechas);
+  }
 }

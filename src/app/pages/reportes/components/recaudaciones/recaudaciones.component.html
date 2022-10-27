@@ -1,0 +1,58 @@
+<template-reporte [title]="'Recaudacion por Articulo'" [backRoute]="'reportes'">
+    <div class="row mt-3 justify-content-around">
+        <div class="col-6 col-md-3 text-center">
+            <h6>Fecha Inicio</h6>
+            <input type="date" [(ngModel)]="startDate">
+        </div>
+        <div class="col-6 col-md-3 text-center">
+            <h6>Fecha Fin</h6>
+            <input type="date" [(ngModel)]="endDate">
+        </div>
+        <div class="col-4 col-md-2 text-center my-2">
+            <button class="btn btn-warning" (click)="filtrarFechas()">Buscar datos</button>
+        </div>
+        <div class="col-4 col-md-2 text-center my-2">
+            <button class="btn btn-outline-danger" (click)="reset()">Reset filtro</button>
+        </div>
+        <div class="col-4 col-md-2 text-center my-2">
+            <button class="btn btn-outline-danger" (click)="generarPDF()">
+                Generar <i class="fas fa-file-pdf"></i>
+            </button>
+        </div>
+        <div class="col-md-12 table-reporte">
+            <table mat-table [dataSource]="dataSource" matSort>
+                <ng-container matColumnDef="codigo">
+                    <th mat-header-cell *matHeaderCellDef> Codigo </th>
+                    <td mat-cell *matCellDef="let row"> {{row.codigoArticulo}} </td>
+                </ng-container>
+                <ng-container matColumnDef="nombre">
+                    <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                    <td mat-cell *matCellDef="let row"> {{row.nombreArticulo | titlecase}} </td>
+                </ng-container>
+                <ng-container matColumnDef="marca">
+                    <th mat-header-cell *matHeaderCellDef> Marca </th>
+                    <td mat-cell *matCellDef="let row"> {{row.nombreMarca|titlecase }} </td>
+                </ng-container>
+                <ng-container matColumnDef="cantidad">
+                    <th mat-header-cell *matHeaderCellDef> Cantidad vendida </th>
+                    <td mat-cell *matCellDef="let row"> {{row.cantidadVendida}} </td>
+                </ng-container>
+                <ng-container matColumnDef="stock">
+                    <th mat-header-cell *matHeaderCellDef> Stock actual</th>
+                    <td mat-cell *matCellDef="let row"> {{row.stockArticulo }} </td>
+                </ng-container>
+                <ng-container matColumnDef="recaudacion">
+                    <th mat-header-cell *matHeaderCellDef> Recaudacion </th>
+                    <td mat-cell *matCellDef="let row"> {{row.recaudacion | currency }} </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="7">No existe datos registrados en la fecha seleccionados</td>
+                </tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+        </div>
+    </div>
+</template-reporte>

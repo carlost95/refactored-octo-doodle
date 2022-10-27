@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment.prod';
 import { empresa, logistica, mapbox } from '../../environments/global-route';
 import { Observable, of } from 'rxjs';
-import { distances, routes } from './mock.data';
+// import { distances, routes } from './mock.data';
 
 @Injectable({
   providedIn: 'root'
