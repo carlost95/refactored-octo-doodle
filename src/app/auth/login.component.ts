@@ -1,8 +1,10 @@
-import {Component, OnInit, Output, EventEmitter} from '@angular/core';
-import {TokenService} from '../service/token.service';
-import {AuthService} from '../service/auth.service';
-import {Router} from '@angular/router';
-import {LoginUsuario} from '../models/login-usuario';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { TokenService } from '../service/token.service';
+import { AuthService } from '../service/auth.service';
+import { Router } from '@angular/router';
+import { LoginUsuario } from '../models/login-usuario';
+import { SnackConfirmComponent } from '../shared/snack-confirm/snack-confirm.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -21,8 +23,9 @@ export class LoginComponent implements OnInit {
   viewPassword = true;
 
   constructor(private tokenService: TokenService,
-              private authService: AuthService,
-              private router: Router
+    private authService: AuthService,
+    private router: Router,
+
   ) {
   }
 
@@ -37,15 +40,15 @@ export class LoginComponent implements OnInit {
   onLogin(): void {
     this.loginUsuario = new LoginUsuario(this.nombreUsuario, this.password);
     this.authService.login(this.loginUsuario).subscribe(data => {
-        this.isLogged = true;
-        this.isLoginsFail = false;
-        this.tokenService.setToken(data.token);
-        this.tokenService.setUserName(data.nombreUsuario);
-        this.tokenService.setAuthorities(data.authorities);
-        this.roles = data.authorities;
-        this.pressLogin.emit(true);
-        // this.router.navigate(['']);
-      },
+      this.isLogged = true;
+      this.isLoginsFail = false;
+      this.tokenService.setToken(data.token);
+      this.tokenService.setUserName(data.nombreUsuario);
+      this.tokenService.setAuthorities(data.authorities);
+      this.roles = data.authorities;
+      this.pressLogin.emit(true);
+      this.router.navigate(['']);
+    },
       err => {
         this.isLogged = false;
         this.isLoginsFail = true;

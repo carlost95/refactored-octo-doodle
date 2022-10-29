@@ -1,6 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-toggler-sm">
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
-    aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon">
     </span>
   </button>
@@ -26,7 +25,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="['reportes']" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['reportes']" *ngIf="isGerente||isAdmin" routerLinkActive="active">
           REPORTES
         </a>
       </li>

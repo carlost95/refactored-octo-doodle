@@ -18,25 +18,25 @@ const routes: Routes = [
         path: 'reporte-venta',
         component: VentasComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin', 'user'] }
+        data: { expectedRol: ['admin', 'gerente'] }
       },
       {
         path: 'reporte-remito',
         component: EntregasComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin', 'user'] }
+        data: { expectedRol: ['admin', 'gerente'] }
       },
       {
         path: 'reporte-pedido',
         component: PedidosComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin', 'user'] }
+        data: { expectedRol: ['admin', 'gerente'] }
       },
       {
         path: 'reporte-recaudacion',
         component: RecaudacionesComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin', 'user'] }
+        data: { expectedRol: ['admin', 'gerente'] }
       }
     ],
   },

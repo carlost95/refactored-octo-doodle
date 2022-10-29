@@ -1,10 +1,12 @@
-import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
-import {TokenService} from '../../../service/token.service';
-import {AuthService} from '../../../service/auth.service';
-import {Router} from '@angular/router';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {NewUsuario} from '../../../models/new-usuario';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
+import { TokenService } from '../../../service/token.service';
+import { AuthService } from '../../../service/auth.service';
+import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NewUsuario } from '../../../models/new-usuario';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { SnackConfirmComponent } from '../../../shared/snack-confirm/snack-confirm.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-logout',
@@ -32,46 +34,41 @@ export class RegisterComponent implements OnInit {
   emailRepe = false;
   passwordError = false;
 
-  constructor(private formBuilder: FormBuilder,
-              private tokenService: TokenService,
-              private authService: AuthService,
-              private router: Router,
-              public dialogRef: MatDialogRef<RegisterComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private tokenService: TokenService,
+    private authService: AuthService,
+    private snackBar: MatSnackBar,
+    public dialogRef: MatDialogRef<RegisterComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
-  // tslint:disable-next-line:typedef
   ngOnInit(): void {
-    this.authService.listUsers().subscribe(data => {
-      this.users = data.data;
-    });
-
     if (this.tokenService.getToken()) {
       this.isLogged = true;
     }
-    const {user} = this.data;
+    const { user } = this.data;
+
     if (user) {
-      if (user.roles.find(x => x.rolNombre === 'ROLE_GERENTE')) {
+      if (user.roles.find(rol => rol.rolNombre === 'ROLE_GERENTE')) {
         this.rolSelect = 'GERENTE';
-        console.log(this.rolSelect);
-      } else if (user.roles.find(x => x.rolNombre === 'ROLE_ADMIN')) {
+      } else if (user.roles.find(rol => rol.rolNombre === 'ROLE_ADMIN')) {
         this.rolSelect = 'ADMIN';
       } else {
         this.rolSelect = 'USER';
-        console.log(this.rolSelect);
-
       }
       this.consulting = this.data.consulting;
       this.userForm = this.formBuilder.group({
-        id: [user.id, null],
-        nombre: [{value: user.nombre, disabled: this.consulting}, Validators.required],
-        email: [{value: user.email, disabled: this.consulting}, Validators.required],
-        nombreUsuario: [{value: user.nombreUsuario, disabled: this.consulting}, Validators.required],
-        password: [{value: user.password, disabled: this.consulting}, Validators.required],
-        roles: [{value: user.roles, disabled: this.consulting}, Validators.required]
+        id: [{ value: user.id, disabled: this.consulting }, null],
+        nombre: [{ value: user.nombre, disabled: this.consulting }, Validators.required],
+        email: [{ value: user.email, disabled: this.consulting }, Validators.required],
+        nombreUsuario: [{ value: user.nombreUsuario, disabled: this.consulting }, Validators.required],
+        password: [{ value: user.password, disabled: this.consulting }, Validators.required],
+        roles: [{ value: user.roles, disabled: this.consulting }, Validators.required]
       });
       this.updating = !this.consulting;
-    } else {
+    }
+    else {
       this.userForm = this.formBuilder.group({
         id: ['', null],
         nombre: ['', Validators.required],
@@ -84,7 +81,6 @@ export class RegisterComponent implements OnInit {
   }
 
 
-// tslint:disable-next-line:typedef
   onSubmit() {
     this.submitted = true;
     this.errorInForm = this.submitted && this.userForm.invalid;
@@ -95,45 +91,41 @@ export class RegisterComponent implements OnInit {
       this.userForm.controls.nombreUsuario.markAsTouched();
       this.userForm.controls.password.markAsTouched();
       this.userForm.controls.roles.markAsTouched();
-      console.log('Error en validacion de datos');
     } else {
       this.makeDTO();
-
     }
   }
 
-  // tslint:disable-next-line:typedef
   makeDTO() {
-    this.newUsuario.id = (this.userForm.controls.id.value);
-    this.newUsuario.nombre = (this.userForm.controls.nombre.value).trim();
-    this.newUsuario.email = (this.userForm.controls.email.value).trim();
-    this.newUsuario.nombreUsuario = (this.userForm.controls.nombreUsuario.value).trim();
-    this.newUsuario.password = (this.userForm.controls.password.value).trim();
-    if ((this.userForm.controls.roles.value).toLowerCase() !== 'admin' &&
-      (this.userForm.controls.roles.value).toLowerCase() !== 'gerente') {
+    this.newUsuario.nombre = this.userForm.controls.nombre.value.trim();
+    this.newUsuario.email = this.userForm.controls.email.value.trim();
+    this.newUsuario.nombreUsuario = this.userForm.controls.nombreUsuario.value.trim();
+    this.newUsuario.password = this.userForm.controls.password.value.trim();
+
+    if (this.userForm.controls.roles.value.toLowerCase() !== 'admin' && this.userForm.controls.roles.value.toLowerCase() !== 'gerente') {
       this.newUsuario.roles.push('user');
-    } else if ((this.userForm.controls.roles.value).toLowerCase() === 'admin') {
-      this.newUsuario.roles.push('admin');
-    } else {
-      this.newUsuario.roles.push('gerente');
-    }
+    } else
+      if (this.userForm.controls.roles.value.toLowerCase() === 'admin') {
+        this.newUsuario.roles.push('admin');
+      } else {
+        this.newUsuario.roles.push('gerente');
+      }
 
     if (this.updating) {
+      this.newUsuario.id = (this.userForm.controls.id.value);
       this.update();
     } else {
-      console.log(this.newUsuario.roles);
       this.onLogout();
     }
 
   }
 
-  // tslint:disable-next-line:typedef
   async onLogout() {
     await this.authService.nuevo(this.newUsuario).toPromise().then((data) => {
-        this.newUsuario = data;
-        this.isLogout = true;
-        this.isLogoutFail = false;
-      },
+      this.newUsuario = data;
+      this.isLogout = true;
+      this.isLogoutFail = false;
+    },
       err => {
         this.isLogout = false;
         this.isLogoutFail = true;
@@ -145,57 +137,54 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-// tslint:disable-next-line:typedef
   close() {
     this.dialogRef.close();
   }
 
-  // tslint:disable-next-line:typedef
   async update() {
-    console.log(this.newUsuario);
-    console.log(this.newUsuario.roles);
     await this.authService.updateUser(this.newUsuario).toPromise().then((data) => {
-        this.newUsuario = data;
-        this.isLogout = true;
-        this.isLogoutFail = false;
-      },
+      this.newUsuario = data;
+      this.isLogout = true;
+      this.isLogoutFail = false;
+      this.openSnackBar(data.mensaje);
+    },
       err => {
         this.isLogout = false;
         this.isLogoutFail = true;
         this.errMsj = err.error.mensaje;
-        console.log(this.errMsj);
+        this.openSnackBar(this.errMsj)
       });
     if (this.isLogout) {
       this.dialogRef.close();
     }
   }
 
-  // tslint:disable-next-line:typedef
-  validarNombreUsuario({target}) {
-    const {value: nombre} = target;
+  validarNombreUsuario({ target }) {
+    const { value: nombre } = target;
     const finded = this.users.find(p => p.nombreUsuario.toLowerCase() === nombre.toLowerCase());
-    console.log('nombre usuarios');
     this.userNameRepe = (finded !== undefined) ? true : false;
   }
 
-  // tslint:disable-next-line:typedef
-  validarEmail({target}) {
-    const {value: nombre} = target;
+  validarEmail({ target }) {
+    const { value: nombre } = target;
     const finded = this.users.find(p => p.email.toLowerCase() === nombre.toLowerCase());
-    console.log('emails');
-
     this.emailRepe = (finded !== undefined) ? true : false;
   }
 
-  // tslint:disable-next-line:typedef
-  validarPassword({target}) {
-    const {value: password} = target;
-    console.log(password);
+  validarPassword({ target }) {
+    const { value: password } = target;
     if (password.length < 8 || password.length > 14) {
       this.passwordError = true;
     } else {
       this.passwordError = false;
     }
 
+  }
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
+    });
   }
 }

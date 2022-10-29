@@ -1,11 +1,7 @@
-<div class="container" ng-controller="Proveedores">
+<!-- <div class="container" ng-controller="Proveedores">
   <div class="card m-1">
     <header class="row mt-4 ml-3 mb-0">
-      <i
-        class="col-md-2 m-0 fas fa-chevron-left fa-3x"
-        style="margin-right: 100%"
-        (click)="backPage()"
-      ></i>
+      <i class="col-md-2 m-0 fas fa-chevron-left fa-3x" style="margin-right: 100%" (click)="backPage()"></i>
       <h1 class="m-0 col-md-10" style="padding-left: 10rem !important">
         Lista de Usuarios
       </h1>
@@ -19,16 +15,12 @@
           </label>
 
           <div class="col-12 m-0 p-0 aligth">
-            <input class="col-12 position-relative has-icon-right searchDiv"
-                   type="text" [(ngModel)]="busqueda"
-                   class="form-control searchText" placeholder="ingrese busqueda"
-                   (keyup)="filtrarUser()"/>
+            <input class="col-12 position-relative has-icon-right searchDiv" type="text" [(ngModel)]="busqueda" class="form-control searchText" placeholder="ingrese busqueda" (keyup)="filtrarUser()" />
           </div>
         </div>
         <br>
         <div class="row col-12 d-flex justify-content-end">
-          <button mat-raised-button color="primary" title="nuevo usuario"
-                  (click)="newUser()">
+          <button mat-raised-button color="primary" title="nuevo usuario" (click)="newUser()">
             <i class="fas fa-user-plus fa-lg"></i>
             Nuevo usuario
           </button>
@@ -38,34 +30,75 @@
     <div class="card-body p-0" style="width: 1090px; height: 470px; overflow: auto">
       <table class="table table-striped">
         <thead class="thead-dark">
-        <tr class="text-center">
-          <th scope="col ">NOMBRE USUARIO</th>
-          <th scope="col ">ROL USUARIO</th>
-          <th scope="col ">CORREO ELECTRONICO</th>
-          <th scope="col*2 ">OPCIONES</th>
-        </tr>
+          <tr class="text-center">
+            <th scope="col ">NOMBRE USUARIO</th>
+            <th scope="col ">ROL USUARIO</th>
+            <th scope="col ">CORREO ELECTRONICO</th>
+            <th scope="col*2 ">OPCIONES</th>
+          </tr>
         </thead>
         <tbody *ngIf="users != null">
-        <tr *ngFor="let user of usersFilter" class="text-center">
-          <td>{{ user.nombreUsuario }}</td>
-          <!--          <td>{{ user.roles.map(({rolNombre}) => rolNombre).join(" ") }}</td>-->
-          <td *ngIf="user.roles.length===1">{{ user.roles[0].rolNombre }}</td>
-          <td *ngIf="user.roles.length===2">{{ user.roles[0].rolNombre }}; {{ user.roles[1].rolNombre }}</td>
-          <td>{{ user.email }}</td>
-          <td>
-            <button class="btn btn-default m-0 p-0" title="Consultar"
-                    (click)="consultUser(user)">
-              <i class="fas fa-exclamation"></i>
-            </button>
-            &nbsp;
-            <button class="btn btn-default m-0 p-0" title="Modificar "
-                    (click)="modifyUser(user)">
-              <i class="fas fa-pencil-alt"></i>
-            </button>
-          </td>
-        </tr>
+          <tr *ngFor="let user of usersFilter" class="text-center">
+            <td>{{ user.nombreUsuario }}</td>
+            <td *ngIf="user.roles.length===1">{{ user.roles[0].rolNombre }}</td>
+            <td *ngIf="user.roles.length===2">{{ user.roles[0].rolNombre }}; {{ user.roles[1].rolNombre }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <button class="btn btn-default m-0 p-0" title="Consultar" (click)="consultUser(user)">
+                <i class="fas fa-exclamation"></i>
+              </button>
+              &nbsp;
+              <button class="btn btn-default m-0 p-0" title="Modificar " (click)="modifyUser(user)">
+                <i class="fas fa-pencil-alt"></i>
+              </button>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
   </div>
-</div>
+</div> -->
+
+<template-page [title]="'Usuarios'" [backRoute]="'seguridad'" [titleButton]="'Nuevo Usuario'" (filtro)="filtrarUser($event)" (onClickButton)="newUser()">
+  <div>
+    <table mat-table [dataSource]="dataSource" matSort>
+
+      <ng-container matColumnDef="nombreUsuario">
+        <th mat-header-cell *matHeaderCellDef> Nombre Usuario</th>
+        <td mat-cell *matCellDef="let row"> {{row.nombreUsuario | titlecase}} </td>
+      </ng-container>
+      <ng-container matColumnDef="rol">
+        <th mat-header-cell *matHeaderCellDef> Rol usuario</th>
+        <td mat-cell *matCellDef="let row">
+          <div *ngIf="row.roles.length === 1"> {{row.roles[0].rolNombre}}</div>
+          <div *ngIf="row.roles.length === 2"> {{row.roles[0].rolNombre}} ; {{row.roles[1].rolNombre}}</div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="correo">
+        <th mat-header-cell *matHeaderCellDef> Email</th>
+        <td mat-cell *matCellDef="let row"> {{row.email}} </td>
+      </ng-container>
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef> Acciones</th>
+        <td mat-cell *matCellDef="let row">
+          <button class="btn btn-default select" title="Consultar" (click)="consultUser(row)">
+            <i class="fas fa-exclamation"></i>
+          </button>
+          <button class="btn btn-default select" title="Modificar" (click)="modifyUser(row)">
+            <i class="fas fa-pencil-alt"></i>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">
+          <h4>
+            No se encontraron resultados para esta busqueda...
+          </h4>
+        </td>
+      </tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+  </div>
+</template-page>

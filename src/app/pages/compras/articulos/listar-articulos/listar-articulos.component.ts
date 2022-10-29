@@ -100,7 +100,7 @@ export class ListarArticulosComponent implements OnInit {
       disableClose: true,
       id: 'modal-component',
       height: 'auto',
-      width: '50rem',
+      width: 'auto',
       panelClass: 'no-padding',
       data,
     });
