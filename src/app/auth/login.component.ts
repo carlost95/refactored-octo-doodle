@@ -3,8 +3,6 @@ import { TokenService } from '../service/token.service';
 import { AuthService } from '../service/auth.service';
 import { Router } from '@angular/router';
 import { LoginUsuario } from '../models/login-usuario';
-import { SnackConfirmComponent } from '../shared/snack-confirm/snack-confirm.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -53,7 +51,6 @@ export class LoginComponent implements OnInit {
         this.isLogged = false;
         this.isLoginsFail = true;
         this.errMsj = err.error.message;
-        // console.log(this.errMsj);
       });
   }
 }

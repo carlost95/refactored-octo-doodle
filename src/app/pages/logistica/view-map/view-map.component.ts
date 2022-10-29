@@ -1,8 +1,8 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, Output, EventEmitter, Input } from '@angular/core';
 import { MapService } from '@app/service/map.service';
 import { PlaceService } from '@app/service/place.service';
-import { Map, Marker } from 'mapbox-gl';
-import {LogisticaService} from '../../../service/logistica.service';
+import { Map, Marker, Popup } from 'mapbox-gl';
+import { LogisticaService } from '../../../service/logistica.service';
 
 @Component({
   selector: 'app-view-map',
@@ -26,7 +26,6 @@ export class ViewMapComponent implements AfterViewInit {
     if (!this.placeService.userLocation) {
       throw new Error('No hay placesService.userLocation');
     }
-    // TODO: se crea el mapa
     const map = new Map({
       container: this.mapDivElement.nativeElement,
       style: 'mapbox://styles/mapbox/streets-v11',
@@ -36,8 +35,6 @@ export class ViewMapComponent implements AfterViewInit {
     map.on('style.load', () => {
       map.setFog({});
     });
-    console.log('map');
-    const markers = [];
     this.logisticaService.getParadas().subscribe(locaciones => {
       locaciones.forEach(locacion => {
         const marker = new Marker({ color: 'blue', draggable: this.draggable })
@@ -48,19 +45,8 @@ export class ViewMapComponent implements AfterViewInit {
       this.mapService.setMap(map);
     });
 
-
-    // TODO: Se define el marcador inicial del mapa
-    // const marker = new Marker({ color: 'blue', draggable: this.draggable })
-    //   .setLngLat(this.placeService.userLocation)
-    //   .addTo(map);
-
-    // TODO: Se establece el mapa en el servicio y tenemos acceso global
-
-    // TODO: listener que actualiza la ubicacion del marcador
-    // marker.on('drag', () => {
-    //   this.ubication.emit(marker.getLngLat().toArray() as [number, number]);
-    // });
+    const popup = new Popup().setHTML('<span style = "color: black; font-size:large">Corralon</span>');
+    const marker = new Marker({ color: 'red', draggable: this.draggable });
+    marker.setLngLat(this.placeService.userLocation).setPopup(popup).addTo(map);
   }
-
-
 }

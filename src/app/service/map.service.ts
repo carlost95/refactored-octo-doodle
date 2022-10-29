@@ -1,12 +1,9 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   LngLatLike,
   Map,
   Marker,
-  Popup,
-  AnyLayer
 } from 'mapbox-gl';
-import {Feature} from '../pages/logistica/interfaces/places';
 import _ from 'lodash';
 
 @Injectable({
@@ -20,7 +17,7 @@ export class MapService {
   }
   private map?: Map;
   private markers: Marker[] = [];
-any;
+  any;
   setMarker(mark: Marker) {
     this.markers.push(mark);
   }
@@ -34,8 +31,6 @@ any;
     if (!this.isMapReady) {
       throw new Error('El mapa no esta inicailizado');
     }
-    // TODO: se define en centro del mapa con las coordenadas recibidas
-
     this.map?.flyTo({
       zoom: 14,
       center: coords,
@@ -54,7 +49,7 @@ any;
       return marker.getLngLat().lng === Number(coord[0]) && marker.getLngLat().lat === Number(coord[1]);
     });
     mark.remove();
-    const marker = new Marker({color, draggable: false})
+    const marker = new Marker({ color, draggable: false })
       .setLngLat([coord[0], coord[1]]);
     const marks = this.markers.filter(markl => {
       return !(markl.getLngLat().lng === Number(coord[0]) && markl.getLngLat().lat === Number(coord[1]));
@@ -65,14 +60,13 @@ any;
   }
 
   updateMarkers(ruta: any[]): void {
-    const coordenadas = ruta.map(({latitud, longitud}) => ({latitud, longitud}));
-    console.error(coordenadas)
+    const coordenadas = ruta.map(({ latitud, longitud }) => ({ latitud, longitud }));
     const marcadoresAEliminar = this.markers.filter(marcador => this.marcadorCoincidenteConCoordenadas(marcador, coordenadas));
     const marcadoresAConservar = this.markers.filter(marcador => !this.marcadorCoincidenteConCoordenadas(marcador, coordenadas));
     marcadoresAEliminar.forEach(marcador => marcador.remove());
     const color = '#ffc107';
-    const marcadoresACrear = coordenadas.map(({latitud, longitud}) => {
-      const nuevoMarcador = new Marker({color, draggable: false});
+    const marcadoresACrear = coordenadas.map(({ latitud, longitud }) => {
+      const nuevoMarcador = new Marker({ color, draggable: false });
       nuevoMarcador.setLngLat([longitud, latitud]);
       return nuevoMarcador;
     });
@@ -80,7 +74,7 @@ any;
 
     marcadoresLayer.forEach(marcador => marcador.addTo(this.map));
     const features = this.configuracionDeLayerParaCoordenadas(marcadoresACrear);
-    if (this.map.getLayer('points')){
+    if (this.map.getLayer('points')) {
       this.map.removeLayer('points');
       this.map.removeSource('points')
     }
@@ -108,12 +102,12 @@ any;
   }
 
   marcadorCoincidenteConCoordenadas(marcador, coordenadas: any[]): any {
-    const {lat, lng} =  marcador.getLngLat()
+    const { lat, lng } = marcador.getLngLat()
     return coordenadas.find(coordenada => lng === Number(coordenada.longitud) && lat === Number(coordenada.latitud));
   }
 
 
-  configuracionDeLayerParaCoordenadas(marcadores: any[]): any{
+  configuracionDeLayerParaCoordenadas(marcadores: any[]): any {
     const features = marcadores.map((marcador, index) => ({
       type: 'Feature',
       geometry: {
@@ -121,10 +115,9 @@ any;
         coordinates: [marcador.getLngLat().lng, marcador.getLngLat().lat]
       },
       properties: {
-        title: (index === 0 ? 'Inicio' : `${index}`),
+        title: (`${index + 1}`),
       }
     }));
-    console.log(features);
     return features;
   }
 
@@ -143,7 +136,7 @@ any;
     });
     const geojson = this.configuracionDeTramos(tramos, coordenadas);
 
-    if (this.map.getSource('route'))  {
+    if (this.map.getSource('route')) {
       this.map.getSource('route');
     } else {
       this.map.addSource('route', {
@@ -155,7 +148,7 @@ any;
     }
   }
 
-configuracionDeTramos(tramos: any[], coordenadas): any {
+  configuracionDeTramos(tramos: any[], coordenadas): any {
     const gradientes = [0, 5, 10, 15, 20, 30];
 
     const configuracion = {
@@ -189,7 +182,7 @@ configuracionDeTramos(tramos: any[], coordenadas): any {
     return configuracion;
   }
 
-agregarLayerRuta(): void {
+  agregarLayerRuta(): void {
     this.map.addLayer({
       id: 'route',
       type: 'line',
@@ -221,7 +214,7 @@ agregarLayerRuta(): void {
     });
   }
 
-agregarLayerAuto(data): void {
+  agregarLayerAuto(data): void {
     this.map.addLayer({
       id: 'directions',
       type: 'symbol',

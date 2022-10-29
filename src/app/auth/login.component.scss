@@ -13,23 +13,12 @@
   height: auto;
   margin-top: auto;
   margin-bottom: auto;
-  background-color: rgba(0, 0, 0, 0.75);
-  width: auto;
-}
-
-.social_icon span:hover {
-  color: white;
-  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.80);
+  width: 30rem;
 }
 
 .card-header h3 {
-  color: white;
-}
-
-.social_icon {
-  position: absolute;
-  right: 20px;
-  top: -45px;
+  color: rgba($color: rgb(221, 221, 221), $alpha: 1.0);
 }
 
 .input-group-prepend span {

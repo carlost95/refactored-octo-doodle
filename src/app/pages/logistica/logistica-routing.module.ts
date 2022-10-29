@@ -1,15 +1,16 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 import { LogisticaComponent } from "./logistica.component";
+import { ProdGuardService as guard } from '../../guars/prod-guard.service';
 
-// const routes: Routes = [];
+
 const routes: Routes = [
   {
     path: "",
     component: LogisticaComponent,
+    canActivate: [guard],
+    data: { expectedRol: ['admin', 'user', 'gerente'] },
     children: [
-      // {path: 'listar-departamentos', component: ListarDepartamentoComponent},
-      // {path: 'agregar-departamento', component: AgregarDepartamentoComponent},
     ],
   },
 ];
@@ -18,4 +19,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class LogisticaRoutingModule {}
+export class LogisticaRoutingModule { }
