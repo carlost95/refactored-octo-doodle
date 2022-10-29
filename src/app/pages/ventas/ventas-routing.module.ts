@@ -20,55 +20,55 @@ const routes: Routes = [
         path: 'clientes',
         component: ClientesComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin', 'user'] }
+        data: { expectedRol: ['admin', 'user', 'gerente'] }
       },
       {
         path: 'listar-venta',
         component: ListarVentaComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin', 'user'] }
+        data: { expectedRol: ['admin', 'user', 'gerente'] }
       },
       {
         path: 'listar-remitos',
         component: ListarRemitosComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin', 'user'] }
+        data: { expectedRol: ['admin', 'user', 'gerente'] }
       },
       {
         path: 'direcciones/:idCliente',
         component: DireccionesComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin', 'user'] }
+        data: { expectedRol: ['admin', 'user', 'gerente'] }
       },
       {
         path: 'crear-direccion',
         component: CrearDireccionComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin', 'user'] }
+        data: { expectedRol: ['admin', 'user', 'gerente'] }
       },
       {
         path: 'agregar-venta',
         component: AgregarVentaComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin', 'user'] }
+        data: { expectedRol: ['admin', 'user', 'gerente'] }
       },
       {
         path: 'consultar-venta/:idVenta',
         component: AgregarVentaComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin', 'user'] }
+        data: { expectedRol: ['admin', 'user', 'gerente'] }
       },
       {
         path: 'consultar-remito/:idRemito',
         component: ConsultarRemitoComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin', 'user'] }
+        data: { expectedRol: ['admin', 'user', 'gerente'] }
       },
       {
         path: 'cambiar-estado-remito/:idRemito',
         component: ConsultarRemitoComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin', 'user'] }
+        data: { expectedRol: ['admin', 'gerente'] }
       }
     ],
   },

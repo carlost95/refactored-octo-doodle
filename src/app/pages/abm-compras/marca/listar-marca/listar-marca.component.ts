@@ -40,7 +40,7 @@ export class ListarMarcaComponent implements OnInit {
 
   ngOnInit(): void {
     this.roles = this.tokenService.getAuthorities();
-    this.mostrarHabilitacion = this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_ADMIN_BANCO');
+    this.mostrarHabilitacion = this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_GERENTE');
     this.marcasService.obtenerMarcas().subscribe(marcas => {
       this.marcas = marcas;
       this.establecerDatasource(marcas);

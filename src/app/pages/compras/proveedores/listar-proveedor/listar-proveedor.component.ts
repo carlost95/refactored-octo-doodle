@@ -111,7 +111,6 @@ export class ListarProveedorComponent implements OnInit {
       data,
       panelClass: 'no-padding',
     });
-    // The user can't close the dialog by clicking outside its body
     dialog.afterClosed().subscribe((result) => {
       this.proveedorService.getAllProveedores().subscribe((proveedores) => {
         this.proveedores = proveedores;
@@ -124,11 +123,16 @@ export class ListarProveedorComponent implements OnInit {
   }
 
   showModal(proveedor: Proveedor): void {
+    if (!this.mostrarModificacion) {
+      this.openSnackBar("permisos insuficientes para generar esta accion")
+      this.proveedorService.getAllProveedores().subscribe(data =>
+        this.establecerDatasource(data))
+      return;
+    }
     const dialogConfig = new MatDialogConfig();
-    // The user can't close the dialog by clicking outside its body
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
-    dialogConfig.height = '15rem';
+    dialogConfig.height = 'auto';
     dialogConfig.width = '20rem';
     dialogConfig.data = {
       message: '¿Desea cambiar estado?',
