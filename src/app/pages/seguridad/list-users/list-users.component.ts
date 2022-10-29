@@ -1,10 +1,15 @@
-import {Component, OnInit} from '@angular/core';
-import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {AgregarArticuloComponent} from '../../compras/articulos/agregar-articulo/agregar-articulo.component';
-import {NewUsuario} from '../../../models/new-usuario';
-import {RegisterComponent} from '../register/register.component';
-import {AuthService} from '../../../service/auth.service';
-import {Router} from '@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { NewUsuario } from '../../../models/new-usuario';
+import { RegisterComponent } from '../register/register.component';
+import { AuthService } from '../../../service/auth.service';
+import { Router } from '@angular/router';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { BuscadorService } from '../../../shared/helpers/buscador.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackConfirmComponent } from '../../../shared/snack-confirm/snack-confirm.component';
 
 @Component({
   selector: 'app-list-users',
@@ -12,8 +17,18 @@ import {Router} from '@angular/router';
   styleUrls: ['./list-users.component.scss']
 })
 export class ListUsersComponent implements OnInit {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  dataSource: MatTableDataSource<NewUsuario>;
+  displayedColumns: string[] = [
+    'nombreUsuario',
+    'rol',
+    'correo',
+    'acciones',
+  ];
+
   usersFilter: NewUsuario[] = [];
-  users: NewUsuario [] = [];
+  users: NewUsuario[] = [];
   busqueda: any;
   toUpdateUser: NewUsuario;
   consultingUser: boolean;
@@ -21,17 +36,23 @@ export class ListUsersComponent implements OnInit {
   constructor(
     public matDialog: MatDialog,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private buscadorService: BuscadorService,
+    private snackBar: MatSnackBar
+
   ) {
   }
 
-  // tslint:disable-next-line:typedef
   async ngOnInit() {
     await this.authService.listUsers().toPromise().then((data) => {
-      console.log(data.data);
       this.users = data.data;
-      this.usersFilter = this.users;
+      this.establecerDatasource(this.users)
     });
+  }
+  establecerDatasource(usuarios: NewUsuario[]): void {
+    this.dataSource = new MatTableDataSource(usuarios);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   consultUser(user: NewUsuario): void {
@@ -52,34 +73,34 @@ export class ListUsersComponent implements OnInit {
     this.openDialog();
   }
 
-  filtrarUser(): void {
-    this.busqueda = this.busqueda.toLowerCase();
-    this.usersFilter = this.users;
 
-    if (this.busqueda !== null) {
-
-      this.usersFilter = this.users.filter((item) => {
-        const inName = item.nombre.toLowerCase().indexOf(this.busqueda) !== -1;
-        const inLastName = item.nombreUsuario.toLowerCase().indexOf(this.busqueda) !== -1;
-        const inEmail =
-          item.email.toLowerCase().indexOf(this.busqueda) !== -1;
-        return inName || inLastName || inEmail;
-
-      });
-    }
-
+  filtrarUser(value: string): void {
+    const TERMINO = 'nombreUsuario';
+    const usuarios = this.buscadorService.buscarTermino(
+      this.users,
+      TERMINO,
+      value
+    );
+    this.establecerDatasource(usuarios);
   }
 
   backPage(): void {
     this.router.navigate(['/seguridad']);
   }
 
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
+    });
+  }
   openDialog(): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
-    dialogConfig.height = '600px';
-    dialogConfig.width = '400px';
+    dialogConfig.height = 'auto';
+    dialogConfig.width = '25rem';
     dialogConfig.data = {
       user: this.toUpdateUser,
       consulting: this.consultingUser
@@ -87,8 +108,7 @@ export class ListUsersComponent implements OnInit {
     const modalDialog = this.matDialog.open(RegisterComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       this.authService.listUsers().subscribe(data => {
-        this.users = data.data;
-        this.usersFilter = data.data;
+        this.establecerDatasource(data.data)
       });
     });
   }

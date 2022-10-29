@@ -1,84 +1,64 @@
-<div class="modal-content-wrapper">
-  <div class="modal-header modal-header">
-    <h2 class="text-center" *ngIf="!updating && !consulting">Creacion de usuario</h2>
-    <h2 class="text-center" *ngIf="updating">Actualizacion de usuario</h2>
-    <h2 class="text-center" *ngIf="consulting">Consulta de usuario</h2>
+<header class="modal-header  modal-header-size">
+  <div>
+    <h1 *ngIf="!updating && !consulting" class="modal-title">Creacion de usuario</h1>
+    <h1 *ngIf="updating" class="modal-title">Actualizacion de usuario</h1>
+    <h1 *ngIf="consulting" class="modal-title">Consulta de usuario</h1>
   </div>
-  <section class="modal-body">
-    <form [formGroup]="userForm" onSubmit="">
-      <div class="form-row justify-content-center">
-        <mat-form-field appearance="legacy" class="col-md-8">
-          <mat-label>nombre</mat-label>
-          <input matInput formControlName="nombre"
-                 required autocomplete="off"/>
-          <mat-error *ngIf="userForm.controls.nombre.errors">
-            nombre es<strong> requerido</strong>
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="legacy" class="col-md-8">
-          <mat-label>Correo Electronico</mat-label>
-          <input matInput formControlName="email" type="email"
-                 required autocomplete="off"
-                 (keyup)="validarEmail($event)"/>
-          <mat-error *ngIf="userForm.controls.email.errors">
-            Email es<strong> requerido</strong>
-          </mat-error>
-          <label *ngIf="emailRepe" style="color: #f44336; font-size: 75%">
-            <b>el email esta repetido</b>
-          </label>
-        </mat-form-field>
-        <mat-form-field appearance="legacy" class="col-md-8">
-          <mat-label>Nombre de usuario</mat-label>
-          <input matInput formControlName="nombreUsuario"
-                 required autocomplete="off"
-                 (keyup)="validarNombreUsuario($event)"/>
-          <mat-error *ngIf="userForm.controls.nombreUsuario.errors">
-            El nombre de usuario es<strong> requerido</strong>
-          </mat-error>
-          <label *ngIf="userNameRepe" style="color: #f44336; font-size: 75%">
-            <b>Nombre de usuario repetido</b>
-          </label>
-        </mat-form-field>
-        <mat-form-field appearance="legacy" class="col-md-8">
-          <mat-label>Contraseña</mat-label>
-          <input matInput formControlName="password" type="password"
-                 required autocomplete="off"
-                 (keyup)="validarPassword($event)"/>
-          <mat-error *ngIf="userForm.controls.password.errors">
-            Contraseña es<strong> requerida</strong>
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field class="col-md-8" appearance="fill">
-          <mat-label> Rol Usuario</mat-label>
-          <mat-select
-            [(ngModel)]="rolSelect"
-            name="roles"
-            formControlName="roles"
-            autocomplete="off">
-            <mat-option *ngFor="let rol of roles" [value]="rol">
-              {{ rol }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="userForm.controls.roles.errors">
-            el rol del usuario es<strong> requerido</strong>
-          </mat-error>
-        </mat-form-field>
-        <mat-error *ngIf="isLogoutFail">
-          <strong style="font-size: 100%">{{errMsj}}</strong>
-        </mat-error>
-      </div>
-    </form>
-  </section>
-  <footer class="modal-footer" *ngIf="!consulting && !updating">
-    <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>&nbsp;
-    <button class="btn btn-warning" (click)="onSubmit()">Crear Cuenta</button>
-  </footer>
-  <footer class="modal-footer" *ngIf="updating">
-    <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>
-    <button class="btn btn-warning" (click)="onSubmit()">Actualizar Cuenta</button>
-  </footer>
-  <footer class="modal-footer" *ngIf="consulting">
-    <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>
-  </footer>
-</div>
-
+</header>
+<section class="d-flex justify-content-center w-100">
+  <form [formGroup]="userForm" onSubmit="" class="w-100 p-4">
+    <mat-form-field appearance="legacy" class="w-100">
+      <mat-label>nombre</mat-label>
+      <input matInput formControlName="nombre" required autocomplete="off" />
+      <mat-error *ngIf="userForm.controls.nombre.errors">
+        nombre es<strong> requerido</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="legacy" class="w-100">
+      <mat-label>Correo Electronico</mat-label>
+      <input matInput formControlName="email" type="email" required autocomplete="off" (keyup)="validarEmail($event)" />
+      <mat-error *ngIf="userForm.controls.email.errors">
+        Email es<strong> requerido</strong>
+      </mat-error>
+      <label *ngIf="emailRepe" class="errorLabel">
+        <b>el email esta repetido</b>
+      </label>
+    </mat-form-field>
+    <mat-form-field appearance="legacy" class="w-100">
+      <mat-label>Nombre de usuario</mat-label>
+      <input matInput formControlName="nombreUsuario" required autocomplete="off" (keyup)="validarNombreUsuario($event)" />
+      <mat-error *ngIf="userForm.controls.nombreUsuario.errors">
+        El nombre de usuario es<strong> requerido</strong>
+      </mat-error>
+      <label *ngIf="userNameRepe" class="errorLabel">
+        <b>Nombre de usuario repetido</b>
+      </label>
+    </mat-form-field>
+    <mat-form-field appearance="legacy" class="w-100">
+      <mat-label>Contraseña</mat-label>
+      <input matInput formControlName="password" type="password" required autocomplete="off" (keyup)="validarPassword($event)" />
+      <mat-error *ngIf="userForm.controls.password.errors">
+        Contraseña es<strong> requerida</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="w-100" appearance="fill">
+      <mat-label> Rol Usuario</mat-label>
+      <mat-select [(ngModel)]="rolSelect" name="roles" formControlName="roles" autocomplete="off">
+        <mat-option *ngFor="let rol of roles" [value]="rol">
+          {{ rol }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="userForm.controls.roles.errors">
+        el rol del usuario es<strong> requerido</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-error *ngIf="isLogoutFail">
+      <strong>{{errMsj}}</strong>
+    </mat-error>
+  </form>
+</section>
+<footer class="modal-footer m-0">
+  <button class="btn btn-outline-danger" (click)="close()">Cerrar</button>&nbsp;
+  <button class="btn btn-warning" (click)="onSubmit()" *ngIf="!consulting && !updating">Crear Cuenta</button>
+  <button class="btn btn-warning" (click)="onSubmit()" *ngIf="updating">Actualizar Cuenta</button>
+</footer>

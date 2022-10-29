@@ -8,10 +8,22 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Recaudacion } from '../../../../models/Recaudacion';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { BuscadorService } from '../../../../shared/helpers/buscador.service';
 import { MatTableDataSource } from '@angular/material/table';
 
+import { PdfMakeWrapper, Table, Txt } from 'pdfmake-wrapper';
+import { ITable } from 'pdfmake-wrapper/lib/interfaces';
+import pdfFonts from "pdfmake/build/vfs_fonts";
+PdfMakeWrapper.setFonts(pdfFonts);
 
+interface DataRecaudacion {
+  codigoArticulo: string;
+  nombreArticulo: string;
+  nombreMarca: string;
+  cantidadVendida: number;
+  stockArticulo: number;
+  recaudacion: number;
+}
+type TableRow = [string, string, string, number, number, number]
 @Component({
   selector: 'app-recaudaciones',
   templateUrl: './recaudaciones.component.html',
@@ -29,7 +41,7 @@ export class RecaudacionesComponent implements OnInit {
     'stock',
     'recaudacion'
   ];
-  recaudaciones: Recaudacion[];
+  recaudaciones: DataRecaudacion[];
   reporteFechas: ReporteFechas = new ReporteFechas();
   startDate: string;
   endDate: string;
@@ -37,8 +49,6 @@ export class RecaudacionesComponent implements OnInit {
   constructor(
     private readonly reporteService: ReporteService,
     private readonly snackBar: MatSnackBar,
-    private readonly buscadorService: BuscadorService,
-
   ) { }
 
   ngOnInit(): void {
@@ -47,12 +57,13 @@ export class RecaudacionesComponent implements OnInit {
 
   fechaInicial(): string {
     const date = new Date();
-    return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear() - 1}`;
+    this.startDate = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear() - 1}`;
+    return this.startDate;
   }
 
   cargarDataInicial() {
     this.reporteFechas.fechaInicial = this.fechaInicial();
-    this.reporteFechas.fechaFinal = moment().format('YYYY-MM-DD');
+    this.reporteFechas.fechaFinal = this.endDate = moment().format('YYYY-MM-DD');
     this.reporteService.getRecaudacionByArticle(this.reporteFechas).subscribe(dataset => {
       this.recaudaciones = dataset
       this.establecerDatasource(this.recaudaciones);
@@ -61,7 +72,7 @@ export class RecaudacionesComponent implements OnInit {
     });
   }
 
-  establecerDatasource(recaudaciones: Recaudacion[]): void {
+  establecerDatasource(recaudaciones: Recaudacion[]) {
     this.dataSource = new MatTableDataSource(recaudaciones);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -97,9 +108,53 @@ export class RecaudacionesComponent implements OnInit {
       data: msg,
     });
   }
-  generarPDF() {
-    console.log("se debe generar el PDF");
 
+  generarPDF() {
+    PdfMakeWrapper.setFonts(pdfFonts);
+    const pdf = new PdfMakeWrapper();
+    pdf.add([
+      new Txt('fecha Emision: ' + moment().format('DD-MM-YYYY')).alignment('right').bold().end,
+      new Txt('Reporte de recaudaciones por articulo').bold().alignment('center').fontSize(20).margin(20).end,
+      this.createTable(this.recaudaciones),
+      new Txt([
+        new Txt('Desde: ').end,
+        new Txt(this.startDate + "    ").bold().alignment('left').fontSize(13).end,
+        new Txt('Hasta: ').end,
+        new Txt(this.endDate).bold().alignment('right').fontSize(13).end
+      ]).margin([0, 20]).alignment('justify').end]);
+    pdf.create().open();
+  }
+
+  createTable(data: DataRecaudacion[]): ITable {
+    return new Table([
+      [new Txt('Codigo').bold().fontSize(14).alignment('left').end,
+      new Txt('Nombre').bold().fontSize(14).alignment('left').end,
+      new Txt('Marca').bold().fontSize(14).alignment('left').end,
+      new Txt('Cantidad vendida').bold().fontSize(14).alignment('left').end,
+      new Txt('Stock').bold().fontSize(14).alignment('left').end,
+      new Txt('Recaudacion').bold().fontSize(14).alignment('left').end],
+      ...this.extractData(data)
+    ]).widths(['*', '*', '*', '*', '*', '*'])
+      .layout({
+        fillColor: (rowIndex) => {
+          if (rowIndex === 0) {
+            return '#ffc107';
+          }
+
+          if (rowIndex % 2 === 1) {
+            return '#ffffff';
+          }
+          else {
+            return '#D5D5D5'
+          }
+        }
+      }).fontSize(12).end;
+  }
+
+  extractData(data: DataRecaudacion[]): any {
+    return data.map(row =>
+      [row.codigoArticulo, row.nombreArticulo, row.nombreMarca,
+      row.cantidadVendida, row.stockArticulo, '$' + row.recaudacion]);
   }
 
 }

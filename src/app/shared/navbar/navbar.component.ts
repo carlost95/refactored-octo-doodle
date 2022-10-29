@@ -11,6 +11,7 @@ export class NavbarComponent implements OnInit {
   isLogged = false;
   roles: string[];
   isAdmin: boolean;
+  isGerente: boolean;
 
   constructor(private tokenService: TokenService) { }
 
@@ -24,6 +25,9 @@ export class NavbarComponent implements OnInit {
     this.roles.forEach((rol) => {
       if (rol === 'ROLE_ADMIN') {
         this.isAdmin = true;
+      }
+      if (rol === 'ROLE_GERENTE') {
+        this.isGerente = true;
       }
     });
   }
