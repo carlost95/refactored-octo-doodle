@@ -13,7 +13,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { PdfMakeWrapper, Table, Txt } from 'pdfmake-wrapper';
 import { ITable } from 'pdfmake-wrapper/lib/interfaces';
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import { layouts } from 'chart.js';
 PdfMakeWrapper.setFonts(pdfFonts);
 
 interface DataRecaudacion {

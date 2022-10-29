@@ -21,49 +21,49 @@ const routes: Routes = [
         path: 'listar-proveedor',
         component: ListarProveedorComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin', 'user'] },
+        data: { expectedRol: ['admin', 'user', 'gerente'] },
       },
       {
         path: 'listar-articulos',
         component: ListarArticulosComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin', 'user'] },
+        data: { expectedRol: ['admin', 'user', 'gerente'] },
       },
       {
         path: 'listar-pedido',
         component: ListarPedidoComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin', 'user'] },
+        data: { expectedRol: ['admin', 'user', 'gerente'] },
       },
       {
         path: 'agregar-proveedor',
         component: AgregarProveedorComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin'] },
+        data: { expectedRol: ['admin', 'gerente'] },
       },
       {
         path: 'agregar-articulo',
         component: AgregarArticuloComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin'] },
+        data: { expectedRol: ['admin', 'gerente'] },
       },
       {
         path: 'agregar-pedido',
         component: AgregarPedidoComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin'] },
+        data: { expectedRol: ['admin', 'gerente'] },
       },
       {
         path: 'consultar-pedido/:id',
         component: AgregarPedidoComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin', 'user'] },
+        data: { expectedRol: ['admin', 'user', 'gerente'] },
       },
       {
         path: 'listar-cuentas/:idProveedor',
         component: ListarCuentasComponent,
         canActivate: [guard],
-        data: { expectedRol: ['admin', 'user'] },
+        data: { expectedRol: ['admin', 'user', 'gerente'] },
       },
     ],
   },
@@ -73,4 +73,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ComprasRoutingModule {}
+export class ComprasRoutingModule { }

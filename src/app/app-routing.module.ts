@@ -13,14 +13,14 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/ventas/ventas.module').then((m) => m.VentasModule),
     canActivate: [guard],
-    data: { expectedRol: ['admin', 'user'] },
+    data: { expectedRol: ['admin', 'user', 'gerente'] },
   },
   {
     path: 'compras',
     loadChildren: () =>
       import('./pages/compras/compras.module').then((m) => m.ComprasModule),
     canActivate: [guard],
-    data: { expectedRol: ['admin', 'user'] },
+    data: { expectedRol: ['admin', 'user', 'gerente'] },
   },
   {
     path: 'abm-ventas',
@@ -29,7 +29,7 @@ const routes: Routes = [
         (m) => m.AbmVentasModule
       ),
     canActivate: [guard],
-    data: { expectedRol: ['admin', 'user'] },
+    data: { expectedRol: ['admin', 'user', 'gerente'] },
   },
   {
     path: 'abm-compras',
@@ -38,7 +38,7 @@ const routes: Routes = [
         (m) => m.AbmComprasModule
       ),
     canActivate: [guard],
-    data: { expectedRol: ['admin', 'user'] },
+    data: { expectedRol: ['admin', 'user', 'gerente'] },
   },
   {
     path: 'seguridad',
@@ -56,7 +56,7 @@ const routes: Routes = [
         (m) => m.LogisticaModule
       ),
     canActivate: [guard],
-    data: { expectedRol: ['admin', 'user'] },
+    data: { expectedRol: ['admin', 'user', 'gerente'] },
   },
   {
     path: 'reportes',
@@ -65,7 +65,7 @@ const routes: Routes = [
         (m) => m.ReportesModule
       ),
     canActivate: [guard],
-    data: { expectedRol: ['admin', 'user'] },
+    data: { expectedRol: ['admin', 'gerente'] },
   },
   {
     path: 'reset-password',
