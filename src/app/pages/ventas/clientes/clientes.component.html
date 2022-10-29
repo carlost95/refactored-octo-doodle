@@ -1,4 +1,4 @@
-<template-page [title]="'Clientes'" [backRoute]="'ventas'" [titleButton]="'Nuevo Cliente'" (filtro)="filtrarClient($event)" (onClickButton)="newClient()">
+<template-page [title]="'Clientes'" [backRoute]="'ventas'" [titleButton]="'Nuevo Cliente'" [showButton]="true" (filtro)="filtrarClient($event)" (onClickButton)="newClient()">
   <div>
     <table class="w-100" mat-table [dataSource]="dataSource" matSort>
 
@@ -14,7 +14,7 @@
         <th mat-header-cell *matHeaderCellDef> Contacto</th>
         <td mat-cell *matCellDef="let row"> {{row.contacto}} </td>
       </ng-container>
-      <ng-container matColumnDef="status">
+      <ng-container matColumnDef="status" disabled="mostrarModificacion">
         <th mat-header-cell *matHeaderCellDef> Habilitado</th>
         <td mat-cell *matCellDef="let row">
           <mat-slide-toggle [checked]="row.status" (click)="showModal(row)" color="primary">
@@ -27,7 +27,7 @@
           <button class="btn btn-default select" title="Consultar" (click)="consultClient(row)">
             <i class="fas fa-exclamation"></i>
           </button>
-          <button class="btn btn-default select" title="Modificar" (click)="updatedClient(row)">
+          <button class="btn btn-default select" *ngIf="mostrarModificacion" title="Modificar" (click)="updatedClient(row)">
             <i class="fas fa-pencil-alt"></i>
 
           </button>

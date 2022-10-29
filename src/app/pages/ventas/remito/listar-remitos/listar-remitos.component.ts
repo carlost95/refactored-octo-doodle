@@ -53,13 +53,11 @@ export class ListarRemitosComponent implements OnInit {
     this.roles = this.tokenService.getAuthorities();
     this.mostrarHabilitacion =
       this.roles.includes('ROLE_ADMIN') ||
-      this.roles.includes('ROLE_ADMIN_BANCO');
+      this.roles.includes('ROLE_GERENTE');
 
     this.remitoService.getAllRemitos().subscribe(remitos => {
       this.remitos = remitos;
       this.establecerDatasource(remitos);
-      console.log(remitos);
-
     });
   }
   establecerDatasource(remitos: Remito[]): void {
@@ -101,6 +99,12 @@ export class ListarRemitosComponent implements OnInit {
   }
 
   showModal(remito: Remito): void {
+    if (!this.mostrarHabilitacion) {
+      this.openSnackBar("permisos insuficientes para generar esta accion")
+      this.remitoService.getAllRemitos().subscribe(data =>
+        this.establecerDatasource(data))
+      return;
+    }
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
@@ -122,6 +126,13 @@ export class ListarRemitosComponent implements OnInit {
       else {
         this.cargarRemitos(3);
       }
+    });
+  }
+  openSnackBar(msg: string): void {
+    this.snackBar.openFromComponent(SnackConfirmComponent, {
+      panelClass: ['error-snackbar'],
+      duration: 5 * 1000,
+      data: msg,
     });
   }
 

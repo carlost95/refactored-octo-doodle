@@ -97,8 +97,6 @@ export class ClientesComponent implements OnInit {
     this.openDialog(data);
   }
   direcciones(idCliente: number): void {
-    console.log(idCliente);
-
     this.router.navigate([`/ventas/direcciones/${idCliente}`]);
   }
 
@@ -107,7 +105,7 @@ export class ClientesComponent implements OnInit {
       id: 'modal-component',
       disableClose: true,
       height: 'auto',
-      width: '20rem',
+      width: '25rem',
       data,
       panelClass: 'no-padding',
     });
@@ -121,11 +119,18 @@ export class ClientesComponent implements OnInit {
       }
     });
   }
+
   showModal(cliente: Cliente): void {
+    if (!this.mostrarModificacion) {
+      this.openSnackBar("permisos insuficientes para generar esta accion")
+      this.clientService.getAllClient().subscribe(data =>
+        this.establecerDatasource(data))
+      return;
+    }
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';
-    dialogConfig.height = '15rem';
+    dialogConfig.height = 'auto';
     dialogConfig.width = '20rem';
     dialogConfig.data = {
       message: '¿Desea cambiar estado?',

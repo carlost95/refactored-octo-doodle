@@ -1,4 +1,4 @@
-<template-page [title]="'Rubros'" [backRoute]="'abm-compras'" [titleButton]="'Nuevo Rubro'" (filtro)="filtrarRubros($event)" (onClickButton)="nuevo()">
+<template-page [title]="'Rubros'" [backRoute]="'abm-compras'" [titleButton]="'Nuevo Rubro'" [showButton]="mostrarHabilitacion" (filtro)="filtrarRubros($event)" (onClickButton)="nuevo()">
   <table class="w-100" mat-table [dataSource]="dataSource" matSort>
     <ng-container matColumnDef="nombre">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre</th>
@@ -8,7 +8,7 @@
       <th mat-header-cell *matHeaderCellDef> Abreviatura</th>
       <td mat-cell *matCellDef="let row"> {{row.abreviatura | uppercase}} </td>
     </ng-container>
-    <ng-container matColumnDef="habilitado" *ngIf="mostrarHabilitacion">
+    <ng-container matColumnDef="habilitado">
       <th mat-header-cell *matHeaderCellDef> Habilitacion</th>
       <td mat-cell *matCellDef="let row">
         <mat-slide-toggle [checked]="row.habilitado" (click)="abrirModalHabilitacion(row)" color="primary">
@@ -21,7 +21,7 @@
         <button class="btn btn-default select" title="Consultar" (click)="consultar(row)">
           <i class="fas fa-info"></i>
         </button>
-        <button class="btn btn-default select" title="Modificar " (click)="editar(row)" *ngIf="mostrarHabilitacion">
+        <button class="btn btn-default select" title="Modificar " (click)="editar(row)">
           <i class="fas fa-pencil-alt"></i>
         </button>
       </td>

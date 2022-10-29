@@ -1,4 +1,4 @@
-<template-page backRoute="ventas" title="Ventas realizadas" titleButton="Nueva Venta" (filtro)="filtrarVenta($event)" (onClickButton)="nuevo()">
+<template-page backRoute="ventas" [title]="'Ventas realizadas'" [titleButton]="'Nueva Venta'" [showButton]="true" (filtro)="filtrarVenta($event)" (onClickButton)="nuevo()">
   <div>
     <table class="w-100" mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="nroVenta">

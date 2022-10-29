@@ -9,7 +9,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { RubroRest } from '../../../../models/rubro-rest';
 import { SubRubroRest } from '../../../../models/subrubro-rest';
 import { BuscadorService } from '../../../../shared/helpers/buscador.service';
 import { TipoModal } from '../../../../shared/models/tipo-modal.enum';
@@ -42,7 +41,7 @@ export class ListarSubRubroComponent implements OnInit {
 
   ngOnInit(): void {
     this.roles = this.tokenService.getAuthorities();
-    this.mostrarHabilitacion = this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_ADMIN_BANCO');
+    this.mostrarHabilitacion = this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_GERENTE');
     this.subrubroService.obtenerSubRubros().subscribe(subrubros => {
       this.subrubros = subrubros;
       this.establecerDatasource(subrubros);

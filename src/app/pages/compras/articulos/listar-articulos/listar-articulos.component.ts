@@ -116,6 +116,12 @@ export class ListarArticulosComponent implements OnInit {
   }
 
   showModal(articulo: Articulo): void {
+    if (!this.mostrarHabilitacion) {
+      this.openSnackBar("permisos insuficientes para generar esta accion")
+      this.articuloService.obtenerArticulos().subscribe(data =>
+        this.establecerDatasource(data))
+      return;
+    }
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.id = 'modal-component';

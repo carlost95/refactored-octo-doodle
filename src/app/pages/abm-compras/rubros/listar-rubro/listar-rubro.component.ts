@@ -41,7 +41,7 @@ export class ListarRubroComponent implements OnInit {
 
   ngOnInit(): void {
     this.roles = this.tokenService.getAuthorities();
-    this.mostrarHabilitacion = this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_ADMIN_BANCO');
+    this.mostrarHabilitacion = this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_GERENTE');
     this.rubroService.obtenerRubros().subscribe(rubros => {
       this.rubros = rubros;
       this.establecerDatasource(rubros);
