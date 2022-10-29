@@ -1,7 +1,6 @@
 import { AgregarProveedorComponent } from './proveedores/agregar-proveedor/agregar-proveedor.component';
 import { ListarProveedorComponent } from './proveedores/listar-proveedor/listar-proveedor.component';
 
-import { ConsultarPedidoComponent } from './pedidos/consultar-pedido/consultar-pedido.component';
 import { AgregarPedidoComponent } from './pedidos/agregar-pedido/agregar-pedido.component';
 import { ListarPedidoComponent } from './pedidos/listar-pedido/listar-pedido.component';
 import { AgregarArticuloComponent } from './articulos/agregar-articulo/agregar-articulo.component';

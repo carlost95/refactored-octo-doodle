@@ -40,7 +40,7 @@ export class EmpresaComponent implements OnInit {
 
   ngOnInit(): void {
     this.roles = this.tokenService.getAuthorities();
-    this.mostrarHabilitacion = this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_ADMIN_BANCO');
+    this.mostrarHabilitacion = this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_GERENTE');
     this.empresaService.getAllEmpresas().subscribe(data => {
       this.empresas = data;
       this.establecerDatasource(this.empresas);

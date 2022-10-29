@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'template-page',
@@ -11,6 +11,7 @@ export class TemplatePageComponent implements OnInit {
   @Input() backRoute: string;
   @Input() titleButton: string;
   @Input() iconButton: string;
+  @Input() showButton: boolean;
   @Output() filtro = new EventEmitter<string>();
   @Output('onClickButton') clicked = new EventEmitter<boolean>();
 

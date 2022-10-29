@@ -41,7 +41,7 @@ export class DepartamentoComponent implements OnInit {
 
   ngOnInit(): void {
     this.roles = this.tokenService.getAuthorities();
-    this.mostrarHabilitacion = this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_ADMIN_BANCO');
+    this.mostrarHabilitacion = this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_GERENTE');
     this.departamentoService.obtenerDepartamentos().subscribe(departamentos => {
       this.departamentos = departamentos;
       this.establecerDatasource(departamentos);

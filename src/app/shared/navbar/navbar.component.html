@@ -39,16 +39,16 @@
           CONFIGURACIONES
         </a>
         <div class="dropdown-menu">
-          <a class="dropdown-item" [routerLink]="['abm-ventas']" routerLinkActive="active">
+          <a class="dropdown-item" [routerLink]="['abm-ventas']" *ngIf="isGerente||isAdmin" routerLinkActive="active">
             <i class="fas fa-file-invoice-dollar"></i>
             ABM ventas
           </a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" [routerLink]="['abm-compras']" routerLinkActive="active">
+          <div class="dropdown-divider" *ngIf="isGerente||isAdmin"></div>
+          <a class="dropdown-item" [routerLink]="['abm-compras']" *ngIf="isGerente||isAdmin" routerLinkActive="active">
             <i class="fas fa-cash-register"></i>
             ABM compras
           </a>
-          <div class="dropdown-divider"></div>
+          <div class="dropdown-divider" *ngIf="isGerente||isAdmin"></div>
           <a class="dropdown-item" [routerLink]="['reset-password']" routerLinkActive="active">
             <i class="fas fa-key"></i>
             Cambiar contraseña
