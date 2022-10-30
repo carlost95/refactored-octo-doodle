@@ -67,8 +67,6 @@ export class AjustesComponent implements OnInit {
     this.router.navigate([`/abm-compras/agregar-ajuste`]);
   }
   consultar(row: Ajuste) {
-    console.log('row con id', row);
-
     this.router.navigate([`/abm-compras/consultar-ajuste/${row.idAjuste}`]);
   }
 }
