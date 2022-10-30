@@ -34,7 +34,7 @@ export class SubMenuComprasComponent implements OnInit {
       icon: 'subRubro',
     },
     {
-      ruta: 'listar-ajuste',
+      ruta: 'listar-ajustes',
       label: 'ajustes',
       icon: 'ajuste',
     },

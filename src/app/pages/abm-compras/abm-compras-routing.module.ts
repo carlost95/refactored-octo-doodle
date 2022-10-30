@@ -11,11 +11,10 @@ import { AgregarBancoComponent } from './bancos/agregar-banco/agregar-banco.comp
 import { AbmComprasComponent } from './abm-compras.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ConsultarAjusteComponent } from './consultar-ajuste/consultar-ajuste.component';
-import { AgregarAjusteComponent } from './agregar-ajuste/agregar-ajuste.component';
-import { ListarAjusteComponent } from './listar-ajuste/listar-ajuste.component';
+import { AgregarAjustesComponent } from './ajustes/agregar-ajustes/agregar-ajustes.component';
 import { ProdGuardService as guard } from '../../guars/prod-guard.service';
 import { EmpresaComponent } from './empresa/empresa.component';
+import { AjustesComponent } from './ajustes/ajustes.component';
 
 const routes: Routes = [
   {
@@ -52,12 +51,7 @@ const routes: Routes = [
         canActivate: [guard],
         data: { expectedRol: ['admin', 'gerente'] },
       },
-      {
-        path: 'agregar-ajuste',
-        component: AgregarAjusteComponent,
-        canActivate: [guard],
-        data: { expectedRol: ['admin', 'gerente'] },
-      },
+
       {
         path: 'listar-banco',
         component: ListarBancoComponent,
@@ -89,14 +83,20 @@ const routes: Routes = [
         data: { expectedRol: ['admin', 'gerente'] },
       },
       {
-        path: 'listar-ajuste',
-        component: ListarAjusteComponent,
+        path: 'listar-ajustes',
+        component: AjustesComponent,
+        canActivate: [guard],
+        data: { expectedRol: ['admin', 'gerente'] },
+      },
+      {
+        path: 'agregar-ajuste',
+        component: AgregarAjustesComponent,
         canActivate: [guard],
         data: { expectedRol: ['admin', 'gerente'] },
       },
       {
         path: 'consultar-ajuste/:id',
-        component: ConsultarAjusteComponent,
+        component: AgregarAjustesComponent,
         canActivate: [guard],
         data: { expectedRol: ['admin', 'gerente'] },
       },

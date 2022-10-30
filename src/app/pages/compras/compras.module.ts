@@ -15,7 +15,6 @@ import { AgregarPedidoComponent } from './pedidos/agregar-pedido/agregar-pedido.
 import { ConsultarPedidoComponent } from './pedidos/consultar-pedido/consultar-pedido.component';
 import { ListarCuentasComponent } from './cuentas/listar-cuentas/listar-cuentas.component';
 import { AgregarCuentaComponent } from './cuentas/agregar-cuenta/agregar-cuenta.component';
-import { ExcelExportService } from '../../service/excel-export.service';
 import { AbmComprasModule } from '../abm-compras/abm-compras.module';
 import { MaterialModule } from '../../material/material.module';
 import { MatPaginatorIntl } from '@angular/material/paginator';
@@ -45,7 +44,6 @@ import { interceptorProvider } from '../../interceptors/prod-interceptor.service
     ReactiveFormsModule,
   ],
   providers: [
-    ExcelExportService,
     interceptorProvider,
     {
       provide: MatPaginatorIntl,

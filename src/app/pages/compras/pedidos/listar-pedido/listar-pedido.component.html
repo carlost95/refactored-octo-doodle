@@ -1,4 +1,4 @@
-<template-page backRoute="compras" title="Pedidos Recibidos" titleButton="Nuevo Pedido" (filtro)="filtrarPedido($event)" (onClickButton)="nuevo()">
+<template-page backRoute="compras" [title]="'Pedidos Recibidos'" [titleButton]="'Nuevo Pedido'" [showButton]="mostrarHabilitacion" (filtro)="filtrarPedido($event)" (onClickButton)="nuevo()">
   <div>
     <table class="w-100" mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="nombre">

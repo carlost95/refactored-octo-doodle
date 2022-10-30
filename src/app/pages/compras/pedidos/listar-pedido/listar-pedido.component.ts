@@ -44,7 +44,7 @@ export class ListarPedidoComponent implements OnInit {
     this.roles = this.tokenService.getAuthorities();
     this.mostrarHabilitacion =
       this.roles.includes('ROLE_ADMIN') ||
-      this.roles.includes('ROLE_ADMIN_BANCO');
+      this.roles.includes('ROLE_GERENTE');
 
     this.pedidoService.obtenerPedidos().subscribe(pedidos => {
       this.pedidos = pedidos;

@@ -8,7 +8,6 @@ import { MaterialModule } from './material/material.module';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { ExcelExportService } from './service/excel-export.service';
 import { ConfirmModalComponent } from './shared/confirm-modal/confirm-modal.component';
 import { SnackConfirmComponent } from './shared/snack-confirm/snack-confirm.component';
 import { IndexComponent } from './index/index.component';
@@ -36,7 +35,7 @@ import { SharedModule } from './shared/shared.module';
     ReactiveFormsModule,
     SharedModule,
   ],
-  providers: [VentasService, ExcelExportService, interceptorProvider],
+  providers: [VentasService, interceptorProvider],
   exports: [],
   bootstrap: [AppComponent],
 })

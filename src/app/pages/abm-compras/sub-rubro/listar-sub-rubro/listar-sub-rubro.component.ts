@@ -46,7 +46,6 @@ export class ListarSubRubroComponent implements OnInit {
       this.subrubros = subrubros;
       this.establecerDatasource(subrubros);
     });
-    this.subrubroService.obtenerRubros().subscribe(data => console.log(data));
   }
 
   establecerDatasource(subrubros: SubRubroRest[]): void {

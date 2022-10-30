@@ -19,7 +19,7 @@ export class AbmComprasComponent implements OnInit {
       this.router.url.includes('/listar-unidad-medida') ||
       this.router.url.includes('/listar-rubro') ||
       this.router.url.includes('/listar-sub-rubro') ||
-      this.router.url.includes('/listar-ajuste') ||
+      this.router.url.includes('/listar-ajustes') ||
       this.router.url.includes('/listar-empresa') ||
       this.router.url.includes('/agregar-banco') ||
       this.router.url.includes('/agregar-marca') ||
@@ -35,7 +35,7 @@ export class AbmComprasComponent implements OnInit {
       this.router.url.includes('/modificar-banco') ||
       this.router.url.includes('/modificar-rubro') ||
       this.router.url.includes('/modificar-sub-rubro') ||
-      this.router.url.includes('consultar-ajuste')) {
+      this.router.url.includes('/consultar-ajuste')) {
       return false;
     } else {
       return true;

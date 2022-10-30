@@ -1,4 +1,3 @@
-import { ArticuloDTO } from '../models/ArticuloDTO';
 import { Response } from '../models/Response';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -6,12 +5,9 @@ import { environment } from '../../environments/environment.prod';
 import { articulos, subRubro } from '../../environments/global-route';
 import { ArticuloRest, ArticuloStock, ArticuloVenta } from '@models/articulo-rest';
 import { forkJoin, Observable, of } from 'rxjs';
-import { SubRubroRest } from '@models/subrubro-rest';
 import { map, switchMap } from 'rxjs/operators';
 import { UnidadMedidaService } from '@service/unidad-medida.service';
 import { RubrosService } from '@service/rubros.service';
-import { Articulo } from '@models/Articulo';
-import { Proveedor } from "@models/Proveedor";
 import { ArticuloRemito } from '../models/articulo-rest';
 
 @Injectable({
@@ -30,13 +26,11 @@ export class ArticulosService {
   obtenerArticulos(): Observable<ArticuloRest[]> {
     return this.http.get<ArticuloRest[]>(this.url)
       .pipe(
-        // tslint:disable-next-line:no-shadowed-variable
         switchMap((articulos) => forkJoin({
           articulos: of(articulos),
           unidadesMedida: this.unidadMedidaService.obtenerUnidadesMedida(),
           rubros: this.rubroService.obtenerRubros()
         })),
-        // tslint:disable-next-line:no-shadowed-variable
         map(({ articulos, unidadesMedida, rubros }) => articulos.map(articulo => ({
           ...articulo,
           unidadMedidaNombre: unidadesMedida.find(unidadMedida => unidadMedida.idUnidadMedida === articulo.idUnidadMedida).nombre,
@@ -58,11 +52,6 @@ export class ArticulosService {
 
   cambiarEstado(id: number): Observable<ArticuloRest> {
     return this.http.put<ArticuloRest>(this.url + '/' + id, id);
-  }
-
-  // tslint:disable-next-line:typedef
-  listarArticuloHabilitados() {
-    return this.http.get<Response>(this.url + '/habilitados');
   }
 
   obtenerArticuloPorProveedor(proveedorId: number): Observable<ArticuloRest[]> {

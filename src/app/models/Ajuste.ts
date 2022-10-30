@@ -1,5 +1,6 @@
+import { ArticuloStock } from './articulo-rest';
 export class Ajuste {
-  id: number;
+  idAjuste: number;
   nombre: string;
   fecha: string;
   descripcion: string;
@@ -7,8 +8,8 @@ export class Ajuste {
   proveedorRazonSocial: string;
 
   constructor(id?: number, nombre?: string, fecha?: string,
-              descripcion?: string, proveedorId?: number, proveedorRazonSocial?: string) {
-    this.id = id;
+    descripcion?: string, proveedorId?: number, proveedorRazonSocial?: string) {
+    this.idAjuste = id;
     this.nombre = nombre;
     this.fecha = fecha;
     this.descripcion = descripcion;
@@ -17,3 +18,11 @@ export class Ajuste {
   }
 }
 
+export class AjusteDTO {
+  id?: number;
+  nombre?: string;
+  descripcion?: string;
+  fecha?: Date;
+  idProveedor?: number;
+  articulos?: ArticuloStock[];
+}

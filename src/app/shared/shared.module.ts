@@ -5,8 +5,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from '../material/material.module';
 
-import { PedidosComponent } from './pedidos/pedidos.component';
-import { AjustesComponent } from './ajustes/ajustes.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -29,8 +27,6 @@ import { ReporteComponent } from './template/reporte/reporte.component';
 
 @NgModule({
   declarations: [
-    PedidosComponent,
-    AjustesComponent,
     ConfirmDialogComponent,
     NavbarComponent,
     FooterComponent,
@@ -60,8 +56,6 @@ import { ReporteComponent } from './template/reporte/reporte.component';
     RouterModule,
   ],
   exports: [
-    PedidosComponent,
-    AjustesComponent,
     NavbarComponent,
     DropdownComponent,
     TemplatePageComponent,

@@ -1,12 +1,10 @@
-import {Injectable} from '@angular/core';
-import {Response} from '../models/Response';
-import {Marca} from '../models/Marca';
-import {environment} from '../../environments/environment.prod';
-import {HttpClient} from '@angular/common/http';
-import {marca} from '../../environments/global-route';
-import {Observable} from 'rxjs';
-import {MarcaRest} from '@models/marca-rest';
-import {map} from "rxjs/operators";
+import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment.prod';
+import { HttpClient } from '@angular/common/http';
+import { marca } from '../../environments/global-route';
+import { Observable } from 'rxjs';
+import { MarcaRest } from '@models/marca-rest';
+import { map } from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -42,31 +40,5 @@ export class MarcasService {
   actualizar(marca: MarcaRest): Observable<MarcaRest> {
     return this.http.put<MarcaRest>(this.url, marca);
   }
-
-  listarMarcaTodos(): Observable<Response> {
-    return this.http.get<Response>(this.url);
-  }
-
-  listarMarcaHabilitados(): Observable<Response> {
-    return this.http.get<Response>(this.url + '/habilitados');
-  }
-
-  cambiarHabilitacion(id: number): Observable<Response> {
-    return this.http.put<Response>(this.url + '/' + id, id);
-  }
-
-  guardarMarca(marca: Marca): Observable<Response> {
-    return this.http.post<Response>(this.url + '/', marca);
-  }
-
-  actualizarMarca(marca: Marca): Observable<Response> {
-    return this.http.put<Response>(this.url, marca);
-  }
-
-  listarMarcaId(id: number): Observable<Response> {
-    return this.http.get<Response>(this.url + id);
-  }
-
-
 
 }
