@@ -1,5 +1,4 @@
-<template-page [title]="'Cuentas Bancarias'" [backRoute]="'compras/listar-proveedor'" [titleButton]="'Nueva Cuenta'"
-  (filtro)="filtrarAccount($event)" (onClickButton)="newAccountBank()">
+<template-page [title]="'Cuentas Bancarias'" [backRoute]="'compras/listar-proveedor'" [showButton]="mostrarHabilitacion" [titleButton]="'Nueva Cuenta'" (filtro)="filtrarAccount($event)" (onClickButton)="newAccountBank()">
   <div>
     <table class="w-100" mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="titular">
@@ -32,8 +31,7 @@
           <button class="btn btn-default m-0 p-0" title="Consultar" (click)="consultAccountBank(row)">
             <i class="fas fa-info"></i>
           </button>
-          <button class="btn btn-default" title="Modificar " (click)="modificarAccountBank(row)"
-            *ngIf="mostrarHabilitacion">
+          <button class="btn btn-default" title="Modificar " (click)="modificarAccountBank(row)" *ngIf="mostrarHabilitacion">
             <i class="fas fa-pencil-alt"></i>
           </button>
         </td>
