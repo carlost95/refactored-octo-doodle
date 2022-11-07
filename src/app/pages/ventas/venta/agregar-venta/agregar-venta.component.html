@@ -89,7 +89,7 @@
         </div>
         <mat-divider></mat-divider>
         <div class="row my-3 pr-3" *ngIf="!CONSULTA">
-          <h4 class="col-md-6 col-sm-12">Productos</h4>
+          <h4 class="col-md-6 col-sm-12">Carga artículo</h4>
           <input class="col-md-6 col-sm-12 inputArticle inputCursor" placeholder="Ingrese articulo" [matAutocomplete]="auto3" (keyup)="cargarArticulo($event)" autocomplete="off">
 
           <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayArticulo" (optionSelected)="setArticulo($event)">

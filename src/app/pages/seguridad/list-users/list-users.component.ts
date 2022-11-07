@@ -10,6 +10,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { BuscadorService } from '../../../shared/helpers/buscador.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackConfirmComponent } from '../../../shared/snack-confirm/snack-confirm.component';
+import { TokenService } from '../../../service/token.service';
 
 @Component({
   selector: 'app-list-users',
@@ -32,18 +33,23 @@ export class ListUsersComponent implements OnInit {
   busqueda: any;
   toUpdateUser: NewUsuario;
   consultingUser: boolean;
+  mostrar: boolean;
+  roles: string[];
 
   constructor(
     public matDialog: MatDialog,
     private authService: AuthService,
     private router: Router,
     private buscadorService: BuscadorService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private tokenService: TokenService
 
   ) {
   }
 
   async ngOnInit() {
+    this.roles = this.tokenService.getAuthorities();
+    this.mostrar = this.roles.includes('ROLE_ADMIN');
     await this.authService.listUsers().toPromise().then((data) => {
       this.users = data.data;
       this.establecerDatasource(this.users)
