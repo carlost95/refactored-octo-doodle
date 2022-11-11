@@ -136,7 +136,7 @@ export class EmpresaComponent implements OnInit {
   }
 
   filtrarEmpresa(value: string): void {
-    const TERMINO = 'rasonSocial';
+    const TERMINO = 'razonSocial';
     const empresas = this.buscadorService.buscarTermino(this.empresas, TERMINO, value);
     this.establecerDatasource(empresas);
   }
