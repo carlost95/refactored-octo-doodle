@@ -25,12 +25,15 @@ export class LogisticaComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.logisticaService.getParadas().subscribe(paradas => this.paradas = paradas);
+    this.getInicialMap();
     await this.placeService.getUserLocation().then(data => {
       this.userLocation.longitud = data[0],
         this.userLocation.latitud = data[1];
     }
     )
+  }
+  getInicialMap() {
+    this.logisticaService.getParadas().subscribe(paradas => this.paradas = paradas);
   }
 
   get isUserLocationReady(): boolean {
@@ -64,9 +67,6 @@ export class LogisticaComponent implements OnInit {
       });
     });
   }
-  volverAtras(): void {
-    this.router.navigate(['/']);
-  }
   cargarDataEmpresa(rutas: any): any[] {
     const rutaComplete = [];
     rutaComplete.push(this.userLocation);
@@ -75,6 +75,12 @@ export class LogisticaComponent implements OnInit {
     }
     rutaComplete.push(this.userLocation)
     return rutaComplete;
+  }
+  volverAtras(): void {
+    this.router.navigate(['/']);
+  }
+  recargarDatos() {
+    window.location.reload()
   }
   openSnackBar(msg: string): void {
     this.snackBar.openFromComponent(SnackConfirmComponent, {
