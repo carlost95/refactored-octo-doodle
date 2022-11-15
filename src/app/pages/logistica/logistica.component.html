@@ -1,7 +1,8 @@
 <div class="d-flex flex-row justify-content-between">
   <section class="col-md-3 d-flex flex-column justify-content-between scrollable view ">
-    <button class="btn btn-warning mt-3" (click)="trazarRuta()">Trazar Ruta</button>
-    <button class="btn btn-danger my-3" (click)="volverAtras()">Volver atras</button>
+    <button class="btn btn-warning my-1" (click)="trazarRuta()">Trazar Ruta</button>
+    <button class="btn btn-danger my-1" (click)="volverAtras()">Volver atras</button>
+    <button class="btn btn-primary my-1" (click)="recargarDatos()">Recargar Datos</button>
     <div class="d-flex flex-column justify-content-between scrollable view ">
       <app-card-parada class="w-100 mb-2" (agregarParada)="agregarParada($event)" [parada]="parada" *ngFor="let parada of paradas">
       </app-card-parada>
