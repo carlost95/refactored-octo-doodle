@@ -27,16 +27,16 @@
             <mat-label>Nombres</mat-label>
             <input matInput disabled [(ngModel)]="cliente.nombre" [ngModelOptions]="{standalone: true}" />
           </mat-form-field>
-          <h4 class="col-md-12 col-sm-12">Datos Direccion</h4>
+          <h4 class="col-md-12 col-sm-12">Datos Dirección</h4>
           <mat-form-field class="col-md-12 col-sm-12" [disabled]="!validateClient">
-            <mat-label>Direccion</mat-label>
+            <mat-label>Dirección</mat-label>
             <mat-select name="idDireccion" formControlName="idDireccion" autocomplete="off">
               <mat-option *ngFor="let direccion of direcciones" [value]="direccion.idDireccion">
                 {{ direccion.calle }} - Nro {{ direccion.numeroCalle}}
               </mat-option>
             </mat-select>
             <mat-error *ngIf="ventaForm.controls.idDireccion.errors">
-              Direccion es <strong>requerido</strong>
+              Dirección es <strong>requerido</strong>
             </mat-error>
           </mat-form-field>
         </div>

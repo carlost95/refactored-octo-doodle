@@ -1,5 +1,5 @@
 export enum TituloDireccion {
-  consulta = 'Consulta de Direccion',
-  actualizacion = 'Actualizacion de Direccion',
-  creacion = 'Carga de Direccion',
+  consulta = 'Consulta de Dirección',
+  actualizacion = 'Actualización de Dirección',
+  creacion = 'Carga de Dirección',
 }
